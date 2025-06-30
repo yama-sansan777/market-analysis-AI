@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Insight Japan - 本日の市況分析</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#2563EB',secondary:'#DC2626'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        /* index.htmlから必要なスタイルをコピー */
+        body { font-family: 'Noto Sans JP', sans-serif; color: #1F2937; background-color: #f4f5f7; font-size: 17px; }
+        @media (min-width: 768px) { body { font-size: 19px; } }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        .tab-button { padding: 0.8rem 1.2rem; font-size: 1.05rem; font-weight: 500; text-align: center; color: #6b7280; border-bottom: 3px solid transparent; transition: all 0.2s ease-in-out; cursor: pointer; }
+        @media (min-width: 768px) { .tab-button { font-size: 1.2rem; } }
+        .tab-button:not(.active):hover { background-color: #f9fafb; border-color: #d1d5db; color: #374151; transform: translateY(-2px); }
+        .tab-button.active { border-color: #4338ca; color: #4338ca; background-color: #eef2ff; font-weight: 700; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<header class="bg-white border-b border-gray-200">
+<div class="container mx-auto px-4 py-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-8">
+<a href="analysis.html" class="text-2xl font-['Pacifico'] text-primary">logo</a>
+<nav class="hidden md:flex space-x-6">
+<a href="analysis.html" class="text-primary font-medium border-b-2 border-primary pb-1">本日の市況分析</a>
+<a href="archive.html" class="text-gray-600 hover:text-primary">分析アーカイブ</a>
+<a href="#" class="text-gray-600 hover:text-primary">テクニカル指標解説</a>
+<a href="#" class="text-gray-600 hover:text-primary">市場用語集</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<button class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary">
+<i class="ri-user-line"></i>
+<span>ログイン</span>
+</button>
+<button class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap">
+無料登録
+</button>
+<button class="md:hidden text-gray-600">
+<i class="ri-menu-line ri-lg"></i>
+</button>
+</div>
+</div>
+</div>
+</header>
+
+    <div class="w-full px-6 py-10 md:px-12 lg:px-20">
+        <header class="mb-14 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">日経平均株価 インタラクティブ市場分析</h1>
+            <p class="mt-4 text-lg max-w-3xl mx-auto text-gray-600">短期トレーダーのためのデータ駆動型インサイト</p>
+             <div class="mt-8 inline-flex items-center gap-6 rounded-xl bg-white border border-gray-200 px-8 py-4 shadow-sm">
+                <p id="session" class="font-semibold text-indigo-700 text-2xl"></p>
+                <span class="text-gray-300 text-2xl">|</span>
+                <p id="date" class="text-2xl font-medium flex items-center gap-3 text-gray-700"></p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-14">
+            <main class="lg:col-span-8">
+                <section id="summary" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-12 text-center ring-1 ring-gray-200">
+                    <h2 class="text-3xl font-semibold text-gray-500 mb-5">総合評価</h2>
+                    <div class="flex items-center justify-center gap-8 mb-6">
+                        <span id="summary-evaluation" class="text-7xl md:text-9xl font-bold"></span>
+                        <div class="text-left">
+                            <p id="summary-score" class="text-6xl md:text-7xl font-bold text-gray-800"></p>
+                            <div id="summary-stars" class="text-4xl text-yellow-400 mt-2"></div>
+                        </div>
+                    </div>
+                    <p id="summary-headline" class="text-2xl md:text-3xl font-semibold text-gray-800 mt-5"></p>
+                    <p id="summary-text" class="max-w-4xl mx-auto text-gray-600 mt-4 leading-relaxed text-lg"></p>
+                </section>
+
+                <section id="dashboard" class="mb-12">
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
+                            <h3 class="font-bold text-2xl mb-5 text-center">市場の健全性 (前引け)</h3>
+                            <div class="h-64" id="breadthChart"></div>
+                        </div>
+                         <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col items-center justify-center">
+                            <h3 class="font-bold text-2xl mb-5 text-center">市場心理 (恐怖指数)</h3>
+                            <div class="h-64 w-full" id="sentimentGauge"></div>
+                        </div>
+                        <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col justify-center">
+                            <h3 class="font-bold text-2xl mb-6 text-center">主要な価格帯</h3>
+                            <div class="space-y-6">
+                                <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
+                                    <p class="text-lg font-semibold text-red-700">上値抵抗線 (レジスタンス)</p>
+                                    <p id="resistance-value" class="text-4xl font-bold text-red-900"></p>
+                                    <p id="resistance-desc" class="text-base text-red-600"></p>
+                                </div>
+                                <div class="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg">
+                                    <p class="text-lg font-semibold text-blue-700">下値支持線 (サポート)</p>
+                                    <p id="support-value" class="text-4xl font-bold text-blue-900"></p>
+                                    <p id="support-desc" class="text-base text-blue-600"></p>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
+                            <h3 class="font-bold text-2xl mb-5 text-center">騰落レシオ (25日)</h3>
+                            <div id="updown-ratio-container" class="text-center py-12"></div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="details" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 ring-1 ring-gray-200">
+                    <div class="text-center mb-10">
+                        <h3 class="text-4xl font-bold text-gray-800">詳細分析</h3>
+                        <p class="text-gray-500 mt-3 text-xl">下のタブをクリックして、分析内容を切り替えられます</p>
+                    </div>
+                    <div class="border-b border-gray-300">
+                        <nav class="flex flex-wrap -mb-px justify-center" id="tab-buttons">
+                            <button data-tab="internals" class="tab-button active">市場の内部構造</button>
+                            <button data-tab="technicals" class="tab-button">テクニカル分析</button>
+                            <button data-tab="fundamentals" class="tab-button">ファンダメンタルズ & 心理</button>
+                            <button data-tab="strategy" class="tab-button">投資戦略</button>
+                        </nav>
+                    </div>
+    
+                    <div id="tab-panels" class="mt-10 text-xl">
+                        <div id="internals" class="tab-panel active">
+                            <h3 id="internals-headline" class="text-3xl font-bold mb-5"></h3>
+                            <div class="h-96"><canvas id="contributionChart"></canvas></div>
+                        </div>
+                        <div id="technicals" class="tab-panel">
+                            <h3 id="technicals-headline" class="text-3xl font-bold mb-5"></h3>
+                            <div class="h-96"><canvas id="technicalChart"></canvas></div>
+                        </div>
+                        <div id="fundamentals" class="tab-panel">
+                            <h3 id="fundamentals-headline" class="text-3xl font-bold mb-5"></h3>
+                            <ul id="fundamentals-list" class="space-y-6 text-gray-700"></ul>
+                        </div>
+                         <div id="strategy" class="tab-panel">
+                            <h3 id="strategy-headline" class="text-3xl font-bold mb-5"></h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
+                                    <h4 class="font-bold text-2xl text-gray-800 mb-3">基本戦略</h4>
+                                    <p id="strategy-basic" class="text-gray-600 leading-relaxed"></p>
+                                </div>
+                                 <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
+                                    <h4 class="font-bold text-2xl text-gray-800 mb-3">リスク管理</h4>
+                                    <p id="strategy-risk" class="text-gray-600 leading-relaxed"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            
+            <aside class="lg:col-span-4 space-y-10">
+                <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
+                    <h3 class="text-2xl font-bold mb-5 border-b pb-4">市場概況</h3>
+                    <div id="market-overview-container" class="space-y-5"></div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
+                    <h3 class="text-2xl font-bold mb-5 border-b pb-4">今日の注目銘柄</h3>
+                    <div id="hot-stocks-container" class="space-y-6"></div>
+                </div>
+            </aside>
+        </div>
+        
+        <footer class="text-center text-lg text-gray-500 mt-20">
+            </footer>
+    </div>
+
+    <script>
+        // データの読み込みとページへの反映を行うメイン関数
+        async function loadReportData() {
+            try {
+                // 1. 現在のページのURLからパラメータを取得
+                const urlParams = new URLSearchParams(window.location.search);
+                // 2. 'datafile'という名前のパラメータの値を取得
+                const dataFileName = urlParams.get('datafile');
+                // 3. もしパラメータがあればそのファイル名を、なければデフォルトで'live_data/latest.json'を使う
+                const fileToFetch = dataFileName ? `archive_data/${dataFileName}` : 'live_data/latest.json';
+                // 4. 決定したファイル名のJSONを読み込む
+                const response = await fetch(fileToFetch);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+    
+                // --- ページの各要素にデータをセット ---
+                populateHtmlElements(。data);
+    
+                // --- チャート描画 ---
+                initializeAllCharts(data);
+    
+                // --- タブ切り替え機能の初期化 ---
+                initializeTabs();
+    
+            } catch (error) {
+                console.error('データの読み込みまたは処理中にエラーが発生しました:', error);
+                document.body.innerHTML = `<div class="text-center p-10"><h1>データの読み込みに失敗しました</h1><p>エラー内容: ${error.message}</p><p>ファイルパスやJSONの形式、サーバーの動作を確認してください。</p></div>`;
+            }
+        }
+    
+        // HTML要素にテキストやリストを流し込む関数
+        function populateHtmlElements(data) {
+            // ヘッダー
+            document.getElementById('session').textContent = data.session;
+            document.getElementById('date').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> ${data.date}`;
+            
+            // サマリー
+            const summaryEval = document.getElementById('summary-evaluation');
+            summaryEval.textContent = data.summary.evaluation;
+            summaryEval.className = 'text-7xl md:text-9xl font-bold';
+            summaryEval.classList.add(data.summary.evaluation === '売り' ? 'text-red-600' : 'text-blue-600');
+            
+            document.getElementById('summary-score').innerHTML = `${data.summary.score}<span class="text-4xl text-gray-500">/10</span>`;
+            
+            let starsHtml = Array.from({ length: 10 }, (_, i) => i < data.summary.score ? '<span>★</span>' : '<span class="text-gray-300">★</span>').join('');
+            document.getElementById('summary-stars').innerHTML = starsHtml;
+    
+            document.getElementById('summary-headline').textContent = data.summary.headline;
+            document.getElementById('summary-text').textContent = data.summary.text;
+    
+            // ダッシュボード
+            document.getElementById('resistance-value').textContent = data.dashboard.priceLevels.resistance.value;
+            document.getElementById('resistance-desc').textContent = data.dashboard.priceLevels.resistance.description;
+            document.getElementById('support-value').textContent = data.dashboard.priceLevels.support.value;
+            document.getElementById('support-desc').textContent = data.dashboard.priceLevels.support.description;
+            
+            document.getElementById('updown-ratio-container').innerHTML = `
+                <p class="text-8xl font-bold text-gray-800">${data.dashboard.upDownRatio.value}<span class="text-5xl">%</span></p>
+                <p class="mt-5 px-6 py-2 inline-block bg-yellow-100 text-yellow-800 rounded-full text-lg font-semibold">${data.dashboard.upDownRatio.status}</p>
+            `;
+            
+            // 詳細分析
+            document.getElementById('internals-headline').textContent = data.details.internals.headline;
+            document.getElementById('technicals-headline').textContent = data.details.technicals.headline;
+            document.getElementById('fundamentals-headline').textContent = data.details.fundamentals.headline;
+            document.getElementById('strategy-headline').textContent = data.details.strategy.headline;
+    
+            document.getElementById('fundamentals-list').innerHTML = data.details.fundamentals.points.map(point => `
+                <li class="flex items-start">
+                    <span class="text-blue-500 mr-4 mt-1"><i class="ri-checkbox-circle-fill ri-xl"></i></span>
+                    <div>${point}</div>
+                </li>`).join('');
+    
+            document.getElementById('strategy-basic').innerHTML = data.details.strategy.basic;
+            document.getElementById('strategy-risk').innerHTML = data.details.strategy.risk;
+    
+            // サイドバー
+            document.getElementById('market-overview-container').innerHTML = data.marketOverview.map(market => `
+                <div class="flex justify-between items-baseline">
+                    <div><p class="font-semibold text-xl text-gray-800">${market.name}</p><p class="text-base ${market.isDown ? 'text-red-600' : 'text-green-600'}">${market.change}</p></div>
+                    <p class="text-3xl font-bold text-gray-900">${market.value}</p>
+                </div>`).join('');
+    
+            document.getElementById('hot-stocks-container').innerHTML = data.hotStocks.map(stock => `
+                <div>
+                    <div class="flex justify-between items-center mb-1"><p class="text-lg font-bold text-gray-800">${stock.name}</p><p class="text-lg font-semibold ${stock.isDown ? 'text-red-600' : 'text-green-600'}">${stock.price}</p></div>
+                    <p class="text-base text-gray-600">${stock.description}</p>
+                </div>`).join('');
+        }
+    
+        // 全てのチャートを初期化・描画する関数
+        function initializeAllCharts(data) {
+            const FONT_SIZE_TITLE = 20, FONT_SIZE_LEGEND = 18, FONT_SIZE_AXIS = 14;
+    
+            // 1. 市場の健全性 (ドーナツグラフ)
+            const breadthChart = echarts.init(document.getElementById('breadthChart'));
+            breadthChart.setOption({
+                tooltip: { trigger: 'item' },
+                legend: { bottom: '5%', left: 'center', textStyle: { fontSize: FONT_SIZE_LEGEND } },
+                series: [{
+                    name: '市場の健全性', type: 'pie', radius: ['50%', '70%'], avoidLabelOverlap: false,
+                    label: { show: false, position: 'center' },
+                    emphasis: { label: { show: true, fontSize: '30', fontWeight: 'bold' } },
+                    labelLine: { show: false },
+                    data: [
+                        { value: data.dashboard.breadth.decliners, name: '値下がり', itemStyle: { color: '#ef4444' } },
+                        { value: data.dashboard.breadth.advancers, name: '値上がり', itemStyle: { color: '#3b82f6' } },
+                    ]
+                }]
+            });
+    
+            // 2. 市場心理 (ゲージ)
+            const sentimentGauge = echarts.init(document.getElementById('sentimentGauge'));
+            sentimentGauge.setOption({
+                series: [{
+                    type: 'gauge', center: ['50%', '60%'], startAngle: 180, endAngle: 0, min: 0, max: 50, splitNumber: 5,
+                    itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0.2, color: '#10b981' },{ offset: 0.5, color: '#f59e0b' },{ offset: 1, color: '#ef4444' }]}},
+                    progress: { show: true, width: 18 }, pointer: { show: true, length: '60%', width: 6 },
+                    axisLine: { lineStyle: { width: 18 } }, axisTick: { distance: -25, length: 7, lineStyle: { width: 1, color: '#999' } },
+                    splitLine: { distance: -30, length: 12, lineStyle: { width: 2, color: '#999' } },
+                    axisLabel: { distance: -10, color: '#999', fontSize: 16 },
+                    detail: { valueAnimation: true, fontSize: 40, fontWeight: 'bold', offsetCenter: [0, '40%'] },
+                    data: [{ value: data.dashboard.sentimentVI }]
+                }]
+            });
+    
+            // 3. 寄与度チャート (横棒グラフ)
+            new Chart(document.getElementById('contributionChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.details.internals.chartData.labels,
+                    datasets: [{
+                        label: '日経平均への寄与度 (円)',
+                        data: data.details.internals.chartData.values,
+                        backgroundColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 0.7)' : 'rgba(59, 130, 246, 0.7)',
+                        borderColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    scales: { x: { ticks: { font: { size: FONT_SIZE_AXIS }}}, y: { ticks: { font: { size: FONT_SIZE_AXIS }}}},
+                    plugins: { legend: { display: false }, title: { display: true, text: '主要銘柄の寄与度（前引け時点）', font: { size: FONT_SIZE_TITLE }, padding: { bottom: 25 } } }
+                }
+            });
+    
+            // 4. テクニカルチャート (折れ線)
+            new Chart(document.getElementById('technicalChart'), {
+                type: 'line',
+                data: {
+                    labels: data.details.technicals.chartData.labels,
+                    datasets: [
+                        { label: '日経平均株価', data: data.details.technicals.chartData.nikkei, borderColor: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.1)', fill: true, tension: 0.1, pointRadius: 5, pointBackgroundColor: '#4f46e5' },
+                        { label: '20日移動平均線', data: data.details.technicals.chartData.ma20, borderColor: '#f59e0b', borderDash: [5, 5], fill: false, pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { ticks: { font: { size: FONT_SIZE_AXIS }}}, x: { ticks: { font: { size: FONT_SIZE_AXIS }}} },
+                    plugins: { legend: { position: 'top', labels: { font: {size: FONT_SIZE_LEGEND}, padding: 15 }}, title: { display: true, text: '短期テクニカルチャート', font: {size: FONT_SIZE_TITLE}, padding: { bottom: 25 } } }
+                }
+            });
+            
+            // ウィンドウリサイズ時のチャートリサイズ
+            window.addEventListener('resize', function() {
+                breadthChart.resize();
+                sentimentGauge.resize();
+            });
+        }
+    
+        // タブ切り替え機能を初期化する関数
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanels = document.querySelectorAll('.tab-panel');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+    
+                    const tabId = button.dataset.tab;
+                    tabPanels.forEach(panel => {
+                        panel.id === tabId ? panel.classList.add('active') : panel.classList.remove('active');
+                    });
+                });
+            });
+        }
+    
+        // ページ読み込み完了時にメイン関数を実行
+        document.addEventListener('DOMContentLoaded', loadReportData);
+    </script>
+    </body>
+</html>

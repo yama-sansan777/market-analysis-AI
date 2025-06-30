@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Insight Japan - 分析アーカイブ</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#2563EB',secondary:'#DC2626'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+.prediction-result {
+display: inline-flex;
+align-items: center;
+padding: 0.25rem 0.75rem;
+border-radius: 9999px;
+font-size: 0.875rem;
+font-weight: 500;
+}
+.prediction-result.correct {
+background-color: #DEF7EC;
+color: #03543F;
+}
+.prediction-result.incorrect {
+background-color: #FDE8E8;
+color: #9B1C1C;
+}
+.prediction-result.pending {
+background-color: #E1EFFE;
+color: #1E429F;
+}
+.calendar-tooltip {
+display: none;
+position: absolute;
+top: 100%;
+left: 50%;
+transform: translateX(-50%);
+width: 280px;
+background: white;
+border: 1px solid #E5E7EB;
+border-radius: 8px;
+padding: 12px;
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+z-index: 9999;
+margin-top: 8px;
+}
+.calendar-tooltip::before {
+content: '';
+position: absolute;
+top: -6px;
+left: 50%;
+transform: translateX(-50%) rotate(45deg);
+width: 12px;
+height: 12px;
+background: white;
+border-left: 1px solid #E5E7EB;
+border-top: 1px solid #E5E7EB;
+}
+.calendar-day.has-report:hover .calendar-tooltip {
+display: block;
+}
+body {
+font-family: 'Noto Sans JP', sans-serif;
+background-color: #F8FAFC;
+color: #1F2937;
+}
+.card {
+background: white;
+border-radius: 12px;
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+padding: 24px;
+}
+.tab-content {
+display: none;
+}
+.tab-content.active {
+display: block;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+input[type="number"] {
+-moz-appearance: textfield;
+}
+.custom-checkbox {
+appearance: none;
+width: 18px;
+height: 18px;
+border: 2px solid #D1D5DB;
+border-radius: 4px;
+position: relative;
+cursor: pointer;
+outline: none;
+}
+.custom-checkbox:checked {
+background-color: #2563EB;
+border-color: #2563EB;
+}
+.custom-checkbox:checked::after {
+content: '';
+position: absolute;
+left: 5px;
+top: 2px;
+width: 6px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.custom-radio {
+appearance: none;
+width: 18px;
+height: 18px;
+border: 2px solid #D1D5DB;
+border-radius: 50%;
+position: relative;
+cursor: pointer;
+outline: none;
+}
+.custom-radio:checked {
+border-color: #2563EB;
+}
+.custom-radio:checked::after {
+content: '';
+position: absolute;
+left: 3px;
+top: 3px;
+width: 8px;
+height: 8px;
+border-radius: 50%;
+background-color: #2563EB;
+}
+.custom-switch {
+position: relative;
+display: inline-block;
+width: 48px;
+height: 24px;
+}
+.custom-switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.switch-slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #D1D5DB;
+transition: .4s;
+border-radius: 24px;
+}
+.switch-slider:before {
+position: absolute;
+content: "";
+height: 18px;
+width: 18px;
+left: 3px;
+bottom: 3px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+input:checked + .switch-slider {
+background-color: #2563EB;
+}
+input:checked + .switch-slider:before {
+transform: translateX(24px);
+}
+.custom-range {
+-webkit-appearance: none;
+width: 100%;
+height: 6px;
+border-radius: 5px;
+background: #D1D5DB;
+outline: none;
+}
+.custom-range::-webkit-slider-thumb {
+-webkit-appearance: none;
+appearance: none;
+width: 18px;
+height: 18px;
+border-radius: 50%;
+background: #2563EB;
+cursor: pointer;
+}
+.custom-range::-moz-range-thumb {
+width: 18px;
+height: 18px;
+border-radius: 50%;
+background: #2563EB;
+cursor: pointer;
+border: none;
+}
+.calendar-day {
+position: relative;
+min-height: 80px;
+border: 1px solid #E5E7EB;
+transition: all 0.2s;
+}
+.calendar-day:hover {
+background-color: #F9FAFB;
+}
+.calendar-day.has-report {
+cursor: pointer;
+}
+.calendar-day.has-report:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.calendar-day.today {
+background-color: #EFF6FF;
+border-color: #BFDBFE;
+}
+.calendar-day.disabled {
+background-color: #F9FAFB;
+color: #D1D5DB;
+}
+.calendar-day .day-number {
+position: absolute;
+top: 4px;
+right: 6px;
+font-size: 12px;
+color: #6B7280;
+}
+.calendar-day.today .day-number {
+color: #2563EB;
+font-weight: 600;
+}
+.report-card {
+transition: all 0.3s ease;
+}
+.report-card:hover {
+transform: translateY(-4px);
+box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+.date-picker-container {
+position: relative;
+}
+.date-picker {
+display: none;
+position: absolute;
+top: 100%;
+left: 0;
+z-index: 10;
+width: 300px;
+background-color: white;
+border-radius: 8px;
+box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+padding: 16px;
+}
+.date-picker.active {
+display: block;
+}
+</style>
+</head>
+<body class="min-h-screen">
+<header class="bg-white border-b border-gray-200">
+<div class="container mx-auto px-4 py-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-8">
+<a href="analysis.html" class="text-2xl font-['Pacifico'] text-primary">logo</a>
+<nav class="hidden md:flex space-x-6">
+<a href="analysis.html" class="text-gray-600 hover:text-primary">本日の市況分析</a>
+<a href="archive.html" class="text-primary font-medium border-b-2 border-primary pb-1">分析アーカイブ</a>
+<a href="#" class="text-gray-600 hover:text-primary">テクニカル指標解説</a>
+<a href="#" class="text-gray-600 hover:text-primary">市場用語集</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<button class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary">
+<i class="ri-user-line"></i>
+<span>ログイン</span>
+</button>
+<button class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap">
+無料登録
+</button>
+<button class="md:hidden text-gray-600">
+<i class="ri-menu-line ri-lg"></i>
+</button>
+</div>
+</div>
+</div>
+</header>
+<main class="container mx-auto px-4 py-6 max-w-7xl">
+<div class="mb-8">
+<h1 class="text-2xl font-bold mb-2">分析アーカイブ</h1>
+<p class="text-gray-600">過去の市場分析レポートを閲覧できます。日付やキーワードで検索して、必要な情報を素早く見つけましょう。</p>
+</div>
+<!-- 検索・フィルタリングセクション -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-8">
+<div class="flex flex-col md:flex-row gap-4">
+<!-- 検索バー -->
+<div class="flex-1">
+<div class="relative">
+<input type="text" placeholder="キーワードで検索" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<i class="ri-search-line text-gray-400"></i>
+</div>
+</div>
+</div>
+<!-- 日付範囲選択 -->
+<div class="md:w-64">
+<div class="date-picker-container">
+<button id="date-range-btn" class="w-full flex items-center justify-between px-4 py-2 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+<span id="selected-date-range">期間を選択</span>
+<i class="ri-calendar-line ml-2 text-gray-400"></i>
+</button>
+<div id="date-picker" class="date-picker">
+<div class="flex justify-between items-center mb-4">
+<button class="text-sm text-gray-600 hover:text-primary">
+<i class="ri-arrow-left-s-line"></i>
+</button>
+<div class="font-medium">2025年6月</div>
+<button class="text-sm text-gray-600 hover:text-primary">
+<i class="ri-arrow-right-s-line"></i>
+</button>
+</div>
+<div class="grid grid-cols-7 gap-1 text-center text-xs text-gray-500 mb-2">
+<div>日</div>
+<div>月</div>
+<div>火</div>
+<div>水</div>
+<div>木</div>
+<div>金</div>
+<div>土</div>
+</div>
+<div class="grid grid-cols-7 gap-1">
+<div class="text-center p-1 text-xs text-gray-400">26</div>
+<div class="text-center p-1 text-xs text-gray-400">27</div>
+<div class="text-center p-1 text-xs text-gray-400">28</div>
+<div class="text-center p-1 text-xs text-gray-400">29</div>
+<div class="text-center p-1 text-xs text-gray-400">30</div>
+<div class="text-center p-1 text-xs text-gray-400">31</div>
+<div class="text-center p-1 text-xs">1</div>
+<div class="text-center p-1 text-xs">2</div>
+<div class="text-center p-1 text-xs">3</div>
+<div class="text-center p-1 text-xs">4</div>
+<div class="text-center p-1 text-xs">5</div>
+<div class="text-center p-1 text-xs">6</div>
+<div class="text-center p-1 text-xs">7</div>
+<div class="text-center p-1 text-xs">8</div>
+<div class="text-center p-1 text-xs">9</div>
+<div class="text-center p-1 text-xs">10</div>
+<div class="text-center p-1 text-xs">11</div>
+<div class="text-center p-1 text-xs">12</div>
+<div class="text-center p-1 text-xs">13</div>
+<div class="text-center p-1 text-xs">14</div>
+<div class="text-center p-1 text-xs">15</div>
+<div class="text-center p-1 text-xs">16</div>
+<div class="text-center p-1 text-xs">17</div>
+<div class="text-center p-1 text-xs">18</div>
+<div class="text-center p-1 text-xs">19</div>
+<div class="text-center p-1 text-xs bg-primary/10 rounded-sm font-medium text-primary">20</div>
+<div class="text-center p-1 text-xs">21</div>
+<div class="text-center p-1 text-xs">22</div>
+<div class="text-center p-1 text-xs">23</div>
+<div class="text-center p-1 text-xs">24</div>
+<div class="text-center p-1 text-xs">25</div>
+<div class="text-center p-1 text-xs">26</div>
+<div class="text-center p-1 text-xs">27</div>
+<div class="text-center p-1 text-xs">28</div>
+<div class="text-center p-1 text-xs">29</div>
+<div class="text-center p-1 text-xs">30</div>
+<div class="text-center p-1 text-xs text-gray-400">1</div>
+<div class="text-center p-1 text-xs text-gray-400">2</div>
+<div class="text-center p-1 text-xs text-gray-400">3</div>
+<div class="text-center p-1 text-xs text-gray-400">4</div>
+<div class="text-center p-1 text-xs text-gray-400">5</div>
+<div class="text-center p-1 text-xs text-gray-400">6</div>
+</div>
+<div class="mt-4 flex justify-between">
+<button class="text-xs text-gray-600 hover:text-primary">今日</button>
+<div>
+<button class="text-xs text-gray-600 hover:text-primary mr-2">キャンセル</button>
+<button class="text-xs bg-primary text-white px-3 py-1 rounded-button">適用</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 評価フィルター -->
+<div class="md:w-48">
+<select class="w-full px-4 py-2 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary pr-8 appearance-none">
+<option value="">評価を選択</option>
+<option value="buy">買い</option>
+<option value="sell">売り</option>
+<option value="neutral">中立</option>
+</select>
+</div>
+<!-- ビュー切替 -->
+<div class="flex rounded-md overflow-hidden border border-gray-300">
+<button id="list-view-btn" class="flex-1 px-4 py-2 bg-primary text-white text-sm font-medium focus:outline-none">
+<i class="ri-list-check-2 mr-1"></i> リスト
+</button>
+<button id="calendar-view-btn" class="flex-1 px-4 py-2 bg-white text-gray-700 text-sm font-medium focus:outline-none hover:bg-gray-50">
+<i class="ri-calendar-line mr-1"></i> カレンダー
+</button>
+</div>
+</div>
+</div>
+<!-- メインコンテンツ -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- サイドバー -->
+<div class="lg:col-span-3 order-2 lg:order-1">
+<div class="sticky top-6">
+<!-- 期間別フィルター -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6">
+<h3 class="text-lg font-medium mb-4">期間</h3>
+<div class="space-y-3">
+<div class="flex items-center">
+<input type="radio" id="period-1w" name="period" class="custom-radio">
+<label for="period-1w" class="ml-2 text-sm text-gray-700">1週間</label>
+</div>
+<div class="flex items-center">
+<input type="radio" id="period-1m" name="period" class="custom-radio" checked>
+<label for="period-1m" class="ml-2 text-sm text-gray-700">1ヶ月</label>
+</div>
+<div class="flex items-center">
+<input type="radio" id="period-3m" name="period" class="custom-radio">
+<label for="period-3m" class="ml-2 text-sm text-gray-700">3ヶ月</label>
+</div>
+<div class="flex items-center">
+<input type="radio" id="period-6m" name="period" class="custom-radio">
+<label for="period-6m" class="ml-2 text-sm text-gray-700">6ヶ月</label>
+</div>
+<div class="flex items-center">
+<input type="radio" id="period-1y" name="period" class="custom-radio">
+<label for="period-1y" class="ml-2 text-sm text-gray-700">1年</label>
+</div>
+</div>
+</div>
+<!-- 評価別統計 -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6">
+<h3 class="text-lg font-medium mb-4">評価別統計</h3>
+<div class="space-y-4">
+<div class="stats-item p-2 hover:bg-gray-50 rounded-md cursor-pointer transition" data-rating="buy">
+<div class="flex justify-between items-center mb-1">
+<span class="text-sm font-medium text-primary">買い</span>
+<span class="text-sm text-gray-600">35件</span>
+</div>
+<div class="w-full bg-gray-200 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 35%"></div>
+</div>
+</div>
+<div class="stats-item p-2 hover:bg-gray-50 rounded-md cursor-pointer transition" data-rating="neutral">
+<div class="flex justify-between items-center mb-1">
+<span class="text-sm font-medium text-gray-600">中立</span>
+<span class="text-sm text-gray-600">25件</span>
+</div>
+<div class="w-full bg-gray-200 rounded-full h-2">
+<div class="bg-gray-500 h-2 rounded-full" style="width: 25%"></div>
+</div>
+</div>
+<div class="stats-item p-2 hover:bg-gray-50 rounded-md cursor-pointer transition" data-rating="sell">
+<div class="flex justify-between items-center mb-1">
+<span class="text-sm font-medium text-secondary">売り</span>
+<span class="text-sm text-gray-600">40件</span>
+</div>
+<div class="w-full bg-gray-200 rounded-full h-2">
+<div class="bg-secondary h-2 rounded-full" style="width: 40%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- 人気キーワード -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+<h3 class="text-lg font-medium mb-4">人気キーワード</h3>
+<div class="flex flex-wrap gap-2">
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">半導体</a>
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">金利</a>
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">日銀</a>
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">米国株</a>
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">テクニカル</a>
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">自動車</a>
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">銀行</a>
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">AI</a>
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">決算</a>
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">円安</a>
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">インフレ</a>
+<a href="#" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">原油</a>
+</div>
+</div>
+</div>
+</div>
+<!-- メインコンテンツエリア -->
+<div class="lg:col-span-9 order-1 lg:order-2">
+<!-- リスト表示 -->
+<div id="list-view" class="space-y-6">
+<!-- レポートはここに動的に挿入されます -->
+</div>
+<!-- ページネーション -->
+<div class="flex justify-center mt-8">
+<nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+<a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+<span class="sr-only">前へ</span>
+<i class="ri-arrow-left-s-line"></i>
+</a>
+<a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-primary text-sm font-medium text-white">
+1
+</a>
+<a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+2
+</a>
+<a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+3
+</a>
+<span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+...
+</span>
+<a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+8
+</a>
+<a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+<span class="sr-only">次へ</span>
+<i class="ri-arrow-right-s-line"></i>
+</a>
+</nav>
+</div>
+</div>
+</div>
+<!-- カレンダー表示 -->
+<div id="calendar-view" class="hidden">
+<!-- カレンダーの実装は省略 -->
+</div>
+</div>
+</main>
+<footer class="bg-gray-50 border-t border-gray-200 mt-12">
+<div class="container mx-auto px-4 py-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div>
+<h4 class="text-lg font-semibold mb-4">Market Insight Japan</h4>
+<p class="text-sm text-gray-600 mb-4">日本の短期株式トレーダー向けに、信頼性の高い市場分析を毎日2回配信するプロフェッショナルサービス</p>
+<div class="flex space-x-4">
+<a href="#" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary">
+<i class="ri-twitter-x-line"></i>
+</a>
+<a href="#" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary">
+<i class="ri-telegram-line"></i>
+</a>
+<a href="#" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary">
+<i class="ri-mail-line"></i>
+</a>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4">コンテンツ</h4>
+<ul class="space-y-2">
+<li><a href="analysis.html" class="text-sm text-gray-600 hover:text-primary">本日の市況分析</a></li>
+<li><a href="archive.html" class="text-sm text-primary font-medium">分析アーカイブ</a></li>
+<li><a href="#" class="text-sm text-gray-600 hover:text-primary">テクニカル指標解説</a></li>
+<li><a href="#" class="text-sm text-gray-600 hover:text-primary">市場用語集</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4">サイト情報</h4>
+<ul class="space-y-2">
+<li><a href="#" class="text-sm text-gray-600 hover:text-primary">サイトについて</a></li>
+<li><a href="#" class="text-sm text-gray-600 hover:text-primary">分析手法</a></li>
+<li><a href="#" class="text-sm text-gray-600 hover:text-primary">利用規約</a></li>
+<li><a href="#" class="text-sm text-gray-600 hover:text-primary">プライバシーポリシー</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4">お問い合わせ</h4>
+<p class="text-sm text-gray-600 mb-4">ご質問やフィードバックがございましたら、お気軽にお問い合わせください。</p>
+<a href="#" class="inline-block bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap">お問い合わせ</a>
+</div>
+</div>
+<div class="border-t border-gray-200 mt-8 pt-8 text-center">
+<p class="text-sm text-gray-600">© 2025 Market Insight Japan. All rights reserved.</p>
+<p class="text-xs text-gray-500 mt-2">当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。投資の最終判断はご自身でお願いします。</p>
+</div>
+</div>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const archiveFiles = [
+        'data_20250619.json',
+        // 新しいアーカイブファイルは、この配列に追記していきます
+    ];
+
+    const listView = document.getElementById('list-view');
+
+    for (const fileName of archiveFiles) {
+        try {
+            const response = await fetch(`archive_data/${fileName}`);
+            const data = await response.json();
+            
+            const card = document.createElement('div');
+            card.className = 'report-card bg-white rounded-lg shadow-sm border border-gray-100 p-6';
+            
+            let evaluationClass = '';
+            if (data.summary.evaluation === '売り') {
+                evaluationClass = 'bg-secondary/10 text-secondary';
+            } else if (data.summary.evaluation === '買い') {
+                evaluationClass = 'bg-primary/10 text-primary';
+            } else {
+                evaluationClass = 'bg-gray-100 text-gray-700';
+            }
+
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-gray-600">${data.date}</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-600">${data.session}</span>
+                    </div>
+                    <div class="px-3 py-1 rounded-full ${evaluationClass} font-medium text-sm">${data.summary.evaluation}</div>
+                </div>
+                <h3 class="text-xl font-bold mb-2">${data.summary.headline}</h3>
+                <p class="text-gray-600 mb-4">${data.summary.text.substring(0, 100)}...</p>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <!-- 閲覧数やブックマーク数は、必要に応じてJSONに追加してください -->
+                    </div>
+                    <a href="analysis.html?datafile=${fileName}" class="text-primary hover:text-primary/80 font-medium">
+                        詳細を見る <i class="ri-arrow-right-line"></i>
+                    </a>
+                </div>
+            `;
+            listView.appendChild(card);
+        } catch (error) {
+            console.error(`Error loading archive file ${fileName}:`, error);
+        }
+    }
+});
+</script>
+</body>
+</html>
