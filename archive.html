@@ -529,7 +529,27 @@ display: block;
 </div>
 <!-- カレンダー表示 -->
 <div id="calendar-view" class="hidden">
-<!-- カレンダーの実装は省略 -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+    <div class="flex justify-between items-center mb-4">
+        <button id="prev-month" class="text-sm text-gray-600 hover:text-primary">
+            <i class="ri-arrow-left-s-line"></i>
+        </button>
+        <div id="current-month-year" class="font-medium text-lg"></div>
+        <button id="next-month" class="text-sm text-gray-600 hover:text-primary">
+            <i class="ri-arrow-right-s-line"></i>
+        </button>
+    </div>
+    <div class="grid grid-cols-7 gap-1 text-center text-xs text-gray-500 mb-2">
+        <div>日</div>
+        <div>月</div>
+        <div>火</div>
+        <div>水</div>
+        <div>木</div>
+        <div>金</div>
+        <div>土</div>
+    </div>
+    <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
+</div>
 </div>
 </div>
 </main>
@@ -584,64 +604,209 @@ display: block;
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
     const listView = document.getElementById('list-view');
+    const calendarView = document.getElementById('calendar-view');
+    const listViewBtn = document.getElementById('list-view-btn');
+    const calendarViewBtn = document.getElementById('calendar-view-btn');
+    const currentMonthYearDisplay = document.getElementById('current-month-year');
+    const calendarGrid = document.getElementById('calendar-grid');
+    const prevMonthBtn = document.getElementById('prev-month');
+    const nextMonthBtn = document.getElementById('next-month');
 
-    try {
-        const manifestResponse = await fetch('/archive_data/manifest.json');
-        if (!manifestResponse.ok) {
-            throw new Error(`Failed to load manifest.json: ${manifestResponse.status}`);
+    let allReports = []; // 全てのレポートデータを保持する配列
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+
+    // ビュー切り替え
+    listViewBtn.addEventListener('click', () => {
+        listView.classList.remove('hidden');
+        calendarView.classList.add('hidden');
+        listViewBtn.classList.add('bg-primary', 'text-white');
+        listViewBtn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+        calendarViewBtn.classList.remove('bg-primary', 'text-white');
+        calendarViewBtn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+        renderReports(allReports); // リスト表示に戻る際は全てのレポートを表示
+    });
+
+    calendarViewBtn.addEventListener('click', () => {
+        calendarView.classList.remove('hidden');
+        listView.classList.add('hidden');
+        calendarViewBtn.classList.add('bg-primary', 'text-white');
+        calendarViewBtn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+        listViewBtn.classList.remove('bg-primary', 'text-white');
+        listViewBtn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+        renderCalendar(currentYear, currentMonth, allReports);
+    });
+
+    // カレンダーナビゲーション
+    prevMonthBtn.addEventListener('click', () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
         }
-        const archiveFiles = await manifestResponse.json();
+        renderCalendar(currentYear, currentMonth, allReports);
+    });
 
-        for (const fileName of archiveFiles) {
-            try {
-                const response = await fetch(`/archive_data/${fileName}`);
-                if (!response.ok) {
-                    console.warn(`Skipping ${fileName} due to HTTP error: ${response.status}`);
-                    continue; // Skip this file and continue with the next one
-                }
-                const data = await response.json();
-                
-                const card = document.createElement('div');
-                card.className = 'report-card bg-white rounded-lg shadow-sm border border-gray-100 p-6';
-                
-                let evaluationClass = '';
-                if (data.summary.evaluation === '売り') {
-                    evaluationClass = 'bg-secondary/10 text-secondary';
-                } else if (data.summary.evaluation === '買い') {
-                    evaluationClass = 'bg-primary/10 text-primary';
-                } else {
-                    evaluationClass = 'bg-gray-100 text-gray-700';
-                }
+    nextMonthBtn.addEventListener('click', () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        renderCalendar(currentYear, currentMonth, allReports);
+    });
 
-                card.innerHTML = `
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-gray-600">${data.date}</span>
-                            <span class="text-gray-600">|</span>
-                            <span class="text-gray-600">${data.session}</span>
-                        </div>
-                        <div class="px-3 py-1 rounded-full ${evaluationClass} font-medium text-sm">${data.summary.evaluation}</div>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">${data.summary.headline}</h3>
-                    <p class="text-gray-600 mb-4">${data.summary.text.substring(0, 100)}...</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <!-- 閲覧数やブックマーク数は、必要に応じてJSONに追加してください -->
-                        </div>
-                        <a href="/index.html?datafile=${fileName}" class="text-primary hover:text-primary/80 font-medium">
-                            詳細を見る <i class="ri-arrow-right-line"></i>
-                        </a>
-                    </div>
-                `;
-                listView.appendChild(card);
-            } catch (error) {
-                console.error(`Error loading archive file ${fileName}:`, error);
+    async function loadArchiveData() {
+        try {
+            const manifestResponse = await fetch('/archive_data/manifest.json');
+            if (!manifestResponse.ok) {
+                throw new Error(`Failed to load manifest.json: ${manifestResponse.status}`);
             }
+            const archiveFiles = await manifestResponse.json();
+
+            const fetchPromises = archiveFiles.map(async fileName => {
+                try {
+                    const response = await fetch(`/archive_data/${fileName}`);
+                    if (!response.ok) {
+                        console.warn(`Skipping ${fileName} due to HTTP error: ${response.status}`);
+                        return null; // Skip this file
+                    }
+                    const data = await response.json();
+                    // レポートにファイル名を紐付けておく（詳細表示用）
+                    data.fileName = fileName;
+                    return data;
+                } catch (error) {
+                    console.error(`Error loading archive file ${fileName}:`, error);
+                    return null;
+                }
+            });
+
+            allReports = (await Promise.all(fetchPromises)).filter(report => report !== null);
+            allReports.sort((a, b) => new Date(b.date) - new Date(a.date)); // 日付でソート
+
+            renderReports(allReports); // 初期表示はリストビュー
+            renderCalendar(currentYear, currentMonth, allReports);
+
+        } catch (error) {
+            console.error('Error loading archive manifest:', error);
+            listView.innerHTML = `<div class="text-center p-10 text-gray-600">アーカイブデータの読み込みに失敗しました。<br>エラー: ${error.message}</div>`;
         }
-    } catch (error) {
-        console.error('Error loading archive manifest:', error);
-        listView.innerHTML = `<div class="text-center p-10 text-gray-600">アーカイブデータの読み込みに失敗しました。<br>エラー: ${error.message}</div>`;
     }
+
+    function renderReports(reportsToRender) {
+        listView.innerHTML = ''; // Clear current list
+        if (reportsToRender.length === 0) {
+            listView.innerHTML = '<div class="text-center p-10 text-gray-600">表示するレポートがありません。</div>';
+            return;
+        }
+
+        reportsToRender.forEach(data => {
+            const card = document.createElement('div');
+            card.className = 'report-card bg-white rounded-lg shadow-sm border border-gray-100 p-6';
+            
+            let evaluationClass = '';
+            if (data.summary.evaluation === '売り') {
+                evaluationClass = 'bg-secondary/10 text-secondary';
+            } else if (data.summary.evaluation === '買い') {
+                evaluationClass = 'bg-primary/10 text-primary';
+            } else {
+                evaluationClass = 'bg-gray-100 text-gray-700';
+            }
+
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-gray-600">${data.date}</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-600">${data.session}</span>
+                    </div>
+                    <div class="px-3 py-1 rounded-full ${evaluationClass} font-medium text-sm">${data.summary.evaluation}</div>
+                </div>
+                <h3 class="text-xl font-bold mb-2">${data.summary.headline}</h3>
+                <p class="text-gray-600 mb-4">${data.summary.text.substring(0, 100)}...</p>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <!-- 閲覧数やブックマーク数は、必要に応じてJSONに追加してください -->
+                    </div>
+                    <a href="/index.html?datafile=${data.fileName}" class="text-primary hover:text-primary/80 font-medium">
+                        詳細を見る <i class="ri-arrow-right-line"></i>
+                    </a>
+                </div>
+            `;
+            listView.appendChild(card);
+        });
+    }
+
+    function renderCalendar(year, month, reports) {
+        currentMonthYearDisplay.textContent = `${year}年 ${month + 1}月`;
+        calendarGrid.innerHTML = '';
+
+        const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0:日, 1:月, ..., 6:土
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // レポートがある日付を効率的に検索するためのSet
+        const reportDates = new Set();
+        reports.forEach(report => {
+            const reportDate = new Date(report.date);
+            if (reportDate.getFullYear() === year && reportDate.getMonth() === month) {
+                reportDates.add(reportDate.getDate());
+            }
+        });
+
+        // 前月の空白セル
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'calendar-day disabled';
+            calendarGrid.appendChild(emptyDay);
+        }
+
+        // 今月の日付
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            dayElement.innerHTML = `<span class="day-number">${day}</span>`;
+
+            const fullDate = new Date(year, month, day);
+            const today = new Date();
+            if (fullDate.toDateString() === today.toDateString()) {
+                dayElement.classList.add('today');
+            }
+
+            if (reportDates.has(day)) {
+                dayElement.classList.add('has-report');
+                // ツールチップの追加（簡易版）
+                const reportsOnThisDay = reports.filter(report => {
+                    const rDate = new Date(report.date);
+                    return rDate.getFullYear() === year && rDate.getMonth() === month && rDate.getDate() === day;
+                });
+                const tooltipContent = reportsOnThisDay.map(r => `
+                    <p class="font-semibold">${r.session}</p>
+                    <p class="text-sm text-gray-600">${r.summary.headline}</p>
+                    <p class="text-xs text-gray-500">評価: ${r.summary.evaluation}</p>
+                    <hr class="my-1">
+                `).join('');
+                dayElement.innerHTML += `<div class="calendar-tooltip">${tooltipContent}</div>`;
+
+                dayElement.addEventListener('click', () => {
+                    const filteredReports = reports.filter(report => {
+                        const rDate = new Date(report.date);
+                        return rDate.getFullYear() === year && rDate.getMonth() === month && rDate.getDate() === day;
+                    });
+                    renderReports(filteredReports);
+                    // リストビューに切り替える
+                    listView.classList.remove('hidden');
+                    calendarView.classList.add('hidden');
+                    listViewBtn.classList.add('bg-primary', 'text-white');
+                    listViewBtn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+                    calendarViewBtn.classList.remove('bg-primary', 'text-white');
+                    calendarViewBtn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+                });
+            }
+            calendarGrid.appendChild(dayElement);
+        }
+    }
+
+    loadArchiveData();
 });
 </script>
 </body>
