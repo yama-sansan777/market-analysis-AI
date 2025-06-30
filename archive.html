@@ -583,54 +583,64 @@ display: block;
 </footer>
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
-    const archiveFiles = [
-        'data_20250619.json',
-        // 新しいアーカイブファイルは、この配列に追記していきます
-    ];
-
     const listView = document.getElementById('list-view');
 
-    for (const fileName of archiveFiles) {
-        try {
-            const response = await fetch(`/archive_data/${fileName}`);
-            const data = await response.json();
-            
-            const card = document.createElement('div');
-            card.className = 'report-card bg-white rounded-lg shadow-sm border border-gray-100 p-6';
-            
-            let evaluationClass = '';
-            if (data.summary.evaluation === '売り') {
-                evaluationClass = 'bg-secondary/10 text-secondary';
-            } else if (data.summary.evaluation === '買い') {
-                evaluationClass = 'bg-primary/10 text-primary';
-            } else {
-                evaluationClass = 'bg-gray-100 text-gray-700';
-            }
-
-            card.innerHTML = `
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-gray-600">${data.date}</span>
-                        <span class="text-gray-600">|</span>
-                        <span class="text-gray-600">${data.session}</span>
-                    </div>
-                    <div class="px-3 py-1 rounded-full ${evaluationClass} font-medium text-sm">${data.summary.evaluation}</div>
-                </div>
-                <h3 class="text-xl font-bold mb-2">${data.summary.headline}</h3>
-                <p class="text-gray-600 mb-4">${data.summary.text.substring(0, 100)}...</p>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
-                        <!-- 閲覧数やブックマーク数は、必要に応じてJSONに追加してください -->
-                    </div>
-                    <a href="/index.html?datafile=${fileName}" class="text-primary hover:text-primary/80 font-medium">
-                        詳細を見る <i class="ri-arrow-right-line"></i>
-                    </a>
-                </div>
-            `;
-            listView.appendChild(card);
-        } catch (error) {
-            console.error(`Error loading archive file ${fileName}:`, error);
+    try {
+        const manifestResponse = await fetch('/archive_data/manifest.json');
+        if (!manifestResponse.ok) {
+            throw new Error(`Failed to load manifest.json: ${manifestResponse.status}`);
         }
+        const archiveFiles = await manifestResponse.json();
+
+        for (const fileName of archiveFiles) {
+            try {
+                const response = await fetch(`/archive_data/${fileName}`);
+                if (!response.ok) {
+                    console.warn(`Skipping ${fileName} due to HTTP error: ${response.status}`);
+                    continue; // Skip this file and continue with the next one
+                }
+                const data = await response.json();
+                
+                const card = document.createElement('div');
+                card.className = 'report-card bg-white rounded-lg shadow-sm border border-gray-100 p-6';
+                
+                let evaluationClass = '';
+                if (data.summary.evaluation === '売り') {
+                    evaluationClass = 'bg-secondary/10 text-secondary';
+                } else if (data.summary.evaluation === '買い') {
+                    evaluationClass = 'bg-primary/10 text-primary';
+                } else {
+                    evaluationClass = 'bg-gray-100 text-gray-700';
+                }
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-gray-600">${data.date}</span>
+                            <span class="text-gray-600">|</span>
+                            <span class="text-gray-600">${data.session}</span>
+                        </div>
+                        <div class="px-3 py-1 rounded-full ${evaluationClass} font-medium text-sm">${data.summary.evaluation}</div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">${data.summary.headline}</h3>
+                    <p class="text-gray-600 mb-4">${data.summary.text.substring(0, 100)}...</p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <!-- 閲覧数やブックマーク数は、必要に応じてJSONに追加してください -->
+                        </div>
+                        <a href="/index.html?datafile=${fileName}" class="text-primary hover:text-primary/80 font-medium">
+                            詳細を見る <i class="ri-arrow-right-line"></i>
+                        </a>
+                    </div>
+                `;
+                listView.appendChild(card);
+            } catch (error) {
+                console.error(`Error loading archive file ${fileName}:`, error);
+            }
+        }
+    } catch (error) {
+        console.error('Error loading archive manifest:', error);
+        listView.innerHTML = `<div class="text-center p-10 text-gray-600">アーカイブデータの読み込みに失敗しました。<br>エラー: ${error.message}</div>`;
     }
 });
 </script>
