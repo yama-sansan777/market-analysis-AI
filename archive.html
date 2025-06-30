@@ -616,6 +616,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     let currentMonth = new Date().getMonth();
     let currentYear = new Date().getFullYear();
 
+    // Helper function to parse "YYYY年MM月DD日" to a Date object
+    function parseJapaneseDate(dateString) {
+        const parts = dateString.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+        if (parts) {
+            const year = parseInt(parts[1], 10);
+            const month = parseInt(parts[2], 10) - 1; // Month is 0-indexed
+            const day = parseInt(parts[3], 10);
+            return new Date(year, month, day);
+        }
+        return null; // Or throw an error
+    }
+
     // ビュー切り替え
     listViewBtn.addEventListener('click', () => {
         listView.classList.remove('hidden');
@@ -674,6 +686,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const data = await response.json();
                     // レポートにファイル名を紐付けておく（詳細表示用）
                     data.fileName = fileName;
+                    data.parsedDate = parseJapaneseDate(data.date); // パース済み日付を追加
                     return data;
                 } catch (error) {
                     console.error(`Error loading archive file ${fileName}:`, error);
@@ -682,7 +695,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             allReports = (await Promise.all(fetchPromises)).filter(report => report !== null);
-            allReports.sort((a, b) => new Date(b.date) - new Date(a.date)); // 日付でソート
+            allReports.sort((a, b) => b.parsedDate - a.parsedDate); // パース済み日付でソート
 
             renderReports(allReports); // 初期表示はリストビュー
             renderCalendar(currentYear, currentMonth, allReports);
@@ -747,9 +760,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         // レポートがある日付を効率的に検索するためのSet
         const reportDates = new Set();
         reports.forEach(report => {
-            const reportDate = new Date(report.date);
-            if (reportDate.getFullYear() === year && reportDate.getMonth() === month) {
-                reportDates.add(reportDate.getDate());
+            // parsedDateが存在し、かつ有効な日付であるかを確認
+            if (report.parsedDate && !isNaN(report.parsedDate) && 
+                report.parsedDate.getFullYear() === year && 
+                report.parsedDate.getMonth() === month) {
+                reportDates.add(report.parsedDate.getDate());
             }
         });
 
@@ -764,7 +779,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         for (let day = 1; day <= daysInMonth; day++) {
             const dayElement = document.createElement('div');
             dayElement.className = 'calendar-day';
-            dayElement.innerHTML = `<span class="day-number">${day}</span>`;
+            
+            const dayNumberSpan = document.createElement('span');
+            dayNumberSpan.className = 'day-number';
+            dayNumberSpan.textContent = day;
+            dayElement.appendChild(dayNumberSpan);
 
             const fullDate = new Date(year, month, day);
             const today = new Date();
@@ -774,23 +793,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (reportDates.has(day)) {
                 dayElement.classList.add('has-report');
-                // ツールチップの追加（簡易版）
+                // ツールチップの追加
                 const reportsOnThisDay = reports.filter(report => {
-                    const rDate = new Date(report.date);
-                    return rDate.getFullYear() === year && rDate.getMonth() === month && rDate.getDate() === day;
+                    const rDate = report.parsedDate;
+                    return rDate && !isNaN(rDate) && 
+                           rDate.getFullYear() === year && 
+                           rDate.getMonth() === month && 
+                           rDate.getDate() === day;
                 });
-                const tooltipContent = reportsOnThisDay.map(r => `
+                const tooltipDiv = document.createElement('div');
+                tooltipDiv.className = 'calendar-tooltip';
+                tooltipDiv.innerHTML = reportsOnThisDay.map(r => `
                     <p class="font-semibold">${r.session}</p>
                     <p class="text-sm text-gray-600">${r.summary.headline}</p>
                     <p class="text-xs text-gray-500">評価: ${r.summary.evaluation}</p>
                     <hr class="my-1">
                 `).join('');
-                dayElement.innerHTML += `<div class="calendar-tooltip">${tooltipContent}</div>`;
+                dayElement.appendChild(tooltipDiv);
 
                 dayElement.addEventListener('click', () => {
                     const filteredReports = reports.filter(report => {
-                        const rDate = new Date(report.date);
-                        return rDate.getFullYear() === year && rDate.getMonth() === month && rDate.getDate() === day;
+                        const rDate = report.parsedDate;
+                        return rDate && !isNaN(rDate) && 
+                               rDate.getFullYear() === year && 
+                               rDate.getMonth() === month && 
+                               rDate.getDate() === day;
                     });
                     renderReports(filteredReports);
                     // リストビューに切り替える
