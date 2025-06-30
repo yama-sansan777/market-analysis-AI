@@ -267,10 +267,10 @@ display: block;
 <div class="container mx-auto px-4 py-4">
 <div class="flex items-center justify-between">
 <div class="flex items-center space-x-8">
-<a href="analysis.html" class="text-2xl font-['Pacifico'] text-primary">logo</a>
+<a href="/index.html" class="text-2xl font-['Pacifico'] text-primary">logo</a>
 <nav class="hidden md:flex space-x-6">
-<a href="analysis.html" class="text-gray-600 hover:text-primary">本日の市況分析</a>
-<a href="archive.html" class="text-primary font-medium border-b-2 border-primary pb-1">分析アーカイブ</a>
+<a href="/index.html" class="text-gray-600 hover:text-primary">本日の市況分析</a>
+<a href="/archive.html" class="text-primary font-medium border-b-2 border-primary pb-1">分析アーカイブ</a>
 <a href="#" class="text-gray-600 hover:text-primary">テクニカル指標解説</a>
 <a href="#" class="text-gray-600 hover:text-primary">市場用語集</a>
 </nav>
@@ -554,8 +554,8 @@ display: block;
 <div>
 <h4 class="text-lg font-semibold mb-4">コンテンツ</h4>
 <ul class="space-y-2">
-<li><a href="analysis.html" class="text-sm text-gray-600 hover:text-primary">本日の市況分析</a></li>
-<li><a href="archive.html" class="text-sm text-primary font-medium">分析アーカイブ</a></li>
+<li><a href="/index.html" class="text-sm text-gray-600 hover:text-primary">本日の市況分析</a></li>
+<li><a href="/archive.html" class="text-sm text-primary font-medium">分析アーカイブ</a></li>
 <li><a href="#" class="text-sm text-gray-600 hover:text-primary">テクニカル指標解説</a></li>
 <li><a href="#" class="text-sm text-gray-600 hover:text-primary">市場用語集</a></li>
 </ul>
@@ -592,7 +592,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     for (const fileName of archiveFiles) {
         try {
-            const response = await fetch(`archive_data/${fileName}`);
+            const response = await fetch(`/archive_data/${fileName}`);
             const data = await response.json();
             
             const card = document.createElement('div');
@@ -622,7 +622,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="flex items-center space-x-4">
                         <!-- 閲覧数やブックマーク数は、必要に応じてJSONに追加してください -->
                     </div>
-                    <a href="analysis.html?datafile=${fileName}" class="text-primary hover:text-primary/80 font-medium">
+                    <a href="/index.html?datafile=${fileName}" class="text-primary hover:text-primary/80 font-medium">
                         詳細を見る <i class="ri-arrow-right-line"></i>
                     </a>
                 </div>
