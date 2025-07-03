@@ -497,58 +497,29 @@ display: block;
 <div id="list-view" class="space-y-6">
 <!-- レポートはここに動的に挿入されます -->
 </div>
-<!-- ページネーション -->
-<div class="flex justify-center mt-8">
-<nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-<a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-<span class="sr-only">前へ</span>
-<i class="ri-arrow-left-s-line"></i>
-</a>
-<a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-primary text-sm font-medium text-white">
-1
-</a>
-<a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-2
-</a>
-<a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-3
-</a>
-<span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-...
-</span>
-<a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-8
-</a>
-<a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-<span class="sr-only">次へ</span>
-<i class="ri-arrow-right-s-line"></i>
-</a>
-</nav>
-</div>
-</div>
-</div>
 <!-- カレンダー表示 -->
 <div id="calendar-view" class="hidden">
-<div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
-    <div class="flex justify-between items-center mb-4">
-        <button id="prev-month" class="text-sm text-gray-600 hover:text-primary">
-            <i class="ri-arrow-left-s-line"></i>
-        </button>
-        <div id="current-month-year" class="font-medium text-lg"></div>
-        <button id="next-month" class="text-sm text-gray-600 hover:text-primary">
-            <i class="ri-arrow-right-s-line"></i>
-        </button>
+  <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+    <div class="flex justify-between items-center mb-6">
+      <button id="prev-month" class="text-gray-600 hover:text-primary">
+        <i class="ri-arrow-left-s-line ri-lg"></i>
+      </button>
+      <h3 id="current-month-year" class="text-xl font-bold"></h3>
+      <button id="next-month" class="text-gray-600 hover:text-primary">
+        <i class="ri-arrow-right-s-line ri-lg"></i>
+      </button>
     </div>
-    <div class="grid grid-cols-7 gap-1 text-center text-xs text-gray-500 mb-2">
-        <div>日</div>
-        <div>月</div>
-        <div>火</div>
-        <div>水</div>
-        <div>木</div>
-        <div>金</div>
-        <div>土</div>
+    <div class="grid grid-cols-7 gap-2 mb-2">
+      <div class="text-center font-medium text-secondary">日</div>
+      <div class="text-center font-medium">月</div>
+      <div class="text-center font-medium">火</div>
+      <div class="text-center font-medium">水</div>
+      <div class="text-center font-medium">木</div>
+      <div class="text-center font-medium">金</div>
+      <div class="text-center font-medium text-primary">土</div>
     </div>
-    <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
+    <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
+  </div>
 </div>
 </div>
 </div>
@@ -834,6 +805,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     loadArchiveData();
+
+    const dateRangeBtn = document.getElementById('date-range-btn');
+    const datePicker = document.getElementById('date-picker');
+    const selectedDateRange = document.getElementById('selected-date-range');
+
+    dateRangeBtn.addEventListener('click', function() {
+        datePicker.classList.toggle('active');
+    });
+
+    document.addEventListener('click', function(event) {
+        const isClickInside = dateRangeBtn.contains(event.target) || datePicker.contains(event.target);
+        if (!isClickInside && datePicker.classList.contains('active')) {
+            datePicker.classList.remove('active');
+        }
+    });
+
+    const calendarDaysForPicker = document.querySelectorAll('#date-picker .grid-cols-7 > div:not(.text-gray-400)');
+    calendarDaysForPicker.forEach(day => {
+        day.addEventListener('click', function() {
+            calendarDaysForPicker.forEach(d => d.classList.remove('bg-primary/10', 'text-primary', 'font-medium', 'rounded-sm'));
+            this.classList.add('bg-primary/10', 'text-primary', 'font-medium', 'rounded-sm');
+            
+            const selectedDate = `2025年6月${this.textContent.trim()}日`;
+            selectedDateRange.textContent = selectedDate;
+        });
+    });
+
+    const calendarDaysForMain = document.querySelectorAll('.calendar-day.has-report');
+  
+    calendarDaysForMain.forEach(day => {
+        day.addEventListener('click', function() {
+            const dayNumber = this.querySelector('.day-number').textContent;
+            const reportTitle = this.querySelector('.text-xs.font-medium')?.textContent || '';
+            
+            if (dayNumber === '20') {
+                window.location.href = 'https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/c2b76512-1852-46a7-bc7a-8fe9c424200f';
+            } else {
+                console.log(`2025年6月${dayNumber}日のレポート「${reportTitle}」を表示します`);
+            }
+        });
+    });
 });
 </script>
 </body>
