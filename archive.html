@@ -725,19 +725,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentMonthYearDisplay.textContent = `${year}年 ${month + 1}月`;
         calendarGrid.innerHTML = '';
 
-        const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0:日, 1:月, ..., 6:土
+        const firstDayOfMonth = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        // レポートがある日付を効率的に検索するためのSet
-        const reportDates = new Set();
-        reports.forEach(report => {
-            // parsedDateが存在し、かつ有効な日付であるかを確認
-            if (report.parsedDate && !isNaN(report.parsedDate) && 
-                report.parsedDate.getFullYear() === year && 
-                report.parsedDate.getMonth() === month) {
-                reportDates.add(report.parsedDate.getDate());
-            }
-        });
 
         // 前月の空白セル
         for (let i = 0; i < firstDayOfMonth; i++) {
@@ -756,22 +745,60 @@ document.addEventListener('DOMContentLoaded', async () => {
             dayNumberSpan.textContent = day;
             dayElement.appendChild(dayNumberSpan);
 
-            const fullDate = new Date(year, month, day);
             const today = new Date();
-            if (fullDate.toDateString() === today.toDateString()) {
+            if (new Date(year, month, day).toDateString() === today.toDateString()) {
                 dayElement.classList.add('today');
             }
 
-            if (reportDates.has(day)) {
+            // この日付にあるレポートを全て取得
+            const reportsOnThisDay = reports.filter(report => {
+                const rDate = report.parsedDate;
+                return rDate && !isNaN(rDate) && 
+                       rDate.getFullYear() === year && 
+                       rDate.getMonth() === month && 
+                       rDate.getDate() === day;
+            });
+
+            if (reportsOnThisDay.length > 0) {
                 dayElement.classList.add('has-report');
-                // ツールチップの追加
-                const reportsOnThisDay = reports.filter(report => {
-                    const rDate = report.parsedDate;
-                    return rDate && !isNaN(rDate) && 
-                           rDate.getFullYear() === year && 
-                           rDate.getMonth() === month && 
-                           rDate.getDate() === day;
-                });
+
+                // --- ▼ここからが変更・追加部分です▼ ---
+
+                // 表示するメインのレポートを1つ選択（通常は最初のもの）
+                const reportForDisplay = reportsOnThisDay[0];
+
+                // タグとヘッドラインを格納するラッパーを作成
+                const contentWrapper = document.createElement('div');
+                contentWrapper.className = 'pt-5 px-1'; // 上下のパディングを設定
+
+                // 評価タグを作成
+                const tagDiv = document.createElement('div');
+                const evaluation = reportForDisplay.summary.evaluation;
+                let tagClass = '';
+                if (evaluation === '売り') {
+                    tagClass = 'bg-secondary/10 text-secondary';
+                } else if (evaluation === '買い') {
+                    tagClass = 'bg-primary/10 text-primary';
+                } else {
+                    tagClass = 'bg-gray-100 text-gray-700';
+                }
+                tagDiv.className = `text-xs rounded-full px-2 py-0.5 inline-block mb-1 ${tagClass}`;
+                tagDiv.textContent = evaluation;
+                
+                // ヘッドラインを作成
+                const headlineDiv = document.createElement('div');
+                headlineDiv.className = 'text-xs font-medium truncate';
+                headlineDiv.textContent = reportForDisplay.summary.headline;
+
+                // 作成した要素をラッパーに追加し、ラッパーを日付セルに追加
+                contentWrapper.appendChild(tagDiv);
+                contentWrapper.appendChild(headlineDiv);
+                dayElement.appendChild(contentWrapper);
+                
+                // --- ▲ここまでが変更・追加部分です▲ ---
+
+
+                // ツールチップの追加（既存の機能はそのまま残します）
                 const tooltipDiv = document.createElement('div');
                 tooltipDiv.className = 'calendar-tooltip';
                 tooltipDiv.innerHTML = reportsOnThisDay.map(r => `
@@ -782,15 +809,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `).join('');
                 dayElement.appendChild(tooltipDiv);
 
+                // クリックイベント（既存の機能はそのまま残します）
                 dayElement.addEventListener('click', () => {
-                    const filteredReports = reports.filter(report => {
-                        const rDate = report.parsedDate;
-                        return rDate && !isNaN(rDate) && 
-                               rDate.getFullYear() === year && 
-                               rDate.getMonth() === month && 
-                               rDate.getDate() === day;
-                    });
-                    renderReports(filteredReports);
+                    renderReports(reportsOnThisDay);
                     // リストビューに切り替える
                     listView.classList.remove('hidden');
                     calendarView.classList.add('hidden');
