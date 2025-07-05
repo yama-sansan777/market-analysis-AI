@@ -31,13 +31,13 @@ body { font-family: 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color
                 <nav class="hidden md:flex space-x-6 text-gray-600">
                     <a href="/index.html" class="hover:text-primary">本日の市況分析</a>
                     <a href="/archive.html" class="text-primary font-medium border-b-2 border-primary pb-1">分析アーカイブ</a>
-                    <a href="#" class="hover:text-primary">テクニカル指標解説</a>
-                    <a href="#" class="hover:text-primary">市場用語集</a>
+                    <a href="/indicators.html" class="text-gray-600 hover:text-primary">テクニカル指標解説</a>
+                    <a href="/terms.html" class="text-gray-600 hover:text-primary">市場用語集</a>
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
-                <button class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary"><i class="ri-user-line"></i><span>ログイン</span></button>
-                <button class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap">無料登録</button>
+                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span>ログイン</span></button>
+                <button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50">無料登録</button>
                 <button class="md:hidden text-gray-600"><i class="ri-menu-line ri-lg"></i></button>
             </div>
         </div>
@@ -319,6 +319,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Initial Load ---
     loadAndInitialize();
+
+    // 未実装機能のアラート
+    document.getElementById('login-btn').addEventListener('click', () => {
+        alert('この機能は現在準備中です。ご期待ください！');
+    });
+    document.getElementById('register-btn').addEventListener('click', () => {
+        alert('この機能は現在準備中です。ご期待ください！');
+    });
 });
 </script>
 </body>

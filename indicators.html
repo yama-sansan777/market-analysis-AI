@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Insight Japan - テクニカル指標解説</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#2563EB',secondary:'#DC2626'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Noto Sans JP', sans-serif;
+background-color: #F8FAFC;
+color: #1F2937;
+}
+.card {
+background: white;
+border-radius: 12px;
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+transition: all 0.3s ease;
+}
+.card:hover {
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+transform: translateY(-2px);
+}
+.difficulty-badge {
+display: inline-flex;
+align-items: center;
+padding: 0.25rem 0.75rem;
+border-radius: 9999px;
+font-size: 0.75rem;
+font-weight: 500;
+}
+.difficulty-beginner {
+background-color: #D1FAE5;
+color: #065F46;
+}
+.difficulty-intermediate {
+background-color: #DBEAFE;
+color: #1E40AF;
+}
+.difficulty-advanced {
+background-color: #EDE9FE;
+color: #5B21B6;
+}
+.indicator-toc-item {
+border-left: 2px solid transparent;
+transition: all 0.2s ease;
+}
+.indicator-toc-item:hover {
+border-left-color: #2563EB;
+background-color: #EFF6FF;
+}
+.indicator-toc-item.active {
+border-left-color: #2563EB;
+background-color: #EFF6FF;
+color: #2563EB;
+font-weight: 500;
+}
+.chart-container {
+height: 300px;
+width: 100%;
+}
+.custom-checkbox {
+appearance: none;
+width: 18px;
+height: 18px;
+border: 2px solid #D1D5DB;
+border-radius: 4px;
+position: relative;
+cursor: pointer;
+outline: none;
+}
+.custom-checkbox:checked {
+background-color: #2563EB;
+border-color: #2563EB;
+}
+.custom-checkbox:checked::after {
+content: '';
+position: absolute;
+left: 5px;
+top: 2px;
+width: 6px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.faq-item {
+border-bottom: 1px solid #E5E7EB;
+}
+.faq-item:last-child {
+border-bottom: none;
+}
+.faq-question {
+cursor: pointer;
+transition: all 0.3s ease;
+}
+.faq-question:hover {
+color: #2563EB;
+}
+.faq-answer {
+max-height: 0;
+overflow: hidden;
+transition: max-height 0.3s ease;
+}
+.faq-item.active .faq-answer {
+max-height: 500px;
+}
+.faq-toggle {
+transition: transform 0.3s ease;
+}
+.faq-item.active .faq-toggle {
+transform: rotate(180deg);
+}
+</style>
+</head>
+<body class="min-h-screen">
+<header class="bg-white border-b border-gray-200">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-8">
+                <a href="/index.html"><img src="image/logo3.png" alt="Market Insight Japan" class="h-10"></a>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="/index.html" class="text-gray-600 hover:text-primary">本日の市況分析</a>
+                    <a href="/archive.html" class="text-gray-600 hover:text-primary">分析アーカイブ</a>
+                    <a href="/indicators.html" class="text-primary font-medium border-b-2 border-primary pb-1">テクニカル指標解説</a>
+                    <a href="/terms.html" class="text-gray-600 hover:text-primary">市場用語集</a>
+                </nav>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span>ログイン</span></button>
+                <button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50">無料登録</button>
+                <button class="md:hidden text-gray-600"><i class="ri-menu-line ri-lg"></i></button>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="container mx-auto px-4 py-6 max-w-7xl">
+<div class="mb-8">
+<h1 class="text-2xl font-bold mb-2">テクニカル指標解説</h1>
+<p class="text-gray-600">株式市場の分析に役立つ主要なテクニカル指標について詳しく解説します。各指標の基本的な概念から実践的な活用方法まで、トレーダーのレベルに合わせた情報を提供します。</p>
+</div>
+<!-- フィルタリングセクション -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-8">
+<div class="flex flex-col md:flex-row gap-4 items-center">
+<!-- 検索バー -->
+<div class="flex-1">
+<div class="relative">
+<input type="text" placeholder="指標名で検索" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<i class="ri-search-line text-gray-400"></i>
+</div>
+</div>
+</div>
+<!-- 難易度フィルター -->
+<div class="flex space-x-2">
+<div class="flex items-center">
+<input type="checkbox" id="beginner" class="custom-checkbox" checked>
+<label for="beginner" class="ml-2 text-sm text-gray-700">初級</label>
+</div>
+<div class="flex items-center">
+<input type="checkbox" id="intermediate" class="custom-checkbox" checked>
+<label for="intermediate" class="ml-2 text-sm text-gray-700">中級</label>
+</div>
+<div class="flex items-center">
+<input type="checkbox" id="advanced" class="custom-checkbox" checked>
+<label for="advanced" class="ml-2 text-sm text-gray-700">上級</label>
+</div>
+</div>
+</div>
+</div>
+<!-- メインコンテンツ -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- サイドバー（目次） -->
+<div class="lg:col-span-3 order-2 lg:order-1">
+<div class="sticky top-6">
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6">
+<h3 class="text-lg font-medium mb-4">目次</h3>
+<div class="space-y-1">
+<a href="#trend-indicators" class="indicator-toc-item block px-3 py-2 rounded-md text-sm active">トレンド系指標</a>
+<a href="#momentum-indicators" class="indicator-toc-item block px-3 py-2 rounded-md text-sm">モメンタム系指標</a>
+<a href="#volatility-indicators" class="indicator-toc-item block px-3 py-2 rounded-md text-sm">ボラティリティ系指標</a>
+<a href="#volume-indicators" class="indicator-toc-item block px-3 py-2 rounded-md text-sm">出来高系指標</a>
+<a href="#oscillator-indicators" class="indicator-toc-item block px-3 py-2 rounded-md text-sm">オシレーター系指標</a>
+<a href="#combination-strategies" class="indicator-toc-item block px-3 py-2 rounded-md text-sm">複合戦略</a>
+<a href="#faq" class="indicator-toc-item block px-3 py-2 rounded-md text-sm">よくある質問</a>
+</div>
+</div>
+<!-- 人気の指標 -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+<h3 class="text-lg font-medium mb-4">人気の指標</h3>
+<div class="space-y-3">
+<a href="#rsi" class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-md transition">
+<div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<i class="ri-line-chart-line"></i>
+</div>
+<div>
+<span class="text-sm font-medium">RSI</span>
+<p class="text-xs text-gray-500">相対力指数</p>
+</div>
+</a>
+<a href="#moving-average" class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-md transition">
+<div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<i class="ri-line-chart-line"></i>
+</div>
+<div>
+<span class="text-sm font-medium">移動平均線</span>
+<p class="text-xs text-gray-500">MA/SMA/EMA</p>
+</div>
+</a>
+<a href="#macd" class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-md transition">
+<div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<i class="ri-line-chart-line"></i>
+</div>
+<div>
+<span class="text-sm font-medium">MACD</span>
+<p class="text-xs text-gray-500">移動平均収束拡散法</p>
+</div>
+</a>
+<a href="#bollinger-bands" class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-md transition">
+<div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<i class="ri-line-chart-line"></i>
+</div>
+<div>
+<span class="text-sm font-medium">ボリンジャーバンド</span>
+<p class="text-xs text-gray-500">価格変動の範囲を示す</p>
+</div>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- メインコンテンツエリア -->
+<div class="lg:col-span-9 order-1 lg:order-2">
+<!-- トレンド系指標 -->
+<section id="trend-indicators" class="mb-12">
+<h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200">トレンド系指標</h2>
+<!-- 移動平均線 -->
+<div id="moving-average" class="card p-6 mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">移動平均線（Moving Average）</h3>
+<span class="difficulty-badge difficulty-beginner">初級</span>
+</div>
+<p class="text-gray-700 mb-4">移動平均線は、一定期間の価格の平均値を結んだ線で、相場のトレンドを把握するための最も基本的な指標です。短期、中期、長期の移動平均線を組み合わせることで、トレンドの変化や強さを判断できます。</p>
+<div class="bg-gray-50 rounded-lg p-4 mb-6">
+<h4 class="font-medium mb-2">計算方法</h4>
+<p class="text-sm text-gray-600 mb-2">単純移動平均（SMA）：指定した期間の終値の合計を期間数で割った値</p>
+<div class="bg-white rounded p-2 text-sm font-mono">SMA = (P₁ + P₂ + ... + Pₙ) / n</div>
+<p class="text-sm text-gray-600 mt-2 mb-2">指数平滑移動平均（EMA）：直近の価格に重みを付けた移動平均</p>
+<div class="bg-white rounded p-2 text-sm font-mono">EMA = 価格 × K + 前日のEMA × (1 - K)<br>K = 2 ÷ (期間数 + 1)</div>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-4">チャート例</h4>
+<div class="chart-container" id="moving-average-chart"></div>
+<p class="text-sm text-gray-500 mt-2">日経平均株価と20日/50日/200日移動平均線</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-3">使い方</h4>
+<ul class="list-disc pl-5 space-y-2 text-gray-700">
+<li>短期移動平均線が長期移動平均線を上抜けると買いシグナル（ゴールデンクロス）</li>
+<li>短期移動平均線が長期移動平均線を下抜けると売りシグナル（デッドクロス）</li>
+<li>価格が移動平均線を上回っていれば上昇トレンド、下回っていれば下降トレンド</li>
+<li>複数の移動平均線が並行して上昇/下降している場合、トレンドが強いことを示す</li>
+</ul>
+</div>
+<div class="bg-blue-50 rounded-lg p-4">
+<h4 class="font-medium mb-3 text-blue-800">実践的なトレード戦略</h4>
+<p class="text-gray-700 mb-3">移動平均線の組み合わせによる戦略例：</p>
+<ol class="list-decimal pl-5 space-y-2 text-gray-700">
+<li>5日と20日の移動平均線のクロスを短期売買のシグナルとして利用</li>
+<li>50日移動平均線をサポート/レジスタンスラインとして活用</li>
+<li>200日移動平均線を長期トレンドの判断基準として利用</li>
+<li>価格が移動平均線に接触した際の反発を狙ったトレード</li>
+</ol>
+</div>
+</div>
+<!-- MACD -->
+<div id="macd" class="card p-6 mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">MACD（Moving Average Convergence Divergence）</h3>
+<span class="difficulty-badge difficulty-intermediate">中級</span>
+</div>
+<p class="text-gray-700 mb-4">MACDは、短期と長期の指数移動平均線（EMA）の差を利用したトレンド系の指標です。トレンドの方向性や強さ、転換点を捉えるのに役立ちます。</p>
+<div class="bg-gray-50 rounded-lg p-4 mb-6">
+<h4 class="font-medium mb-2">計算方法</h4>
+<p class="text-sm text-gray-600 mb-2">MACD線 = 短期EMA - 長期EMA（通常12日と26日）</p>
+<p class="text-sm text-gray-600 mb-2">シグナル線 = MACDの9日EMA</p>
+<p class="text-sm text-gray-600 mb-2">ヒストグラム = MACD線 - シグナル線</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-4">チャート例</h4>
+<div class="chart-container" id="macd-chart"></div>
+<p class="text-sm text-gray-500 mt-2">上：日経平均株価、下：MACD（青線：MACD線、赤線：シグナル線、ヒストグラム）</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-3">使い方</h4>
+<ul class="list-disc pl-5 space-y-2 text-gray-700">
+<li>MACD線がシグナル線を上抜けると買いシグナル</li>
+<li>MACD線がシグナル線を下抜けると売りシグナル</li>
+<li>MACD線とシグナル線がゼロラインを上回っていれば上昇トレンド</li>
+<li>MACD線とシグナル線がゼロラインを下回っていれば下降トレンド</li>
+<li>ヒストグラムの拡大はトレンドの加速、縮小はトレンドの減速を示す</li>
+</ul>
+</div>
+<div class="bg-blue-50 rounded-lg p-4">
+<h4 class="font-medium mb-3 text-blue-800">実践的なトレード戦略</h4>
+<p class="text-gray-700 mb-3">MACDを活用した戦略例：</p>
+<ol class="list-decimal pl-5 space-y-2 text-gray-700">
+<li>ゼロラインクロス：MACD線がゼロラインを上抜け/下抜けした際にエントリー</li>
+<li>ダイバージェンス：価格が高値更新しているのにMACDが高値を更新しない場合は売りシグナル</li>
+<li>ヒストグラムの変化：ヒストグラムが縮小し始めたらトレンド終了の可能性を警戒</li>
+<li>複数時間軸分析：日足と週足のMACDを組み合わせて、より信頼性の高いシグナルを探る</li>
+</ol>
+</div>
+</div>
+</section>
+<!-- モメンタム系指標 -->
+<section id="momentum-indicators" class="mb-12">
+<h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200">モメンタム系指標</h2>
+<!-- RSI -->
+<div id="rsi" class="card p-6 mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">RSI（Relative Strength Index：相対力指数）</h3>
+<span class="difficulty-badge difficulty-beginner">初級</span>
+</div>
+<p class="text-gray-700 mb-4">RSIは、一定期間における値上がり幅と値下がり幅の比率から算出される指標で、相場の過熱感や買われ過ぎ・売られ過ぎの状態を判断するのに役立ちます。0〜100の範囲で表示され、通常は14日間の期間で計算されます。</p>
+<div class="bg-gray-50 rounded-lg p-4 mb-6">
+<h4 class="font-medium mb-2">計算方法</h4>
+<p class="text-sm text-gray-600 mb-2">RSI = 100 - (100 / (1 + RS))</p>
+<p class="text-sm text-gray-600 mb-2">RS（相対力）= 一定期間の平均上昇幅 ÷ 一定期間の平均下落幅</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-4">チャート例</h4>
+<div class="chart-container" id="rsi-chart"></div>
+<p class="text-sm text-gray-500 mt-2">上：日経平均株価、下：RSI（14日間）</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-3">使い方</h4>
+<ul class="list-disc pl-5 space-y-2 text-gray-700">
+<li>RSIが70以上で買われ過ぎ（売りシグナル）</li>
+<li>RSIが30以下で売られ過ぎ（買いシグナル）</li>
+<li>RSIが50を上回ると上昇トレンド、下回ると下降トレンド</li>
+<li>RSIのトレンドラインブレイクは価格の転換点を示唆することがある</li>
+<li>RSIと価格のダイバージェンス（乖離）は、トレンド転換のサインとなる</li>
+</ul>
+</div>
+<div class="bg-blue-50 rounded-lg p-4">
+<h4 class="font-medium mb-3 text-blue-800">実践的なトレード戦略</h4>
+<p class="text-gray-700 mb-3">RSIを活用した戦略例：</p>
+<ol class="list-decimal pl-5 space-y-2 text-gray-700">
+<li>強いトレンド相場では、RSIの基準値を調整（上昇トレンドでは40-80、下降トレンドでは20-60など）</li>
+<li>RSIが30を下回った後、再び30を上抜けたタイミングで買いエントリー</li>
+<li>RSIが70を上回った後、再び70を下抜けたタイミングで売りエントリー</li>
+<li>RSIと価格のポジティブダイバージェンス（価格が安値更新しているのにRSIが安値を更新しない）は強力な買いシグナル</li>
+<li>RSIと価格のネガティブダイバージェンス（価格が高値更新しているのにRSIが高値を更新しない）は強力な売りシグナル</li>
+</ol>
+</div>
+</div>
+<!-- ストキャスティクス -->
+<div id="stochastics" class="card p-6 mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">ストキャスティクス（Stochastics）</h3>
+<span class="difficulty-badge difficulty-intermediate">中級</span>
+</div>
+<p class="text-gray-700 mb-4">ストキャスティクスは、一定期間の価格レンジにおける現在の終値の位置を百分率で表した指標です。相場の勢いや方向性、買われ過ぎ・売られ過ぎの状態を判断するのに役立ちます。</p>
+<div class="bg-gray-50 rounded-lg p-4 mb-6">
+<h4 class="font-medium mb-2">計算方法</h4>
+<p class="text-sm text-gray-600 mb-2">%K = 100 × ((現在の終値 - 期間内の最安値) ÷ (期間内の最高値 - 期間内の最安値))</p>
+<p class="text-sm text-gray-600 mb-2">%D = %Kの3日間の単純移動平均</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-4">チャート例</h4>
+<div class="chart-container" id="stochastics-chart"></div>
+<p class="text-sm text-gray-500 mt-2">上：日経平均株価、下：ストキャスティクス（青線：%K、赤線：%D）</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-3">使い方</h4>
+<ul class="list-disc pl-5 space-y-2 text-gray-700">
+<li>%Kが%Dを上抜けると買いシグナル</li>
+<li>%Kが%Dを下抜けると売りシグナル</li>
+<li>80以上で買われ過ぎ、20以下で売られ過ぎと判断</li>
+<li>買われ過ぎ・売られ過ぎの領域からの反転が強いシグナルとなる</li>
+<li>ストキャスティクスと価格のダイバージェンスはトレンド転換の可能性を示唆</li>
+</ul>
+</div>
+<div class="bg-blue-50 rounded-lg p-4">
+<h4 class="font-medium mb-3 text-blue-800">実践的なトレード戦略</h4>
+<p class="text-gray-700 mb-3">ストキャスティクスを活用した戦略例：</p>
+<ol class="list-decimal pl-5 space-y-2 text-gray-700">
+<li>スローストキャスティクス（%Dをさらに3日間移動平均したもの）を用いたノイズ軽減</li>
+<li>トレンド相場では、ストキャスティクスが20-50の範囲で推移する上昇トレンド、50-80の範囲で推移する下降トレンドに注目</li>
+<li>複数時間軸のストキャスティクスを組み合わせた分析（日足が買われ過ぎでも週足が上昇中なら上昇継続の可能性）</li>
+<li>ストキャスティクスとRSIの組み合わせによる確認（両方が買われ過ぎ/売られ過ぎを示した場合の反転狙い）</li>
+</ol>
+</div>
+</div>
+</section>
+<!-- ボラティリティ系指標 -->
+<section id="volatility-indicators" class="mb-12">
+<h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200">ボラティリティ系指標</h2>
+<!-- ボリンジャーバンド -->
+<div id="bollinger-bands" class="card p-6 mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">ボリンジャーバンド（Bollinger Bands）</h3>
+<span class="difficulty-badge difficulty-intermediate">中級</span>
+</div>
+<p class="text-gray-700 mb-4">ボリンジャーバンドは、移動平均線を中心に、一定期間の標準偏差を上下にプロットした指標です。価格のボラティリティ（変動幅）を視覚化し、相場の過熱感や反転の可能性を判断するのに役立ちます。</p>
+<div class="bg-gray-50 rounded-lg p-4 mb-6">
+<h4 class="font-medium mb-2">計算方法</h4>
+<p class="text-sm text-gray-600 mb-2">中央線 = n期間の単純移動平均（通常20日）</p>
+<p class="text-sm text-gray-600 mb-2">上限バンド = 中央線 + (n期間の標準偏差 × k)（通常k=2）</p>
+<p class="text-sm text-gray-600 mb-2">下限バンド = 中央線 - (n期間の標準偏差 × k)（通常k=2）</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-4">チャート例</h4>
+<div class="chart-container" id="bollinger-bands-chart"></div>
+<p class="text-sm text-gray-500 mt-2">日経平均株価とボリンジャーバンド（20日、±2σ）</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-3">使い方</h4>
+<ul class="list-disc pl-5 space-y-2 text-gray-700">
+<li>価格が上限バンドに接触/突破すると買われ過ぎ、下限バンドに接触/突破すると売られ過ぎの可能性</li>
+<li>バンド幅の拡大はボラティリティの増加、縮小はボラティリティの減少を示す</li>
+<li>バンド幅が極端に縮小した後は、大きな値動きが発生する可能性が高い（スクイーズ）</li>
+<li>価格が中央線を上抜けると上昇トレンド、下抜けると下降トレンドの可能性</li>
+<li>W底（ダブルボトム）やM天井（ダブルトップ）のパターンに注目</li>
+</ul>
+</div>
+<div class="bg-blue-50 rounded-lg p-4">
+<h4 class="font-medium mb-3 text-blue-800">実践的なトレード戦略</h4>
+<p class="text-gray-700 mb-3">ボリンジャーバンドを活用した戦略例：</p>
+<ol class="list-decimal pl-5 space-y-2 text-gray-700">
+<li>バンドウォーク：強いトレンド相場では、価格が上限/下限バンドに沿って推移する傾向がある</li>
+<li>バンドタッチ戦略：レンジ相場では、上限バンドタッチで売り、下限バンドタッチで買いを検討</li>
+<li>ボリンジャーバウンス：下限バンドを下抜けた後に再び上抜けたタイミングで買い</li>
+<li>スクイーズブレイクアウト：バンド幅が極端に縮小した後のブレイクアウト方向に追随</li>
+<li>%b指標の活用：価格のバンド内での相対的位置を0〜1で表した指標を併用</li>
+</ol>
+</div>
+</div>
+<!-- ATR -->
+<div id="atr" class="card p-6 mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">ATR（Average True Range：平均真実範囲）</h3>
+<span class="difficulty-badge difficulty-advanced">上級</span>
+</div>
+<p class="text-gray-700 mb-4">ATRは、一定期間の価格変動幅（真の値幅）の平均値を示す指標です。相場のボラティリティを数値化し、リスク管理やポジションサイジングに役立ちます。</p>
+<div class="bg-gray-50 rounded-lg p-4 mb-6">
+<h4 class="font-medium mb-2">計算方法</h4>
+<p class="text-sm text-gray-600 mb-2">真の値幅（TR）= 以下の3つの値のうち最大値</p>
+<ul class="text-sm text-gray-600 list-disc pl-5 mb-2">
+<li>当日の高値 - 当日の安値</li>
+<li>|当日の高値 - 前日の終値|</li>
+<li>|当日の安値 - 前日の終値|</li>
+</ul>
+<p class="text-sm text-gray-600 mb-2">ATR = n日間のTRの指数移動平均（通常14日）</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-4">チャート例</h4>
+<div class="chart-container" id="atr-chart"></div>
+<p class="text-sm text-gray-500 mt-2">上：日経平均株価、下：ATR（14日間）</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-3">使い方</h4>
+<ul class="list-disc pl-5 space-y-2 text-gray-700">
+<li>ATRの上昇はボラティリティの増加、下降はボラティリティの減少を示す</li>
+<li>ATRの急上昇は、相場の転換点や重要なイベントの発生を示唆することがある</li>
+<li>ATRを利用して、損切りレベルやリスク許容度に応じたポジションサイズを決定</li>
+<li>ATRの倍数を使用した利確・損切り設定（例：エントリー価格から2ATR分の価格変動で損切り）</li>
+</ul>
+</div>
+<div class="bg-blue-50 rounded-lg p-4">
+<h4 class="font-medium mb-3 text-blue-800">実践的なトレード戦略</h4>
+<p class="text-gray-700 mb-3">ATRを活用した戦略例：</p>
+<ol class="list-decimal pl-5 space-y-2 text-gray-700">
+<li>チャンドラーのATRストップ：トレンドフォロー戦略で、トレイリングストップをATRの倍数で設定</li>
+<li>ボラティリティブレイクアウト：ATRの低下後の上昇をブレイクアウトのシグナルとして利用</li>
+<li>リスク調整型ポジションサイジング：許容リスク額 ÷ (ATR × 価格単位) でポジションサイズを決定</li>
+<li>ATRチャネル：現在の価格から上下にATRの倍数を加減したチャネルを形成し、サポート/レジスタンスとして活用</li>
+</ol>
+</div>
+</div>
+</section>
+<!-- 出来高系指標 -->
+<section id="volume-indicators" class="mb-12">
+<h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200">出来高系指標</h2>
+<!-- OBV -->
+<div id="obv" class="card p-6 mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">OBV（On-Balance Volume：オンバランスボリューム）</h3>
+<span class="difficulty-badge difficulty-intermediate">中級</span>
+</div>
+<p class="text-gray-700 mb-4">OBVは、価格の上昇日には出来高を加算し、下落日には出来高を減算する累積指標です。価格の動きに先行して出来高が変化することがあるため、トレンドの転換点を予測するのに役立ちます。</p>
+<div class="bg-gray-50 rounded-lg p-4 mb-6">
+<h4 class="font-medium mb-2">計算方法</h4>
+<p class="text-sm text-gray-600 mb-2">価格が上昇した場合：OBV = 前日のOBV + 当日の出来高</p>
+<p class="text-sm text-gray-600 mb-2">価格が下落した場合：OBV = 前日のOBV - 当日の出来高</p>
+<p class="text-sm text-gray-600 mb-2">価格が変わらない場合：OBV = 前日のOBV</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-4">チャート例</h4>
+<div class="chart-container" id="obv-chart"></div>
+<p class="text-sm text-gray-500 mt-2">上：日経平均株価、下：OBV</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-3">使い方</h4>
+<ul class="list-disc pl-5 space-y-2 text-gray-700">
+<li>OBVが上昇トレンドにあれば、価格の上昇トレンドが確認される</li>
+<li>OBVが下降トレンドにあれば、価格の下降トレンドが確認される</li>
+<li>OBVと価格のダイバージェンスはトレンド転換の可能性を示唆</li>
+<li>OBVのトレンドラインブレイクは、価格の動きに先行することがある</li>
+</ul>
+</div>
+<div class="bg-blue-50 rounded-lg p-4">
+<h4 class="font-medium mb-3 text-blue-800">実践的なトレード戦略</h4>
+<p class="text-gray-700 mb-3">OBVを活用した戦略例：</p>
+<ol class="list-decimal pl-5 space-y-2 text-gray-700">
+<li>OBVのトレンドライン分析：OBVのトレンドラインブレイクを価格の転換点として利用</li>
+<li>OBVの移動平均線との関係：OBVが自身の移動平均線を上抜け/下抜けした際にシグナルとして利用</li>
+<li>ポジティブダイバージェンス：価格が下落しているのにOBVが上昇している場合は買いシグナル</li>
+<li>ネガティブダイバージェンス：価格が上昇しているのにOBVが下落している場合は売りシグナル</li>
+</ol>
+</div>
+</div>
+<!-- 出来高加重移動平均 -->
+<div id="vwap" class="card p-6 mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">VWAP（Volume Weighted Average Price：出来高加重平均価格）</h3>
+<span class="difficulty-badge difficulty-advanced">上級</span>
+</div>
+<p class="text-gray-700 mb-4">VWAPは、各価格帯での取引量を考慮した加重平均価格を示す指標です。主に機関投資家が取引コストを評価するために使用しますが、個人投資家もサポート/レジスタンスレベルやトレンドの方向性を判断するのに活用できます。</p>
+<div class="bg-gray-50 rounded-lg p-4 mb-6">
+<h4 class="font-medium mb-2">計算方法</h4>
+<p class="text-sm text-gray-600 mb-2">VWAP = Σ(価格 × 出来高) ÷ Σ(出来高)</p>
+<p class="text-sm text-gray-600 mb-2">通常、1日の取引時間内で計算され、翌日にリセットされる</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-4">チャート例</h4>
+<div class="chart-container" id="vwap-chart"></div>
+<p class="text-sm text-gray-500 mt-2">日経平均株価とVWAP</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-3">使い方</h4>
+<ul class="list-disc pl-5 space-y-2 text-gray-700">
+<li>価格がVWAPを上回っていれば買い圧力が強く、下回っていれば売り圧力が強いと判断</li>
+<li>VWAPはサポート/レジスタンスとして機能することが多い</li>
+<li>価格がVWAPから大きく乖離した場合、平均回帰の可能性を考慮</li>
+<li>機関投資家は通常、VWAPより有利な価格での取引を目指すため、VWAPを基準に売買判断を行うことがある</li>
+</ul>
+</div>
+<div class="bg-blue-50 rounded-lg p-4">
+<h4 class="font-medium mb-3 text-blue-800">実践的なトレード戦略</h4>
+<p class="text-gray-700 mb-3">VWAPを活用した戦略例：</p>
+<ol class="list-decimal pl-5 space-y-2 text-gray-700">
+<li>VWAP反発戦略：価格がVWAPに接触して反発した際にトレンド方向へのエントリー</li>
+<li>VWAPクロス戦略：価格がVWAPを上抜け/下抜けした際にブレイクアウト方向へのエントリー</li>
+<li>VWAP乖離戦略：価格がVWAPから大きく乖離した際に、平均回帰を狙った逆張りエントリー</li>
+<li>複数時間枠VWAP：日中の短期VWAPと複数日のVWAPを組み合わせた分析</li>
+</ol>
+</div>
+</div>
+</section>
+<!-- オシレーター系指標 -->
+<section id="oscillator-indicators" class="mb-12">
+<h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200">オシレーター系指標</h2>
+<!-- CCI -->
+<div id="cci" class="card p-6 mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">CCI（Commodity Channel Index：商品チャネル指数）</h3>
+<span class="difficulty-badge difficulty-advanced">上級</span>
+</div>
+<p class="text-gray-700 mb-4">CCIは、価格が平均価格からどれだけ乖離しているかを測定する指標です。相場の過熱感や買われ過ぎ・売られ過ぎの状態を判断するのに役立ちます。</p>
+<div class="bg-gray-50 rounded-lg p-4 mb-6">
+<h4 class="font-medium mb-2">計算方法</h4>
+<p class="text-sm text-gray-600 mb-2">CCI = (TP - SMA of TP) / (0.015 × MD)</p>
+<p class="text-sm text-gray-600 mb-2">TP（典型的価格）= (高値 + 安値 + 終値) / 3</p>
+<p class="text-sm text-gray-600 mb-2">SMA of TP = TPのn期間単純移動平均（通常20日）</p>
+<p class="text-sm text-gray-600 mb-2">MD = TPとSMA of TPの絶対偏差の平均</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-4">チャート例</h4>
+<div class="chart-container" id="cci-chart"></div>
+<p class="text-sm text-gray-500 mt-2">上：日経平均株価、下：CCI（20日間）</p>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-3">使い方</h4>
+<ul class="list-disc pl-5 space-y-2 text-gray-700">
+<li>CCIが+100を上回ると買われ過ぎ、-100を下回ると売られ過ぎと判断</li>
+<li>CCIがゼロラインを上抜けると上昇トレンド、下抜けると下降トレンドの可能性</li>
+<li>CCIの極端な値（+200以上/-200以下）は、強いトレンドや反転の可能性を示唆</li>
+<li>CCIと価格のダイバージェンスはトレンド転換のサインとなる</li>
+</ul>
+</div>
+<div class="bg-blue-50 rounded-lg p-4">
+<h4 class="font-medium mb-3 text-blue-800">実践的なトレード戦略</h4>
+<p class="text-gray-700 mb-3">CCIを活用した戦略例：</p>
+<ol class="list-decimal pl-5 space-y-2 text-gray-700">
+<li>CCIゼロラインクロス戦略：CCIがゼロラインを上抜け/下抜けした際にトレンド方向へのエントリー</li>
+<li>CCI反転戦略：CCIが+100/-100を超えた後に反転した際に、反転方向へのエントリー</li>
+<li>CCIダイバージェンス戦略：CCIと価格のダイバージェンスを検出し、トレンド転換を狙う</li>
+<li>CCIトレンド継続戦略：強いトレンド相場では、CCIが+100/-100を超えた状態が継続することを利用</li>
+</ol>
+</div>
+</div>
+</section>
+<!-- 複合戦略 -->
+<section id="combination-strategies" class="mb-12">
+<h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200">複合戦略</h2>
+<div class="card p-6 mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold">複数指標を組み合わせた効果的な分析手法</h3>
+<span class="difficulty-badge difficulty-advanced">上級</span>
+</div>
+<p class="text-gray-700 mb-4">単一の指標だけでなく、複数の指標を組み合わせることで、より信頼性の高いシグナルを得ることができます。ここでは、効果的な指標の組み合わせと、その活用方法を紹介します。</p>
+<div class="mb-6">
+<h4 class="font-medium mb-3">トレンド確認と売買タイミングの組み合わせ</h4>
+<div class="bg-gray-50 rounded-lg p-4 mb-4">
+<h5 class="font-medium text-sm mb-2">移動平均線 + RSI</h5>
+<ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
+<li>移動平均線でトレンドの方向性を確認</li>
+<li>RSIで売買のタイミングを判断</li>
+<li>例：上昇トレンド（価格が移動平均線の上）でRSIが30を下回った後に上昇に転じたタイミングで買い</li>
+</ul>
+</div>
+<div class="bg-gray-50 rounded-lg p-4 mb-4">
+<h5 class="font-medium text-sm mb-2">MACD + ボリンジャーバンド</h5>
+<ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
+<li>MACDでトレンドの方向性と強さを確認</li>
+<li>ボリンジャーバンドで価格の変動範囲とブレイクアウトを判断</li>
+<li>例：MACD線がシグナル線を上抜け、かつ価格がボリンジャーバンドの上限を突破した場合は強い買いシグナル</li>
+</ul>
+</div>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-3">複数時間枠分析</h4>
+<p class="text-gray-700 mb-3">異なる時間枠のチャートを組み合わせることで、より包括的な相場観を得ることができます。</p>
+<div class="bg-gray-50 rounded-lg p-4">
+<h5 class="font-medium text-sm mb-2">トップダウンアプローチ</h5>
+<ol class="list-decimal pl-5 space-y-1 text-sm text-gray-700">
+<li>長期チャート（週足/日足）でトレンドの方向性を確認</li>
+<li>中期チャート（日足/4時間足）でトレンド内の調整や反発を確認</li>
+<li>短期チャート（1時間足/15分足）でエントリーポイントを特定</li>
+<li>例：週足で上昇トレンド、日足で調整後の反発、1時間足でサポートからの上昇確認でエントリー</li>
+</ol>
+</div>
+</div>
+<div class="mb-6">
+<h4 class="font-medium mb-3">高確率パターンの組み合わせ</h4>
+<div class="bg-gray-50 rounded-lg p-4 mb-4">
+<h5 class="font-medium text-sm mb-2">トリプルクロス戦略</h5>
+<ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
+<li>移動平均線のゴールデンクロス/デッドクロス</li>
+<li>MACDのシグナルクロス</li>
+<li>RSIのオーバーソールド/オーバーボート圏からの反転</li>
+<li>上記3つのシグナルが同時期に発生した場合、高確率のエントリーポイントとなる</li>
+</ul>
+</div>
+<div class="bg-gray-50 rounded-lg p-4">
+<h5 class="font-medium text-sm mb-2">ダイバージェンス確認戦略</h5>
+<ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
+<li>複数のオシレーター系指標（RSI、MACD、ストキャスティクス）でダイバージェンスを確認</li>
+<li>複数の指標で同時にダイバージェンスが発生した場合、トレンド転換の可能性が高い</li>
+<li>例：価格が高値更新しているのに、RSI、MACD、ストキャスティクスのすべてが高値を更新していない場合は強い売りシグナル</li>
+</ul>
+</div>
+</div>
+<div class="bg-blue-50 rounded-lg p-4">
+<h4 class="font-medium mb-3 text-blue-800">実践的なアドバイス</h4>
+<ol class="list-decimal pl-5 space-y-2 text-gray-700">
+<li>指標の組み合わせは多すぎると判断が複雑になるため、2〜3種類に絞ることをおすすめします</li>
+<li>異なる種類の指標（トレンド系 + オシレーター系など）を組み合わせると、より多角的な分析が可能です</li>
+<li>バックテストを行い、自分のトレードスタイルに合った指標の組み合わせを見つけることが重要です</li>
+<li>市場環境（トレンド相場/レンジ相場）によって、有効な指標の組み合わせは異なります</li>
+<li>テクニカル指標だけでなく、価格のパターンやサポート/レジスタンスレベルなども考慮した総合的な判断を心がけましょう</li>
+</ol>
+</div>
+</div>
+</section>
+<!-- よくある質問 -->
+<section id="faq" class="mb-12">
+<h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200">よくある質問</h2>
+<div class="card p-6">
+<div class="space-y-4">
+<div class="faq-item active">
+<div class="faq-question flex justify-between items-center py-3">
+<h4 class="font-medium">テクニカル指標は本当に有効なのですか？</h4>
+<i class="ri-arrow-down-s-line faq-toggle"></i>
+</div>
+<div class="faq-answer px-1 pb-3">
+<p class="text-gray-700">テクニカル指標は、市場参加者の行動パターンを数値化・可視化したものであり、多くのトレーダーが同じ指標を見ていることから、ある程度の有効性があります。ただし、完璧な予測ツールではなく、確率的な優位性を得るための道具として考えるべきです。単一の指標だけに頼るのではなく、複数の指標や分析手法を組み合わせ、リスク管理と合わせて活用することが重要です。</p>
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question flex justify-between items-center py-3">
+<h4 class="font-medium">初心者はどの指標から学び始めるべきですか？</h4>
+<i class="ri-arrow-down-s-line faq-toggle"></i>
+</div>
+<div class="faq-answer px-1 pb-3">
+<p class="text-gray-700">初心者には、まず移動平均線、RSI、MACDなどの基本的な指標から学び始めることをおすすめします。これらの指標は理解しやすく、多くのチャートソフトに標準で搭載されています。特に移動平均線はトレンドの方向性を視覚的に捉えやすく、RSIは買われ過ぎ・売られ過ぎの状態を判断するのに役立ちます。基本的な指標の理解が深まったら、徐々に他の指標や組み合わせ方を学んでいくとよいでしょう。</p>
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question flex justify-between items-center py-3">
+<h4 class="font-medium">指標のパラメーター（期間設定）はどのように決めるべきですか？</h4>
+<i class="ri-arrow-down-s-line faq-toggle"></i>
+</div>
+<div class="faq-answer px-1 pb-3">
+<p class="text-gray-700">指標のパラメーターは、トレードの時間軸や銘柄の特性によって調整するとよいでしょう。一般的には、短期トレードでは短い期間設定（RSIなら9日など）、長期トレードでは長い期間設定（RSIなら14日や21日など）が使われます。また、ボラティリティの高い銘柄では長めの期間設定、ボラティリティの低い銘柄では短めの期間設定が効果的なことがあります。最終的には、バックテストや実践を通じて、自分のトレードスタイルに合ったパラメーターを見つけることが重要です。</p>
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question flex justify-between items-center py-3">
+<h4 class="font-medium">テクニカル指標だけでトレードすべきですか？</h4>
+<i class="ri-arrow-down-s-line faq-toggle"></i>
+</div>
+<div class="faq-answer px-1 pb-3">
+<p class="text-gray-700">テクニカル指標は有用なツールですが、それだけに頼るのではなく、ファンダメンタル分析（企業の業績、経済指標など）やマーケットセンチメント（市場心理）、需給要因なども考慮した総合的な判断が重要です。特に長期投資では、ファンダメンタルズの重要性が高まります。また、相場環境（トレンド相場かレンジ相場か）によって有効な指標や分析手法が異なるため、柔軟な対応が求められます。テクニカル指標はあくまでも意思決定をサポートするツールの一つとして位置づけるとよいでしょう。</p>
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question flex justify-between items-center py-3">
+<h4 class="font-medium">指標が矛盾するシグナルを出した場合はどうすべきですか？</h4>
+<i class="ri-arrow-down-s-line faq-toggle"></i>
+</div>
+<div class="faq-answer px-1 pb-3">
+<p class="text-gray-700">指標が矛盾するシグナルを出した場合は、以下のアプローチを検討してください：</p>
+<ol class="list-decimal pl-5 space-y-1 text-gray-700 mt-2">
+<li>優先順位を設ける（例：トレンド系指標を主、オシレーター系指標を従とする）</li>
+<li>時間軸の長い指標を優先する（例：日足のシグナルを1時間足のシグナルより重視）</li>
+<li>シグナルの強さを比較する（例：強いダイバージェンスは弱いクロスオーバーより重視）</li>
+<li>ポジションサイズを調整する（矛盾があればリスクを減らす）</li>
+<li>様子見の姿勢をとり、より明確なシグナルが出るまで待つ</li>
+</ol>
+<p class="text-gray-700 mt-2">矛盾するシグナルは、相場の不確実性が高まっていることを示している可能性があります。そのような状況では、無理にエントリーせず、リスク管理を徹底することが重要です。</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<footer class="bg-gray-50 border-t border-gray-200 mt-12">
+<div class="container mx-auto px-4 py-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div>
+<h4 class="text-lg font-semibold mb-4">Market Insight Japan</h4>
+<p class="text-sm text-gray-600 mb-4">日本の短期株式トレーダー向けに、信頼性の高い市場分析を毎日2回配信するプロフェッショナルサービス</p>
+<div class="flex space-x-4">
+<a href="#" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary">
+<i class="ri-twitter-x-line"></i>
+</a>
+<a href="#" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary">
+<i class="ri-telegram-line"></i>
+</a>
+<a href="#" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary">
+<i class="ri-mail-line"></i>
+</a>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4">コンテンツ</h4>
+<ul class="space-y-2">
+<li><a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/c2b76512-1852-46a7-bc7a-8fe9c424200f" data-readdy="true" class="text-sm text-gray-600 hover:text-primary">本日の市況分析</a></li>
+<li><a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/c217e7e5-db6d-49b5-a8b1-645e129c3123" data-readdy="true" class="text-sm text-gray-600 hover:text-primary">分析アーカイブ</a></li>
+<li><a href="#" class="text-sm text-primary font-medium">テクニカル指標解説</a></li>
+<li><a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/efea5557-6fb7-411d-a82b-c30ce21fbc81" data-readdy="true" class="text-sm text-gray-600 hover:text-primary">市場用語集</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4">サイト情報</h4>
+<ul class="space-y-2">
+<li><a href="#" class="text-sm text-gray-600 hover:text-primary">サイトについて</a></li>
+<li><a href="#" class="text-sm text-gray-600 hover:text-primary">分析手法</a></li>
+<li><a href="#" class="text-sm text-gray-600 hover:text-primary">利用規約</a></li>
+<li><a href="#" class="text-sm text-gray-600 hover:text-primary">プライバシーポリシー</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4">お問い合わせ</h4>
+<p class="text-sm text-gray-600 mb-4">ご質問やフィードバックがございましたら、お気軽にお問い合わせください。</p>
+<a href="#" class="inline-block bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap">お問い合わせ</a>
+</div>
+</div>
+<div class="border-t border-gray-200 mt-8 pt-8 text-center">
+<p class="text-sm text-gray-600">© 2025 Market Insight Japan. All rights reserved.</p>
+<p class="text-xs text-gray-500 mt-2">当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。投資の最終判断はご自身でお願いします。</p>
+</div>
+</div>
+</footer>
+<script id="difficulty-filter">
+document.addEventListener('DOMContentLoaded', function() {
+const beginnerCheckbox = document.getElementById('beginner');
+const intermediateCheckbox = document.getElementById('intermediate');
+const advancedCheckbox = document.getElementById('advanced');
+const indicatorCards = document.querySelectorAll('.card');
+function updateVisibility() {
+const showBeginner = beginnerCheckbox.checked;
+const showIntermediate = intermediateCheckbox.checked;
+const showAdvanced = advancedCheckbox.checked;
+indicatorCards.forEach(card => {
+const badge = card.querySelector('.difficulty-badge');
+if (!badge) return;
+if ((badge.classList.contains('difficulty-beginner') && showBeginner) ||
+(badge.classList.contains('difficulty-intermediate') && showIntermediate) ||
+(badge.classList.contains('difficulty-advanced') && showAdvanced)) {
+card.style.display = 'block';
+} else {
+card.style.display = 'none';
+}
+});
+}
+beginnerCheckbox.addEventListener('change', updateVisibility);
+intermediateCheckbox.addEventListener('change', updateVisibility);
+advancedCheckbox.addEventListener('change', updateVisibility);
+});
+</script>
+<script id="toc-navigation">
+document.addEventListener('DOMContentLoaded', function() {
+const tocItems = document.querySelectorAll('.indicator-toc-item');
+tocItems.forEach(item => {
+item.addEventListener('click', function(e) {
+e.preventDefault();
+// Remove active class from all items
+tocItems.forEach(i => i.classList.remove('active'));
+// Add active class to clicked item
+this.classList.add('active');
+// Scroll to target section
+const targetId = this.getAttribute('href').substring(1);
+const targetSection = document.getElementById(targetId);
+if (targetSection) {
+window.scrollTo({
+top: targetSection.offsetTop - 20,
+behavior: 'smooth'
+});
+}
+});
+});
+// Update active TOC item on scroll
+window.addEventListener('scroll', function() {
+const scrollPosition = window.scrollY;
+// Get all sections
+const sections = document.querySelectorAll('section[id]');
+// Find the current section
+let currentSection = '';
+sections.forEach(section => {
+if (scrollPosition >= section.offsetTop - 100) {
+currentSection = section.getAttribute('id');
+}
+});
+// Update active class
+if (currentSection) {
+tocItems.forEach(item => {
+item.classList.remove('active');
+if (item.getAttribute('href') === `#${currentSection}`) {
+item.classList.add('active');
+}
+});
+}
+});
+});
+</script>
+<script id="faq-handler">
+document.addEventListener('DOMContentLoaded', function() {
+const faqItems = document.querySelectorAll('.faq-item');
+faqItems.forEach(item => {
+const question = item.querySelector('.faq-question');
+question.addEventListener('click', function() {
+// Toggle active class on clicked item
+item.classList.toggle('active');
+// Optional: Close other items
+faqItems.forEach(otherItem => {
+if (otherItem !== item) {
+otherItem.classList.remove('active');
+}
+});
+});
+});
+});
+</script>
+<script id="charts-renderer">
+document.addEventListener('DOMContentLoaded', function() {
+// Moving Average Chart
+const maChart = echarts.init(document.getElementById('moving-average-chart'));
+const maOption = {
+animation: false,
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+borderColor: '#E5E7EB',
+textStyle: {
+color: '#1f2937'
+}
+},
+legend: {
+data: ['日経平均', '20日SMA', '50日SMA', '200日SMA'],
+bottom: 0
+},
+grid: {
+left: 0,
+right: 0,
+top: 10,
+bottom: 30,
+containLabel: true
+},
+xAxis: {
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+}
+},
+yAxis: {
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+}
+},
+series: [
+{
+name: '日経平均',
+type: 'line',
+data: [36500, 36800, 37200, 37800, 38200, 38600, 38400, 38100, 37900, 38300, 38700, 39100],
+lineStyle: {
+width: 2,
+color: 'rgba(87, 181, 231, 1)'
+},
+symbol: 'none',
+smooth: true
+},
+{
+name: '20日SMA',
+type: 'line',
+data: [36400, 36600, 37000, 37500, 38000, 38400, 38500, 38300, 38000, 38100, 38400, 38800],
+lineStyle: {
+width: 2,
+color: 'rgba(141, 211, 199, 1)'
+},
+symbol: 'none',
+smooth: true
+},
+{
+name: '50日SMA',
+type: 'line',
+data: [36200, 36300, 36600, 37000, 37400, 37800, 38100, 38300, 38300, 38200, 38200, 38400],
+lineStyle: {
+width: 2,
+color: 'rgba(251, 191, 114, 1)'
+},
+symbol: 'none',
+smooth: true
+},
+{
+name: '200日SMA',
+type: 'line',
+data: [35500, 35700, 35900, 36100, 36300, 36500, 36700, 36900, 37100, 37300, 37500, 37700],
+lineStyle: {
+width: 2,
+color: 'rgba(252, 141, 98, 1)'
+},
+symbol: 'none',
+smooth: true
+}
+]
+};
+maChart.setOption(maOption);
+// MACD Chart
+const macdChart = echarts.init(document.getElementById('macd-chart'));
+const macdOption = {
+animation: false,
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+borderColor: '#E5E7EB',
+textStyle: {
+color: '#1f2937'
+}
+},
+legend: {
+data: ['日経平均', 'MACD', 'シグナル'],
+bottom: 0
+},
+grid: [
+{
+left: 0,
+right: 0,
+top: 10,
+height: '60%',
+containLabel: true
+},
+{
+left: 0,
+right: 0,
+top: '70%',
+bottom: 30,
+containLabel: true
+}
+],
+xAxis: [
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 0
+},
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 1
+}
+],
+yAxis: [
+{
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 0
+},
+{
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 1
+}
+],
+series: [
+{
+name: '日経平均',
+type: 'line',
+data: [36500, 36800, 37200, 37800, 38200, 38600, 38400, 38100, 37900, 38300, 38700, 39100],
+lineStyle: {
+width: 2,
+color: 'rgba(87, 181, 231, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 0,
+yAxisIndex: 0
+},
+{
+name: 'MACD',
+type: 'line',
+data: [50, 100, 150, 200, 180, 120, 50, -20, -80, 30, 100, 150],
+lineStyle: {
+width: 2,
+color: 'rgba(87, 181, 231, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 1,
+yAxisIndex: 1
+},
+{
+name: 'シグナル',
+type: 'line',
+data: [30, 60, 120, 170, 190, 170, 120, 60, 0, -20, 40, 100],
+lineStyle: {
+width: 2,
+color: 'rgba(252, 141, 98, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 1,
+yAxisIndex: 1
+},
+{
+name: 'ヒストグラム',
+type: 'bar',
+data: [20, 40, 30, 30, -10, -50, -70, -80, -80, 50, 60, 50],
+itemStyle: {
+color: function(params) {
+return params.data >= 0 ? 'rgba(87, 181, 231, 0.6)' : 'rgba(252, 141, 98, 0.6)';
+}
+},
+barWidth: '60%',
+xAxisIndex: 1,
+yAxisIndex: 1
+}
+]
+};
+macdChart.setOption(macdOption);
+// RSI Chart
+const rsiChart = echarts.init(document.getElementById('rsi-chart'));
+const rsiOption = {
+animation: false,
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+borderColor: '#E5E7EB',
+textStyle: {
+color: '#1f2937'
+}
+},
+legend: {
+data: ['日経平均', 'RSI'],
+bottom: 0
+},
+grid: [
+{
+left: 0,
+right: 0,
+top: 10,
+height: '60%',
+containLabel: true
+},
+{
+left: 0,
+right: 0,
+top: '70%',
+bottom: 30,
+containLabel: true
+}
+],
+xAxis: [
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 0
+},
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 1
+}
+],
+yAxis: [
+{
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 0
+},
+{
+type: 'value',
+min: 0,
+max: 100,
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 1
+}
+],
+series: [
+{
+name: '日経平均',
+type: 'line',
+data: [36500, 36800, 37200, 37800, 38200, 38600, 38400, 38100, 37900, 38300, 38700, 39100],
+lineStyle: {
+width: 2,
+color: 'rgba(87, 181, 231, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 0,
+yAxisIndex: 0
+},
+{
+name: 'RSI',
+type: 'line',
+data: [45, 55, 65, 75, 80, 70, 60, 45, 35, 45, 60, 70],
+lineStyle: {
+width: 2,
+color: 'rgba(141, 211, 199, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 1,
+yAxisIndex: 1,
+markLine: {
+silent: true,
+lineStyle: {
+color: '#E5E7EB'
+},
+data: [
+{
+yAxis: 70,
+label: {
+formatter: '買われ過ぎ',
+position: 'end'
+}
+},
+{
+yAxis: 30,
+label: {
+formatter: '売られ過ぎ',
+position: 'end'
+}
+},
+{
+yAxis: 50,
+label: {
+formatter: '中立',
+position: 'end'
+}
+}
+]
+}
+}
+]
+};
+rsiChart.setOption(rsiOption);
+// Stochastics Chart
+const stochasticsChart = echarts.init(document.getElementById('stochastics-chart'));
+const stochasticsOption = {
+animation: false,
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+borderColor: '#E5E7EB',
+textStyle: {
+color: '#1f2937'
+}
+},
+legend: {
+data: ['日経平均', '%K', '%D'],
+bottom: 0
+},
+grid: [
+{
+left: 0,
+right: 0,
+top: 10,
+height: '60%',
+containLabel: true
+},
+{
+left: 0,
+right: 0,
+top: '70%',
+bottom: 30,
+containLabel: true
+}
+],
+xAxis: [
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 0
+},
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 1
+}
+],
+yAxis: [
+{
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 0
+},
+{
+type: 'value',
+min: 0,
+max: 100,
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 1
+}
+],
+series: [
+{
+name: '日経平均',
+type: 'line',
+data: [36500, 36800, 37200, 37800, 38200, 38600, 38400, 38100, 37900, 38300, 38700, 39100],
+lineStyle: {
+width: 2,
+color: 'rgba(87, 181, 231, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 0,
+yAxisIndex: 0
+},
+{
+name: '%K',
+type: 'line',
+data: [40, 55, 70, 85, 90, 75, 60, 40, 25, 35, 55, 75],
+lineStyle: {
+width: 2,
+color: 'rgba(87, 181, 231, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 1,
+yAxisIndex: 1
+},
+{
+name: '%D',
+type: 'line',
+data: [45, 50, 60, 75, 85, 80, 70, 55, 40, 30, 40, 60],
+lineStyle: {
+width: 2,
+color: 'rgba(252, 141, 98, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 1,
+yAxisIndex: 1
+}
+]
+};
+stochasticsChart.setOption(stochasticsOption);
+// Bollinger Bands Chart
+const bbChart = echarts.init(document.getElementById('bollinger-bands-chart'));
+const bbOption = {
+animation: false,
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+borderColor: '#E5E7EB',
+textStyle: {
+color: '#1f2937'
+}
+},
+legend: {
+data: ['日経平均', '上限バンド', '中央線', '下限バンド'],
+bottom: 0
+},
+grid: {
+left: 0,
+right: 0,
+top: 10,
+bottom: 30,
+containLabel: true
+},
+xAxis: {
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+}
+},
+yAxis: {
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+}
+},
+series: [
+{
+name: '日経平均',
+type: 'line',
+data: [36500, 36800, 37200, 37800, 38200, 38600, 38400, 38100, 37900, 38300, 38700, 39100],
+lineStyle: {
+width: 2,
+color: 'rgba(87, 181, 231, 1)'
+},
+symbol: 'none',
+smooth: true
+},
+{
+name: '上限バンド',
+type: 'line',
+data: [37000, 37400, 37800, 38500, 39000, 39400, 39200, 38800, 38500, 38900, 39400, 39800],
+lineStyle: {
+width: 2,
+color: 'rgba(251, 191, 114, 1)'
+},
+symbol: 'none',
+smooth: true
+},
+{
+name: '中央線',
+type: 'line',
+data: [36400, 36600, 37000, 37500, 38000, 38400, 38500, 38300, 38000, 38100, 38400, 38800],
+lineStyle: {
+width: 2,
+color: 'rgba(141, 211, 199, 1)'
+},
+symbol: 'none',
+smooth: true
+},
+{
+name: '下限バンド',
+type: 'line',
+data: [35800, 35800, 36200, 36500, 37000, 37400, 37800, 37800, 37500, 37300, 37400, 37800],
+lineStyle: {
+width: 2,
+color: 'rgba(251, 191, 114, 1)'
+},
+symbol: 'none',
+smooth: true
+}
+]
+};
+bbChart.setOption(bbOption);
+// ATR Chart
+const atrChart = echarts.init(document.getElementById('atr-chart'));
+const atrOption = {
+animation: false,
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+borderColor: '#E5E7EB',
+textStyle: {
+color: '#1f2937'
+}
+},
+legend: {
+data: ['日経平均', 'ATR'],
+bottom: 0
+},
+grid: [
+{
+left: 0,
+right: 0,
+top: 10,
+height: '60%',
+containLabel: true
+},
+{
+left: 0,
+right: 0,
+top: '70%',
+bottom: 30,
+containLabel: true
+}
+],
+xAxis: [
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 0
+},
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 1
+}
+],
+yAxis: [
+{
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 0
+},
+{
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 1
+}
+],
+series: [
+{
+name: '日経平均',
+type: 'line',
+data: [36500, 36800, 37200, 37800, 38200, 38600, 38400, 38100, 37900, 38300, 38700, 39100],
+lineStyle: {
+width: 2,
+color: 'rgba(87, 181, 231, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 0,
+yAxisIndex: 0
+},
+{
+name: 'ATR',
+type: 'line',
+data: [300, 320, 280, 350, 400, 450, 420, 380, 350, 320, 380, 420],
+lineStyle: {
+width: 2,
+color: 'rgba(252, 141, 98, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 1,
+yAxisIndex: 1,
+areaStyle: {
+color: {
+type: 'linear',
+x: 0,
+y: 0,
+x2: 0,
+y2: 1,
+colorStops: [{
+offset: 0,
+color: 'rgba(252, 141, 98, 0.2)'
+}, {
+offset: 1,
+color: 'rgba(252, 141, 98, 0.05)'
+}]
+}
+}
+}
+]
+};
+atrChart.setOption(atrOption);
+// OBV Chart
+const obvChart = echarts.init(document.getElementById('obv-chart'));
+const obvOption = {
+animation: false,
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+borderColor: '#E5E7EB',
+textStyle: {
+color: '#1f2937'
+}
+},
+legend: {
+data: ['日経平均', 'OBV'],
+bottom: 0
+},
+grid: [
+{
+left: 0,
+right: 0,
+top: 10,
+height: '60%',
+containLabel: true
+},
+{
+left: 0,
+right: 0,
+top: '70%',
+bottom: 30,
+containLabel: true
+}
+],
+xAxis: [
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 0
+},
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 1
+}
+],
+yAxis: [
+{
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 0
+},
+{
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 1
+}
+],
+series: [
+{
+name: '日経平均',
+type: 'line',
+data: [36500, 36800, 37200, 37800, 38200, 38600, 38400, 38100, 37900, 38300, 38700, 39100],
+lineStyle: {
+width: 2,
+color: 'rgba(87, 181, 231, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 0,
+yAxisIndex: 0
+},
+{
+name: 'OBV',
+type: 'line',
+data: [5000, 5500, 6000, 6800, 7500, 8200, 8000, 7800, 7600, 8000, 8500, 9000],
+lineStyle: {
+width: 2,
+color: 'rgba(141, 211, 199, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 1,
+yAxisIndex: 1,
+areaStyle: {
+color: {
+type: 'linear',
+x: 0,
+y: 0,
+x2: 0,
+y2: 1,
+colorStops: [{
+offset: 0,
+color: 'rgba(141, 211, 199, 0.2)'
+}, {
+offset: 1,
+color: 'rgba(141, 211, 199, 0.05)'
+}]
+}
+}
+}
+]
+};
+obvChart.setOption(obvOption);
+// VWAP Chart
+const vwapChart = echarts.init(document.getElementById('vwap-chart'));
+const vwapOption = {
+animation: false,
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+borderColor: '#E5E7EB',
+textStyle: {
+color: '#1f2937'
+}
+},
+legend: {
+data: ['日経平均', 'VWAP'],
+bottom: 0
+},
+grid: {
+left: 0,
+right: 0,
+top: 10,
+bottom: 30,
+containLabel: true
+},
+xAxis: {
+type: 'category',
+data: ['9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+}
+},
+yAxis: {
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+}
+},
+series: [
+{
+name: '日経平均',
+type: 'line',
+data: [38200, 38300, 38400, 38350, 38250, 38300, 38400],
+lineStyle: {
+width: 2,
+color: 'rgba(87, 181, 231, 1)'
+},
+symbol: 'none',
+smooth: true
+},
+{
+name: 'VWAP',
+type: 'line',
+data: [38200, 38250, 38300, 38320, 38300, 38290, 38310],
+lineStyle: {
+width: 2,
+color: 'rgba(251, 191, 114, 1)'
+},
+symbol: 'none',
+smooth: true
+}
+]
+};
+vwapChart.setOption(vwapOption);
+// CCI Chart
+const cciChart = echarts.init(document.getElementById('cci-chart'));
+const cciOption = {
+animation: false,
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+borderColor: '#E5E7EB',
+textStyle: {
+color: '#1f2937'
+}
+},
+legend: {
+data: ['日経平均', 'CCI'],
+bottom: 0
+},
+grid: [
+{
+left: 0,
+right: 0,
+top: 10,
+height: '60%',
+containLabel: true
+},
+{
+left: 0,
+right: 0,
+top: '70%',
+bottom: 30,
+containLabel: true
+}
+],
+xAxis: [
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 0
+},
+{
+type: 'category',
+data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+gridIndex: 1
+}
+],
+yAxis: [
+{
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 0
+},
+{
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#E5E7EB'
+}
+},
+axisLabel: {
+color: '#1f2937'
+},
+splitLine: {
+lineStyle: {
+color: '#F3F4F6'
+}
+},
+gridIndex: 1
+}
+],
+series: [
+{
+name: '日経平均',
+type: 'line',
+data: [36500, 36800, 37200, 37800, 38200, 38600, 38400, 38100, 37900, 38300, 38700, 39100],
+lineStyle: {
+width: 2,
+color: 'rgba(87, 181, 231, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 0,
+yAxisIndex: 0
+},
+{
+name: 'CCI',
+type: 'line',
+data: [-50, 0, 80, 150, 200, 120, 50, -30, -100, -50, 50, 150],
+lineStyle: {
+width: 2,
+color: 'rgba(252, 141, 98, 1)'
+},
+symbol: 'none',
+smooth: true,
+xAxisIndex: 1,
+yAxisIndex: 1,
+markLine: {
+silent: true,
+lineStyle: {
+color: '#E5E7EB'
+},
+data: [
+{
+yAxis: 100,
+label: {
+formatter: '買われ過ぎ',
+position: 'end'
+}
+},
+{
+yAxis: -100,
+label: {
+formatter: '売られ過ぎ',
+position: 'end'
+}
+},
+{
+yAxis: 0,
+label: {
+formatter: '中立',
+position: 'end'
+}
+}
+]
+}
+}
+]
+};
+cciChart.setOption(cciOption);
+// Window resize handler
+window.addEventListener('resize', function() {
+maChart.resize();
+macdChart.resize();
+rsiChart.resize();
+stochasticsChart.resize();
+bbChart.resize();
+atrChart.resize();
+obvChart.resize();
+vwapChart.resize();
+cciChart.resize();
+});
+});
+</script>
+<script id="search-handler">
+document.addEventListener('DOMContentLoaded', function() {
+const searchInput = document.querySelector('input[placeholder="指標名で検索"]');
+const indicatorCards = document.querySelectorAll('.card');
+searchInput.addEventListener('input', function() {
+const searchTerm = this.value.toLowerCase().trim();
+indicatorCards.forEach(card => {
+const cardTitle = card.querySelector('h3').textContent.toLowerCase();
+if (searchTerm === '' || cardTitle.includes(searchTerm)) {
+card.style.display = 'block';
+} else {
+card.style.display = 'none';
+}
+});
+});
+});
+</script>
+</body>
+</html>
