@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プライバシーポリシー | YOHOU Nikkei AI</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#2563EB',secondary:'#DC2626'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  color: #1F2937;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+.custom-checkbox {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #D1D5DB;
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+}
+.custom-checkbox:checked {
+  background-color: #2563EB;
+  border-color: #2563EB;
+}
+.custom-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.custom-radio {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #D1D5DB;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+}
+.custom-radio:checked {
+  border-color: #2563EB;
+}
+.custom-radio:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #2563EB;
+}
+.custom-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+.custom-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #D1D5DB;
+  transition: .4s;
+  border-radius: 24px;
+}
+.switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .switch-slider {
+  background-color: #2563EB;
+}
+input:checked + .switch-slider:before {
+  transform: translateX(24px);
+}
+.custom-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 5px;
+  background: #D1D5DB;
+  outline: none;
+}
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2563EB;
+  cursor: pointer;
+}
+.custom-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2563EB;
+  cursor: pointer;
+  border: none;
+}
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.table-of-contents {
+  position: sticky;
+  top: 2rem;
+}
+.toc-link.active {
+  color: #2563EB;
+  font-weight: 500;
+}
+</style>
+</head>
+<body class="bg-white min-h-screen">
+<header class="bg-[#1A1F2E] text-white py-6">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold mb-1">YOHOU Nikkei AI</h1>
+        <p class="text-sm text-gray-400">AI駆動型の日経平均株価分析プラットフォーム</p>
+      </div>
+      <div class="flex items-center space-x-2 text-sm bg-[#2A2F3E] px-3 py-2 rounded">
+        <i class="ri-time-line"></i>
+        <span>最終更新</span>
+        <span>2025年7月6日</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/c6d5095f-f561-48f4-96bb-f75de45cef8c" data-readdy="true" class="inline-flex items-center text-gray-600 hover:text-primary transition">
+      <i class="ri-arrow-left-line mr-2"></i>
+      <span>戻る</span>
+    </a>
+  </div>
+
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-2">プライバシーポリシー</h1>
+    <p class="text-gray-600">YOHOU Nikkei AIが収集・利用するユーザー情報と、その保護に関する方針について説明します。</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <!-- 目次 (サイドバー) -->
+    <div class="lg:col-span-1">
+      <div class="bg-white rounded-lg p-5 shadow-sm border border-gray-100 table-of-contents">
+        <h2 class="text-lg font-semibold mb-4">目次</h2>
+        <ul class="space-y-3 text-sm">
+          <li>
+            <a href="#introduction" class="toc-link text-gray-700 hover:text-primary transition flex items-center">
+              <div class="w-5 h-5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-arrow-right-s-line"></i>
+              </div>
+              はじめに
+            </a>
+          </li>
+          <li>
+            <a href="#collection" class="toc-link text-gray-700 hover:text-primary transition flex items-center">
+              <div class="w-5 h-5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-arrow-right-s-line"></i>
+              </div>
+              個人情報の収集・利用
+            </a>
+          </li>
+          <li>
+            <a href="#management" class="toc-link text-gray-700 hover:text-primary transition flex items-center">
+              <div class="w-5 h-5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-arrow-right-s-line"></i>
+              </div>
+              個人情報の管理
+            </a>
+          </li>
+          <li>
+            <a href="#thirdparty" class="toc-link text-gray-700 hover:text-primary transition flex items-center">
+              <div class="w-5 h-5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-arrow-right-s-line"></i>
+              </div>
+              第三者提供
+            </a>
+          </li>
+          <li>
+            <a href="#cookies" class="toc-link text-gray-700 hover:text-primary transition flex items-center">
+              <div class="w-5 h-5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-arrow-right-s-line"></i>
+              </div>
+              Cookie使用方針
+            </a>
+          </li>
+          <li>
+            <a href="#rights" class="toc-link text-gray-700 hover:text-primary transition flex items-center">
+              <div class="w-5 h-5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-arrow-right-s-line"></i>
+              </div>
+              ユーザーの権利
+            </a>
+          </li>
+          <li>
+            <a href="#children" class="toc-link text-gray-700 hover:text-primary transition flex items-center">
+              <div class="w-5 h-5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-arrow-right-s-line"></i>
+              </div>
+              未成年者の情報
+            </a>
+          </li>
+          <li>
+            <a href="#updates" class="toc-link text-gray-700 hover:text-primary transition flex items-center">
+              <div class="w-5 h-5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-arrow-right-s-line"></i>
+              </div>
+              ポリシーの更新
+            </a>
+          </li>
+          <li>
+            <a href="#contact" class="toc-link text-gray-700 hover:text-primary transition flex items-center">
+              <div class="w-5 h-5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-arrow-right-s-line"></i>
+              </div>
+              お問い合わせ
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="lg:col-span-3">
+      <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100 mb-8 fade-in">
+        <section id="introduction" class="mb-10">
+          <h2 class="text-2xl font-semibold mb-4 pb-2 border-b border-gray-200">はじめに</h2>
+          <p class="text-gray-700 mb-4">株式会社フィナンシャルインサイト（以下、「当社」といいます）は、YOHOU Nikkei AI（以下、「本サービス」といいます）の提供にあたり、ユーザーの個人情報保護を最優先事項と考えております。本プライバシーポリシーでは、当社がどのような個人情報を収集し、どのように利用・保護するかについて説明します。</p>
+          <p class="text-gray-700 mb-4">当社は、個人情報の保護に関する法律、その他の関係法令を遵守し、本プライバシーポリシーに従って個人情報を適切に取り扱います。本サービスをご利用いただくことにより、本プライバシーポリシーに同意いただいたものとみなします。</p>
+          <div class="bg-blue-50 p-4 rounded-lg mt-6">
+            <div class="flex items-start">
+              <div class="w-8 h-8 flex items-center justify-center mt-0.5 mr-3 bg-blue-100 rounded-full text-primary">
+                <i class="ri-information-line"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold mb-1">最終更新日</h3>
+                <p class="text-sm text-gray-700">本プライバシーポリシーの最終更新日は2025年7月6日です。当社は、法令の改正や本サービスの変更等に応じて、本プライバシーポリシーを適宜見直し、改定する場合があります。</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="collection" class="mb-10">
+          <h2 class="text-2xl font-semibold mb-4 pb-2 border-b border-gray-200">個人情報の収集・利用</h2>
+          
+          <h3 class="text-xl font-medium mb-3 mt-6">収集する個人情報の種類</h3>
+          <p class="text-gray-700 mb-4">当社は、本サービスの提供にあたり、以下の個人情報を収集することがあります：</p>
+          <ul class="space-y-3 text-gray-700 mb-6">
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-checkbox-circle-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">アカウント情報：</span>
+                <span>氏名、メールアドレス、パスワード（暗号化されたもの）、電話番号、職業</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-checkbox-circle-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">利用情報：</span>
+                <span>サービスの利用履歴、閲覧したコンテンツ、検索履歴、お気に入り設定</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-checkbox-circle-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">決済情報：</span>
+                <span>クレジットカード情報（決済代行会社を通じて処理され、当社のサーバーには保存されません）、請求先住所</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-checkbox-circle-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">デバイス情報：</span>
+                <span>IPアドレス、デバイスの種類、ブラウザの種類、言語設定、アクセス日時</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-checkbox-circle-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">通信内容：</span>
+                <span>お問い合わせやサポートリクエストの内容、フィードバック</span>
+              </div>
+            </li>
+          </ul>
+
+          <h3 class="text-xl font-medium mb-3 mt-6">利用目的</h3>
+          <p class="text-gray-700 mb-4">当社は、収集した個人情報を以下の目的で利用します：</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">サービス提供・改善</h4>
+              <ul class="space-y-1 text-sm text-gray-700">
+                <li>・本サービスの提供、維持、改善</li>
+                <li>・ユーザー認証とアカウント管理</li>
+                <li>・カスタマイズされたコンテンツの提供</li>
+                <li>・サービスの利用状況の分析</li>
+              </ul>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">コミュニケーション</h4>
+              <ul class="space-y-1 text-sm text-gray-700">
+                <li>・サービスに関する通知の送信</li>
+                <li>・お問い合わせへの対応</li>
+                <li>・サポートの提供</li>
+                <li>・重要なお知らせの配信</li>
+              </ul>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">マーケティング</h4>
+              <ul class="space-y-1 text-sm text-gray-700">
+                <li>・新機能や更新情報のお知らせ</li>
+                <li>・関連サービスのご案内</li>
+                <li>・マーケティング効果の測定と分析</li>
+                <li>・ユーザー調査の実施</li>
+              </ul>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">法的義務の履行</h4>
+              <ul class="space-y-1 text-sm text-gray-700">
+                <li>・法令に基づく義務の履行</li>
+                <li>・不正利用の検知と防止</li>
+                <li>・セキュリティ上の脅威への対応</li>
+                <li>・紛争解決と権利保護</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 class="text-xl font-medium mb-3 mt-6">法的根拠</h3>
+          <p class="text-gray-700 mb-4">当社が個人情報を処理する法的根拠は以下の通りです：</p>
+          <ul class="space-y-3 text-gray-700">
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <span><span class="font-medium">契約の履行：</span>本サービスの提供に必要な個人情報の処理</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <span><span class="font-medium">法的義務：</span>法令に基づく義務を履行するための処理</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <span><span class="font-medium">正当な利益：</span>当社の正当な利益（サービス改善、セキュリティ確保など）のための処理</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <span><span class="font-medium">同意：</span>マーケティング目的などの特定の処理に対するユーザーの同意に基づく処理</span>
+            </li>
+          </ul>
+        </section>
+
+        <section id="management" class="mb-10">
+          <h2 class="text-2xl font-semibold mb-4 pb-2 border-b border-gray-200">個人情報の管理</h2>
+          
+          <h3 class="text-xl font-medium mb-3 mt-6">セキュリティ対策</h3>
+          <p class="text-gray-700 mb-4">当社は、個人情報の紛失、不正アクセス、漏洩、改ざん、破壊などのリスクから保護するため、以下のセキュリティ対策を実施しています：</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-gray-50 p-4 rounded">
+              <div class="flex items-center mb-2">
+                <div class="w-8 h-8 flex items-center justify-center mr-3 bg-blue-100 rounded-full text-primary">
+                  <i class="ri-lock-line"></i>
+                </div>
+                <h4 class="font-medium">技術的対策</h4>
+              </div>
+              <ul class="space-y-1 text-sm text-gray-700">
+                <li>・SSL/TLS暗号化通信の使用</li>
+                <li>・データの暗号化保存</li>
+                <li>・ファイアウォールの設置</li>
+                <li>・不正アクセス検知システムの導入</li>
+                <li>・定期的なセキュリティ監査の実施</li>
+              </ul>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <div class="flex items-center mb-2">
+                <div class="w-8 h-8 flex items-center justify-center mr-3 bg-blue-100 rounded-full text-primary">
+                  <i class="ri-shield-check-line"></i>
+                </div>
+                <h4 class="font-medium">組織的対策</h4>
+              </div>
+              <ul class="space-y-1 text-sm text-gray-700">
+                <li>・個人情報保護責任者の設置</li>
+                <li>・従業員への教育・研修</li>
+                <li>・情報セキュリティポリシーの策定</li>
+                <li>・アクセス権限の適切な管理</li>
+                <li>・インシデント対応手順の整備</li>
+              </ul>
+            </div>
+          </div>
+          <p class="text-gray-700 mb-6">当社は、これらの対策を継続的に見直し、改善することで、個人情報の安全性確保に努めています。ただし、インターネット上のデータ送信や電子ストレージの方法は、100%安全であることを保証するものではありません。</p>
+          <h3 class="text-xl font-medium mb-3 mt-6">データ保持期間</h3>
+          <p class="text-gray-700 mb-4">当社は、個人情報を以下の期間保持します：</p>
+          <ul class="space-y-3 text-gray-700 mb-6">
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-time-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">アカウント情報：</span>
+                <span>アカウントが有効である限り保持し、アカウント削除後は90日以内に削除します。</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-time-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">利用情報：</span>
+                <span>サービス改善のため最長2年間保持し、その後は匿名化または削除します。</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-time-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">決済情報：</span>
+                <span>税法その他の法令に基づき、最長7年間保持します。</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-time-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">通信内容：</span>
+                <span>お問い合わせ対応完了後、3年間保持します。</span>
+              </div>
+            </li>
+          </ul>
+          <p class="text-gray-700">法令により保持が義務付けられている場合や、紛争解決、権利行使、不正利用防止などの目的で必要な場合は、上記の期間を超えて個人情報を保持することがあります。</p>
+          <h3 class="text-xl font-medium mb-3 mt-6">アクセス制限</h3>
+          <p class="text-gray-700 mb-4">当社は、個人情報へのアクセスを、業務上必要な従業員に限定しています。これらの従業員は、機密保持義務を負い、個人情報の適切な取り扱いについての教育を受けています。また、アクセス権限は定期的に見直され、必要最小限の範囲に制限されています。</p>
+        </section>
+
+        <section id="thirdparty" class="mb-10">
+          <h2 class="text-2xl font-semibold mb-4 pb-2 border-b border-gray-200">第三者提供</h2>
+          
+          <h3 class="text-xl font-medium mb-3 mt-6">提供される場合の条件</h3>
+          <p class="text-gray-700 mb-4">当社は、以下の場合を除き、ユーザーの個人情報を第三者に提供することはありません：</p>
+          <ul class="space-y-3 text-gray-700 mb-6">
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <span>ユーザーの同意がある場合</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <span>法令に基づく場合（裁判所の命令、法的手続き、政府機関からの要請など）</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <span>人の生命、身体または財産の保護のために必要がある場合</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <span>公衆衛生の向上または児童の健全な育成の推進のために特に必要がある場合</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <span>国の機関もしくは地方公共団体またはその委託を受けた者が法令の定める事務を遂行することに対して協力する必要がある場合</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <span>合併、会社分割、事業譲渡その他の事由による事業の承継に伴って個人情報を提供する場合</span>
+            </li>
+          </ul>
+
+          <h3 class="text-xl font-medium mb-3 mt-6">サービス提供のためのパートナー</h3>
+          <p class="text-gray-700 mb-4">当社は、本サービスの提供・改善のために、以下のような第三者のサービスを利用することがあります：</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">決済処理サービス</h4>
+              <p class="text-sm text-gray-700">クレジットカード決済や銀行振込などの決済処理を行うサービス提供者。これらの提供者は、決済処理に必要な情報のみを受け取ります。</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">クラウドサービス</h4>
+              <p class="text-sm text-gray-700">データの保存やサービス運用のためのクラウドインフラストラクチャ提供者。これらの提供者とは、適切なデータ保護契約を締結しています。</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">分析サービス</h4>
+              <p class="text-sm text-gray-700">サービスの利用状況を分析し、改善するためのツール提供者。これらのサービスは主に集計データを扱い、可能な限り匿名化されたデータを使用します。</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">カスタマーサポート</h4>
+              <p class="text-sm text-gray-700">お問い合わせ対応やサポートを提供するためのツール提供者。これらのサービスは、サポート提供に必要な情報のみにアクセスします。</p>
+            </div>
+          </div>
+          <p class="text-gray-700">これらのパートナーは、当社との契約に基づき、提供された個人情報を特定の目的のためにのみ使用し、適切なセキュリティ対策を実施することが義務付けられています。</p>
+          <h3 class="text-xl font-medium mb-3 mt-6">提供先の選定基準</h3>
+          <p class="text-gray-700 mb-4">当社は、個人情報を提供するパートナーを選定する際、以下の基準を考慮します：</p>
+          <ul class="space-y-3 text-gray-700 mb-6">
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-shield-check-line"></i>
+              </div>
+              <span>適切なデータ保護・セキュリティ対策を実施していること</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-shield-check-line"></i>
+              </div>
+              <span>関連する法令やプライバシー規制を遵守していること</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-shield-check-line"></i>
+              </div>
+              <span>個人情報の取り扱いに関する明確なポリシーを持っていること</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-shield-check-line"></i>
+              </div>
+              <span>サービスの信頼性と安定性が確保されていること</span>
+            </li>
+          </ul>
+        </section>
+
+        <section id="cookies" class="mb-10">
+          <h2 class="text-2xl font-semibold mb-4 pb-2 border-b border-gray-200">Cookie使用方針</h2>
+          
+          <h3 class="text-xl font-medium mb-3 mt-6">Cookieとは</h3>
+          <p class="text-gray-700 mb-4">Cookieとは、ウェブサイトがユーザーのブラウザに保存する小さなテキストファイルです。これにより、ウェブサイトはユーザーのデバイスを認識し、ユーザー体験を向上させることができます。</p>
+          <h3 class="text-xl font-medium mb-3 mt-6">使用するCookieの種類と目的</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">必須Cookie</h4>
+              <p class="text-sm text-gray-700">ウェブサイトの基本的な機能を有効にするために必要なCookieです。これらは、ログイン状態の維持、セキュリティ確保、サイト内の移動などに使用されます。</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">機能Cookie</h4>
+              <p class="text-sm text-gray-700">ユーザーの設定や選択を記憶し、より便利な機能を提供するためのCookieです。言語設定、表示設定、ユーザー名の記憶などに使用されます。</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">分析Cookie</h4>
+              <p class="text-sm text-gray-700">ウェブサイトの利用状況を分析し、サービスを改善するためのCookieです。訪問者数、滞在時間、人気ページなどの情報を収集します。</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <h4 class="font-medium mb-2">マーケティングCookie</h4>
+              <p class="text-sm text-gray-700">ユーザーの興味や行動に基づいて、関連性の高い広告を表示するためのCookieです。広告効果の測定にも使用されます。</p>
+            </div>
+          </div>
+
+          <h3 class="text-xl font-medium mb-3 mt-6">Cookie設定の管理</h3>
+          <p class="text-gray-700 mb-4">ほとんどのウェブブラウザでは、Cookie設定を管理することができます。以下の方法でCookieを制御できます：</p>
+          <ul class="space-y-3 text-gray-700 mb-6">
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-settings-line"></i>
+              </div>
+              <span>ブラウザの設定を変更して、すべてのCookieを拒否する</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-settings-line"></i>
+              </div>
+              <span>新しいCookieを受け入れる前に通知するようブラウザを設定する</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-settings-line"></i>
+              </div>
+              <span>既存のCookieを削除する</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-settings-line"></i>
+              </div>
+              <span>プライベートブラウジングモードを使用する</span>
+            </li>
+          </ul>
+          <p class="text-gray-700 mb-4">ただし、必須Cookieを無効にすると、本サービスの一部の機能が正常に動作しなくなる可能性があります。</p>
+          <h3 class="text-xl font-medium mb-3 mt-6">その他のトラッキング技術</h3>
+          <p class="text-gray-700 mb-4">当社は、Cookieに加えて、以下のようなトラッキング技術を使用することがあります：</p>
+          <ul class="space-y-3 text-gray-700">
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">ウェブビーコン：</span>
+                <span>ウェブページやメールの閲覧状況を追跡する小さな画像ファイル</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">ローカルストレージ：</span>
+                <span>ブラウザにデータを保存する方法で、Cookieよりも多くのデータを保存できる</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                <i class="ri-check-line"></i>
+              </div>
+              <div>
+                <span class="font-medium">セッションストレージ：</span>
+                <span>ブラウザセッション中のみデータを保存する一時的なストレージ</span>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section id="rights" class="mb-10">
+          <h2 class="text-2xl font-semibold mb-4 pb-2 border-b border-gray-200">ユーザーの権利</h2>
+          
+          <p class="text-gray-700 mb-6">個人情報保護法およびその他の適用法令に基づき、ユーザーには以下の権利があります：</p>
+          
+          <div class="space-y-6">
+            <div class="bg-gray-50 p-5 rounded">
+              <h3 class="text-lg font-medium mb-3">個人情報の開示請求</h3>
+              <p class="text-gray-700 mb-3">当社が保有するユーザーの個人情報について、開示を請求することができます。</p>
+              <div class="flex items-start text-sm text-gray-700">
+                <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                  <i class="ri-information-line"></i>
+                </div>
+                <span>開示請求には、本人確認書類の提出が必要です。また、手数料がかかる場合があります。</span>
+              </div>
+            </div>
+            
+            <div class="bg-gray-50 p-5 rounded">
+              <h3 class="text-lg font-medium mb-3">訂正・削除の権利</h3>
+              <p class="text-gray-700 mb-3">不正確または不完全な個人情報の訂正や、不要になった個人情報の削除を請求することができます。</p>
+              <div class="flex items-start text-sm text-gray-700">
+                <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                  <i class="ri-information-line"></i>
+                </div>
+                <span>法令により保持が義務付けられている場合など、一部の情報は削除できない場合があります。</span>
+              </div>
+            </div>
+            
+            <div class="bg-gray-50 p-5 rounded">
+              <h3 class="text-lg font-medium mb-3">利用停止・第三者提供停止の権利</h3>
+              <p class="text-gray-700 mb-3">個人情報の利用停止や第三者への提供停止を請求することができます。</p>
+              <div class="flex items-start text-sm text-gray-700">
+                <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                  <i class="ri-information-line"></i>
+                </div>
+                <span>サービス提供に必要不可欠な情報の利用を停止した場合、一部のサービスが利用できなくなる可能性があります。</span>
+              </div>
+            </div>
+            
+            <div class="bg-gray-50 p-5 rounded">
+              <h3 class="text-lg font-medium mb-3">同意の撤回</h3>
+              <p class="text-gray-700 mb-3">個人情報の処理に対する同意を、いつでも撤回することができます。</p>
+              <div class="flex items-start text-sm text-gray-700">
+                <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                  <i class="ri-information-line"></i>
+                </div>
+                <span>同意の撤回は、撤回前の処理の適法性に影響を与えません。</span>
+              </div>
+            </div>
+            
+            <div class="bg-gray-50 p-5 rounded">
+              <h3 class="text-lg font-medium mb-3">データポータビリティの権利</h3>
+              <p class="text-gray-700 mb-3">ユーザーが提供した個人情報を、構造化された一般的に使用される機械可読形式で受け取り、他の事業者に移行することができます。</p>
+            </div>
+          </div>
+          
+          <div class="bg-blue-50 p-5 rounded mt-6">
+            <h3 class="font-medium mb-3">権利行使の方法</h3>
+            <p class="text-gray-700 mb-3">上記の権利を行使するには、以下の方法でお問い合わせください：</p>
+            <ul class="space-y-2 text-gray-700">
+              <li class="flex items-start">
+                <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                  <i class="ri-mail-line"></i>
+                </div>
+                <span>メール：privacy@market-insight-japan.co.jp</span>
+              </li>
+              <li class="flex items-start">
+                <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                  <i class="ri-customer-service-2-line"></i>
+                </div>
+                <span>電話：03-1234-5678（平日 9:00-18:00）</span>
+              </li>
+              <li class="flex items-start">
+                <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                  <i class="ri-mail-send-line"></i>
+                </div>
+                <span>郵送：〒100-0004 東京都千代田区大手町1-2-3 フィナンシャルタワー15階 個人情報保護担当宛</span>
+              </li>
+            </ul>
+            <p class="text-sm text-gray-700 mt-3">当社は、ご請求を受けてから原則として2週間以内に対応いたします。本人確認のため、追加の情報をお願いする場合があります。</p>
+          </div>
+        </section>
+
+        <section id="children" class="mb-10">
+          <h2 class="text-2xl font-semibold mb-4 pb-2 border-b border-gray-200">未成年者の情報</h2>
+          
+          <p class="text-gray-700 mb-4">本サービスは、18歳未満の方を対象としていません。当社は、18歳未満の方から故意に個人情報を収集することはありません。</p>
+          
+          <p class="text-gray-700 mb-4">18歳未満の方が当社に個人情報を提供したことが判明した場合、当社はできるだけ速やかにその情報を削除します。保護者または法定代理人の方が、18歳未満の方の個人情報が当社に提供されたと思われる場合は、以下の連絡先までご連絡ください。</p>
+          
+          <div class="bg-gray-50 p-4 rounded">
+            <h3 class="font-medium mb-2">連絡先</h3>
+            <p class="text-sm text-gray-700">メール：privacy@market-insight-japan.co.jp</p>
+            <p class="text-sm text-gray-700">電話：03-1234-5678（平日 9:00-18:00）</p>
+          </div>
+        </section>
+        <section id="updates" class="mb-10">
+          <h2 class="text-2xl font-semibold mb-4 pb-2 border-b border-gray-200">ポリシーの更新</h2>
+          
+          <p class="text-gray-700 mb-4">当社は、法令の改正や本サービスの変更等に応じて、本プライバシーポリシーを適宜見直し、改定することがあります。重要な変更がある場合は、本サービス上での通知、メールでのお知らせ、またはその他の適切な方法でユーザーに通知します。</p>
+          
+          <p class="text-gray-700 mb-4">最新のプライバシーポリシーは常に本ページでご確認いただけます。ページ上部に記載された「最終更新日」をご確認ください。</p>
+          
+          <p class="text-gray-700 mb-4">本プライバシーポリシーの変更後も本サービスを継続して利用される場合、変更後のプライバシーポリシーに同意したものとみなされます。定期的に本ページをご確認いただくことをお勧めします。</p>
+          
+          <div class="bg-blue-50 p-4 rounded mt-4">
+            <div class="flex items-start">
+              <div class="w-8 h-8 flex items-center justify-center mt-0.5 mr-3 bg-blue-100 rounded-full text-primary">
+                <i class="ri-history-line"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold mb-1">更新履歴</h3>
+                <ul class="space-y-2 text-sm text-gray-700">
+                  <li>2025年7月6日 - プライバシーポリシー全面改定</li>
+                  <li>2024年11月15日 - Cookie使用方針の追加</li>
+                  <li>2024年4月1日 - データ保持期間の明確化</li>
+                  <li>2023年10月10日 - 初版公開</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="contact" class="mb-6">
+          <h2 class="text-2xl font-semibold mb-4 pb-2 border-b border-gray-200">お問い合わせ</h2>
+          
+          <p class="text-gray-700 mb-4">本プライバシーポリシーに関するご質問、ご意見、またはご不明点がございましたら、以下の連絡先までお問い合わせください。</p>
+          
+          <div class="bg-gray-50 p-5 rounded">
+            <h3 class="font-semibold mb-3">個人情報保護管理者</h3>
+            <p class="text-gray-700 mb-1">株式会社フィナンシャルインサイト</p>
+            <p class="text-gray-700 mb-1">個人情報保護管理責任者：情報セキュリティ部 部長 佐藤 健太</p>
+            <p class="text-gray-700 mb-4">〒100-0004 東京都千代田区大手町1-2-3 フィナンシャルタワー15階</p>
+            
+            <h4 class="font-medium mb-2">お問い合わせ方法</h4>
+            <ul class="space-y-2 text-gray-700">
+              <li class="flex items-start">
+                <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                  <i class="ri-mail-line"></i>
+                </div>
+                <span>メール：privacy@market-insight-japan.co.jp</span>
+              </li>
+              <li class="flex items-start">
+                <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                  <i class="ri-customer-service-2-line"></i>
+                </div>
+                <span>電話：03-1234-5678（平日 9:00-18:00）</span>
+              </li>
+              <li class="flex items-start">
+                <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
+                  <i class="ri-question-answer-line"></i>
+                </div>
+                <span>お問い合わせフォーム：<a href="#" class="text-primary hover:underline">こちら</a></span>
+              </li>
+            </ul>
+            <p class="text-sm text-gray-700 mt-4">お問い合わせいただいた内容は、原則として2営業日以内にご回答いたします。ただし、内容によっては、回答までにお時間をいただく場合がございます。</p>
+          </div>
+        </section>
+
+        <div class="flex justify-between items-center mt-10 pt-6 border-t border-gray-200">
+          <a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/c6d5095f-f561-48f4-96bb-f75de45cef8c" data-readdy="true" class="inline-flex items-center text-gray-600 hover:text-primary transition">
+            <i class="ri-arrow-left-line mr-2"></i>
+            <span>前のページに戻る</span>
+          </a>
+          <a href="#" class="inline-flex items-center text-primary hover:underline">
+            <span>ページ上部へ</span>
+            <i class="ri-arrow-up-line ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="bg-gray-50 border-t border-gray-200 mt-12">
+  <div class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div>
+        <h4 class="text-lg font-semibold mb-4">YOHOU Nikkei AI</h4>
+        <p class="text-sm text-gray-600 mb-4">AI技術を活用した日経平均株価の分析・予測プラットフォーム。24時間365日、リアルタイムで市場を分析</p>
+        <div class="flex space-x-4">
+          <a href="#" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary">
+            <i class="ri-twitter-x-line"></i>
+          </a>
+          <a href="#" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary">
+            <i class="ri-telegram-line"></i>
+          </a>
+          <a href="#" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary">
+            <i class="ri-mail-line"></i>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-lg font-semibold mb-4">コンテンツ</h4>
+        <ul class="space-y-2">
+          <li><a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/c2b76512-1852-46a7-bc7a-8fe9c424200f" data-readdy="true" class="text-sm text-gray-600 hover:text-primary">本日の市況分析</a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">分析アーカイブ</a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">テクニカル指標解説</a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">市場用語集</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-lg font-semibold mb-4">サイト情報</h4>
+        <ul class="space-y-2">
+          <li><a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/c6d5095f-f561-48f4-96bb-f75de45cef8c" data-readdy="true" class="text-sm text-gray-600 hover:text-primary">サイトについて</a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">分析手法</a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">利用規約</a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">プライバシーポリシー</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-lg font-semibold mb-4">お問い合わせ</h4>
+        <p class="text-sm text-gray-600 mb-4">ご質問やフィードバックがございましたら、お気軽にお問い合わせください。</p>
+        <a href="#" class="inline-block bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap">お問い合わせ</a>
+      </div>
+    </div>
+    <div class="border-t border-gray-200 mt-8 pt-8 text-center">
+      <p class="text-sm text-gray-600">© 2025 Market Insight Japan. All rights reserved.</p>
+      <p class="text-xs text-gray-500 mt-2">当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。投資の最終判断はご自身でお願いします。</p>
+    </div>
+  </div>
+</footer>
+
+<script id="scroll-to-top">
+document.addEventListener('DOMContentLoaded', function() {
+  const scrollToTopLink = document.querySelector('a[href="#"]');
+  scrollToTopLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+});
+</script>
+
+<script id="toc-highlight">
+document.addEventListener('DOMContentLoaded', function() {
+  const sections = document.querySelectorAll('section[id]');
+  const tocLinks = document.querySelectorAll('.toc-link');
+  
+  function highlightToc() {
+    let scrollPosition = window.scrollY;
+    
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 100;
+      const sectionHeight = section.offsetHeight;
+      const sectionId = section.getAttribute('id');
+      
+      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+        tocLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + sectionId) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }
+  
+  window.addEventListener('scroll', highlightToc);
+  highlightToc(); // 初期表示時にも実行
+});
+</script>
+
+<script id="animation-handler">
+document.addEventListener('DOMContentLoaded', function() {
+  const fadeElements = document.querySelectorAll('.fade-in');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = 1;
+        entry.target.style.transform = 'translateY(0)';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  fadeElements.forEach(element => {
+    element.style.opacity = 0;
+    element.style.transform = 'translateY(10px)';
+    element.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+    observer.observe(element);
+  });
+});
+</script>
+</body>
+</html>

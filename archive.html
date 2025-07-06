@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Market Insight Japan - 分析アーカイブ</title>
+<title>YOHOU Nikkei AI - 分析アーカイブ</title>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <script>tailwind.config={theme:{extend:{colors:{primary:'#2563EB',secondary:'#DC2626'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,12 +27,13 @@ body { font-family: 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color
     <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-8">
-                <a href="/index.html"><img src="image/logo3.png" alt="Market Insight Japan" class="h-10"></a>
+                <a href="/index.html"><img src="image/logo3.png" alt="YOHOU Nikkei AI" class="h-10"></a>
                 <nav class="hidden md:flex space-x-6 text-gray-600">
                     <a href="/index.html" class="hover:text-primary">本日の市況分析</a>
                     <a href="/archive.html" class="text-primary font-medium border-b-2 border-primary pb-1">分析アーカイブ</a>
                     <a href="/indicators.html" class="text-gray-600 hover:text-primary">テクニカル指標解説</a>
                     <a href="/terms.html" class="text-gray-600 hover:text-primary">市場用語集</a>
+                    <a href="/about.html" class="text-gray-600 hover:text-primary">サイトについて</a>
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
@@ -64,7 +65,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color
     </div>
 </main>
 
-<footer class="bg-gray-50 border-t border-gray-200 mt-12"><div class="container mx-auto px-4 py-8 text-center"><p class="text-sm text-gray-600">© 2025 Market Insight Japan. All rights reserved.</p><p class="text-xs text-gray-500 mt-2">当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。</p></div></footer>
+<footer class="bg-gray-50 border-t border-gray-200 mt-12"><div class="container mx-auto px-4 py-8 text-center"><p class="text-sm text-gray-600">© 2025 YOHOU Nikkei AI. All rights reserved.</p><p class="text-xs text-gray-500 mt-2">当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。</p></div></footer>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -155,9 +156,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="flex items-center space-x-3 text-sm text-gray-600"><span>${data.date}</span><span>|</span><span>${data.session}</span></div>
                     <div class="px-3 py-1 rounded-full ${evalClass} font-medium text-sm">${data.summary.evaluation}</div>
                 </div>
-                <h3 class="text-xl font-bold mb-2 text-gray-800">${data.summary.headline}</h3>
-                <p class="text-gray-600 mb-4 leading-relaxed">${data.summary.text.substring(0, 100)}...</p>
-                <a href="/index.html?datafile=${data.fileName}" class="text-primary font-semibold hover:underline">詳細を見る <i class="ri-arrow-right-line align-middle"></i></a>`;
+                <h3 class="text-2xl font-bold mb-2 text-gray-800">${data.summary.headline}</h3>
+                <p class="text-lg text-gray-600 mb-4 leading-relaxed">${data.summary.text.substring(0, 100)}...</p>
+                <div class="text-right"><a href="/index.html?datafile=${data.fileName}" class="text-primary font-semibold hover:underline">詳細を見る <i class="ri-arrow-right-line align-middle"></i></a></div>`;
             listView.appendChild(card);
         });
     }
