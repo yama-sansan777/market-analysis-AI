@@ -1,23 +1,69 @@
 {
-  "reportId": "20250623-am",
-  "session": "前場展望",
-  "date": "2025年6月23日",
+  "reportId": "20250619-am",
+  "session": "後場展望",
+  "date": "2025年6月19日",
   "summary": {
-    "evaluation": "売り",
-    "score": 7,
-    "headline": "外部環境の悪化が、内部の脆弱性を露呈させる展開",
-    "text": "週明けの市場は、米国ハイテク株安の流れを引き継ぎ、売り優勢の展開が予想されます。先週来の課題であった、一部銘柄に依存した市場構造の脆弱性が、改めて意識されることになるでしょう。円安が一定の下支えとはなるものの、買い上がる材料に乏しく、戻りの鈍い展開を想定します。"
+    "evaluation": "中立",
+    "score": 5,
+    "headline": "方向感に乏しい展開、米経済指標発表を控えて様子見ムード",
+    "text": "日経平均は前場、小幅な値動きとなりました。米国の経済指標発表を控えて投資家の様子見姿勢が強まっています。セクター別では銀行株が堅調な一方、ハイテク株は軟調な展開。"
   },
   "dashboard": {
     "breadth": {
-      "advancers": 622,
-      "decliners": 918
+      "advancers": 500,
+      "decliners": 500,
+      "summary": "値上がり・値下がりが拮抗し、方向感に乏しい。"
     },
-    "sentimentVI": 25,
+    "sentimentVI": 20,
+    "sentimentVISummary": "VIは落ち着いた水準で推移。",
     "priceLevels": {
       "resistance": {
-        "value": "38,600 円",
-        "description": "先週の高値圏。強力な売り圧力。"
+        "value": "38,800 円",
+        "description": "直近高値"
       },
       "support": {
-        "value": "38,350 円
+        "value": "38,200 円",
+        "description": "直近安値"
+      }
+    },
+    "upDownRatio": {
+      "value": "100.00",
+      "status": "中立圏",
+      "summary": "売り買いのバランスが取れている。"
+    }
+  },
+  "details": {
+    "internals": {
+      "headline": "主力株の動きに注目",
+      "text": "主力株の動きが全体相場を左右しています。",
+      "chartData": {
+        "labels": ["A", "B", "C"],
+        "values": [10, -5, 3]
+      }
+    },
+    "technicals": {
+      "headline": "もみ合い相場",
+      "text": "短期的な方向感は乏しい。",
+      "chartData": {
+        "labels": ["D-2", "D-1", "Today"],
+        "nikkei": [38200, 38400, 38300],
+        "ma5": [38100, 38300, 38250]
+      }
+    },
+    "fundamentals": {
+      "headline": "材料難",
+      "points": ["米経済指標待ち", "為替は安定"]
+    },
+    "strategy": {
+      "headline": "様子見推奨",
+      "basic": "無理なエントリーは避ける。",
+      "risk": "突発的な材料に注意。"
+    }
+  },
+  "marketOverview": [
+    { "name": "日経平均", "value": "38,300.00", "change": "+0.00 (0.00%)", "isDown": false }
+  ],
+  "hotStocks": [
+    { "name": "A社", "price": "+1.0%", "description": "材料あり", "isDown": false }
+  ]
+}

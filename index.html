@@ -85,10 +85,12 @@
                         <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
                             <h3 class="font-bold text-2xl mb-5 text-center">市場の健全性 (前引け)</h3>
                             <div class="h-64" id="breadthChart"></div>
+                            <p id="breadth-comment" class="mt-6 text-center text-gray-600 text-lg"></p>
                         </div>
                          <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col items-center justify-center">
                             <h3 class="font-bold text-2xl mb-5 text-center">市場心理 (恐怖指数)</h3>
                             <div class="h-64 w-full" id="sentimentGauge"></div>
+                            <p id="sentimentVI-comment" class="mt-6 text-center text-gray-600 text-lg"></p>
                         </div>
                         <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col justify-center">
                             <h3 class="font-bold text-2xl mb-6 text-center">主要な価格帯</h3>
@@ -108,6 +110,7 @@
                          <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
                             <h3 class="font-bold text-2xl mb-5 text-center">騰落レシオ (25日)</h3>
                             <div id="updown-ratio-container" class="text-center py-12"></div>
+                            <p id="updown-ratio-comment" class="mt-6 text-center text-gray-600 text-lg"></p>
                         </div>
                     </div>
                 </section>
@@ -129,10 +132,12 @@
                     <div id="tab-panels" class="mt-10 text-xl">
                         <div id="internals" class="tab-panel active">
                             <h3 id="internals-headline" class="text-3xl font-bold mb-5"></h3>
+                            <p id="internals-text" class="mb-6 text-gray-600 text-lg"></p>
                             <div class="h-96"><canvas id="contributionChart"></canvas></div>
                         </div>
                         <div id="technicals" class="tab-panel">
                             <h3 id="technicals-headline" class="text-3xl font-bold mb-5"></h3>
+                            <p id="technicals-text" class="mb-6 text-gray-600 text-lg"></p>
                             <div class="h-96"><canvas id="technicalChart"></canvas></div>
                         </div>
                         <div id="fundamentals" class="tab-panel">
@@ -234,10 +239,18 @@
                 <p class="text-8xl font-bold text-gray-800">${data.dashboard.upDownRatio.value}<span class="text-5xl">%</span></p>
                 <p class="mt-5 px-6 py-2 inline-block bg-yellow-100 text-yellow-800 rounded-full text-lg font-semibold">${data.dashboard.upDownRatio.status}</p>
             `;
+            // 市場の健全性コメント
+            document.getElementById('breadth-comment').textContent = data.dashboard.breadth.summary || '';
+            // 市場心理コメント
+            document.getElementById('sentimentVI-comment').textContent = data.dashboard.sentimentVISummary || '';
+            // 騰落レシオコメント
+            document.getElementById('updown-ratio-comment').textContent = (data.dashboard.upDownRatio.summary || '');
             
             // 詳細分析
             document.getElementById('internals-headline').textContent = data.details.internals.headline;
+            document.getElementById('internals-text').textContent = data.details.internals.text || '';
             document.getElementById('technicals-headline').textContent = data.details.technicals.headline;
+            document.getElementById('technicals-text').textContent = data.details.technicals.text || '';
             document.getElementById('fundamentals-headline').textContent = data.details.fundamentals.headline;
             document.getElementById('strategy-headline').textContent = data.details.strategy.headline;
     
