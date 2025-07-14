@@ -224,8 +224,12 @@
     // データの読み込みとページへの反映を行うメイン関数
     async function loadReportData() {
         try {
-            // ここで読み込むJSONファイルを指定します
-            const response = await fetch('live_data/us_stock_data.json');
+            // datafileパラメータ取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataFileName = urlParams.get('datafile');
+            // パラメータがあればarchive_dataから、なければlatest.json
+            const fileToFetch = dataFileName ? `archive_data/${dataFileName}` : 'live_data/latest.json';
+            const response = await fetch(fileToFetch);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
