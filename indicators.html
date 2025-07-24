@@ -10,7 +10,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script src="lang.js"></script>
 <style>
 :where([class^="ri-"])::before { content: "\f3c2"; }
 body {
@@ -135,16 +136,16 @@ transform: rotate(180deg);
             <div class="flex items-center space-x-8">
                 <a href="/index.html"><img src="image/logo.png" alt="株式会社BizRom東京" class="h-10"></a>
                 <nav class="hidden md:flex space-x-6">
-                    <a href="/index.html" class="text-gray-600 hover:text-primary">本日の市況分析</a>
-                    <a href="/archive.html" class="text-gray-600 hover:text-primary">分析アーカイブ</a>
-                    <a href="/indicators.html" class="text-primary font-medium border-b-2 border-primary pb-1">テクニカル指標解説</a>
-                    <a href="/terms.html" class="text-gray-600 hover:text-primary">市場用語集</a>
-                    <a href="/about.html" class="text-gray-600 hover:text-primary">サイトについて</a>
+                    <a href="index.html" class="text-gray-600 hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                    <a href="archive.html" class="text-gray-600 hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
+                    <a href="indicators.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_indicators">テクニカル指標解説</a>
+                    <a href="terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                    <a href="about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
-                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span>ログイン</span></button>
-                <button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50">無料登録</button>
+                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                <button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
                 <button class="md:hidden text-gray-600"><i class="ri-menu-line ri-lg"></i></button>
             </div>
         </div>
@@ -152,8 +153,8 @@ transform: rotate(180deg);
 </header>
 <main class="container mx-auto px-4 py-6 max-w-7xl">
 <div class="mb-8">
-<h1 class="text-2xl font-bold mb-2">テクニカル指標解説</h1>
-<p class="text-gray-600">株式市場の分析に役立つ主要なテクニカル指標について詳しく解説します。各指標の基本的な概念から実践的な活用方法まで、トレーダーのレベルに合わせた情報を提供します。</p>
+<h1 class="text-2xl font-bold mb-2" data-lang="indicators_title">テクニカル指標解説</h1>
+<p class="text-gray-600" data-lang="indicators_subtitle">株式市場の分析に役立つ主要なテクニカル指標について詳しく解説します。各指標の基本的な概念から実践的な活用方法まで、トレーダーのレベルに合わせた情報を提供します。</p>
 </div>
 <!-- フィルタリングセクション -->
 <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-8">
@@ -161,7 +162,7 @@ transform: rotate(180deg);
 <!-- 検索バー -->
 <div class="flex-1">
 <div class="relative">
-<input type="text" placeholder="指標名で検索" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm">
+<input type="text" placeholder="指標名で検索" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" data-lang-placeholder="indicator_search_placeholder">
 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 <i class="ri-search-line text-gray-400"></i>
 </div>
@@ -2088,6 +2089,9 @@ card.style.display = 'none';
 }
 });
 });
+  
+  // Initialize language system
+  initLanguage();
 });
 </script>
 </body>

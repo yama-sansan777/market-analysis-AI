@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="lang.js"></script>
 <style>
 :where([class^="ri-"])::before { content: "\f3c2"; }
 body {
@@ -177,8 +178,8 @@ to { opacity: 1; transform: translateY(0); }
 </header>
 <main class="container mx-auto px-4 py-8">
 <div class="mb-8">
-<h2 class="text-3xl font-bold mb-2">サイトについて</h2>
-<p class="text-gray-600">YOHOU US Stock AIの概要、サービスの特徴、分析手法などの詳細情報をご紹介します。</p>
+<h2 class="text-3xl font-bold mb-2" data-lang="about_title">サイトについて</h2>
+<p class="text-gray-600" data-lang="about_subtitle">YOHOU US Stock AIの概要、サービスの特徴、分析手法などの詳細情報をご紹介します。</p>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
 <!-- サービス概要 -->
@@ -567,6 +568,9 @@ to { opacity: 1; transform: translateY(0); }
 </footer>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize language system
+    initLanguage();
+    
     // 未実装機能のアラート
     document.getElementById('login-btn').addEventListener('click', () => {
         alert('この機能は現在準備中です。ご期待ください！');

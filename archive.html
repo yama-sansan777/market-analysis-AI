@@ -10,7 +10,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script src="lang.js"></script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-90LPDJBXLY"></script>
 <script>
@@ -37,11 +38,11 @@ body { font-family: 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color
             <div class="flex items-center space-x-8">
                 <a href="/index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
                 <nav class="hidden md:flex space-x-6 text-gray-600">
-                    <a href="/index.html" class="hover:text-primary">本日の市況分析</a>
-                    <a href="/archive.html" class="text-primary font-medium border-b-2 border-primary pb-1">分析アーカイブ</a>
-                    <a href="/indicators.html" class="text-gray-600 hover:text-primary">テクニカル指標解説</a>
-                    <a href="/terms.html" class="text-gray-600 hover:text-primary">市場用語集</a>
-                    <a href="/about.html" class="text-gray-600 hover:text-primary">サイトについて</a>
+                    <a href="index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                    <a href="archive.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_archive">分析アーカイブ</a>
+                    <a href="indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                    <a href="terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                    <a href="about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
@@ -55,8 +56,8 @@ body { font-family: 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color
 
 <main class="container mx-auto px-4 py-6 max-w-7xl">
     <div class="mb-8">
-        <h1 class="text-2xl font-bold mb-2">分析アーカイブ</h1>
-        <p class="text-gray-600">過去の市場分析レポートを閲覧できます。日付やキーワードで検索して、必要な情報を素早く見つけましょう。</p>
+        <h1 class="text-2xl font-bold mb-2" data-lang="archive_title">分析アーカイブ</h1>
+        <p class="text-gray-600" data-lang="archive_subtitle">過去の市場分析レポートを閲覧できます。日付やキーワードで検索して、必要な情報を素早く見つけましょう。</p>
     </div>
 
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-8">
@@ -68,12 +69,12 @@ body { font-family: 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <aside class="lg:col-span-3 order-2 lg:order-1"><div class="sticky top-6"><div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6"><h3 class="text-lg font-medium mb-4">期間</h3><div id="period-filter-group" class="space-y-3"><div class="flex items-center"><input type="radio" id="period-all" value="all" name="period" class="custom-radio" checked><label for="period-all" class="ml-2 text-sm text-gray-700">全期間</label></div><div class="flex items-center"><input type="radio" id="period-1w" value="1w" name="period" class="custom-radio"><label for="period-1w" class="ml-2 text-sm text-gray-700">1週間</label></div><div class="flex items-center"><input type="radio" id="period-1m" value="1m" name="period" class="custom-radio"><label for="period-1m" class="ml-2 text-sm text-gray-700">1ヶ月</label></div><div class="flex items-center"><input type="radio" id="period-3m" value="3m" name="period" class="custom-radio"><label for="period-3m" class="ml-2 text-sm text-gray-700">3ヶ月</label></div></div></div><div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6"><h3 class="text-lg font-medium mb-4">評価別統計</h3><div id="stats-container" class="space-y-4"></div></div></div></aside>
+        <aside class="lg:col-span-3 order-2 lg:order-1"><div class="sticky top-6"><div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6"><h3 class="text-lg font-medium mb-4" data-lang="period">期間</h3><div id="period-filter-group" class="space-y-3"><div class="flex items-center"><input type="radio" id="period-all" value="all" name="period" class="custom-radio" checked><label for="period-all" class="ml-2 text-sm text-gray-700" data-lang="period_all">全期間</label></div><div class="flex items-center"><input type="radio" id="period-1w" value="1w" name="period" class="custom-radio"><label for="period-1w" class="ml-2 text-sm text-gray-700" data-lang="period_1w">1週間</label></div><div class="flex items-center"><input type="radio" id="period-1m" value="1m" name="period" class="custom-radio"><label for="period-1m" class="ml-2 text-sm text-gray-700" data-lang="period_1m">1ヶ月</label></div><div class="flex items-center"><input type="radio" id="period-3m" value="3m" name="period" class="custom-radio"><label for="period-3m" class="ml-2 text-sm text-gray-700" data-lang="period_3m">3ヶ月</label></div></div></div><div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6"><h3 class="text-lg font-medium mb-4" data-lang="evaluation_stats">評価別統計</h3><div id="stats-container" class="space-y-4"></div></div></div></aside>
         <div class="lg:col-span-9 order-1 lg:order-2"><div id="list-view" class="space-y-6"></div></div>
     </div>
 </main>
 
-<footer class="bg-gray-50 border-t border-gray-200 mt-12"><div class="container mx-auto px-4 py-8 text-center"><p class="text-sm text-gray-600">© 2025 YOHOU Nikkei AI. All rights reserved.</p><p class="text-xs text-gray-500 mt-2">当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。</p></div></footer>
+<footer class="bg-gray-50 border-t border-gray-200 mt-12"><div class="container mx-auto px-4 py-8 text-center"><p class="text-sm text-gray-600" data-lang="footer_copyright">© 2025 YOHOU Nikkei AI. All rights reserved.</p><p class="text-xs text-gray-500 mt-2" data-lang="footer_disclaimer_short">当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。</p></div></footer>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -118,9 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 評価値の正規化関数を追加
     function normalizeEvaluation(evaluation) {
         if (!evaluation) return '';
-        if (evaluation.includes('売り') || evaluation.includes('弱気')) return '売り';
-        if (evaluation.includes('買い') || evaluation.includes('強気')) return '買い';
-        if (evaluation.includes('中立')) return '中立';
+        if (evaluation.includes('売り') || evaluation.includes('弱気')) return getTranslation('eval_sell');
+        if (evaluation.includes('買い') || evaluation.includes('強気')) return getTranslation('eval_buy');
+        if (evaluation.includes('中立')) return getTranslation('eval_neutral');
         return evaluation;
     }
 
@@ -175,27 +176,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <h3 class="text-2xl font-bold mb-2 text-gray-800">${data.headline}</h3>
                 <p class="text-lg text-gray-600 mb-4 leading-relaxed">${data.summary.substring(0, 100)}...</p>
-                <div class="text-right"><a href="/index.html?datafile=${data.file}" class="text-primary font-semibold hover:underline">詳細を見る <i class="ri-arrow-right-line align-middle"></i></a></div>`;
+                <div class="text-right"><a href="index.html?datafile=${data.file}" class="text-primary font-semibold hover:underline">${getTranslation('view_details')} <i class="ri-arrow-right-line align-middle"></i></a></div>`;
             listView.appendChild(card);
         });
     }
 
     function updateStats(reports) {
         const total = reports.length;
-        const counts = { '買い': 0, '中立': 0, '売り': 0 };
+        const counts = { [getTranslation('eval_buy')]: 0, [getTranslation('eval_neutral')]: 0, [getTranslation('eval_sell')]: 0 };
         reports.forEach(r => {
             const normalizedEval = normalizeEvaluation(r.evaluation);
             if(counts[normalizedEval] !== undefined) counts[normalizedEval]++;
         });
 
         statsContainer.innerHTML = Object.entries(counts).map(([rating, count]) => {
-            const colorClass = rating === '買い' ? 'primary' : (rating === '売り' ? 'secondary' : 'gray-500');
+            const colorClass = rating === getTranslation('eval_buy') ? 'primary' : (rating === getTranslation('eval_sell') ? 'secondary' : 'gray-500');
             const width = total > 0 ? (count / total * 100) : 0;
             return `
                 <div class="stats-item p-2 hover:bg-gray-50 rounded-md cursor-pointer transition" data-rating="${rating}">
                     <div class="flex justify-between items-center mb-1">
                         <span class="text-sm font-medium text-${colorClass}">${rating}</span>
-                        <span class="text-sm text-gray-600">${count}件</span>
+                        <span class="text-sm text-gray-600">${count}${getTranslation('cases')}</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-${colorClass} h-2 rounded-full" style="width: ${width}%"></div></div>
                 </div>`;
@@ -206,6 +207,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 evaluationSelect.value = item.dataset.rating;
                 applyFilters();
             });
+        });
+        
+        // Listen for language changes and re-render dynamic content
+        document.addEventListener('languageChanged', function(e) {
+            renderReports(filteredReports);
+            updateStats(allReports);
         });
     }
 
@@ -348,6 +355,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('register-btn').addEventListener('click', () => {
         alert('この機能は現在準備中です。ご期待ください！');
     });
+
+    // Initialize language system
+    initLanguage();
 });
 </script>
 </body>
