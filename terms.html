@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Market Insight Japan - 市場用語集</title>
+<title>YOHOU US Stock AI</title>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <script>tailwind.config={theme:{extend:{colors:{primary:'#2563EB',secondary:'#DC2626'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -141,16 +141,16 @@ body {
             <div class="flex items-center space-x-8">
                 <a href="/index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
                 <nav class="hidden md:flex space-x-6">
-                    <a href="index.html" class="text-gray-600 hover:text-primary" data-lang="nav_today">本日の市況分析</a>
-                    <a href="archive.html" class="text-gray-600 hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
-                    <a href="indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
-                    <a href="terms.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_terms">市場用語集</a>
-                    <a href="about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    <a href="index.html" class="text-gray-600 hover:text-primary" data-lang="nav_today"></a>
+                    <a href="archive.html" class="text-gray-600 hover:text-primary" data-lang="nav_archive"></a>
+                    <a href="indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators"></a>
+                    <a href="terms.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_terms"></a>
+                    <a href="about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about"></a>
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
-                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
-                <button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login"></span></button>
+                <button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50" data-lang="register"></button>
                 <button class="md:hidden text-gray-600"><i class="ri-menu-line ri-lg"></i></button>
             </div>
         </div>
@@ -159,8 +159,8 @@ body {
 
 <main class="container mx-auto px-4 py-6 max-w-7xl">
   <div class="mb-8">
-    <h1 class="text-2xl font-bold mb-2" data-lang="terms_title">市場用語集</h1>
-    <p class="text-gray-600" data-lang="terms_subtitle">株式市場で使用される専門用語を解説します。基本用語からチャート用語、指標用語、取引用語まで、投資家のレベルに合わせた情報を提供します。</p>
+    <h1 class="text-2xl font-bold mb-2" data-lang="terms_title"></h1>
+    <p class="text-gray-600" data-lang="terms_subtitle"></p>
   </div>
 
   <!-- 検索・フィルターセクション -->
@@ -169,7 +169,7 @@ body {
       <!-- 検索バー -->
       <div class="flex-1">
         <div class="relative">
-          <input type="text" id="term-search" placeholder="用語を検索" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" data-lang-placeholder="search_placeholder">
+          <input type="text" id="term-search" placeholder="" data-lang-placeholder="search_placeholder" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <i class="ri-search-line text-gray-400"></i>
           </div>
@@ -179,15 +179,15 @@ body {
       <div class="flex space-x-2">
         <div class="flex items-center">
           <input type="checkbox" id="importance-high" class="custom-checkbox" checked>
-          <label for="importance-high" class="ml-2 text-sm text-gray-700">重要度高</label>
+          <label for="importance-high" class="ml-2 text-sm text-gray-700" data-lang="terms_imp_high"></label>
         </div>
         <div class="flex items-center">
           <input type="checkbox" id="importance-medium" class="custom-checkbox" checked>
-          <label for="importance-medium" class="ml-2 text-sm text-gray-700">重要度中</label>
+          <label for="importance-medium" class="ml-2 text-sm text-gray-700" data-lang="terms_imp_medium"></label>
         </div>
         <div class="flex items-center">
           <input type="checkbox" id="importance-low" class="custom-checkbox" checked>
-          <label for="importance-low" class="ml-2 text-sm text-gray-700">重要度低</label>
+          <label for="importance-low" class="ml-2 text-sm text-gray-700" data-lang="terms_imp_low"></label>
         </div>
       </div>
     </div>
@@ -196,11 +196,11 @@ body {
   <!-- カテゴリータブ -->
   <div class="border-b border-gray-200 mb-6">
     <div class="flex overflow-x-auto pb-1 space-x-6">
-      <div class="category-tab active whitespace-nowrap px-1 py-2 text-primary font-medium" data-category="all">すべて</div>
-      <div class="category-tab whitespace-nowrap px-1 py-2 text-gray-600" data-category="basic">基本用語</div>
-      <div class="category-tab whitespace-nowrap px-1 py-2 text-gray-600" data-category="chart">チャート用語</div>
-      <div class="category-tab whitespace-nowrap px-1 py-2 text-gray-600" data-category="indicator">指標用語</div>
-      <div class="category-tab whitespace-nowrap px-1 py-2 text-gray-600" data-category="trading">取引用語</div>
+      <div class="category-tab active whitespace-nowrap px-1 py-2 text-primary font-medium" data-category="all" data-lang="terms_cat_all"></div>
+      <div class="category-tab whitespace-nowrap px-1 py-2 text-gray-600" data-category="basic" data-lang="terms_cat_basic"></div>
+      <div class="category-tab whitespace-nowrap px-1 py-2 text-gray-600" data-category="chart" data-lang="terms_cat_chart"></div>
+      <div class="category-tab whitespace-nowrap px-1 py-2 text-gray-600" data-category="indicator" data-lang="terms_cat_indicator"></div>
+      <div class="category-tab whitespace-nowrap px-1 py-2 text-gray-600" data-category="trading" data-lang="terms_cat_trading"></div>
     </div>
   </div>
 
@@ -210,7 +210,7 @@ body {
     <div class="lg:col-span-3 order-2 lg:order-1">
       <div class="sticky top-6">
         <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6">
-          <h3 class="text-lg font-medium mb-4">五十音順</h3>
+          <h3 class="text-lg font-medium mb-4" data-lang="terms_sidebar_kana_index"></h3>
           <div class="kana-index">
             <a href="#index-a" class="text-center py-1 bg-gray-50 hover:bg-gray-100 rounded text-sm">あ</a>
             <a href="#index-ka" class="text-center py-1 bg-gray-50 hover:bg-gray-100 rounded text-sm">か</a>
@@ -222,25 +222,25 @@ body {
             <a href="#index-ya" class="text-center py-1 bg-gray-50 hover:bg-gray-100 rounded text-sm">や</a>
             <a href="#index-ra" class="text-center py-1 bg-gray-50 hover:bg-gray-100 rounded text-sm">ら</a>
             <a href="#index-wa" class="text-center py-1 bg-gray-50 hover:bg-gray-100 rounded text-sm">わ</a>
-            <a href="#index-en" class="text-center py-1 bg-gray-50 hover:bg-gray-100 rounded text-sm">英数</a>
+            <a href="#index-en" class="text-center py-1 bg-gray-50 hover:bg-gray-100 rounded text-sm" data-lang="terms_sidebar_kana_en"></a>
           </div>
         </div>
         
         <!-- カテゴリー別ジャンプリンク -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6">
-          <h3 class="text-lg font-medium mb-4">カテゴリー</h3>
+          <h3 class="text-lg font-medium mb-4" data-lang="terms_sidebar_categories"></h3>
           <div class="space-y-1">
-            <a href="#" class="glossary-toc-item block px-3 py-2 rounded-md text-sm active" data-category="all">すべての用語</a>
-            <a href="#" class="glossary-toc-item block px-3 py-2 rounded-md text-sm" data-category="basic">基本用語</a>
-            <a href="#" class="glossary-toc-item block px-3 py-2 rounded-md text-sm" data-category="chart">チャート用語</a>
-            <a href="#" class="glossary-toc-item block px-3 py-2 rounded-md text-sm" data-category="indicator">指標用語</a>
-            <a href="#" class="glossary-toc-item block px-3 py-2 rounded-md text-sm" data-category="trading">取引用語</a>
+            <a href="#" class="glossary-toc-item block px-3 py-2 rounded-md text-sm active" data-category="all" data-lang="terms_sidebar_cat_all"></a>
+            <a href="#" class="glossary-toc-item block px-3 py-2 rounded-md text-sm" data-category="basic" data-lang="terms_cat_basic"></a>
+            <a href="#" class="glossary-toc-item block px-3 py-2 rounded-md text-sm" data-category="chart" data-lang="terms_cat_chart"></a>
+            <a href="#" class="glossary-toc-item block px-3 py-2 rounded-md text-sm" data-category="indicator" data-lang="terms_cat_indicator"></a>
+            <a href="#" class="glossary-toc-item block px-3 py-2 rounded-md text-sm" data-category="trading" data-lang="terms_cat_trading"></a>
           </div>
         </div>
         
         <!-- よく検索される用語 -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
-          <h3 class="text-lg font-medium mb-4">よく検索される用語</h3>
+          <h3 class="text-lg font-medium mb-4" data-lang="terms_sidebar_frequent_terms"></h3>
           <div class="space-y-3">
             <a href="#term-ipo" class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-md transition">
               <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
@@ -248,7 +248,7 @@ body {
               </div>
               <div>
                 <span class="text-sm font-medium">IPO</span>
-                <p class="text-xs text-gray-500">新規株式公開</p>
+                <p class="text-xs text-gray-500" data-lang="terms_ipo_short_desc"></p>
               </div>
             </a>
             <a href="#term-psr" class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-md transition">
@@ -257,7 +257,7 @@ body {
               </div>
               <div>
                 <span class="text-sm font-medium">PER</span>
-                <p class="text-xs text-gray-500">株価収益率</p>
+                <p class="text-xs text-gray-500" data-lang="terms_per_short_desc"></p>
               </div>
             </a>
             <a href="#term-pbr" class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-md transition">
@@ -266,7 +266,7 @@ body {
               </div>
               <div>
                 <span class="text-sm font-medium">PBR</span>
-                <p class="text-xs text-gray-500">株価純資産倍率</p>
+                <p class="text-xs text-gray-500" data-lang="terms_pbr_short_desc"></p>
               </div>
             </a>
             <a href="#term-volume" class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-md transition">
@@ -274,8 +274,8 @@ body {
                 <i class="ri-bar-chart-line"></i>
               </div>
               <div>
-                <span class="text-sm font-medium">出来高</span>
-                <p class="text-xs text-gray-500">取引量の指標</p>
+                <span class="text-sm font-medium" data-lang="terms_volume_title"></span>
+                <p class="text-xs text-gray-500" data-lang="terms_volume_short_desc"></p>
               </div>
             </a>
           </div>
@@ -288,43 +288,43 @@ body {
       <!-- 英数 -->
       <section id="index-en" class="mb-12">
         <h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200 flex items-center">
-          <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">英数</span>
-          英数
+          <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm" data-lang="terms_sidebar_kana_en"></span>
+          <span data-lang="terms_section_en"></span>
         </h2>
         
         <!-- IPO -->
         <div id="term-ipo" class="card p-4 mb-4 term-item" data-category="basic" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">IPO（新規株式公開）</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_ipo_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">IPO（Initial Public Offering）とは、未上場企業が新たに株式を証券取引所に上場し、公開することです。企業は資金調達を行い、投資家は新たな投資機会を得ることができます。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_ipo_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>企業が資金調達を行う重要な手段</li>
-                <li>株式の公開価格は主幹事証券会社によって決定される</li>
-                <li>抽選方式で一般投資家に割り当てられることが多い</li>
-                <li>上場初日は価格変動が大きくなる傾向がある</li>
+                <li data-lang="term_ipo_point1"></li>
+                <li data-lang="term_ipo_point2"></li>
+                <li data-lang="term_ipo_point3"></li>
+                <li data-lang="term_ipo_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「テクノロジー企業Aは来月IPOを予定しており、初値は公開価格を大きく上回ると予想されている」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_ipo_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-bb" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">ブックビルディング</a>
-                <a href="#term-listing" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">上場</a>
-                <a href="#term-marketcap" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">時価総額</a>
+                <a href="#term-bb" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_ipo_related1"></a>
+                <a href="#term-listing" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_ipo_related2"></a>
+                <a href="#term-marketcap" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_ipo_related3"></a>
               </div>
             </div>
           </div>
@@ -334,31 +334,31 @@ body {
         <div id="term-per" class="card p-4 mb-4 term-item" data-category="indicator" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">PER（株価収益率）</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_per_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">PER（Price Earnings Ratio）は、株価を1株当たりの純利益（EPS）で割った値で、株価が収益の何倍かを示す指標です。企業の株価が割高か割安かを判断する際に使用されます。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_per_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">計算方法</h4>
-              <div class="bg-white rounded p-2 text-sm font-mono">PER = 株価 ÷ 1株当たり純利益（EPS）</div>
-              <p class="text-xs text-gray-600 mt-2">例：株価が3,000円、EPSが150円の場合、PERは20倍</p>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_calculation"></h4>
+              <div class="bg-white rounded p-2 text-sm font-mono" data-lang="term_per_formula"></div>
+              <p class="text-xs text-gray-600 mt-2" data-lang="term_per_formula_example"></p>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「この企業のPERは30倍と業界平均の20倍を大きく上回っており、株価が割高な可能性がある」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_per_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-pbr" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">PBR</a>
-                <a href="#term-eps" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">EPS</a>
-                <a href="#term-roe" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">ROE</a>
+                <a href="#term-pbr" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_per_related1"></a>
+                <a href="#term-eps" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_per_related2"></a>
+                <a href="#term-roe" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_per_related3"></a>
               </div>
             </div>
           </div>
@@ -368,31 +368,31 @@ body {
         <div id="term-pbr" class="card p-4 mb-4 term-item" data-category="indicator" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">PBR（株価純資産倍率）</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_pbr_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">PBR（Price Book-value Ratio）は、株価を1株当たりの純資産（BPS）で割った値で、株価が純資産の何倍かを示す指標です。企業の資産価値に対する株価の割高・割安を判断する際に使用されます。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_pbr_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">計算方法</h4>
-              <div class="bg-white rounded p-2 text-sm font-mono">PBR = 株価 ÷ 1株当たり純資産（BPS）</div>
-              <p class="text-xs text-gray-600 mt-2">例：株価が3,000円、BPSが2,000円の場合、PBRは1.5倍</p>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_calculation"></h4>
+              <div class="bg-white rounded p-2 text-sm font-mono" data-lang="term_pbr_formula"></div>
+              <p class="text-xs text-gray-600 mt-2" data-lang="term_pbr_formula_example"></p>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「この企業のPBRは0.8倍と1倍を下回っており、純資産に対して株価が割安な状態にある」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_pbr_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-per" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">PER</a>
-                <a href="#term-bps" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">BPS</a>
-                <a href="#term-nav" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">純資産</a>
+                <a href="#term-per" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_pbr_related1"></a>
+                <a href="#term-bps" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_pbr_related2"></a>
+                <a href="#term-nav" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_pbr_related3"></a>
               </div>
             </div>
           </div>
@@ -402,31 +402,31 @@ body {
         <div id="term-roe" class="card p-4 mb-4 term-item" data-category="indicator" data-importance="medium">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">ROE（自己資本利益率）</h3>
-              <span class="importance-badge importance-medium ml-3">重要度中</span>
+              <h3 class="text-lg font-bold" data-lang="term_roe_title"></h3>
+              <span class="importance-badge importance-medium ml-3" data-lang="terms_imp_medium"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">ROE（Return On Equity）は、企業の自己資本（株主資本）に対する当期純利益の割合を示す指標です。企業が株主から預かった資本をどれだけ効率的に利益に変換しているかを測定します。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_roe_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">計算方法</h4>
-              <div class="bg-white rounded p-2 text-sm font-mono">ROE = 当期純利益 ÷ 自己資本 × 100（%）</div>
-              <p class="text-xs text-gray-600 mt-2">例：当期純利益が100億円、自己資本が1,000億円の場合、ROEは10%</p>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_calculation"></h4>
+              <div class="bg-white rounded p-2 text-sm font-mono" data-lang="term_roe_formula"></div>
+              <p class="text-xs text-gray-600 mt-2" data-lang="term_roe_formula_example"></p>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「この企業のROEは15%と高く、株主資本を効率的に活用して利益を生み出している」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_roe_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-roa" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">ROA</a>
-                <a href="#term-eps" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">EPS</a>
-                <a href="#term-equity" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">自己資本</a>
+                <a href="#term-roa" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_roe_related1"></a>
+                <a href="#term-eps" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_roe_related2"></a>
+                <a href="#term-equity" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_roe_related3"></a>
               </div>
             </div>
           </div>
@@ -437,42 +437,42 @@ body {
       <section id="index-a" class="mb-12">
         <h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200 flex items-center">
           <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">あ</span>
-          あ行
+          <span data-lang="terms_section_a"></span>
         </h2>
         
         <!-- 安値 -->
         <div id="term-安値" class="card p-4 mb-4 term-item" data-category="basic" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">安値（やすね）</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_low_price_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">安値とは、一定期間内における株価の最も低い価格のことを指します。日中安値、年初来安値、史上最安値など、参照する期間によって異なります。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_low_price_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>テクニカル分析において重要なサポートレベルとなることが多い</li>
-                <li>連続して安値を更新する場合は下降トレンドの強さを示す</li>
-                <li>前回の安値を割り込まずに反発する場合は、底打ちのサインとなることがある</li>
-                <li>年初来安値や史上最安値の更新は、投資家心理に大きな影響を与える</li>
+                <li data-lang="term_low_price_point1"></li>
+                <li data-lang="term_low_price_point2"></li>
+                <li data-lang="term_low_price_point3"></li>
+                <li data-lang="term_low_price_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「日経平均は一時27,000円の年初来安値を記録したが、その後は反発して上昇トレンドに転じた」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_low_price_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-高値" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">高値</a>
-                <a href="#term-サポートライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">サポートライン</a>
-                <a href="#term-底値" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">底値</a>
+                <a href="#term-高値" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_low_price_related1"></a>
+                <a href="#term-サポートライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_low_price_related2"></a>
+                <a href="#term-底値" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_low_price_related3"></a>
               </div>
             </div>
           </div>
@@ -482,35 +482,35 @@ body {
         <div id="term-アップトレンド" class="card p-4 mb-4 term-item" data-category="chart" data-importance="medium">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">アップトレンド</h3>
-              <span class="importance-badge importance-medium ml-3">重要度中</span>
+              <h3 class="text-lg font-bold" data-lang="term_uptrend_title"></h3>
+              <span class="importance-badge importance-medium ml-3" data-lang="terms_imp_medium"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">アップトレンドとは、株価が全体的に上昇傾向にある状態を指します。高値と安値がともに切り上がっていく（前回の高値より高い高値、前回の安値より高い安値をつける）パターンが特徴です。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_uptrend_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>高値と安値が切り上がりながら推移する</li>
-                <li>移動平均線が上昇傾向を示し、株価が移動平均線の上に位置することが多い</li>
-                <li>調整（一時的な下落）後も、前回の安値を割り込まずに上昇を再開する</li>
-                <li>出来高は上昇局面で増加し、調整局面で減少する傾向がある</li>
+                <li data-lang="term_uptrend_point1"></li>
+                <li data-lang="term_uptrend_point2"></li>
+                <li data-lang="term_uptrend_point3"></li>
+                <li data-lang="term_uptrend_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「この銘柄は3ヶ月間アップトレンドが続いており、押し目買いの好機を狙っている投資家が多い」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_uptrend_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-ダウントレンド" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">ダウントレンド</a>
-                <a href="#term-レンジ相場" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">レンジ相場</a>
-                <a href="#term-トレンドライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">トレンドライン</a>
+                <a href="#term-ダウントレンド" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_uptrend_related1"></a>
+                <a href="#term-レンジ相場" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_uptrend_related2"></a>
+                <a href="#term-トレンドライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_uptrend_related3"></a>
               </div>
             </div>
           </div>
@@ -521,42 +521,42 @@ body {
       <section id="index-ka" class="mb-12">
         <h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200 flex items-center">
           <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">か</span>
-          か行
+          <span data-lang="terms_section_ka"></span>
         </h2>
         
         <!-- 株価指数 -->
         <div id="term-株価指数" class="card p-4 mb-4 term-item" data-category="basic" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">株価指数（かぶかしすう）</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_stock_index_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">株価指数とは、特定の市場や業種の株価全体の動向を表す指標です。複数の銘柄の株価を一定のルールで集計し、単一の数値として表します。市場全体の動きを把握するために使用されます。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_stock_index_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主な株価指数</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>日経平均株価（日経225）：東証一部上場企業から選ばれた225銘柄の平均株価</li>
-                <li>TOPIX（東証株価指数）：東証一部上場全銘柄の時価総額加重平均</li>
-                <li>JPX日経インデックス400：ROEなどの指標を基に選定された400銘柄の時価総額加重平均</li>
-                <li>日経ジャスダック平均：ジャスダック市場上場銘柄の平均株価</li>
+                <li data-lang="term_stock_index_point1"></li>
+                <li data-lang="term_stock_index_point2"></li>
+                <li data-lang="term_stock_index_point3"></li>
+                <li data-lang="term_stock_index_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「本日の日経平均株価は前日比300円高の29,500円で取引を終えた」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_stock_index_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-日経平均" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">日経平均</a>
-                <a href="#term-topix" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">TOPIX</a>
-                <a href="#term-指数化" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">指数化</a>
+                <a href="#term-日経平均" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_stock_index_related1"></a>
+                <a href="#term-topix" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_stock_index_related2"></a>
+                <a href="#term-指数化" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_stock_index_related3"></a>
               </div>
             </div>
           </div>
@@ -566,35 +566,35 @@ body {
         <div id="term-株主優待" class="card p-4 mb-4 term-item" data-category="basic" data-importance="medium">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">株主優待（かぶぬしゆうたい）</h3>
-              <span class="importance-badge importance-medium ml-3">重要度中</span>
+              <h3 class="text-lg font-bold" data-lang="term_shareholder_benefit_title"></h3>
+              <span class="importance-badge importance-medium ml-3" data-lang="terms_imp_medium"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">株主優待とは、企業が自社株主に対して提供する特典のことです。自社製品、商品券、割引券などが一般的で、配当とは別に株主に還元する仕組みです。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_shareholder_benefit_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>権利確定日に株主名簿に記載されている株主に付与される</li>
-                <li>保有株数に応じて優待内容が異なることが多い</li>
-                <li>年1回または年2回実施する企業が多い</li>
-                <li>長期保有株主向けの特別優待を設ける企業も増えている</li>
+                <li data-lang="term_shareholder_benefit_point1"></li>
+                <li data-lang="term_shareholder_benefit_point2"></li>
+                <li data-lang="term_shareholder_benefit_point3"></li>
+                <li data-lang="term_shareholder_benefit_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「この飲食チェーンは100株以上保有する株主に対して、年2回5,000円相当の食事券を株主優待として提供している」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_shareholder_benefit_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-配当" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">配当</a>
-                <a href="#term-権利確定日" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">権利確定日</a>
-                <a href="#term-株主還元" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">株主還元</a>
+                <a href="#term-配当" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_shareholder_benefit_related1"></a>
+                <a href="#term-権利確定日" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_shareholder_benefit_related2"></a>
+                <a href="#term-株主還元" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_shareholder_benefit_related3"></a>
               </div>
             </div>
           </div>
@@ -604,35 +604,35 @@ body {
         <div id="term-株式分割" class="card p-4 mb-4 term-item" data-category="basic" data-importance="medium">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">株式分割（かぶしきぶんかつ）</h3>
-              <span class="importance-badge importance-medium ml-3">重要度中</span>
+              <h3 class="text-lg font-bold" data-lang="term_stock_split_title"></h3>
+              <span class="importance-badge importance-medium ml-3" data-lang="terms_imp_medium"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">株式分割とは、企業が発行済み株式を分割して株式数を増やす手法です。株主が保有する株式数は増えますが、株価は分割比率に応じて下がるため、理論上は資産価値は変わりません。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_stock_split_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>1株を2株、1株を3株など、様々な分割比率がある</li>
-                <li>株価が高騰した銘柄の投資しやすさを向上させる目的で実施されることが多い</li>
-                <li>株式の流動性向上につながる</li>
-                <li>分割による株価の調整後、心理的に割安感が生まれ株価が上昇することもある</li>
+                <li data-lang="term_stock_split_point1"></li>
+                <li data-lang="term_stock_split_point2"></li>
+                <li data-lang="term_stock_split_point3"></li>
+                <li data-lang="term_stock_split_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「テクノロジー企業Bは来月1:4の株式分割を実施し、現在の株価40,000円を10,000円程度に調整する予定だ」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_stock_split_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-株式併合" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">株式併合</a>
-                <a href="#term-権利落ち" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">権利落ち</a>
-                <a href="#term-eps" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">EPS</a>
+                <a href="#term-株式併合" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_stock_split_related1"></a>
+                <a href="#term-権利落ち" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_stock_split_related2"></a>
+                <a href="#term-eps" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_stock_split_related3"></a>
               </div>
             </div>
           </div>
@@ -643,42 +643,42 @@ body {
       <section id="index-sa" class="mb-12">
         <h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200 flex items-center">
           <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">さ</span>
-          さ行
+          <span data-lang="terms_section_sa"></span>
         </h2>
         
         <!-- サポートライン -->
         <div id="term-サポートライン" class="card p-4 mb-4 term-item" data-category="chart" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">サポートライン</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_support_line_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">サポートラインとは、チャート上で株価が下落した際に反発しやすい価格帯を結んだラインのことです。過去に何度か株価が反発した価格水準に引かれ、下値支持線とも呼ばれます。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_support_line_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>過去の安値を結ぶことで形成される</li>
-                <li>株価がサポートラインに接近すると買い注文が入りやすい</li>
-                <li>サポートラインを下抜けると、さらなる下落の可能性が高まる</li>
-                <li>下抜けた後に再び上抜けると、レジスタンスラインに転換することがある</li>
+                <li data-lang="term_support_line_point1"></li>
+                <li data-lang="term_support_line_point2"></li>
+                <li data-lang="term_support_line_point3"></li>
+                <li data-lang="term_support_line_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「日経平均は28,000円付近に強いサポートラインがあり、3度この水準で反発している」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_support_line_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-レジスタンスライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">レジスタンスライン</a>
-                <a href="#term-トレンドライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">トレンドライン</a>
-                <a href="#term-ブレイクアウト" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">ブレイクアウト</a>
+                <a href="#term-レジスタンスライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_support_line_related1"></a>
+                <a href="#term-トレンドライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_support_line_related2"></a>
+                <a href="#term-ブレイクアウト" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_support_line_related3"></a>
               </div>
             </div>
           </div>
@@ -688,35 +688,35 @@ body {
         <div id="term-指値注文" class="card p-4 mb-4 term-item" data-category="trading" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">指値注文（さしねちゅうもん）</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_limit_order_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">指値注文とは、株式の売買において、取引を行う価格を指定する注文方法です。買いの場合は指定価格以下、売りの場合は指定価格以上でないと約定しません。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_limit_order_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>希望する価格で取引できるというメリットがある</li>
-                <li>指定した価格に到達しない場合は約定しないリスクがある</li>
-                <li>価格変動が激しい相場では約定しにくくなることがある</li>
-                <li>寄り付き（取引開始時）や引け（取引終了時）に特殊な指値注文方法がある</li>
+                <li data-lang="term_limit_order_point1"></li>
+                <li data-lang="term_limit_order_point2"></li>
+                <li data-lang="term_limit_order_point3"></li>
+                <li data-lang="term_limit_order_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「現在の株価は1,500円だが、1,450円で指値買い注文を出しておき、一時的な下落時に自動的に買えるようにした」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_limit_order_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-成行注文" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">成行注文</a>
-                <a href="#term-逆指値注文" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">逆指値注文</a>
-                <a href="#term-ioc注文" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">IOC注文</a>
+                <a href="#term-成行注文" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_limit_order_related1"></a>
+                <a href="#term-逆指値注文" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_limit_order_related2"></a>
+                <a href="#term-ioc注文" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_limit_order_related3"></a>
               </div>
             </div>
           </div>
@@ -727,42 +727,42 @@ body {
       <section id="index-ta" class="mb-12">
         <h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200 flex items-center">
           <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">た</span>
-          た行
+          <span data-lang="terms_section_ta"></span>
         </h2>
         
         <!-- 高値 -->
         <div id="term-高値" class="card p-4 mb-4 term-item" data-category="basic" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">高値（たかね）</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_high_price_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">高値とは、一定期間内における株価の最も高い価格のことを指します。日中高値、年初来高値、史上最高値など、参照する期間によって異なります。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_high_price_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>テクニカル分析において重要なレジスタンスレベルとなることが多い</li>
-                <li>連続して高値を更新する場合は上昇トレンドの強さを示す</li>
-                <li>前回の高値を超えられずに反落する場合は、天井のサインとなることがある</li>
-                <li>年初来高値や史上最高値の更新は、投資家心理に大きな影響を与える</li>
+                <li data-lang="term_high_price_point1"></li>
+                <li data-lang="term_high_price_point2"></li>
+                <li data-lang="term_high_price_point3"></li>
+                <li data-lang="term_high_price_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「日経平均は一時30,000円の年初来高値を記録したが、その後は利益確定売りで反落した」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_high_price_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-安値" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">安値</a>
-                <a href="#term-レジスタンスライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">レジスタンスライン</a>
-                <a href="#term-天井" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">天井</a>
+                <a href="#term-安値" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_high_price_related1"></a>
+                <a href="#term-レジスタンスライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_high_price_related2"></a>
+                <a href="#term-天井" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_high_price_related3"></a>
               </div>
             </div>
           </div>
@@ -772,35 +772,35 @@ body {
         <div id="term-ダウントレンド" class="card p-4 mb-4 term-item" data-category="chart" data-importance="medium">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">ダウントレンド</h3>
-              <span class="importance-badge importance-medium ml-3">重要度中</span>
+              <h3 class="text-lg font-bold" data-lang="term_downtrend_title"></h3>
+              <span class="importance-badge importance-medium ml-3" data-lang="terms_imp_medium"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">ダウントレンドとは、株価が全体的に下落傾向にある状態を指します。高値と安値がともに切り下がっていく（前回の高値より低い高値、前回の安値より低い安値をつける）パターンが特徴です。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_downtrend_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>高値と安値が切り下がりながら推移する</li>
-                <li>移動平均線が下降傾向を示し、株価が移動平均線の下に位置することが多い</li>
-                <li>反発（一時的な上昇）後も、前回の高値を超えずに下落を再開する</li>
-                <li>出来高は下落局面で増加し、反発局面で減少する傾向がある</li>
+                <li data-lang="term_downtrend_point1"></li>
+                <li data-lang="term_downtrend_point2"></li>
+                <li data-lang="term_downtrend_point3"></li>
+                <li data-lang="term_downtrend_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「この銘柄は2ヶ月間ダウントレンドが続いており、反発を売る戦略が有効となっている」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_downtrend_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-アップトレンド" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">アップトレンド</a>
-                <a href="#term-レンジ相場" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">レンジ相場</a>
-                <a href="#term-トレンドライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">トレンドライン</a>
+                <a href="#term-アップトレンド" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_downtrend_related1"></a>
+                <a href="#term-レンジ相場" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_downtrend_related2"></a>
+                <a href="#term-トレンドライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_downtrend_related3"></a>
               </div>
             </div>
           </div>
@@ -811,42 +811,42 @@ body {
       <section id="index-na" class="mb-12">
         <h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200 flex items-center">
           <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">な</span>
-          な行
+          <span data-lang="terms_section_na"></span>
         </h2>
         
         <!-- 日経平均株価 -->
         <div id="term-日経平均株価" class="card p-4 mb-4 term-item" data-category="basic" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">日経平均株価（にっけいへいきんかぶか）</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_nikkei_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">日経平均株価（日経225）は、東京証券取引所に上場する代表的な225銘柄の株価を平均した指数です。日本の株式市場全体の動向を示す代表的な指標として広く利用されています。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_nikkei_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>株価平均型の指数で、株価の高い銘柄ほど影響力が大きい</li>
-                <li>日本経済新聞社が算出・公表している</li>
-                <li>構成銘柄は定期的に見直される</li>
-                <li>先物やオプション取引の対象となっている</li>
+                <li data-lang="term_nikkei_point1"></li>
+                <li data-lang="term_nikkei_point2"></li>
+                <li data-lang="term_nikkei_point3"></li>
+                <li data-lang="term_nikkei_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「米国株式市場の上昇を受けて、日経平均株価は29,000円台を回復した」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_nikkei_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-topix" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">TOPIX</a>
-                <a href="#term-ダウ平均" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">ダウ平均</a>
-                <a href="#term-日経平均先物" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">日経平均先物</a>
+                <a href="#term-topix" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_nikkei_related1"></a>
+                <a href="#term-ダウ平均" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_nikkei_related2"></a>
+                <a href="#term-日経平均先物" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_nikkei_related3"></a>
               </div>
             </div>
           </div>
@@ -857,42 +857,42 @@ body {
       <section id="index-ha" class="mb-12">
         <h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200 flex items-center">
           <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">は</span>
-          は行
+          <span data-lang="terms_section_ha"></span>
         </h2>
         
         <!-- 配当 -->
         <div id="term-配当" class="card p-4 mb-4 term-item" data-category="basic" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">配当（はいとう）</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_dividend_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">配当とは、企業が利益の一部を株主に現金で還元する仕組みです。株主に対する重要な利益還元方法の一つで、通常は年1回（期末配当）または年2回（中間配当と期末配当）実施されます。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_dividend_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>配当金額は1株あたりの金額で表示される</li>
-                <li>配当利回り = 年間配当金 ÷ 株価 × 100（%）で計算される</li>
-                <li>権利確定日に株主名簿に記載されている株主に支払われる</li>
-                <li>配当性向 = 配当金総額 ÷ 当期純利益 × 100（%）で、利益に対する配当の割合を示す</li>
+                <li data-lang="term_dividend_point1"></li>
+                <li data-lang="term_dividend_point2"></li>
+                <li data-lang="term_dividend_point3"></li>
+                <li data-lang="term_dividend_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「この企業は1株あたり年間60円の配当を実施しており、現在の株価3,000円に対して配当利回りは2%となる」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_dividend_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-配当利回り" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">配当利回り</a>
-                <a href="#term-権利確定日" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">権利確定日</a>
-                <a href="#term-株主還元" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">株主還元</a>
+                <a href="#term-配当利回り" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_dividend_related1"></a>
+                <a href="#term-権利確定日" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_dividend_related2"></a>
+                <a href="#term-株主還元" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_dividend_related3"></a>
               </div>
             </div>
           </div>
@@ -903,42 +903,42 @@ body {
       <section id="index-ma" class="mb-12">
         <h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200 flex items-center">
           <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">ま</span>
-          ま行
+          <span data-lang="terms_section_ma"></span>
         </h2>
         
         <!-- 窓（ギャップ） -->
         <div id="term-窓" class="card p-4 mb-4 term-item" data-category="chart" data-importance="medium">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">窓（まど）/ ギャップ</h3>
-              <span class="importance-badge importance-medium ml-3">重要度中</span>
+              <h3 class="text-lg font-bold" data-lang="term_gap_title"></h3>
+              <span class="importance-badge importance-medium ml-3" data-lang="terms_imp_medium"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">窓（ギャップ）とは、前日の終値と当日の始値の間に価格の空白部分ができる現象です。上昇ギャップ（前日終値より高い始値）と下落ギャップ（前日終値より低い始値）があります。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_gap_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>重要な経済指標の発表や企業の決算発表後などに発生しやすい</li>
-                <li>「窓は埋まる」という格言があり、後日その価格帯まで戻ることが多い</li>
-                <li>上昇トレンド中の上昇ギャップは強気サイン、下降トレンド中の下落ギャップは弱気サイン</li>
-                <li>大きなギャップが発生した場合、トレンド転換のサインとなることがある</li>
+                <li data-lang="term_gap_point1"></li>
+                <li data-lang="term_gap_point2"></li>
+                <li data-lang="term_gap_point3"></li>
+                <li data-lang="term_gap_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「好決算を受けて、この銘柄は前日終値の1,500円から当日始値1,580円と大きな上昇ギャップで取引を開始した」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_gap_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-窓埋め" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">窓埋め</a>
-                <a href="#term-寄り付き" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">寄り付き</a>
-                <a href="#term-前日比" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">前日比</a>
+                <a href="#term-窓埋め" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_gap_related1"></a>
+                <a href="#term-寄り付き" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_gap_related2"></a>
+                <a href="#term-前日比" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_gap_related3"></a>
               </div>
             </div>
           </div>
@@ -949,42 +949,42 @@ body {
       <section id="index-ya" class="mb-12">
         <h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200 flex items-center">
           <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">や</span>
-          や行
+          <span data-lang="terms_section_ya"></span>
         </h2>
         
         <!-- 四本値 -->
         <div id="term-四本値" class="card p-4 mb-4 term-item" data-category="basic" data-importance="medium">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">四本値（よんほんち）</h3>
-              <span class="importance-badge importance-medium ml-3">重要度中</span>
+              <h3 class="text-lg font-bold" data-lang="term_ohlc_title"></h3>
+              <span class="importance-badge importance-medium ml-3" data-lang="terms_imp_medium"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">四本値とは、一定期間（通常は1日）の株価を表す4つの値段のことで、始値、高値、安値、終値を指します。ローソク足チャートの基本となる価格情報です。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_ohlc_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>始値：取引開始時の最初の約定価格</li>
-                <li>高値：期間内の最も高い取引価格</li>
-                <li>安値：期間内の最も低い取引価格</li>
-                <li>終値：取引終了時の最後の約定価格（翌日の基準価格となる）</li>
+                <li data-lang="term_ohlc_point1"></li>
+                <li data-lang="term_ohlc_point2"></li>
+                <li data-lang="term_ohlc_point3"></li>
+                <li data-lang="term_ohlc_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「本日のトヨタ自動車の四本値は、始値2,100円、高値2,150円、安値2,080円、終値2,120円だった」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_ohlc_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-ローソク足" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">ローソク足</a>
-                <a href="#term-寄り付き" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">寄り付き</a>
-                <a href="#term-引け" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">引け</a>
+                <a href="#term-ローソク足" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_ohlc_related1"></a>
+                <a href="#term-寄り付き" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_ohlc_related2"></a>
+                <a href="#term-引け" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_ohlc_related3"></a>
               </div>
             </div>
           </div>
@@ -995,43 +995,43 @@ body {
       <section id="index-ra" class="mb-12">
         <h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200 flex items-center">
           <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">ら</span>
-          ら行
+          <span data-lang="terms_section_ra"></span>
         </h2>
         
         <!-- ローソク足 -->
         <div id="term-ローソク足" class="card p-4 mb-4 term-item" data-category="chart" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">ローソク足</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_candlestick_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">ローソク足とは、株価の動きを視覚的に表現するチャート手法で、日本発祥のテクニカル分析ツールです。始値、高値、安値、終値の四本値を一つの図形で表現します。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_candlestick_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>実体（ボディ）：始値と終値を結んだ長方形部分</li>
-                <li>ヒゲ（シャドウ）：高値・安値から実体までの線</li>
-                <li>陽線（白/緑/青）：終値が始値より高い場合（上昇）</li>
-                <li>陰線（黒/赤）：終値が始値より低い場合（下落）</li>
-                <li>様々なパターン（はらみ線、包み線、十字線など）が相場の転換点を示す</li>
+                <li data-lang="term_candlestick_point1"></li>
+                <li data-lang="term_candlestick_point2"></li>
+                <li data-lang="term_candlestick_point3"></li>
+                <li data-lang="term_candlestick_point4"></li>
+                <li data-lang="term_candlestick_point5"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「日足チャートで3本連続の大陽線が現れ、強い買い圧力が続いていることを示している」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_candlestick_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-四本値" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">四本値</a>
-                <a href="#term-陽線" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">陽線</a>
-                <a href="#term-陰線" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">陰線</a>
+                <a href="#term-四本値" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_candlestick_related1"></a>
+                <a href="#term-陽線" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_candlestick_related2"></a>
+                <a href="#term-陰線" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_candlestick_related3"></a>
               </div>
             </div>
           </div>
@@ -1041,35 +1041,35 @@ body {
         <div id="term-レジスタンスライン" class="card p-4 mb-4 term-item" data-category="chart" data-importance="high">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">レジスタンスライン</h3>
-              <span class="importance-badge importance-high ml-3">重要度高</span>
+              <h3 class="text-lg font-bold" data-lang="term_resistance_line_title"></h3>
+              <span class="importance-badge importance-high ml-3" data-lang="terms_imp_high"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">レジスタンスラインとは、チャート上で株価が上昇した際に反落しやすい価格帯を結んだラインのことです。過去に何度か株価が反落した価格水準に引かれ、上値抵抗線とも呼ばれます。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_resistance_line_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>過去の高値を結ぶことで形成される</li>
-                <li>株価がレジスタンスラインに接近すると売り注文が入りやすい</li>
-                <li>レジスタンスラインを上抜けると、さらなる上昇の可能性が高まる</li>
-                <li>上抜けた後に再び下抜けると、サポートラインに転換することがある</li>
+                <li data-lang="term_resistance_line_point1"></li>
+                <li data-lang="term_resistance_line_point2"></li>
+                <li data-lang="term_resistance_line_point3"></li>
+                <li data-lang="term_resistance_line_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「日経平均は30,000円付近に強いレジスタンスラインがあり、2度この水準で反落している」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_resistance_line_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-サポートライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">サポートライン</a>
-                <a href="#term-トレンドライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">トレンドライン</a>
-                <a href="#term-ブレイクアウト" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">ブレイクアウト</a>
+                <a href="#term-サポートライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_resistance_line_related1"></a>
+                <a href="#term-トレンドライン" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_resistance_line_related2"></a>
+                <a href="#term-ブレイクアウト" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_resistance_line_related3"></a>
               </div>
             </div>
           </div>
@@ -1080,42 +1080,42 @@ body {
       <section id="index-wa" class="mb-12">
         <h2 class="text-xl font-bold mb-6 pb-2 border-b border-gray-200 flex items-center">
           <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">わ</span>
-          わ行
+          <span data-lang="terms_section_wa"></span>
         </h2>
         
         <!-- 割安株 -->
         <div id="term-割安株" class="card p-4 mb-4 term-item" data-category="basic" data-importance="medium">
           <div class="flex items-center justify-between cursor-pointer term-header">
             <div class="flex items-center">
-              <h3 class="text-lg font-bold">割安株（わりやすかぶ）</h3>
-              <span class="importance-badge importance-medium ml-3">重要度中</span>
+              <h3 class="text-lg font-bold" data-lang="term_value_stock_title"></h3>
+              <span class="importance-badge importance-medium ml-3" data-lang="terms_imp_medium"></span>
             </div>
             <i class="ri-arrow-down-s-line term-toggle"></i>
           </div>
           <div class="term-detail pt-4">
-            <p class="text-gray-700 mb-4">割安株とは、企業の本来の価値（理論価値や適正価値）に比べて株価が割安に評価されていると考えられる株式のことです。バリュー投資の対象となります。</p>
+            <p class="text-gray-700 mb-4" data-lang="term_value_stock_desc"></p>
             
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2">主なポイント</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_main_points"></h4>
               <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                <li>PER（株価収益率）が業界平均や市場平均より低い</li>
-                <li>PBR（株価純資産倍率）が1倍を下回る、または業界平均より低い</li>
-                <li>配当利回りが市場平均より高い</li>
-                <li>企業の成長性や収益性に対して株価が割安に放置されている状態</li>
+                <li data-lang="term_value_stock_point1"></li>
+                <li data-lang="term_value_stock_point2"></li>
+                <li data-lang="term_value_stock_point3"></li>
+                <li data-lang="term_value_stock_point4"></li>
               </ul>
             </div>
             
             <div class="bg-blue-50 rounded-lg p-4 mb-4">
-              <h4 class="font-medium mb-2 text-blue-800">使用例</h4>
-              <p class="text-sm text-gray-700">「この銀行株はPBR0.6倍、配当利回り4%と典型的な割安株の特徴を示している」</p>
+              <h4 class="font-medium mb-2 text-blue-800" data-lang="terms_reusable_example"></h4>
+              <p class="text-sm text-gray-700" data-lang="term_value_stock_example"></p>
             </div>
             
             <div class="mt-3">
-              <h4 class="font-medium mb-2">関連用語</h4>
+              <h4 class="font-medium mb-2" data-lang="terms_reusable_related"></h4>
               <div class="flex flex-wrap gap-2">
-                <a href="#term-割高株" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">割高株</a>
-                <a href="#term-バリュー投資" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">バリュー投資</a>
-                <a href="#term-per" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded">PER</a>
+                <a href="#term-割高株" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_value_stock_related1"></a>
+                <a href="#term-バリュー投資" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_value_stock_related2"></a>
+                <a href="#term-per" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded" data-lang="term_value_stock_related3"></a>
               </div>
             </div>
           </div>
@@ -1137,7 +1137,7 @@ body {
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <div>
         <h4 class="text-lg font-semibold mb-4">Market Insight Japan</h4>
-        <p class="text-sm text-gray-600 mb-4">日本の短期株式トレーダー向けに、信頼性の高い市場分析を毎日2回配信するプロフェッショナルサービス</p>
+        <p class="text-sm text-gray-600 mb-4" data-lang="about_description"></p>
         <div class="flex space-x-4">
           <a href="#" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary">
             <i class="ri-twitter-x-line"></i>
@@ -1151,32 +1151,32 @@ body {
         </div>
       </div>
       <div>
-        <h4 class="text-lg font-semibold mb-4">コンテンツ</h4>
+        <h4 class="text-lg font-semibold mb-4" data-lang="footer_content_title"></h4>
         <ul class="space-y-2">
-          <li><a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/c2b76512-1852-46a7-bc7a-8fe9c424200f" data-readdy="true" class="text-sm text-gray-600 hover:text-primary">本日の市況分析</a></li>
-          <li><a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/c217e7e5-db6d-49b5-a8b1-645e129c3123" data-readdy="true" class="text-sm text-gray-600 hover:text-primary">分析アーカイブ</a></li>
-          <li><a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/94b141a0-5479-4015-8c3f-b32cfa28317c" data-readdy="true" class="text-sm text-gray-600 hover:text-primary">テクニカル指標解説</a></li>
-          <li><a href="#" class="text-sm text-primary font-medium">市場用語集</a></li>
+          <li><a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/c2b76512-1852-46a7-bc7a-8fe9c424200f" data-readdy="true" class="text-sm text-gray-600 hover:text-primary" data-lang="nav_today"></a></li>
+          <li><a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/c217e7e5-db6d-49b5-a8b1-645e129c3123" data-readdy="true" class="text-sm text-gray-600 hover:text-primary" data-lang="nav_archive"></a></li>
+          <li><a href="https://readdy.ai/home/201953e9-b390-4de5-99cf-ec8a266a5178/94b141a0-5479-4015-8c3f-b32cfa28317c" data-readdy="true" class="text-sm text-gray-600 hover:text-primary" data-lang="nav_indicators"></a></li>
+          <li><a href="#" class="text-sm text-primary font-medium" data-lang="nav_terms"></a></li>
         </ul>
       </div>
       <div>
-        <h4 class="text-lg font-semibold mb-4">サイト情報</h4>
+        <h4 class="text-lg font-semibold mb-4" data-lang="footer_site_info_title"></h4>
         <ul class="space-y-2">
-          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">サイトについて</a></li>
-          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">分析手法</a></li>
-          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">利用規約</a></li>
-          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">プライバシーポリシー</a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_about_link"></a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_analysis_method_link"></a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_terms_link"></a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_privacy_link"></a></li>
         </ul>
       </div>
       <div>
-        <h4 class="text-lg font-semibold mb-4">お問い合わせ</h4>
-        <p class="text-sm text-gray-600 mb-4">ご質問やフィードバックがございましたら、お気軽にお問い合わせください。</p>
-        <a href="#" class="inline-block bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap">お問い合わせ</a>
+        <h4 class="text-lg font-semibold mb-4" data-lang="footer_contact_title"></h4>
+        <p class="text-sm text-gray-600 mb-4" data-lang="footer_contact_desc"></p>
+        <a href="#" class="inline-block bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap" data-lang="footer_contact_button"></a>
       </div>
     </div>
     <div class="border-t border-gray-200 mt-8 pt-8 text-center">
-      <p class="text-sm text-gray-600">© 2025 Market Insight Japan. All rights reserved.</p>
-      <p class="text-xs text-gray-500 mt-2">当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。投資の最終判断はご自身でお願いします。</p>
+      <p class="text-sm text-gray-600" data-lang="footer_copyright"></p>
+      <p class="text-xs text-gray-500 mt-2" data-lang="footer_disclaimer_short"></p>
     </div>
   </div>
 </footer>
