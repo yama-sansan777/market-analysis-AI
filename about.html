@@ -161,16 +161,16 @@ to { opacity: 1; transform: translateY(0); }
             <div class="flex items-center space-x-8">
                 <a href="/index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
                 <nav class="hidden md:flex space-x-6">
-                    <a href="/index.html" class="text-gray-600 hover:text-primary">本日の市況分析</a>
-                    <a href="/archive.html" class="text-gray-600 hover:text-primary">分析アーカイブ</a>
-                    <a href="/indicators.html" class="text-gray-600 hover:text-primary">テクニカル指標解説</a>
-                    <a href="/terms.html" class="text-gray-600 hover:text-primary">市場用語集</a>
-                    <a href="/about.html" class="text-primary font-medium border-b-2 border-primary pb-1">サイトについて</a>
+                    <a href="/index.html" class="text-gray-600 hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                    <a href="/archive.html" class="text-gray-600 hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
+                    <a href="/indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                    <a href="/terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                    <a href="/about.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_about">サイトについて</a>
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
-                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span>ログイン</span></button>
-                <button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50">無料登録</button>
+                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                <button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
                 <button class="md:hidden text-gray-600"><i class="ri-menu-line ri-lg"></i></button>
             </div>
         </div>
@@ -188,56 +188,56 @@ to { opacity: 1; transform: translateY(0); }
 <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
 <i class="ri-line-chart-line ri-xl text-primary"></i>
 </div>
-<h3 class="text-xl font-semibold">サービス概要</h3>
+<h3 class="text-xl font-semibold" data-lang="service_overview_title">サービス概要</h3>
 </div>
-<p class="text-gray-700 mb-4">YOHOU US Stock AIは、最新の人工知能技術を活用して、日経平均株価の動向を分析・予測する革新的なAIプラットフォームです。市場データをリアルタイムで処理し、高度な機械学習アルゴリズムによって、精度の高い市場分析と予測を提供します。</p>
-<h4 class="font-semibold mb-2 mt-6">主な特徴</h4>
+<p class="text-gray-700 mb-4" data-lang="service_overview_description">YOHOU US Stock AIは、最新の人工知能技術を活用して、日経平均株価の動向を分析・予測する革新的なAIプラットフォームです。市場データをリアルタイムで処理し、高度な機械学習アルゴリズムによって、精度の高い市場分析と予測を提供します。</p>
+<h4 class="font-semibold mb-2 mt-6" data-lang="service_features_title">主な特徴</h4>
 <ul class="space-y-2">
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-check-line"></i>
 </div>
-<span>日経平均、TOPIXなど主要指数の詳細分析</span>
+<span data-lang="service_feature_1">日経平均、TOPIXなど主要指数の詳細分析</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-check-line"></i>
 </div>
-<span>市場の健全性、心理指標のリアルタイム評価</span>
+<span data-lang="service_feature_2">市場の健全性、心理指標のリアルタイム評価</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-check-line"></i>
 </div>
-<span>セクター別の詳細な動向と相関分析</span>
+<span data-lang="service_feature_3">セクター別の詳細な動向と相関分析</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-check-line"></i>
 </div>
-<span>注目銘柄のピックアップと背景解説</span>
+<span data-lang="service_feature_4">注目銘柄のピックアップと背景解説</span>
 </li>
 </ul>
-<h4 class="font-semibold mb-2 mt-6">対象ユーザー</h4>
-<p class="text-gray-700">当サービスは以下のような方々に最適です：</p>
+<h4 class="font-semibold mb-2 mt-6" data-lang="target_users_title">対象ユーザー</h4>
+<p class="text-gray-700" data-lang="target_users_description">当サービスは以下のような方々に最適です：</p>
 <ul class="space-y-2 mt-2">
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-user-line"></i>
 </div>
-<span>日本株の短期トレーダー</span>
+<span data-lang="target_user_1">日本株の短期トレーダー</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-user-line"></i>
 </div>
-<span>機関投資家のトレーディングデスク</span>
+<span data-lang="target_user_2">機関投資家のトレーディングデスク</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-user-line"></i>
 </div>
-<span>市場動向を詳細に把握したい個人投資家</span>
+<span data-lang="target_user_3">市場動向を詳細に把握したい個人投資家</span>
 </li>
 </ul>
 </div>
@@ -247,52 +247,52 @@ to { opacity: 1; transform: translateY(0); }
 <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
 <i class="ri-bar-chart-grouped-line ri-xl text-primary"></i>
 </div>
-<h3 class="text-xl font-semibold">分析手法</h3>
+<h3 class="text-xl font-semibold" data-lang="analysis_method_title">分析手法</h3>
 </div>
-<p class="text-gray-700 mb-4">YOHOU US Stock AIでは、複数の分析手法を組み合わせることで、市場の多角的な理解を提供しています。定量的なデータ分析と定性的な市場解釈を融合させ、バランスの取れた市場見通しを提供します。</p>
-<h4 class="font-semibold mb-2 mt-6">データ収集方法</h4>
-<p class="text-gray-700 mb-4">当サービスでは、以下のデータソースを活用しています：</p>
+<p class="text-gray-700 mb-4" data-lang="analysis_method_description">YOHOU US Stock AIでは、複数の分析手法を組み合わせることで、市場の多角的な理解を提供しています。定量的なデータ分析と定性的な市場解釈を融合させ、バランスの取れた市場見通しを提供します。</p>
+<h4 class="font-semibold mb-2 mt-6" data-lang="data_collection_title">データ収集方法</h4>
+<p class="text-gray-700 mb-4" data-lang="data_collection_description">当サービスでは、以下のデータソースを活用しています：</p>
 <ul class="space-y-2">
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-database-2-line"></i>
 </div>
-<span>東京証券取引所のリアルタイム取引データ</span>
+<span data-lang="data_source_1">東京証券取引所のリアルタイム取引データ</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-database-2-line"></i>
 </div>
-<span>各種経済指標と企業業績データ</span>
+<span data-lang="data_source_2">各種経済指標と企業業績データ</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-database-2-line"></i>
 </div>
-<span>グローバル市場の相関データ</span>
+<span data-lang="data_source_3">グローバル市場の相関データ</span>
 </li>
 </ul>
-<h4 class="font-semibold mb-2 mt-6">主要分析指標</h4>
+<h4 class="font-semibold mb-2 mt-6" data-lang="key_indicators_title">主要分析指標</h4>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
 <div class="bg-gray-50 p-3 rounded">
-<h5 class="font-medium text-sm mb-1">市場の健全性</h5>
-<p class="text-xs text-gray-600">騰落銘柄比率、出来高分析、セクター間の資金フロー</p>
+<h5 class="font-medium text-sm mb-1" data-lang="indicator_market_health_title">市場の健全性</h5>
+<p class="text-xs text-gray-600" data-lang="indicator_market_health_desc">騰落銘柄比率、出来高分析、セクター間の資金フロー</p>
 </div>
 <div class="bg-gray-50 p-3 rounded">
-<h5 class="font-medium text-sm mb-1">市場心理</h5>
-<p class="text-xs text-gray-600">恐怖・強欲指数、ボラティリティ分析、投資家センチメント</p>
+<h5 class="font-medium text-sm mb-1" data-lang="indicator_market_sentiment_title">市場心理</h5>
+<p class="text-xs text-gray-600" data-lang="indicator_market_sentiment_desc">恐怖・強欲指数、ボラティリティ分析、投資家センチメント</p>
 </div>
 <div class="bg-gray-50 p-3 rounded">
-<h5 class="font-medium text-sm mb-1">テクニカル分析</h5>
-<p class="text-xs text-gray-600">移動平均、RSI、MACD、ボリンジャーバンド、一目均衡表</p>
+<h5 class="font-medium text-sm mb-1" data-lang="indicator_technical_title">テクニカル分析</h5>
+<p class="text-xs text-gray-600" data-lang="indicator_technical_desc">移動平均、RSI、MACD、ボリンジャーバンド、一目均衡表</p>
 </div>
 <div class="bg-gray-50 p-3 rounded">
-<h5 class="font-medium text-sm mb-1">内部構造分析</h5>
-<p class="text-xs text-gray-600">指数間乖離、時価総額別パフォーマンス、セクター寄与度</p>
+<h5 class="font-medium text-sm mb-1" data-lang="indicator_internal_title">内部構造分析</h5>
+<p class="text-xs text-gray-600" data-lang="indicator_internal_desc">指数間乖離、時価総額別パフォーマンス、セクター寄与度</p>
 </div>
 </div>
-<h4 class="font-semibold mb-2 mt-6">更新頻度</h4>
-<p class="text-gray-700">市場分析は毎営業日の前場終了後（11:30頃）と大引け後（15:30頃）の2回更新されます。重要な市場イベント発生時には臨時レポートも配信します。</p>
+<h4 class="font-semibold mb-2 mt-6" data-lang="update_frequency_title">更新頻度</h4>
+<p class="text-gray-700" data-lang="update_frequency_description">市場分析は毎営業日の前場終了後（11:30頃）と大引け後（15:30頃）の2回更新されます。重要な市場イベント発生時には臨時レポートも配信します。</p>
 </div>
 <!-- チーム紹介 -->
 <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100 fade-in">
@@ -300,45 +300,45 @@ to { opacity: 1; transform: translateY(0); }
 <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
 <i class="ri-cpu-line ri-xl text-primary"></i>
 </div>
-<h3 class="text-xl font-semibold">AI技術について</h3>
+<h3 class="text-xl font-semibold" data-lang="ai_technology_title">AI技術について</h3>
 </div>
-<p class="text-gray-700 mb-6">YOHOU US Stock AIは、最先端の人工知能技術を活用して、市場分析と予測を行っています。複数のAIモデルを組み合わせることで、より正確で信頼性の高い分析を実現しています。</p>
+<p class="text-gray-700 mb-6" data-lang="ai_technology_description">YOHOU US Stock AIは、最先端の人工知能技術を活用して、市場分析と予測を行っています。複数のAIモデルを組み合わせることで、より正確で信頼性の高い分析を実現しています。</p>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <div class="bg-gray-50 p-4 rounded">
-<h4 class="font-semibold mb-2">ディープラーニングモデル</h4>
-<p class="text-sm text-gray-700">大量の市場データを学習し、複雑なパターンを認識して、市場動向を予測します。時系列分析と非線形パターンの検出に特化しています。</p>
+<h4 class="font-semibold mb-2" data-lang="deep_learning_title">ディープラーニングモデル</h4>
+<p class="text-sm text-gray-700" data-lang="deep_learning_desc">大量の市場データを学習し、複雑なパターンを認識して、市場動向を予測します。時系列分析と非線形パターンの検出に特化しています。</p>
 </div>
 <div class="bg-gray-50 p-4 rounded">
-<h4 class="font-semibold mb-2">自然言語処理（NLP）</h4>
-<p class="text-sm text-gray-700">ニュース記事や市場レポートをリアルタイムで分析し、市場センチメントを評価します。テキストデータから重要な市場動向を抽出します。</p>
+<h4 class="font-semibold mb-2" data-lang="nlp_title">自然言語処理（NLP）</h4>
+<p class="text-sm text-gray-700" data-lang="nlp_desc">ニュース記事や市場レポートをリアルタイムで分析し、市場センチメントを評価します。テキストデータから重要な市場動向を抽出します。</p>
 </div>
 </div>
 <div class="mt-6 bg-blue-50 p-4 rounded">
-<h4 class="font-semibold mb-2">AIの特徴</h4>
+<h4 class="font-semibold mb-2" data-lang="ai_features_title">AIの特徴</h4>
 <ul class="space-y-2 text-sm text-gray-700">
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-check-line"></i>
 </div>
-<span>24時間365日の継続的な市場監視と分析</span>
+<span data-lang="ai_feature_1">24時間365日の継続的な市場監視と分析</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-check-line"></i>
 </div>
-<span>数百万件のデータポイントをリアルタイムで処理</span>
+<span data-lang="ai_feature_2">数百万件のデータポイントをリアルタイムで処理</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-check-line"></i>
 </div>
-<span>市場の微細な変化を検知し、即時に分析に反映</span>
+<span data-lang="ai_feature_3">市場の微細な変化を検知し、即時に分析に反映</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-primary">
 <i class="ri-check-line"></i>
 </div>
-<span>継続的な学習による予測精度の向上</span>
+<span data-lang="ai_feature_4">継続的な学習による予測精度の向上</span>
 </li>
 </ul>
 </div>
@@ -349,30 +349,30 @@ to { opacity: 1; transform: translateY(0); }
 <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
 <i class="ri-building-line ri-xl text-primary"></i>
 </div>
-<h3 class="text-xl font-semibold">会社情報</h3>
+<h3 class="text-xl font-semibold" data-lang="company_info_title">会社情報</h3>
 </div>
-<p class="text-gray-700 mb-6">YOHOU US Stock AIは、株式会社BizRom東京が運営する AI 駆動型の市場分析プラットフォームです。当社は金融AIの研究開発と AI を活用した市場分析に特化した企業です。</p>
+<p class="text-gray-700 mb-6" data-lang="company_info_description">YOHOU US Stock AIは、株式会社BizRom東京が運営する AI 駆動型の市場分析プラットフォームです。当社は金融AIの研究開発と AI を活用した市場分析に特化した企業です。</p>
 <div class="space-y-4">
 <div>
-<h4 class="font-semibold mb-1">会社名</h4>
-<p class="text-gray-700">株式会社BizRom東京</p>
+<h4 class="font-semibold mb-1" data-lang="company_name">会社名</h4>
+<p class="text-gray-700" data-lang="company_name_value">株式会社BizRom東京</p>
 </div>
 <div>
-<h4 class="font-semibold mb-1">設立</h4>
-<p class="text-gray-700">令和2年9月</p>
+<h4 class="font-semibold mb-1" data-lang="company_established">設立</h4>
+<p class="text-gray-700" data-lang="company_established_value">令和2年9月</p>
 </div>
 <div>
-<h4 class="font-semibold mb-1">事業内容</h4>
+<h4 class="font-semibold mb-1" data-lang="company_business_title">事業内容</h4>
 <ul class="space-y-1 text-gray-700">
-<li>・金融市場分析サービスの提供</li>
-<li>・投資情報配信サービス</li>
-<li>・金融データ分析ツールの開発</li>
-<li>・市場分析セミナーの開催</li>
+<li data-lang="company_business_1">・金融市場分析サービスの提供</li>
+<li data-lang="company_business_2">・投資情報配信サービス</li>
+<li data-lang="company_business_3">・金融データ分析ツールの開発</li>
+<li data-lang="company_business_4">・市場分析セミナーの開催</li>
 </ul>
 </div>
 <div>
-<h4 class="font-semibold mb-1">取引金融機関</h4>
-<p class="text-gray-700">みずほ銀行</p>
+<h4 class="font-semibold mb-1" data-lang="company_bank_title">取引金融機関</h4>
+<p class="text-gray-700" data-lang="company_bank_value">みずほ銀行</p>
 </div>
 </div>
 </div>
@@ -383,106 +383,106 @@ to { opacity: 1; transform: translateY(0); }
 <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
 <i class="ri-file-list-3-line ri-xl text-primary"></i>
 </div>
-<h3 class="text-xl font-semibold">利用条件</h3>
+<h3 class="text-xl font-semibold" data-lang="terms_conditions_title">利用条件</h3>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 <div>
-<h4 class="font-semibold mb-3 pb-2 border-b border-gray-200">利用規約</h4>
+<h4 class="font-semibold mb-3 pb-2 border-b border-gray-200" data-lang="terms_of_use_title">利用規約</h4>
 <ul class="space-y-2 text-gray-700 text-sm">
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-gray-400">
 <i class="ri-arrow-right-s-line"></i>
 </div>
-<span>YOHOU US Stock AIが提供する情報は、投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。</span>
+<span data-lang="terms_point_1">YOHOU US Stock AIが提供する情報は、投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-gray-400">
 <i class="ri-arrow-right-s-line"></i>
 </div>
-<span>投資の最終判断はご自身の責任において行ってください。当社は情報の利用によって生じたいかなる損害についても責任を負いません。</span>
+<span data-lang="terms_point_2">投資の最終判断はご自身の責任において行ってください。当社は情報の利用によって生じたいかなる損害についても責任を負いません。</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-gray-400">
 <i class="ri-arrow-right-s-line"></i>
 </div>
-<span>当サービスのコンテンツの無断転載、複製、再配布は禁止されています。</span>
+<span data-lang="terms_point_3">当サービスのコンテンツの無断転載、複製、再配布は禁止されています。</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-gray-400">
 <i class="ri-arrow-right-s-line"></i>
 </div>
-<span>サービス内容は予告なく変更される場合があります。</span>
+<span data-lang="terms_point_4">サービス内容は予告なく変更される場合があります。</span>
 </li>
 </ul>
-<a href="/TermsOfUse.html" class="inline-block mt-4 text-primary text-sm hover:underline">利用規約の全文を読む</a>
+<a href="/TermsOfUse.html" class="inline-block mt-4 text-primary text-sm hover:underline" data-lang="terms_full_link">利用規約の全文を読む</a>
 </div>
 <div>
-<h4 class="font-semibold mb-3 pb-2 border-b border-gray-200">プライバシーポリシー</h4>
+<h4 class="font-semibold mb-3 pb-2 border-b border-gray-200" data-lang="privacy_policy_title">プライバシーポリシー</h4>
 <ul class="space-y-2 text-gray-700 text-sm">
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-gray-400">
 <i class="ri-arrow-right-s-line"></i>
 </div>
-<span>当社は、ユーザーのプライバシー保護を最優先事項と考えています。</span>
+<span data-lang="privacy_point_1">当社は、ユーザーのプライバシー保護を最優先事項と考えています。</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-gray-400">
 <i class="ri-arrow-right-s-line"></i>
 </div>
-<span>収集した個人情報は、サービス提供、品質向上、および法的義務の履行のためにのみ使用されます。</span>
+<span data-lang="privacy_point_2">収集した個人情報は、サービス提供、品質向上、および法的義務の履行のためにのみ使用されます。</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-gray-400">
 <i class="ri-arrow-right-s-line"></i>
 </div>
-<span>当社は、ユーザーの同意なしに第三者に個人情報を提供することはありません。</span>
+<span data-lang="privacy_point_3">当社は、ユーザーの同意なしに第三者に個人情報を提供することはありません。</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-gray-400">
 <i class="ri-arrow-right-s-line"></i>
 </div>
-<span>当サイトでは、サービス向上のためにCookieを使用しています。</span>
+<span data-lang="privacy_point_4">当サイトでは、サービス向上のためにCookieを使用しています。</span>
 </li>
 </ul>
-<a href="/PrivacyPolicy.html" class="inline-block mt-4 text-primary text-sm hover:underline">プライバシーポリシーの全文を読む</a>
+<a href="/PrivacyPolicy.html" class="inline-block mt-4 text-primary text-sm hover:underline" data-lang="privacy_full_link">プライバシーポリシーの全文を読む</a>
 </div>
 <div>
-<h4 class="font-semibold mb-3 pb-2 border-b border-gray-200">免責事項</h4>
+<h4 class="font-semibold mb-3 pb-2 border-b border-gray-200" data-lang="disclaimer_title">免責事項</h4>
 <ul class="space-y-2 text-gray-700 text-sm">
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-gray-400">
 <i class="ri-arrow-right-s-line"></i>
 </div>
-<span>当サービスで提供される情報の正確性には万全を期していますが、その完全性、正確性、適時性、有用性等を保証するものではありません。</span>
+<span data-lang="disclaimer_point_1">当サービスで提供される情報の正確性には万全を期していますが、その完全性、正確性、適時性、有用性等を保証するものではありません。</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-gray-400">
 <i class="ri-arrow-right-s-line"></i>
 </div>
-<span>市場分析は過去のデータや現在の市場状況に基づいており、将来の市場動向を保証するものではありません。</span>
+<span data-lang="disclaimer_point_2">市場分析は過去のデータや現在の市場状況に基づいており、将来の市場動向を保証するものではありません。</span>
 </li>
 <li class="flex items-start">
 <div class="w-5 h-5 mt-0.5 flex items-center justify-center mr-2 text-gray-400">
 <i class="ri-arrow-right-s-line"></i>
 </div>
-<span>当サービスの利用により直接的または間接的に生じたいかなる損害についても、当社は責任を負いません。</span>
+<span data-lang="disclaimer_point_3">当サービスの利用により直接的または間接的に生じたいかなる損害についても、当社は責任を負いません。</span>
 </li>
 </ul>
-<a href="/disclaimer.html" class="inline-block mt-4 text-primary text-sm hover:underline">免責事項の全文を読む</a>
+<a href="/disclaimer.html" class="inline-block mt-4 text-primary text-sm hover:underline" data-lang="disclaimer_full_link">免責事項の全文を読む</a>
 </div>
 </div>
 </div>
 <!-- ナビゲーションリンク -->
 <div class="bg-gray-50 rounded-lg p-6 mb-12 fade-in">
-<h3 class="text-xl font-semibold mb-6">サイトナビゲーション</h3>
+<h3 class="text-xl font-semibold mb-6" data-lang="site_navigation_title">サイトナビゲーション</h3>
 <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
 <a href="/index.html" class="bg-white p-4 rounded shadow-sm border border-gray-100 hover:border-primary transition flex items-center">
 <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
 <i class="ri-line-chart-line text-primary"></i>
 </div>
 <div>
-<h4 class="font-medium">本日の市況分析</h4>
-<p class="text-xs text-gray-500">最新の市場分析レポート</p>
+<h4 class="font-medium" data-lang="nav_today_analysis_title">本日の市況分析</h4>
+<p class="text-xs text-gray-500" data-lang="nav_today_analysis_desc">最新の市場分析レポート</p>
 </div>
 </a>
 <a href="/archive.html" class="bg-white p-4 rounded shadow-sm border border-gray-100 hover:border-primary transition flex items-center">
@@ -490,8 +490,8 @@ to { opacity: 1; transform: translateY(0); }
 <i class="ri-archive-line text-primary"></i>
 </div>
 <div>
-<h4 class="font-medium">分析アーカイブ</h4>
-<p class="text-xs text-gray-500">過去の市場分析レポート</p>
+<h4 class="font-medium" data-lang="nav_archive_title">分析アーカイブ</h4>
+<p class="text-xs text-gray-500" data-lang="nav_archive_desc">過去の市場分析レポート</p>
 </div>
 </a>
 <a href="/indicators.html" class="bg-white p-4 rounded shadow-sm border border-gray-100 hover:border-primary transition flex items-center">
@@ -499,8 +499,8 @@ to { opacity: 1; transform: translateY(0); }
 <i class="ri-book-open-line text-primary"></i>
 </div>
 <div>
-<h4 class="font-medium">テクニカル指標解説</h4>
-<p class="text-xs text-gray-500">各種指標の詳細解説</p>
+<h4 class="font-medium" data-lang="nav_indicators_title">テクニカル指標解説</h4>
+<p class="text-xs text-gray-500" data-lang="nav_indicators_desc">各種指標の詳細解説</p>
 </div>
 </a>
 </div>
@@ -508,11 +508,11 @@ to { opacity: 1; transform: translateY(0); }
 <!-- お問い合わせセクション -->
 <div class="bg-blue-50 rounded-lg p-8 mb-12 fade-in">
 <div class="max-w-3xl mx-auto text-center">
-<h3 class="text-2xl font-bold mb-4">さらに詳しい情報が必要ですか？</h3>
-<p class="text-sm text-gray-700 mb-6">YOHOU US Stock AIに関するご質問やご不明点がございましたら、お気軽にお問い合わせください。専門スタッフが丁寧にお答えします。</p>
+<h3 class="text-2xl font-bold mb-4" data-lang="contact_title">さらに詳しい情報が必要ですか？</h3>
+<p class="text-sm text-gray-700 mb-6" data-lang="contact_description">YOHOU US Stock AIに関するご質問やご不明点がございましたら、お気軽にお問い合わせください。専門スタッフが丁寧にお答えします。</p>
 <div class="flex flex-col sm:flex-row justify-center gap-4">
-<a href="#" id="contact-form-btn" class="bg-primary text-white px-6 py-3 rounded-button font-medium transition whitespace-nowrap cursor-not-allowed opacity-50">お問い合わせフォーム</a>
-<a href="#" id="trial-btn" class="bg-white text-primary border border-primary px-6 py-3 rounded-button font-medium transition whitespace-nowrap cursor-not-allowed opacity-50">無料トライアルに申し込む</a>
+<a href="#" id="contact-form-btn" class="bg-primary text-white px-6 py-3 rounded-button font-medium transition whitespace-nowrap cursor-not-allowed opacity-50" data-lang="contact_form">お問い合わせフォーム</a>
+<a href="#" id="trial-btn" class="bg-white text-primary border border-primary px-6 py-3 rounded-button font-medium transition whitespace-nowrap cursor-not-allowed opacity-50" data-lang="trial_button">無料トライアルに申し込む</a>
 </div>
 </div>
 </div>
@@ -521,8 +521,8 @@ to { opacity: 1; transform: translateY(0); }
   <div class="container mx-auto px-4 py-8">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <div>
-        <h4 class="text-lg font-semibold mb-4">YOHOU US Stock AI</h4>
-        <p class="text-sm text-gray-600 mb-4">日本の短期株式トレーダー向けに、信頼性の高い市場分析を毎日2回配信するプロフェッショナルサービス</p>
+        <h4 class="text-lg font-semibold mb-4" data-lang="footer_company_name">YOHOU US Stock AI</h4>
+        <p class="text-sm text-gray-600 mb-4" data-lang="footer_company_desc">日本の短期株式トレーダー向けに、信頼性の高い市場分析を毎日2回配信するプロフェッショナルサービス</p>
         <div class="flex space-x-4">
           <a href="#" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary">
             <i class="ri-twitter-x-line"></i>
@@ -536,33 +536,33 @@ to { opacity: 1; transform: translateY(0); }
         </div>
       </div>
       <div>
-        <h4 class="text-lg font-semibold mb-4">コンテンツ</h4>
+        <h4 class="text-lg font-semibold mb-4" data-lang="footer_content_title">コンテンツ</h4>
         <ul class="space-y-2">
-          <li><a href="/index.html" class="text-sm text-gray-600 hover:text-primary">本日の市況分析</a></li>
-          <li><a href="/archive.html" class="text-sm text-gray-600 hover:text-primary">分析アーカイブ</a></li>
-          <li><a href="/indicators.html" class="text-sm text-gray-600 hover:text-primary">テクニカル指標解説</a></li>
-          <li><a href="/terms.html" class="text-sm text-gray-600 hover:text-primary">市場用語集</a></li>
-          <li><a href="/about.html" class="text-sm text-primary font-medium">サイトについて</a></li>
+          <li><a href="/index.html" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_todays_analysis">本日の市況分析</a></li>
+          <li><a href="/archive.html" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_analysis_archive">分析アーカイブ</a></li>
+          <li><a href="/indicators.html" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_technical_indicators">テクニカル指標解説</a></li>
+          <li><a href="/terms.html" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_market_glossary">市場用語集</a></li>
+          <li><a href="/about.html" class="text-sm text-primary font-medium" data-lang="footer_about_link">サイトについて</a></li>
         </ul>
       </div>
       <div>
-        <h4 class="text-lg font-semibold mb-4">サイト情報</h4>
+        <h4 class="text-lg font-semibold mb-4" data-lang="footer_site_info_title">サイト情報</h4>
         <ul class="space-y-2">
-          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">サイトについて</a></li>
-          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">分析手法</a></li>
-          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">利用規約</a></li>
-          <li><a href="#" class="text-sm text-gray-600 hover:text-primary">プライバシーポリシー</a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_about_link">サイトについて</a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_analysis_method_link">分析手法</a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_terms_link">利用規約</a></li>
+          <li><a href="#" class="text-sm text-gray-600 hover:text-primary" data-lang="footer_privacy_link">プライバシーポリシー</a></li>
         </ul>
       </div>
       <div>
-        <h4 class="text-lg font-semibold mb-4">お問い合わせ</h4>
-        <p class="text-sm text-gray-600 mb-4">ご質問やフィードバックがございましたら、お気軽にお問い合わせください。</p>
-        <a href="#" id="footer-contact-btn" class="inline-block bg-primary text-white px-4 py-2 rounded-button font-medium transition whitespace-nowrap cursor-not-allowed opacity-50">お問い合わせ</a>
+        <h4 class="text-lg font-semibold mb-4" data-lang="footer_contact_title">お問い合わせ</h4>
+        <p class="text-sm text-gray-600 mb-4" data-lang="footer_contact_desc">ご質問やフィードバックがございましたら、お気軽にお問い合わせください。</p>
+        <a href="#" id="footer-contact-btn" class="inline-block bg-primary text-white px-4 py-2 rounded-button font-medium transition whitespace-nowrap cursor-not-allowed opacity-50" data-lang="footer_contact_button">お問い合わせ</a>
       </div>
     </div>
     <div class="border-t border-gray-200 mt-8 pt-8 text-center">
-      <p class="text-sm text-gray-600">© 2025 YOHOU US Stock AI. All rights reserved.</p>
-      <p class="text-xs text-gray-500 mt-2">当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。投資の最終判断はご自身でお願いします。</p>
+      <p class="text-sm text-gray-600" data-lang="footer_company_copyright">© 2025 YOHOU US Stock AI. All rights reserved.</p>
+      <p class="text-xs text-gray-500 mt-2" data-lang="footer_disclaimer">当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。投資の最終判断はご自身でお願いします。</p>
     </div>
   </div>
 </footer>

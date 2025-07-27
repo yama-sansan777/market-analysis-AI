@@ -6,56 +6,57 @@
 const fs = require('fs');
 const path = require('path');
 
-const LIVE_DATA_PATH = path.join(__dirname, 'live_data', 'latest.json');
-const ARCHIVE_DATA_PATH = path.join(__dirname, 'archive_data');
-const MANIFEST_PATH = path.join(ARCHIVE_DATA_PATH, 'manifest.json');
-
-function readJsonFile(filePath) {
-  try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  } catch (e) {
-    console.error('JSON読み込み失敗:', filePath, e);
-    return null;
-  }
+// 最新記事のJSONファイルを読み込み
+function updateLatestArticle() {
+    try {
+        // 最新記事のJSONファイルを読み込み（例：articles/article_20250127.json）
+        const articlesDir = './articles';
+        const files = fs.readdirSync(articlesDir);
+        const jsonFiles = files.filter(file => file.endsWith('.json'));
+        
+        if (jsonFiles.length === 0) {
+            console.log('記事ファイルが見つかりません');
+            return;
+        }
+        
+        // 最新の記事ファイルを取得（ファイル名の日付でソート）
+        const latestFile = jsonFiles.sort().pop();
+        const latestArticlePath = path.join(articlesDir, latestFile);
+        
+        console.log(`最新記事ファイル: ${latestFile}`);
+        
+        // 最新記事の内容を読み込み
+        const latestArticle = JSON.parse(fs.readFileSync(latestArticlePath, 'utf8'));
+        
+        // 多言語対応のlatest.json構造を作成
+        const latestData = {
+            date: latestArticle.date || latestArticle.ja?.date || new Date().toISOString().split('T')[0],
+            ja: {
+                title: latestArticle.ja?.title || latestArticle.title,
+                summary: latestArticle.ja?.summary || latestArticle.summary,
+                evaluation: latestArticle.ja?.evaluation || latestArticle.evaluation,
+                content: latestArticle.ja?.content || latestArticle.content
+            },
+            en: {
+                title: latestArticle.en?.title || latestArticle.title,
+                summary: latestArticle.en?.summary || latestArticle.summary,
+                evaluation: latestArticle.en?.evaluation || latestArticle.evaluation,
+                content: latestArticle.en?.content || latestArticle.content
+            }
+        };
+        
+        // latest.jsonに書き込み
+        fs.writeFileSync('./latest.json', JSON.stringify(latestData, null, 2));
+        
+        console.log('✅ latest.jsonを更新しました');
+        console.log(`📅 日付: ${latestData.date}`);
+        console.log(`🇯🇵 日本語タイトル: ${latestData.ja.title}`);
+        console.log(`🇺🇸 英語タイトル: ${latestData.en.title}`);
+        
+    } catch (error) {
+        console.error('❌ エラーが発生しました:', error.message);
+    }
 }
 
-function writeJsonFile(filePath, data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-}
-
-function archiveLatest() {
-  if (!fs.existsSync(LIVE_DATA_PATH)) {
-    console.error('live_data/latest.json が存在しません');
-    return;
-  }
-  const latest = readJsonFile(LIVE_DATA_PATH);
-  if (!latest) return;
-
-  // ファイル名生成（例: 2025.07.14.json）
-  const dateStr = latest.date.replace(/年|\.|\//g, '.').replace('月', '.').replace('日', '').replace(/\s.*/, '');
-  const archiveFileName = `${dateStr}.json`;
-  const archivePath = path.join(ARCHIVE_DATA_PATH, archiveFileName);
-
-  // 既存latest.jsonをアーカイブへ移動
-  fs.copyFileSync(LIVE_DATA_PATH, archivePath);
-  console.log('アーカイブ:', archiveFileName);
-
-  // manifest.jsonを更新
-  let manifest = [];
-  if (fs.existsSync(MANIFEST_PATH)) {
-    manifest = readJsonFile(MANIFEST_PATH);
-  }
-  // manifest追記用データ
-  manifest.unshift({
-    file: archiveFileName,
-    date: latest.date,
-    session: latest.session || '',
-    evaluation: latest.summary.evaluation || '',
-    headline: latest.summary.headline || '',
-    summary: latest.summary.text || ''
-  });
-  writeJsonFile(MANIFEST_PATH, manifest);
-  console.log('manifest.json 追記完了');
-}
-
-archiveLatest(); 
+// スクリプト実行
+updateLatestArticle(); 
