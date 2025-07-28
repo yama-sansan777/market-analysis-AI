@@ -46,8 +46,8 @@ body { font-family: 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
-                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span>ログイン</span></button>
-                <button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50">無料登録</button>
+                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                <button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
                 <button class="md:hidden text-gray-600"><i class="ri-menu-line ri-lg"></i></button>
             </div>
         </div>
@@ -356,7 +356,11 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('この機能は現在準備中です。ご期待ください！');
     });
 
+    // renderAll関数をグローバルに公開（lang.jsから呼び出すため）
+    window.renderAll = renderAll;
+
     // Initialize language system
+    window.currentLang = localStorage.getItem('language') || 'ja';
     initLanguage();
 });
 </script>

@@ -1394,6 +1394,9 @@ function switchLanguage(lang) {
     currentLang = lang;
     localStorage.setItem('language', lang);
     
+    // Update global currentLang for compatibility
+    window.currentLang = lang;
+    
     // Update language switcher buttons
     document.querySelectorAll('.lang-btn').forEach(btn => {
         const btnLang = btn.getAttribute('data-lang');
@@ -1419,6 +1422,16 @@ function switchLanguage(lang) {
             element.placeholder = translations[lang][key];
         }
     });
+    
+    // Reload data for index.html if loadReportData function exists
+    if (typeof window.loadReportData === 'function') {
+        window.loadReportData();
+    }
+    
+    // Re-render content for archive.html if renderAll function exists
+    if (typeof window.renderAll === 'function') {
+        window.renderAll();
+    }
     
     // Trigger custom event for dynamic content
     document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));

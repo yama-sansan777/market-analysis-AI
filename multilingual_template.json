@@ -1,0 +1,200 @@
+{
+  "date": "2025年7月27日",
+  "session": "7月27日 市場分析",
+  "languages": {
+    "ja": {
+      "summary": {
+        "evaluation": "買い",
+        "score": 7,
+        "headline": "市場分析のヘッドライン",
+        "text": "本日の市場分析の詳細な説明がここに入ります。S&P 500の動向、市場センチメント、テクニカル分析などを総合的に評価した結果を記載します。"
+      },
+      "dashboard": {
+        "breadth": {
+          "advancers": 2800,
+          "decliners": 2200,
+          "summary": "値上がり銘柄数が値下がり銘柄数を上回り、市場の広がりは良好です。"
+        },
+        "sentimentVI": 65,
+        "sentimentVISummary": "Fear & Greed指数は中立圏にあり、市場参加者の感情は安定しています。",
+        "priceLevels": {
+          "resistance": {
+            "value": "$6,500",
+            "description": "次の重要な抵抗線として機能する水準です。"
+          },
+          "support": {
+            "value": "$6,300",
+            "description": "重要なサポート水準として機能します。"
+          }
+        },
+        "putCallRatio": {
+          "dailyValue": "0.75",
+          "movingAverage": "0.72",
+          "status": "中立",
+          "summary": "プット・コール比率は適正な水準にあります。"
+        }
+      },
+      "details": {
+        "internals": {
+          "headline": "市場内部の動向分析",
+          "text": "市場内部の詳細な分析内容がここに入ります。騰落銘柄数、出来高分析、セクター動向などの詳細を記載します。",
+          "chartData": {
+            "labels": ["Apple", "Microsoft", "NVIDIA", "Alphabet", "Amazon", "Tesla"],
+            "values": [1.2, 0.8, 2.1, 0.5, -0.3, -1.5]
+          }
+        },
+        "technicals": {
+          "headline": "テクニカル分析",
+          "text": "テクニカル指標の詳細な分析内容がここに入ります。移動平均、RSI、MACD、ボリンジャーバンドなどの分析結果を記載します。",
+          "chartData": {
+            "labels": ["2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25", "2025-07-26"],
+            "sp500": [6300, 6320, 6350, 6370, 6380],
+            "ma50": [6200, 6210, 6220, 6230, 6240],
+            "adl": [24800, 24850, 24900, 24950, 25000]
+          }
+        },
+        "fundamentals": {
+          "headline": "ファンダメンタルズ分析",
+          "text": "基本的な経済指標や企業業績の分析内容がここに入ります。",
+          "vix": {
+            "value": 16.50,
+            "change": "+0.25",
+            "summary": "VIX指数は安定した水準を維持しています。"
+          },
+          "aaiiSurvey": {
+            "date": "2025年7月27日の週",
+            "bullish": 45.2,
+            "neutral": 32.1,
+            "bearish": 22.7,
+            "summary": "個人投資家のセンチメントは楽観的な傾向を示しています。"
+          },
+          "investorsIntelligence": {
+            "date": "2025年7月27日の週",
+            "bullish": 52.3,
+            "bearish": 21.4,
+            "correction": 26.3,
+            "summary": "投資アドバイザーのセンチメントは適度に楽観的です。"
+          },
+          "points": [
+            "経済指標は堅調な推移を示している。",
+            "企業業績は予想を上回る傾向にある。",
+            "地政学的リスクは限定的である。"
+          ]
+        },
+        "strategy": {
+          "headline": "投資戦略",
+          "basic": "基本的な投資戦略の推奨事項がここに入ります。現在の市場環境に基づいた具体的なアドバイスを記載します。",
+          "risk": "主要なリスク要因と注意すべき点について詳細に説明します。"
+        }
+      },
+      "marketOverview": [
+        { "name": "S&P 500", "value": "6,380.50", "change": "+15.25 (+0.24%)", "isDown": false },
+        { "name": "Nasdaq-100", "value": "18,750.20", "change": "+45.30 (+0.24%)", "isDown": false },
+        { "name": "VIX指数", "value": "16.50", "change": "+0.25 (+1.54%)", "isDown": false },
+        { "name": "米国10年債利回り", "value": "4.35%", "change": "-0.08%", "isDown": true }
+      ],
+      "hotStocks": [
+        { "name": "Apple (AAPL)", "price": "決算好調で上昇", "description": "強い四半期業績により株価が上昇しています。", "isDown": false },
+        { "name": "Microsoft (MSFT)", "price": "AI投資で注目", "description": "人工知能への投資拡大が評価されています。", "isDown": false },
+        { "name": "Tesla (TSLA)", "price": "調整局面", "description": "利益確定売りにより一時的に調整しています。", "isDown": true }
+      ]
+    },
+    "en": {
+      "summary": {
+        "evaluation": "buy",
+        "score": 7,
+        "headline": "Market Analysis Headline",
+        "text": "Today's comprehensive market analysis details go here. This includes S&P 500 trends, market sentiment, technical analysis, and overall evaluation of market conditions."
+      },
+      "dashboard": {
+        "breadth": {
+          "advancers": 2800,
+          "decliners": 2200,
+          "summary": "Advancing stocks outnumber declining stocks, indicating healthy market breadth."
+        },
+        "sentimentVI": 65,
+        "sentimentVISummary": "The Fear & Greed Index is in neutral territory, showing stable market participant emotions.",
+        "priceLevels": {
+          "resistance": {
+            "value": "$6,500",
+            "description": "Key resistance level that will act as the next major obstacle."
+          },
+          "support": {
+            "value": "$6,300",
+            "description": "Important support level that should provide buying interest."
+          }
+        },
+        "putCallRatio": {
+          "dailyValue": "0.75",
+          "movingAverage": "0.72",
+          "status": "neutral",
+          "summary": "Put-call ratio is at appropriate levels."
+        }
+      },
+      "details": {
+        "internals": {
+          "headline": "Market Internals Analysis",
+          "text": "Detailed analysis of market internals goes here. This includes advance-decline numbers, volume analysis, sector trends, and other internal market dynamics.",
+          "chartData": {
+            "labels": ["Apple", "Microsoft", "NVIDIA", "Alphabet", "Amazon", "Tesla"],
+            "values": [1.2, 0.8, 2.1, 0.5, -0.3, -1.5]
+          }
+        },
+        "technicals": {
+          "headline": "Technical Analysis",
+          "text": "Detailed technical indicator analysis goes here. This covers moving averages, RSI, MACD, Bollinger Bands, and other technical analysis results.",
+          "chartData": {
+            "labels": ["2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25", "2025-07-26"],
+            "sp500": [6300, 6320, 6350, 6370, 6380],
+            "ma50": [6200, 6210, 6220, 6230, 6240],
+            "adl": [24800, 24850, 24900, 24950, 25000]
+          }
+        },
+        "fundamentals": {
+          "headline": "Fundamental Analysis",
+          "text": "Analysis of fundamental economic indicators and corporate earnings goes here.",
+          "vix": {
+            "value": 16.50,
+            "change": "+0.25",
+            "summary": "VIX index maintains stable levels."
+          },
+          "aaiiSurvey": {
+            "date": "Week of July 27, 2025",
+            "bullish": 45.2,
+            "neutral": 32.1,
+            "bearish": 22.7,
+            "summary": "Individual investor sentiment shows optimistic trends."
+          },
+          "investorsIntelligence": {
+            "date": "Week of July 27, 2025",
+            "bullish": 52.3,
+            "bearish": 21.4,
+            "correction": 26.3,
+            "summary": "Investment advisor sentiment is moderately optimistic."
+          },
+          "points": [
+            "Economic indicators show steady progress.",
+            "Corporate earnings tend to exceed expectations.",
+            "Geopolitical risks remain limited."
+          ]
+        },
+        "strategy": {
+          "headline": "Investment Strategy",
+          "basic": "Basic investment strategy recommendations go here. Specific advice based on current market conditions should be detailed.",
+          "risk": "Major risk factors and points to watch are explained in detail here."
+        }
+      },
+      "marketOverview": [
+        { "name": "S&P 500", "value": "6,380.50", "change": "+15.25 (+0.24%)", "isDown": false },
+        { "name": "Nasdaq-100", "value": "18,750.20", "change": "+45.30 (+0.24%)", "isDown": false },
+        { "name": "VIX Index", "value": "16.50", "change": "+0.25 (+1.54%)", "isDown": false },
+        { "name": "US 10Y Treasury", "value": "4.35%", "change": "-0.08%", "isDown": true }
+      ],
+      "hotStocks": [
+        { "name": "Apple (AAPL)", "price": "Strong earnings boost", "description": "Stock rises on strong quarterly performance.", "isDown": false },
+        { "name": "Microsoft (MSFT)", "price": "AI investment focus", "description": "Artificial intelligence investment expansion is being evaluated.", "isDown": false },
+        { "name": "Tesla (TSLA)", "price": "Correction phase", "description": "Temporarily adjusting due to profit-taking.", "isDown": true }
+      ]
+    }
+  }
+}

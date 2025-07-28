@@ -217,11 +217,6 @@
 </div>
 
 <script>
-    // ページの読み込み完了時にメイン関数を実行
-    document.addEventListener('DOMContentLoaded', () => {
-        loadReportData();
-    });
-
     // データの読み込みとページへの反映を行うメイン関数
     async function loadReportData() {
         try {
@@ -230,11 +225,21 @@
             const dataFileName = urlParams.get('datafile');
             // パラメータがあればarchive_dataから、なければlatest.json
             const fileToFetch = dataFileName ? `archive_data/${dataFileName}` : 'live_data/latest.json';
+            
+            console.log('Fetching file:', fileToFetch);
+            
             const response = await fetch(fileToFetch);
+            console.log('Response status:', response.status);
+            
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTPエラー! ステータス: ${response.status}, ファイル: ${fileToFetch}`);
             }
-            const data = await response.json();
+            
+            const rawData = await response.json();
+            console.log('Raw JSON data loaded successfully');
+
+            // 多言語対応データの処理
+            const data = getLocalizedData(rawData);
 
             // --- ページの各要素にデータをセット ---
             populateHtmlElements(data);
@@ -247,8 +252,53 @@
 
         } catch (error) {
             console.error('データの読み込みまたは処理中にエラーが発生しました:', error);
-            document.body.innerHTML = `<div class="text-center p-10"><h1>データの読み込みに失敗しました</h1><p>${error.message}</p></div>`;
+            // より詳細なエラー情報を表示
+            const errorDetails = `
+                エラー: ${error.message}
+                ファイル: ${dataFileName || 'live_data/latest.json'}
+                スタック: ${error.stack}
+            `;
+            document.body.innerHTML = `<div class="text-center p-10">
+                <h1 class="text-2xl font-bold text-red-600 mb-4">データの読み込みに失敗しました</h1>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-left max-w-2xl mx-auto">
+                    <h2 class="font-bold mb-2">エラー詳細:</h2>
+                    <pre class="text-sm text-red-700 whitespace-pre-wrap">${error.message}</pre>
+                    <h3 class="font-bold mt-4 mb-2">対処方法:</h3>
+                    <ul class="text-sm text-red-600 list-disc list-inside">
+                        <li>latest.jsonファイルが存在することを確認してください</li>
+                        <li>JSONファイルの形式が正しいことを確認してください</li>
+                        <li>ブラウザのデベロッパーツールで詳細なエラーを確認してください</li>
+                    </ul>
+                </div>
+            </div>`;
         }
+    }
+
+    // 多言語対応データから現在の言語のデータを取得
+    function getLocalizedData(rawData) {
+        console.log('Raw data received:', rawData);
+        
+        // 現在の言語設定を取得（lang.jsから）
+        const currentLang = window.currentLang || 'ja';
+        console.log('Current language:', currentLang);
+        
+        // 新しい多言語構造の場合
+        if (rawData.languages) {
+            console.log('Multilingual structure detected');
+            const langData = rawData.languages[currentLang] || rawData.languages.ja;
+            console.log('Selected language data:', langData);
+            
+            const result = {
+                ...rawData,
+                ...langData
+            };
+            console.log('Final localized data:', result);
+            return result;
+        }
+        
+        // 従来の構造の場合はそのまま返す
+        console.log('Legacy structure detected, returning as-is');
+        return rawData;
     }
 
     // HTML要素にテキストやリストを流し込む関数
@@ -374,13 +424,47 @@
             </div>`).join('');
     }
 
+    // グローバル変数でチャートインスタンスを管理
+    let chartInstances = {
+        breadthChart: null,
+        sentimentGauge: null,
+        contributionChart: null,
+        technicalChart: null
+    };
+
+    // 既存のチャートを破棄する関数
+    function destroyExistingCharts() {
+        // ECharts インスタンスの破棄
+        if (chartInstances.breadthChart) {
+            chartInstances.breadthChart.dispose();
+            chartInstances.breadthChart = null;
+        }
+        if (chartInstances.sentimentGauge) {
+            chartInstances.sentimentGauge.dispose();
+            chartInstances.sentimentGauge = null;
+        }
+        
+        // Chart.js インスタンスの破棄
+        if (chartInstances.contributionChart) {
+            chartInstances.contributionChart.destroy();
+            chartInstances.contributionChart = null;
+        }
+        if (chartInstances.technicalChart) {
+            chartInstances.technicalChart.destroy();
+            chartInstances.technicalChart = null;
+        }
+    }
+
     // 全てのチャートを初期化・描画する関数
     function initializeAllCharts(data) {
         const FONT_SIZE_TITLE = 20, FONT_SIZE_LEGEND = 16, FONT_SIZE_AXIS = 14;
 
+        // 既存のチャートを破棄
+        destroyExistingCharts();
+
         // 1. 市場の健全性 (ドーナツグラフ)
-        const breadthChart = echarts.init(document.getElementById('breadthChart'));
-        breadthChart.setOption({
+        chartInstances.breadthChart = echarts.init(document.getElementById('breadthChart'));
+        chartInstances.breadthChart.setOption({
             tooltip: { trigger: 'item' },
             legend: { bottom: '5%', left: 'center', textStyle: { fontSize: FONT_SIZE_LEGEND } },
             series: [{
@@ -396,8 +480,8 @@
         });
 
         // 2. 市場心理 (ゲージ) - CNN Fear & Greed Index
-        const sentimentGauge = echarts.init(document.getElementById('sentimentGauge'));
-        sentimentGauge.setOption({
+        chartInstances.sentimentGauge = echarts.init(document.getElementById('sentimentGauge'));
+        chartInstances.sentimentGauge.setOption({
             series: [{
                 type: 'gauge', center: ['50%', '60%'], startAngle: 180, endAngle: 0, min: 0, max: 100, splitNumber: 10,
                 itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [ { offset: 0, color: '#ef4444' }, { offset: 0.5, color: '#f59e0b' }, { offset: 1, color: '#10b981' }]}},
@@ -411,7 +495,7 @@
         });
 
         // 3. 寄与度チャート (横棒グラフ)
-        new Chart(document.getElementById('contributionChart'), {
+        chartInstances.contributionChart = new Chart(document.getElementById('contributionChart'), {
             type: 'bar',
             data: {
                 labels: data.details.internals.chartData.labels,
@@ -436,7 +520,7 @@
         });
 
         // 4. テクニカルチャート (折れ線) with アドバンス・デクライン・ライン
-        new Chart(document.getElementById('technicalChart'), {
+        chartInstances.technicalChart = new Chart(document.getElementById('technicalChart'), {
             type: 'line',
             data: {
                 labels: data.details.technicals.chartData.labels,
@@ -510,8 +594,12 @@
         });
         
         window.addEventListener('resize', () => {
-            breadthChart.resize();
-            sentimentGauge.resize();
+            if (chartInstances.breadthChart) {
+                chartInstances.breadthChart.resize();
+            }
+            if (chartInstances.sentimentGauge) {
+                chartInstances.sentimentGauge.resize();
+            }
         });
     }
 
@@ -532,9 +620,21 @@
         });
     }
 
+    // loadReportData関数をグローバルに公開（lang.jsから呼び出すため）
+    window.loadReportData = loadReportData;
+
     // Initialize language system
     document.addEventListener('DOMContentLoaded', function() {
-        initLanguage();
+        // Initialize current language from localStorage or default to 'ja'
+        window.currentLang = localStorage.getItem('language') || 'ja';
+        
+        // Initialize lang.js language system
+        if (window.initLanguage) {
+            initLanguage();
+        }
+        
+        // Load initial data
+        loadReportData();
     });
 </script>
 <!-- Google tag (gtag.js) -->
