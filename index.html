@@ -110,32 +110,32 @@
             <section id="dashboard" class="mb-12">
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
-                        <h3 class="font-bold text-2xl mb-5 text-center">市場の健全性 (前日終値)</h3>
+                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="market_health_title">市場の健全性 (前日終値)</h3>
                         <div class="h-64" id="breadthChart"></div>
                         <p id="breadth-summary" class="text-left text-lg text-gray-600 mt-5"></p>
                     </div>
                      <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col items-center justify-center">
-                        <h3 class="font-bold text-2xl mb-5 text-center">市場心理 (CNN Fear & Greed)</h3>
+                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="market_sentiment_title">市場心理 (CNN Fear & Greed)</h3>
                         <div class="h-64 w-full" id="sentimentGauge"></div>
                         <p id="sentiment-summary" class="text-left text-lg text-gray-600 mt-5"></p>
                     </div>
                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col justify-center">
-                        <h3 class="font-bold text-2xl mb-6 text-center">主要な価格帯</h3>
+                        <h3 class="font-bold text-2xl mb-6 text-center" data-lang="price_levels_title">主要な価格帯</h3>
                         <div class="space-y-6">
                             <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
-                                <p class="text-lg font-semibold text-red-700">上値抵抗線 (レジスタンス)</p>
+                                <p class="text-lg font-semibold text-red-700" data-lang="resistance_level">上値抵抗線 (レジスタンス)</p>
                                 <p id="resistance-value" class="text-4xl font-bold text-red-900"></p>
                                 <p id="resistance-desc" class="text-base text-red-600"></p>
                             </div>
                             <div class="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg">
-                                <p class="text-lg font-semibold text-blue-700">下値支持線 (サポート)</p>
+                                <p class="text-lg font-semibold text-blue-700" data-lang="support_level">下値支持線 (サポート)</p>
                                 <p id="support-value" class="text-4xl font-bold text-blue-900"></p>
                                 <p id="support-desc" class="text-base text-blue-600"></p>
                             </div>
                         </div>
                     </div>
                      <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
-                        <h3 class="font-bold text-2xl mb-5 text-center">エクイティ Put Call Ratio</h3>
+                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="put_call_ratio_title">エクイティ Put Call Ratio</h3>
                         <div id="put-call-ratio-container" class="text-center py-12"></div>
                          <p id="put-call-ratio-summary" class="text-left text-lg text-gray-600 mt-2"></p>
                     </div>
@@ -144,15 +144,15 @@
             
             <section id="details" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 ring-1 ring-gray-200">
                 <div class="text-center mb-10">
-                    <h3 class="text-4xl font-bold text-gray-800">詳細分析</h3>
-                    <p class="text-gray-500 mt-3 text-xl">下のタブをクリックして、分析内容を切り替えられます</p>
+                    <h3 class="text-4xl font-bold text-gray-800" data-lang="detailed_analysis_title">詳細分析</h3>
+                    <p class="text-gray-500 mt-3 text-xl" data-lang="tab_instructions">下のタブをクリックして、分析内容を切り替えられます</p>
                 </div>
                 <div class="border-b border-gray-300">
                     <nav class="flex flex-wrap -mb-px justify-center" id="tab-buttons">
-                        <button data-tab="internals" class="tab-button active">市場の内部構造</button>
-                        <button data-tab="technicals" class="tab-button">テクニカル分析</button>
-                        <button data-tab="fundamentals" class="tab-button">ファンダメンタルズ & 心理</button>
-                        <button data-tab="strategy" class="tab-button">投資戦略</button>
+                        <button data-tab="internals" class="tab-button active" data-lang="tab_internals">市場の内部構造</button>
+                        <button data-tab="technicals" class="tab-button" data-lang="tab_technicals">テクニカル分析</button>
+                        <button data-tab="fundamentals" class="tab-button" data-lang="tab_fundamentals">ファンダメンタルズ & 心理</button>
+                        <button data-tab="strategy" class="tab-button" data-lang="tab_strategy">投資戦略</button>
                     </nav>
                 </div>
 
@@ -185,11 +185,11 @@
                         <h3 id="strategy-headline" class="text-3xl font-bold"></h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
-                                <h4 class="font-bold text-2xl text-gray-800 mb-3">基本戦略</h4>
+                                <h4 class="font-bold text-2xl text-gray-800 mb-3" data-lang="basic_strategy">基本戦略</h4>
                                 <p id="strategy-basic" class="text-gray-600 leading-relaxed text-lg"></p>
                             </div>
                              <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
-                                <h4 class="font-bold text-2xl text-gray-800 mb-3">リスク管理</h4>
+                                <h4 class="font-bold text-2xl text-gray-800 mb-3" data-lang="risk_management">リスク管理</h4>
                                 <p id="strategy-risk" class="text-gray-600 leading-relaxed text-lg"></p>
                             </div>
                         </div>
@@ -200,19 +200,19 @@
         
         <aside class="lg:col-span-4 space-y-10">
             <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
-                <h3 class="text-2xl font-bold mb-5 border-b pb-4">市場概況</h3>
+                <h3 class="text-2xl font-bold mb-5 border-b pb-4" data-lang="market_overview_title">市場概況</h3>
                 <div id="market-overview-container" class="space-y-5"></div>
             </div>
             <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
-                <h3 class="text-2xl font-bold mb-5 border-b pb-4">注目銘柄 (Top Movers)</h3>
+                <h3 class="text-2xl font-bold mb-5 border-b pb-4" data-lang="hot_stocks_title">注目銘柄 (Top Movers)</h3>
                 <div id="hot-stocks-container" class="space-y-6"></div>
             </div>
         </aside>
     </div>
     
     <footer class="text-center text-sm text-gray-500 mt-20 py-8">
-        <p>この分析は提供された情報に基づく予測であり、投資成果を保証するものではありません。</p>
-        <p>Copyright &copy; 2025 Market Insight. All Rights Reserved.</p>
+        <p data-lang="footer_disclaimer">この分析は提供された情報に基づく予測であり、投資成果を保証するものではありません。</p>
+        <p data-lang="footer_copyright_text">Copyright &copy; 2025 Market Insight. All Rights Reserved.</p>
     </footer>
 </div>
 
@@ -274,6 +274,185 @@
         }
     }
 
+    // 日本語テキストから英語を自動生成する辞書
+    const translationDict = {
+        // 評価関連
+        '買い': 'Buy',
+        '売り': 'Sell',
+        'ホールド': 'Hold',
+        '中立': 'Neutral',
+        
+        // 市場状況
+        '史上最高値': 'all-time high',
+        '市場': 'market',
+        '投資家': 'investors',
+        'プロ投資家': 'professional investors',
+        '個人投資家': 'individual investors',
+        '短期トレーダー': 'short-term traders',
+        'リスク管理': 'risk management',
+        '最高値圏': 'near all-time highs',
+        '記録更新': 'record-breaking',
+        '成功': 'success',
+        '重み': 'weight',
+        '耐える': 'withstand',
+        
+        // 感情・センチメント
+        '楽観的': 'optimistic',
+        '悲観的': 'pessimistic',
+        '慎重': 'cautious',
+        '熱狂': 'euphoria',
+        '懐疑的': 'skeptical',
+        '警戒': 'caution',
+        '自己満足': 'complacency',
+        '楽観論': 'optimism',
+        '疲弊': 'exhaustion',
+        '兆候': 'signs',
+        '乖離': 'divergence',
+        '躊躇': 'hesitation',
+        
+        // テクニカル用語
+        '上昇トレンド': 'uptrend',
+        '下降トレンド': 'downtrend',
+        'サポート': 'support',
+        'レジスタンス': 'resistance',
+        '過熱': 'overheated',
+        '調整': 'correction',
+        '内部指標': 'internal indicators',
+        '深刻な悪化': 'serious deterioration',
+        '逆張り': 'contrarian',
+        'シグナル': 'signal',
+        '高値追い': 'chasing highs',
+        '控える': 'avoid',
+        '局面': 'phase',
+        
+        // 市場用語
+        '値上がり銘柄': 'advancing stocks',
+        '値下がり銘柄': 'declining stocks',
+        '上回る': 'exceed',
+        '主要銘柄': 'major stocks',
+        '急落': 'sharp decline',
+        'ラリー': 'rally',
+        '脆弱性': 'fragility',
+        '示唆': 'suggest',
+        '強欲': 'greed',
+        '領域': 'territory',
+        '広範': 'widespread',
+        '反映': 'reflect',
+        '歴史的': 'historically',
+        '前兆': 'precursor',
+        
+        // 価格・数値関連
+        '利益確定': 'profit-taking',
+        '下落ヘッジ': 'downside hedge',
+        '心理的': 'psychological',
+        '節目': 'level',
+        '割り込む': 'break below',
+        '上抜け': 'break above',
+        '支持線': 'support line',
+        '抵抗線': 'resistance line',
+        '弱気転換': 'bearish reversal',
+        '急上昇': 'sharp rise',
+        '萌芽': 'emergence',
+        
+        // センチメント指標
+        '恐怖指数': 'fear index',
+        '強気': 'bullish',
+        '弱気': 'bearish',
+        'ブルベア指数': 'bull/bear ratio',
+        'センチメント': 'sentiment',
+        '個人投資家センチメント': 'individual investor sentiment',
+        
+        // 一般的な表現
+        'について': 'regarding',
+        'による': 'due to',
+        'によって': 'by',
+        'である': 'is',
+        'です': '',
+        'ます': '',
+        'した': 'ed',
+        'する': 'to',
+        'しています': 'ing',
+        'としている': 'as',
+        'と': 'and',
+        'が': '',
+        'は': '',
+        'を': '',
+        'に': 'in',
+        'の': 'of',
+        'で': 'at'
+    };
+
+    // 日本語テキストを英語に自動翻訳する関数
+    function autoTranslateText(japaneseText) {
+        if (!japaneseText) return '';
+        
+        let englishText = japaneseText;
+        
+        // 長いフレーズから短いものの順で置換（より正確な翻訳のため）
+        const sortedEntries = Object.entries(translationDict).sort((a, b) => b[0].length - a[0].length);
+        
+        sortedEntries.forEach(([japanese, english]) => {
+            if (english) { // 空文字列でない場合のみ置換
+                const regex = new RegExp(japanese.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+                englishText = englishText.replace(regex, english);
+            }
+        });
+        
+        // 特定の日本語パターンの変換
+        englishText = englishText
+            // 日付フォーマット
+            .replace(/(\d+)年(\d+)月(\d+)日/g, '$1/$2/$3')
+            .replace(/(\d+)月(\d+)日/g, '$1/$2')
+            // 数値と単位
+            .replace(/(\d+)日移動平均/g, '$1-day moving average')
+            .replace(/(\d+)日/g, '$1-day')
+            .replace(/移動平均/g, 'moving average')
+            // 句読点
+            .replace(/。/g, '. ')
+            .replace(/、/g, ', ')
+            .replace(/：/g, ': ')
+            .replace(/；/g, '; ')
+            .replace(/（/g, ' (')
+            .replace(/）/g, ') ')
+            .replace(/「/g, '"')
+            .replace(/」/g, '"')
+            // 余分な空白を削除
+            .replace(/\s+/g, ' ')
+            // 文の始まりを大文字に
+            .replace(/^\s*([a-z])/g, (match, p1) => match.replace(p1, p1.toUpperCase()))
+            .replace(/\.\s+([a-z])/g, (match, p1) => match.replace(p1, p1.toUpperCase()));
+            
+        // 最終的なクリーンアップ
+        englishText = englishText
+            .replace(/\s+([.,:;!?])/g, '$1') // 句読点前の空白除去
+            .replace(/\(\s+/g, '(') // 括弧内の余分な空白
+            .replace(/\s+\)/g, ')') // 括弧内の余分な空白
+            .trim();
+            
+        return englishText;
+    }
+
+    // オブジェクトを再帰的に翻訳する関数
+    function translateObjectRecursively(obj) {
+        if (typeof obj === 'string') {
+            return autoTranslateText(obj);
+        } else if (Array.isArray(obj)) {
+            return obj.map(item => translateObjectRecursively(item));
+        } else if (obj !== null && typeof obj === 'object') {
+            const translated = {};
+            for (const [key, value] of Object.entries(obj)) {
+                translated[key] = translateObjectRecursively(value);
+            }
+            return translated;
+        }
+        return obj;
+    }
+
+    // 日本語データから英語データを自動生成する関数
+    function generateEnglishData(japaneseData) {
+        return translateObjectRecursively(japaneseData);
+    }
+
     // 多言語対応データから現在の言語のデータを取得
     function getLocalizedData(rawData) {
         console.log('Raw data received:', rawData);
@@ -285,6 +464,21 @@
         // 新しい多言語構造の場合
         if (rawData.languages) {
             console.log('Multilingual structure detected');
+            
+            // 英語データが存在しない場合は日本語データから自動生成
+            if (currentLang === 'en' && !rawData.languages.en && rawData.languages.ja) {
+                console.log('Generating English data from Japanese...');
+                rawData.languages.en = generateEnglishData(rawData.languages.ja);
+                
+                // 基本情報も英語化
+                if (rawData.date) {
+                    rawData.languages.en.date = autoTranslateText(rawData.date);
+                }
+                if (rawData.session) {
+                    rawData.languages.en.session = autoTranslateText(rawData.session);
+                }
+            }
+            
             const langData = rawData.languages[currentLang] || rawData.languages.ja;
             console.log('Selected language data:', langData);
             
@@ -331,8 +525,8 @@
             <div class="flex items-end justify-center gap-4">
                 <p class="text-8xl font-bold text-gray-800">${pcRatio.dailyValue}</p>
                 <div class="text-left mb-2">
-                     <p class="text-xl font-semibold text-gray-500">当日レシオ</p>
-                     <p class="text-xl font-bold text-gray-700">${pcRatio.movingAverage} <span class="text-base font-medium text-gray-500">(21日移動平均)</span></p>
+                     <p class="text-xl font-semibold text-gray-500" data-lang="daily_ratio">当日レシオ</p>
+                     <p class="text-xl font-bold text-gray-700">${pcRatio.movingAverage} <span class="text-base font-medium text-gray-500" data-lang="moving_average_21">(21日移動平均)</span></p>
                 </div>
             </div>
             <p class="mt-5 px-6 py-2 inline-block bg-red-100 text-red-800 rounded-full text-lg font-semibold">${pcRatio.status}</p>`;
@@ -354,7 +548,7 @@
         const vix = fundamentals.vix;
         document.getElementById('vix-container').innerHTML = `
             <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
-                <h4 class="text-2xl font-bold text-gray-800 mb-1">VIX (恐怖指数)</h4>
+                <h4 class="text-2xl font-bold text-gray-800 mb-1" data-lang="vix_title">VIX (恐怖指数)</h4>
                 <div class="flex items-baseline gap-4 mb-2">
                     <p class="text-5xl font-bold text-red-600">${vix.value}</p>
                     <p class="text-xl font-semibold text-red-600">${vix.change}</p>
@@ -366,19 +560,19 @@
         const aaii = fundamentals.aaiiSurvey;
         document.getElementById('aaii-container').innerHTML = `
             <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
-                <h4 class="text-2xl font-bold text-gray-800 mb-1">AAII 個人投資家センチメント</h4>
+                <h4 class="text-2xl font-bold text-gray-800 mb-1" data-lang="aaii_title">AAII 個人投資家センチメント</h4>
                 <p class="text-gray-500 mb-4">${aaii.date}</p>
                 <div class="space-y-3">
                     <div class="flex items-center">
-                        <span class="w-24 font-semibold text-bullish">強気</span>
+                        <span class="w-24 font-semibold text-bullish" data-lang="bullish">強気</span>
                         <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bullish h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.bullish}%">${aaii.bullish}%</div></div>
                     </div>
                     <div class="flex items-center">
-                        <span class="w-24 font-semibold text-neutral">中立</span>
+                        <span class="w-24 font-semibold text-neutral" data-lang="neutral">中立</span>
                         <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-neutral h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.neutral}%">${aaii.neutral}%</div></div>
                     </div>
                     <div class="flex items-center">
-                        <span class="w-24 font-semibold text-bearish">弱気</span>
+                        <span class="w-24 font-semibold text-bearish" data-lang="bearish">弱気</span>
                         <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bearish h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.bearish}%">${aaii.bearish}%</div></div>
                     </div>
                 </div>
@@ -390,15 +584,15 @@
         const ii = fundamentals.investorsIntelligence;
         document.getElementById('ii-container').innerHTML = `
             <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
-                <h4 class="text-2xl font-bold text-gray-800 mb-1">Investors Intelligence ブルベア指数</h4>
+                <h4 class="text-2xl font-bold text-gray-800 mb-1" data-lang="ii_title">Investors Intelligence ブルベア指数</h4>
                  <p class="text-gray-500 mb-4">${ii.date}</p>
                 <div class="space-y-3">
                     <div class="flex items-center">
-                        <span class="w-28 font-semibold text-bullish">強気 (Bulls)</span>
+                        <span class="w-28 font-semibold text-bullish" data-lang="bulls">強気 (Bulls)</span>
                         <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bullish h-6 rounded-full text-center text-white font-bold" style="width: ${ii.bullish}%">${ii.bullish}%</div></div>
                     </div>
                     <div class="flex items-center">
-                        <span class="w-28 font-semibold text-bearish">弱気 (Bears)</span>
+                        <span class="w-28 font-semibold text-bearish" data-lang="bears">弱気 (Bears)</span>
                         <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bearish h-6 rounded-full text-center text-white font-bold" style="width: ${ii.bearish}%">${ii.bearish}%</div></div>
                     </div>
                 </div>
@@ -464,17 +658,23 @@
 
         // 1. 市場の健全性 (ドーナツグラフ)
         chartInstances.breadthChart = echarts.init(document.getElementById('breadthChart'));
+        const currentLang = window.currentLang || 'ja';
+        const chartLabels = {
+            health: currentLang === 'en' ? 'Market Health' : '市場の健全性',
+            decliners: currentLang === 'en' ? 'Decliners' : '値下がり',
+            advancers: currentLang === 'en' ? 'Advancers' : '値上がり'
+        };
         chartInstances.breadthChart.setOption({
             tooltip: { trigger: 'item' },
             legend: { bottom: '5%', left: 'center', textStyle: { fontSize: FONT_SIZE_LEGEND } },
             series: [{
-                name: '市場の健全性', type: 'pie', radius: ['50%', '70%'], avoidLabelOverlap: false,
+                name: chartLabels.health, type: 'pie', radius: ['50%', '70%'], avoidLabelOverlap: false,
                 label: { show: false, position: 'center' },
                 emphasis: { label: { show: true, fontSize: '30', fontWeight: 'bold' } },
                 labelLine: { show: false },
                 data: [
-                    { value: data.dashboard.breadth.decliners, name: '値下がり', itemStyle: { color: '#ef4444' } },
-                    { value: data.dashboard.breadth.advancers, name: '値上がり', itemStyle: { color: '#3b82f6' } },
+                    { value: data.dashboard.breadth.decliners, name: chartLabels.decliners, itemStyle: { color: '#ef4444' } },
+                    { value: data.dashboard.breadth.advancers, name: chartLabels.advancers, itemStyle: { color: '#3b82f6' } },
                 ]
             }]
         });

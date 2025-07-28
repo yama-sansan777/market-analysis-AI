@@ -170,6 +170,51 @@ const translations = {
         main_subtitle: '短期トレーダーのためのデータ駆動型インサイト',
         summary_title: '総合評価',
         
+        // Dashboard sections
+        market_health_title: '市場の健全性 (前日終値)',
+        market_sentiment_title: '市場心理 (CNN Fear & Greed)',
+        price_levels_title: '主要な価格帯',
+        resistance_level: '上値抵抗線 (レジスタンス)',
+        support_level: '下値支持線 (サポート)',
+        put_call_ratio_title: 'エクイティ Put Call Ratio',
+        daily_ratio: '当日レシオ',
+        moving_average_21: '21日移動平均',
+        
+        // Analysis tabs
+        detailed_analysis_title: '詳細分析',
+        tab_instructions: '下のタブをクリックして、分析内容を切り替えられます',
+        tab_internals: '市場の内部構造',
+        tab_technicals: 'テクニカル分析',
+        tab_fundamentals: 'ファンダメンタルズ & 心理',
+        tab_strategy: '投資戦略',
+        
+        // Strategy section
+        basic_strategy: '基本戦略',
+        risk_management: 'リスク管理',
+        
+        // Sidebar
+        market_overview_title: '市場概況',
+        hot_stocks_title: '注目銘柄 (Top Movers)',
+        
+        // Sentiment indicators
+        vix_title: 'VIX (恐怖指数)',
+        aaii_title: 'AAII 個人投資家センチメント',
+        bullish: '強気',
+        neutral: '中立',
+        bearish: '弱気',
+        ii_title: 'Investors Intelligence ブルベア指数',
+        bulls: '強気 (Bulls)',
+        bears: '弱気 (Bears)',
+        
+        // Chart labels
+        chart_market_health: '市場の健全性',
+        chart_decliners: '値下がり',
+        chart_advancers: '値上がり',
+        
+        // Footer
+        footer_disclaimer: 'この分析は提供された情報に基づく予測であり、投資成果を保証するものではありません。',
+        footer_copyright_text: 'Copyright © 2025 Market Insight. All Rights Reserved.',
+        
         // Terms page
         terms_title: '市場用語集',
         terms_subtitle: '株式市場で使用される専門用語を解説します。基本用語からチャート用語、指標用語、取引用語まで、投資家のレベルに合わせた情報を提供します。',
@@ -850,6 +895,51 @@ const translations = {
         main_subtitle: 'Data-driven insights for short-term traders',
         summary_title: 'Overall Assessment',
         
+        // Dashboard sections
+        market_health_title: 'Market Health (Previous Close)',
+        market_sentiment_title: 'Market Sentiment (CNN Fear & Greed)',
+        price_levels_title: 'Key Price Levels',
+        resistance_level: 'Resistance Level',
+        support_level: 'Support Level',
+        put_call_ratio_title: 'Equity Put Call Ratio',
+        daily_ratio: 'Daily Ratio',
+        moving_average_21: '21-day Moving Average',
+        
+        // Analysis tabs
+        detailed_analysis_title: 'Detailed Analysis',
+        tab_instructions: 'Click the tabs below to switch between analysis sections',
+        tab_internals: 'Market Internals',
+        tab_technicals: 'Technical Analysis',
+        tab_fundamentals: 'Fundamentals & Psychology',
+        tab_strategy: 'Investment Strategy',
+        
+        // Strategy section
+        basic_strategy: 'Basic Strategy',
+        risk_management: 'Risk Management',
+        
+        // Sidebar
+        market_overview_title: 'Market Overview',
+        hot_stocks_title: 'Hot Stocks (Top Movers)',
+        
+        // Sentiment indicators
+        vix_title: 'VIX (Fear Index)',
+        aaii_title: 'AAII Individual Investor Sentiment',
+        bullish: 'Bullish',
+        neutral: 'Neutral',
+        bearish: 'Bearish',
+        ii_title: 'Investors Intelligence Bull/Bear Index',
+        bulls: 'Bulls',
+        bears: 'Bears',
+        
+        // Chart labels
+        chart_market_health: 'Market Health',
+        chart_decliners: 'Decliners',
+        chart_advancers: 'Advancers',
+        
+        // Footer
+        footer_disclaimer: 'This analysis is a forecast based on provided information and does not guarantee investment results.',
+        footer_copyright_text: 'Copyright © 2025 Market Insight. All Rights Reserved.',
+        
         // Terms page
         terms_title: 'Market Glossary',
         terms_subtitle: 'Explains specialized terms used in the stock market. Provides information tailored to investor levels, from basic and chart terms to indicator and trading terms.',
@@ -1431,6 +1521,11 @@ function switchLanguage(lang) {
     // Re-render content for archive.html if renderAll function exists
     if (typeof window.renderAll === 'function') {
         window.renderAll();
+    }
+    
+    // Reload data to apply auto-translation for charts and dynamic content
+    if (window.loadReportData) {
+        window.loadReportData();
     }
     
     // Trigger custom event for dynamic content
