@@ -175,43 +175,43 @@
       ]
     },
     "en": {
-      "session": "7月28日 Market Analysis",
+      "session": "7月28日 market分析",
       "date": "2025年7月28日",
       "summary": {
-        "evaluation": "hold",
+        "evaluation": "Hold",
         "score": 3,
-        "headline": "Signs of Exhaustion Behind Record Highs: Can the Market Bear the Weight of Its Own Success?",
-        "text": "While the S&P 500 is near all-time highs, internal indicators show serious deterioration. The divergence between professional investor euphoria and retail investor caution is a contrarian sell signal. Short-term traders should prioritize risk management and avoid chasing highs in this phase."
+        "headline": "signs of exhaustion lurking behind record-breaking performance: can the market withstand the weight of its own success？",
+        "text": "S&P 500 is near all-time highs, but internal indicators show serious deterioration. The divergence between professional investor euphoria and individual investor caution is a contrarian sell signal. Short-term traders should prioritize risk management and avoid chasing highs in this phase."
       },
       "dashboard": {
         "breadth": {
           "advancers": 5915,
           "decliners": 3993,
-          "summary": "Advancing issues exceed declining issues, but sharp declines in some major stocks suggest rally fragility."
+          "summary": "advancing stocks outnumber declining stocks, but, sharp declines in some major stocks suggest rally fragility."
         },
         "sentimentVI": 74,
-        "sentimentVISummary": "The index is in 'Greed' territory, reflecting widespread optimism and complacency. Historically, this is a precursor to correction.",
+        "sentimentVISummary": "the index is in \"Greed\" territory, reflecting widespread optimism and complacency. historically a precursor to correction.",
         "priceLevels": {
           "resistance": {
             "value": "$6,450",
-            "description": "psychological level。profit-taking resistance。"
+            "description": "psychological level. Profit-taking wall."
           },
           "support": {
             "value": "$6,350",
-            "description": "Short-term psychological support. Break below triggers bearish reversal."
+            "description": "short-term psychological support. Break below signals bearish reversal."
           }
         },
         "putCallRatio": {
           "dailyValue": "0.72",
           "movingAverage": "0.56",
-          "status": "emerging caution",
-          "summary": "The sharp rise in daily ratio is a sign some investors are beginning downside hedging."
+          "status": "emergence of caution",
+          "summary": "sharp rise in daily ratio signals some investors are starting downside hedging."
         }
       },
       "details": {
         "internals": {
-          "headline": "Professional Euphoria vs. Retail Caution: Dangerous Sentiment Divergence",
-          "text": "Professional investors are extremely optimistic (historically a peak signal) while retail investors remain skeptical. This combination of 'smart money euphoria' and 'dumb money hesitation' indicates the rally's foundation is extremely fragile.",
+          "headline": "プロ 熱狂 and 個人 冷静: 危険なセンチメント 乖離",
+          "text": "professional investors 極端 楽観的 (歴史的  天井 サイン)  ある一方, 個人 懐疑的 す. こ 「スマートマネー 熱狂」 and 「ダムマネー 躊躇」 組み合わせ , ラリー 基盤 極めて脆弱 あるこ and  示しています.",
           "chartData": {
             "labels": [
               "Deere & Co",
@@ -232,8 +232,8 @@
           }
         },
         "technicals": {
-          "headline": "Uptrend Continues, But Overheating and Divergence Suggest Reversal",
-          "text": "While the S&P 500 is near all-time highs, RSI shows 'overbought' conditions and MACD suggests momentum deceleration. More seriously, this is a 'poor quality' advance where the index rises while market breadth (A/D Line) fails to follow.",
+          "headline": "上昇トレンド 継続, しかし過熱感 and ダイバージェンス 転換 示唆",
+          "text": "S&P 500 near all-time highs あります , RSI 「買われすぎ」 示し, MACD 勢い 鈍化 示唆しています. より深刻な  , 指数 上昇する一方 market 幅 (A/Dライン)  追随していない「質 悪い」上昇 あるこ and  す.",
           "chartData": {
             "labels": [
               "2025-07-21",
@@ -266,60 +266,60 @@
           }
         },
         "fundamentals": {
-          "headline": "Optimism Supported by Earnings and Rate Expectations, Low VIX Shows Complacency",
-          "text": "Market optimism is supported by strong corporate earnings and expectations for Fed rate cuts. However, the low VIX level reflects dangerous complacency, leaving the market vulnerable to event risks like next week's FOMC and major earnings.",
+          "headline": "好決算 and 金利期待 支える楽観論, VIX 低さ 油断 証",
+          "text": "market 楽観論 好調な企業決算 and FRB 利下げ期待 支えられています. しかし, VIX 低水準 危険な自己満足 反映しており, 来週 FOMCや主要決算 and いったイベントリスク 対し脆弱な状態 す.",
           "vix": {
             "value": 14.93,
             "change": "-0.46",
-            "summary": "VIX is near 52-week lows, showing extreme market complacency. Unexpected news could trigger a volatility spike."
+            "summary": "VIX 52週間 安値圏 あり, market 極端な自己満足 示しています. 予期せぬニュース ボラティリティ 急上昇 引き起こす可能性 あります."
           },
           "aaiiSurvey": {
-            "date": "2025, 7/24 Survey",
+            "date": "July 24, 2025調査",
             "bullish": 36.8,
             "neutral": 29.2,
             "bearish": 34,
-            "summary": "Retail investors are skeptical of the rally with sentiment nearly neutral. This is a warning sign showing lack of broad support."
+            "summary": "individual investors ラリー 懐疑的 センチメント ほぼNeutral. 広範な支持 欠いているこ and  示す警告サイン す."
           },
           "investorsIntelligence": {
-            "date": "2025, 7/23 Survey",
+            "date": "July 23, 2025調査",
             "bullish": 60.8,
             "bearish": 21.7,
             "correction": 17.5,
-            "summary": "Professional investors' extreme bullishness is a powerful contrarian indicator, suggesting 'smart money' is in euphoric state."
+            "summary": "professional investors 極端なBullish 強力な逆張り指標 あり, 「スマートマネー」 熱狂状態 あるこ and  示唆します."
           },
           "points": [
-            "Strong Q2 earnings are providing fundamental support for the market rally.",
-            "Fed rate cut expectations are boosting liquidity and risk appetite.",
-            "The combination of low VIX and extreme professional bullishness creates an environment highly vulnerable to negative surprises."
+            "好調な第2四半期決算 , marketラリー ファンダメンタルズ面  支え and なっている.",
+            "FRB よる利下げ期待 , 流動性 and リスク選好 後押ししている.",
+            "低いVIX index and professional investors 極端なBullish 組み合わせ , ネガティブなサプライズ 非常 脆弱な環境 生み出している."
           ]
         },
         "strategy": {
-          "headline": "Strengthen Defense, Secure Profits, and Wait for the Next Opportunity",
-          "basic": "Consider partial profit-taking on existing longs and set stop-losses just below 6,350. For new positions, it's wise to avoid chasing highs and wait for a pullback to 6,250-6,300.",
-          "risk": "The biggest risk is a FOMO-driven 'melt-up' market. The bearish view would be invalidated if the S&P 500 strongly breaks above 6,450 with improving market breadth."
+          "headline": "守り 固め, 利益 確保し, 次 機会 待つ",
+          "basic": "既存ロング 部分的な利益確定 検討し, ストップロス 6,350直下 設定. 新規ポジション 高値追い 避け, 6,250〜6,300へ 調整 待つ  賢明 す.",
+          "risk": "最大 リスク FOMO よる「メルトアップ」相場 す. Bearish見方 , S&P 500 6,450 力強く上抜け, かつmarket 幅 改善した場合 無効 and なります."
         }
       },
       "marketOverview": [
         {
-          "name": "S&P 500 (7/25 Close)",
+          "name": "S&P 500 (7/25 close)",
           "value": "6,388.6",
           "change": "+2.70 (+0.04%)",
           "isDown": false
         },
         {
-          "name": "S&P 500 Futures",
+          "name": "S&P 500 先物",
           "value": "6,385.50",
           "change": "-3.10",
           "isDown": true
         },
         {
-          "name": "VIX Index",
+          "name": "VIX index",
           "value": "14.93",
           "change": "-0.46 (-2.99%)",
           "isDown": true
         },
         {
-          "name": "US 10Y Treasury",
+          "name": "US 10-year yield",
           "value": "4.40%",
           "change": "-0.02%",
           "isDown": true
@@ -328,20 +328,20 @@
       "hotStocks": [
         {
           "name": "Intel (INTC)",
-          "price": "Major Declining Stock",
-          "description": "Sharp 8.5% decline on earnings disappointment. Symbolizes cracks in market internals.",
+          "price": "主な値下 り銘柄",
+          "description": "決算失望 -8.5% 急落. market内部 亀裂 象徴.",
           "isDown": true
         },
         {
           "name": "Charter (CHTR)",
-          "price": "Major Declining Stock",
-          "description": "18.5% plunge. Shows weakness in specific sectors.",
+          "price": "主な値下 り銘柄",
+          "description": "-18.5% 暴落. 特定 セクター 弱さ 示す.",
           "isDown": true
         },
         {
           "name": "Deere & Co (DE)",
-          "price": "Major Advancing Stock",
-          "description": "Announced strong earnings, partially supporting market sentiment.",
+          "price": "主な値上 り銘柄",
+          "description": "好決算 発表し, market センチメント 一部下支え.",
           "isDown": false
         }
       ]
