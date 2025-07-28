@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOHOU US Stock AI</title>
+    <title>YOHOU 米国株AI - 市場分析</title>
     <script src="https://cdn.tailwindcss.com/3.4.1"></script>
     <script>
         tailwind.config = {
@@ -34,7 +34,6 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <script src="lang.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -52,39 +51,30 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-<header class="bg-white border-b border-gray-200">
-<div class="container mx-auto px-4 py-4">
-<div class="flex items-center justify-between">
-<div class="flex items-center space-x-8">
-<a href="index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
-<nav class="hidden md:flex space-x-6">
-<a href="index.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_today">本日の市況分析</a>
-<a href="archive.html" class="text-gray-600 hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
-<a href="indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
-<a href="terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
-<a href="about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
-</nav>
-</div>
-<div class="flex items-center space-x-4">
-<button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50">
-<i class="ri-user-line"></i>
-<span data-lang="login">ログイン</span>
-</button>
-<button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50" data-lang="register">
-無料登録
-</button>
-<button class="md:hidden text-gray-600">
-<i class="ri-menu-line ri-lg"></i>
-</button>
-</div>
-</div>
-</div>
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-8">
+                <a href="#" class="text-2xl md:text-3xl font-pacifico text-indigo-700">Market Insight</a>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#" class="text-primary font-medium border-b-2 border-primary pb-1">本日の分析</a>
+                    <a href="#" class="text-gray-600 hover:text-primary">分析アーカイブ</a>
+                    <a href="#" class="text-gray-600 hover:text-primary">テクニカル指標解説</a>
+                </nav>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="md:hidden text-gray-600">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 </header>
 
 <div class="w-full px-6 py-10 md:px-12 lg:px-20">
     <header class="mb-14 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight" data-lang="main_title">S&P 500 インタラクティブ市場分析</h1>
-        <p class="mt-4 text-lg max-w-3xl mx-auto text-gray-600" data-lang="main_subtitle">短期トレーダーのためのデータ駆動型インサイト</p>
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">S&P 500 インタラクティブ市場分析</h1>
+        <p class="mt-4 text-lg max-w-3xl mx-auto text-gray-600">短期トレーダーのためのデータ駆動型インサイト</p>
          <div class="mt-8 inline-flex items-center gap-6 rounded-xl bg-white border border-gray-200 px-8 py-4 shadow-sm">
             <p id="session" class="font-semibold text-indigo-700 text-2xl"></p>
             <span class="text-gray-300 text-2xl">|</span>
@@ -95,7 +85,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-14">
         <main class="lg:col-span-8">
             <section id="summary" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-12 text-center ring-1 ring-gray-200">
-                <h2 class="text-3xl font-semibold text-gray-500 mb-5" data-lang="summary_title">総合評価</h2>
+                <h2 class="text-3xl font-semibold text-gray-500 mb-5">総合評価</h2>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-6">
                     <span id="summary-evaluation" class="text-7xl md:text-9xl font-bold"></span>
                     <div class="text-left">
@@ -104,7 +94,7 @@
                     </div>
                 </div>
                 <p id="summary-headline" class="text-2xl md:text-3xl font-semibold text-gray-800 mt-5"></p>
-                <p id="summary-text" class="max-w-4xl mx-auto text-gray-600 mt-4 leading-relaxed text-lg text-left"></p>
+                <p id="summary-text" class="max-w-4xl mx-auto text-gray-600 mt-4 leading-relaxed text-lg"></p>
             </section>
 
             <section id="dashboard" class="mb-12">
@@ -112,12 +102,12 @@
                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
                         <h3 class="font-bold text-2xl mb-5 text-center">市場の健全性 (前日終値)</h3>
                         <div class="h-64" id="breadthChart"></div>
-                        <p id="breadth-summary" class="text-left text-lg text-gray-600 mt-5"></p>
+                        <p id="breadth-summary" class="text-center text-lg text-gray-600 mt-5"></p>
                     </div>
                      <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col items-center justify-center">
                         <h3 class="font-bold text-2xl mb-5 text-center">市場心理 (CNN Fear & Greed)</h3>
                         <div class="h-64 w-full" id="sentimentGauge"></div>
-                        <p id="sentiment-summary" class="text-left text-lg text-gray-600 mt-5"></p>
+                        <p id="sentiment-summary" class="text-center text-lg text-gray-600 mt-5"></p>
                     </div>
                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col justify-center">
                         <h3 class="font-bold text-2xl mb-6 text-center">主要な価格帯</h3>
@@ -137,7 +127,7 @@
                      <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
                         <h3 class="font-bold text-2xl mb-5 text-center">エクイティ Put Call Ratio</h3>
                         <div id="put-call-ratio-container" class="text-center py-12"></div>
-                         <p id="put-call-ratio-summary" class="text-left text-lg text-gray-600 mt-2"></p>
+                         <p id="put-call-ratio-summary" class="text-center text-lg text-gray-600 mt-2"></p>
                     </div>
                 </div>
             </section>
@@ -217,91 +207,116 @@
 </div>
 
 <script>
-    // データの読み込みとページへの反映を行うメイン関数
-    async function loadReportData() {
-        try {
-            // datafileパラメータ取得
-            const urlParams = new URLSearchParams(window.location.search);
-            const dataFileName = urlParams.get('datafile');
-            // パラメータがあればarchive_dataから、なければlatest.json
-            const fileToFetch = dataFileName ? `archive_data/${dataFileName}` : 'live_data/latest.json';
-            
-            console.log('Fetching file:', fileToFetch);
-            
-            const response = await fetch(fileToFetch);
-            console.log('Response status:', response.status);
-            
-            if (!response.ok) {
-                throw new Error(`HTTPエラー! ステータス: ${response.status}, ファイル: ${fileToFetch}`);
-            }
-            
-            const rawData = await response.json();
-            console.log('Raw JSON data loaded successfully');
-
-            // 多言語対応データの処理
-            const data = getLocalizedData(rawData);
-
-            // --- ページの各要素にデータをセット ---
-            populateHtmlElements(data);
-
-            // --- チャート描画 ---
-            initializeAllCharts(data);
-
-            // --- タブ切り替え機能の初期化 ---
-            initializeTabs();
-
-        } catch (error) {
-            console.error('データの読み込みまたは処理中にエラーが発生しました:', error);
-            // より詳細なエラー情報を表示
-            const errorDetails = `
-                エラー: ${error.message}
-                ファイル: ${dataFileName || 'live_data/latest.json'}
-                スタック: ${error.stack}
-            `;
-            document.body.innerHTML = `<div class="text-center p-10">
-                <h1 class="text-2xl font-bold text-red-600 mb-4">データの読み込みに失敗しました</h1>
-                <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-left max-w-2xl mx-auto">
-                    <h2 class="font-bold mb-2">エラー詳細:</h2>
-                    <pre class="text-sm text-red-700 whitespace-pre-wrap">${error.message}</pre>
-                    <h3 class="font-bold mt-4 mb-2">対処方法:</h3>
-                    <ul class="text-sm text-red-600 list-disc list-inside">
-                        <li>latest.jsonファイルが存在することを確認してください</li>
-                        <li>JSONファイルの形式が正しいことを確認してください</li>
-                        <li>ブラウザのデベロッパーツールで詳細なエラーを確認してください</li>
-                    </ul>
-                </div>
-            </div>`;
+    // データオブジェクト
+    const reportData = {
+      "session": "7月28日 市場分析",
+      "date": "2025年7月28日",
+      "summary": {
+        "evaluation": "ホールド",
+        "score": 3,
+        "headline": "記録更新の裏に潜む疲弊の兆候：市場は自らの成功の重みに耐えられるか？",
+        "text": "S&P 500は史上最高値圏にありますが、内部指標は深刻な悪化を示しています。プロ投資家の熱狂と個人投資家の慎重さの乖離は逆張りの売りシグナルです。短期トレーダーはリスク管理を最優先し、高値追いを控えるべき局面です。"
+      },
+      "dashboard": {
+        "breadth": {
+          "advancers": 5915,
+          "decliners": 3993,
+          "summary": "値上がり銘柄数が値下がり銘柄数を上回っていますが、一部主要銘柄の急落はラリーの脆弱性を示唆しています。"
+        },
+        "sentimentVI": 74,
+        "sentimentVISummary": "インデックスは「Greed（強欲）」の領域にあり、広範な楽観論と自己満足を反映しています。歴史的には調整の前兆です。",
+        "priceLevels": {
+          "resistance": {
+            "value": "6,450",
+            "description": "心理的な節目。利益確定売りの壁。"
+          },
+          "support": {
+            "value": "6,350",
+            "description": "短期的な心理的支持線。割り込むと弱気転換。"
+          }
+        },
+        "putCallRatio": {
+          "dailyValue": "0.72",
+          "movingAverage": "0.56",
+          "status": "警戒感の萌芽",
+          "summary": "日次レシオの急上昇は、一部投資家が下落ヘッジを始めている兆候です。"
         }
-    }
-
-    // 多言語対応データから現在の言語のデータを取得
-    function getLocalizedData(rawData) {
-        console.log('Raw data received:', rawData);
-        
-        // 現在の言語設定を取得（lang.jsから）
-        const currentLang = window.currentLang || 'ja';
-        console.log('Current language:', currentLang);
-        
-        // 新しい多言語構造の場合
-        if (rawData.languages) {
-            console.log('Multilingual structure detected');
-            const langData = rawData.languages[currentLang] || rawData.languages.ja;
-            console.log('Selected language data:', langData);
-            
-            const result = {
-                ...rawData,
-                ...langData
-            };
-            console.log('Final localized data:', result);
-            return result;
+      },
+      "details": {
+        "internals": {
+          "headline": "プロの熱狂と個人の冷静：危険なセンチメントの乖離",
+          "text": "プロ投資家は極端に楽観的（歴史的には天井のサイン）である一方、個人は懐疑的です。この「スマートマネーの熱狂」と「ダムマネーの躊躇」の組み合わせは、ラリーの基盤が極めて脆弱であることを示しています。",
+          "chartData": {
+            "labels": ['Deere & Co', 'NVIDIA', 'Apple', 'Intel', 'Microsoft', 'Charter'],
+            "values": [2.5, 1.8, 1.2, -8.5, -1.1, -18.5]
+          }
+        },
+        "technicals": {
+          "headline": "上昇トレンドは継続、しかし過熱感とダイバージェンスが転換を示唆",
+          "text": "S&P 500は史上最高値圏にありますが、RSIは「買われすぎ」を示し、MACDは勢いの鈍化を示唆しています。より深刻なのは、指数が上昇する一方で市場の幅（A/Dライン）が追随していない「質の悪い」上昇であることです。",
+          "chartData": {
+            "labels": ["2025-07-21", "2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25"],
+            "sp500": [6334.3, 6335.6, 6380.1, 6385.9, 6388.6],
+            "ma50": [6205.5, 6210.1, 6215.8, 6221.5, 6227.0],
+            "adl": [150500, 150200, 151000, 151400, 152100]
+          }
+        },
+        "fundamentals": {
+          "headline": "好決算と金利期待が支える楽観論、VIXの低さは油断の証",
+          "text": "市場の楽観論は好調な企業決算とFRBの利下げ期待に支えられています。しかし、VIXの低水準は危険な自己満足を反映しており、来週のFOMCや主要決算といったイベントリスクに対し脆弱な状態です。",
+          "vix": {
+              "value": 14.93,
+              "change": "-0.46",
+              "status": "自己満足",
+              "summary": "VIXは52週間の安値圏にあり、市場の極端な自己満足を示しています。予期せぬニュースがボラティリティの急上昇を引き起こす可能性があります。"
+          },
+          "aaiiSurvey": {
+            "date": "2025年7月24日調査",
+            "bullish": 36.8,
+            "neutral": 29.2,
+            "bearish": 34.0,
+            "summary": "個人投資家はラリーに懐疑的でセンチメントはほぼ中立。広範な支持を欠いていることを示す警告サインです。"
+          },
+          "investorsIntelligence": {
+              "date": "2025年7月23日調査",
+              "bullish": 60.8,
+              "bearish": 21.7,
+              "correction": 17.5,
+              "summary": "プロ投資家の極端な強気は強力な逆張り指標であり、「スマートマネー」が熱狂状態にあることを示唆します。"
+          },
+          "points": [
+            "好調な第2四半期決算が、市場ラリーのファンダメンタルズ面での支えとなっている。",
+            "FRBによる利下げ期待が、流動性とリスク選好を後押ししている。",
+            "低いVIX指数とプロ投資家の極端な強気の組み合わせは、ネガティブなサプライズに非常に脆弱な環境を生み出している。"
+          ]
+        },
+        "strategy": {
+          "headline": "守りを固め、利益を確保し、次の機会を待つ",
+          "basic": "既存ロングは部分的な利益確定を検討し、ストップロスを6,350直下に設定。新規ポジションは高値追いを避け、6,250〜6,300への調整を待つのが賢明です。",
+          "risk": "最大のリスクはFOMOによる「メルトアップ」相場です。弱気見方は、S&P 500が6,450を力強く上抜け、かつ市場の幅が改善した場合に無効となります。"
         }
-        
-        // 従来の構造の場合はそのまま返す
-        console.log('Legacy structure detected, returning as-is');
-        return rawData;
-    }
+      },
+      "marketOverview": [
+        { "name": "S&P 500 (7/25終値)", "value": "6,388.6", "change": "+2.70 (+0.04%)", "isDown": false },
+        { "name": "S&P 500 先物", "value": "6,385.50", "change": "-3.10", "isDown": true },
+        { "name": "VIX指数", "value": "14.93", "change": "-0.46 (-2.99%)", "isDown": true },
+        { "name": "米国10年債利回り", "value": "4.40%", "change": "-0.02%", "isDown": true }
+      ],
+      "hotStocks": [
+        { "name": "Intel (INTC)", "price": "主な値下がり銘柄", "description": "決算失望で-8.5%の急落。市場内部の亀裂を象徴。", "isDown": true },
+        { "name": "Charter (CHTR)", "price": "主な値下がり銘柄", "description": "-18.5%の暴落。特定のセクターの弱さを示す。", "isDown": true },
+        { "name": "Deere & Co (DE)", "price": "主な値上がり銘柄", "description": "好決算を発表し、市場のセンチメントを一部下支え。", "isDown": false }
+      ]
+    };
 
-    // HTML要素にテキストやリストを流し込む関数
+    // メイン関数
+    document.addEventListener('DOMContentLoaded', () => {
+        populateHtmlElements(reportData);
+        initializeAllCharts(reportData);
+        initializeTabs();
+    });
+
+    // HTML要素にデータを流し込む関数
     function populateHtmlElements(data) {
         // ヘッダー
         document.getElementById('session').textContent = data.session;
@@ -311,7 +326,13 @@
         const summaryEval = document.getElementById('summary-evaluation');
         summaryEval.textContent = data.summary.evaluation;
         summaryEval.className = 'text-7xl md:text-9xl font-bold';
-        summaryEval.classList.add(data.summary.evaluation === '売り' ? 'text-red-600' : 'text-blue-600');
+        if (data.summary.evaluation === '売り') {
+            summaryEval.classList.add('text-red-600');
+        } else if (data.summary.evaluation === '買い') {
+            summaryEval.classList.add('text-blue-600');
+        } else {
+            summaryEval.classList.add('text-yellow-600');
+        }
         
         document.getElementById('summary-score').innerHTML = `${data.summary.score}<span class="text-4xl text-gray-500">/10</span>`;
         document.getElementById('summary-stars').innerHTML = Array.from({ length: 10 }, (_, i) => i < data.summary.score ? '<span>★</span>' : '<span class="text-gray-300">★</span>').join('');
@@ -327,6 +348,7 @@
         document.getElementById('support-desc').textContent = data.dashboard.priceLevels.support.description;
         
         const pcRatio = data.dashboard.putCallRatio;
+        const pcStatusClass = pcRatio.status === "弱気シグナル" ? "bg-red-100 text-red-800" : "bg-yellow-100 text-yellow-800";
         document.getElementById('put-call-ratio-container').innerHTML = `
             <div class="flex items-end justify-center gap-4">
                 <p class="text-8xl font-bold text-gray-800">${pcRatio.dailyValue}</p>
@@ -335,7 +357,7 @@
                      <p class="text-xl font-bold text-gray-700">${pcRatio.movingAverage} <span class="text-base font-medium text-gray-500">(21日移動平均)</span></p>
                 </div>
             </div>
-            <p class="mt-5 px-6 py-2 inline-block bg-red-100 text-red-800 rounded-full text-lg font-semibold">${pcRatio.status}</p>`;
+            <p class="mt-5 px-6 py-2 inline-block ${pcStatusClass} rounded-full text-lg font-semibold">${pcRatio.status}</p>`;
         document.getElementById('put-call-ratio-summary').textContent = pcRatio.summary;
         
         // 詳細分析タブ
@@ -352,12 +374,13 @@
 
         // VIX
         const vix = fundamentals.vix;
+        const vixColor = vix.value >= 20 ? 'text-red-600' : 'text-green-600';
         document.getElementById('vix-container').innerHTML = `
             <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
                 <h4 class="text-2xl font-bold text-gray-800 mb-1">VIX (恐怖指数)</h4>
                 <div class="flex items-baseline gap-4 mb-2">
-                    <p class="text-5xl font-bold text-red-600">${vix.value}</p>
-                    <p class="text-xl font-semibold text-red-600">${vix.change}</p>
+                    <p class="text-5xl font-bold ${vixColor}">${vix.value}</p>
+                    <p class="text-xl font-semibold ${vixColor}">${vix.change}</p>
                 </div>
                 <p class="mt-2 text-gray-600 text-lg leading-relaxed">${vix.summary}</p>
             </div>`;
@@ -424,47 +447,13 @@
             </div>`).join('');
     }
 
-    // グローバル変数でチャートインスタンスを管理
-    let chartInstances = {
-        breadthChart: null,
-        sentimentGauge: null,
-        contributionChart: null,
-        technicalChart: null
-    };
-
-    // 既存のチャートを破棄する関数
-    function destroyExistingCharts() {
-        // ECharts インスタンスの破棄
-        if (chartInstances.breadthChart) {
-            chartInstances.breadthChart.dispose();
-            chartInstances.breadthChart = null;
-        }
-        if (chartInstances.sentimentGauge) {
-            chartInstances.sentimentGauge.dispose();
-            chartInstances.sentimentGauge = null;
-        }
-        
-        // Chart.js インスタンスの破棄
-        if (chartInstances.contributionChart) {
-            chartInstances.contributionChart.destroy();
-            chartInstances.contributionChart = null;
-        }
-        if (chartInstances.technicalChart) {
-            chartInstances.technicalChart.destroy();
-            chartInstances.technicalChart = null;
-        }
-    }
-
     // 全てのチャートを初期化・描画する関数
     function initializeAllCharts(data) {
         const FONT_SIZE_TITLE = 20, FONT_SIZE_LEGEND = 16, FONT_SIZE_AXIS = 14;
 
-        // 既存のチャートを破棄
-        destroyExistingCharts();
-
         // 1. 市場の健全性 (ドーナツグラフ)
-        chartInstances.breadthChart = echarts.init(document.getElementById('breadthChart'));
-        chartInstances.breadthChart.setOption({
+        const breadthChart = echarts.init(document.getElementById('breadthChart'));
+        breadthChart.setOption({
             tooltip: { trigger: 'item' },
             legend: { bottom: '5%', left: 'center', textStyle: { fontSize: FONT_SIZE_LEGEND } },
             series: [{
@@ -480,8 +469,8 @@
         });
 
         // 2. 市場心理 (ゲージ) - CNN Fear & Greed Index
-        chartInstances.sentimentGauge = echarts.init(document.getElementById('sentimentGauge'));
-        chartInstances.sentimentGauge.setOption({
+        const sentimentGauge = echarts.init(document.getElementById('sentimentGauge'));
+        sentimentGauge.setOption({
             series: [{
                 type: 'gauge', center: ['50%', '60%'], startAngle: 180, endAngle: 0, min: 0, max: 100, splitNumber: 10,
                 itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [ { offset: 0, color: '#ef4444' }, { offset: 0.5, color: '#f59e0b' }, { offset: 1, color: '#10b981' }]}},
@@ -495,32 +484,44 @@
         });
 
         // 3. 寄与度チャート (横棒グラフ)
-        chartInstances.contributionChart = new Chart(document.getElementById('contributionChart'), {
+        new Chart(document.getElementById('contributionChart'), {
             type: 'bar',
             data: {
                 labels: data.details.internals.chartData.labels,
                 datasets: [{
-                    label: 'S&P 500への影響',
+                    label: '騰落率 (%)',
                     data: data.details.internals.chartData.values,
-                    backgroundColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 0.7)' : 'rgba(59, 130, 246, 0.7)',
-                    borderColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(59, 130, 246, 1)',
+                    backgroundColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 0.7)' : 'rgba(16, 185, 129, 0.7)',
+                    borderColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(16, 185, 129, 1)',
                     borderWidth: 1
                 }]
             },
             options: {
                 indexAxis: 'y', responsive: true, maintainAspectRatio: false,
                 scales: { 
-                    x: { ticks: { font: { size: FONT_SIZE_AXIS }, callback: (v) => v + '%' }}, 
+                    x: { 
+                        ticks: { 
+                            font: { size: FONT_SIZE_AXIS },
+                            callback: function(value) { return value + '%'; }
+                        }
+                    }, 
                     y: { ticks: { font: { size: FONT_SIZE_AXIS }}}
                 },
                 plugins: { 
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.formattedValue + '%';
+                            }
+                        }
+                    }
                 }
             }
         });
 
         // 4. テクニカルチャート (折れ線) with アドバンス・デクライン・ライン
-        chartInstances.technicalChart = new Chart(document.getElementById('technicalChart'), {
+        new Chart(document.getElementById('technicalChart'), {
             type: 'line',
             data: {
                 labels: data.details.technicals.chartData.labels,
@@ -594,11 +595,11 @@
         });
         
         window.addEventListener('resize', () => {
-            if (chartInstances.breadthChart) {
-                chartInstances.breadthChart.resize();
+            if (breadthChart && !breadthChart.isDisposed()) {
+                breadthChart.resize();
             }
-            if (chartInstances.sentimentGauge) {
-                chartInstances.sentimentGauge.resize();
+            if (sentimentGauge && !sentimentGauge.isDisposed()) {
+                sentimentGauge.resize();
             }
         });
     }
@@ -619,31 +620,6 @@
             });
         });
     }
-
-    // loadReportData関数をグローバルに公開（lang.jsから呼び出すため）
-    window.loadReportData = loadReportData;
-
-    // Initialize language system
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize current language from localStorage or default to 'ja'
-        window.currentLang = localStorage.getItem('language') || 'ja';
-        
-        // Initialize lang.js language system
-        if (window.initLanguage) {
-            initLanguage();
-        }
-        
-        // Load initial data
-        loadReportData();
-    });
-</script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-90LPDJBXLY"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-90LPDJBXLY');
 </script>
 </body>
 </html>
