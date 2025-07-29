@@ -1,348 +1,274 @@
 {
-  "date": "2025年7月28日",
-  "session": "7月28日 市場分析",
+  "date": "2025年7月29日",
+  "session": "7月29日 市場分析",
   "languages": {
     "ja": {
-      "session": "7月28日 市場分析",
-      "date": "2025年7月28日",
+      "session": "7月29日 市場分析",
+      "date": "2025年7月29日",
       "summary": {
         "evaluation": "ホールド",
-        "score": 3,
-        "headline": "記録更新の裏に潜む疲弊の兆候：市場は自らの成功の重みに耐えられるか？",
-        "text": "S&P 500は史上最高値圏にありますが、内部指標は深刻な悪化を示しています。プロ投資家の熱狂と個人投資家の慎重さの乖離は逆張りの売りシグナルです。短期トレーダーはリスク管理を最優先し、高値追いを控えるべき局面です。"
+        "score": 7,
+        "headline": "記録更新の裏に潜む亀裂：市場の健全性低下とセンチメントの乖離が示す警戒シグナル",
+        "text": "S&P 500は記録更新を続けているが、その上昇の基盤は著しく不安定化している。市場の騰落を示す内部指標（ブレッド）は悪化しており、上昇が一部の大型株にのみ依存していることを示唆している。センチメントは危険なほどに分裂しており、オプション市場では下落への備えが急増している。主要経済指標の発表を前にボラティリティが極端に低い現状は、短期トレーダーにとって極めて高いリスクを示唆するため、新規の買いは見送り、既存ポジションの利益確定とストップロスの引き上げを優先すべきである。"
       },
       "dashboard": {
         "breadth": {
-          "advancers": 5915,
-          "decliners": 3993,
-          "summary": "値上がり銘柄数が値下がり銘柄数を上回っていますが、一部主要銘柄の急落はラリーの脆弱性を示唆しています。"
+          "advancers": 210,
+          "decliners": 290,
+          "summary": "市場の内部は弱く、指数の上昇が一部の大型株に依存。この「ネガティブ・ダイバージェンス」は上昇トレンドの脆弱性の兆候です。"
         },
         "sentimentVI": 74,
-        "sentimentVISummary": "インデックスは「Greed（強欲）」の領域にあり、広範な楽観論と自己満足を反映しています。歴史的には調整の前兆です。",
+        "sentimentVISummary": "指数は「強欲（Greed）」の領域にあり、市場の楽観が行き過ぎている可能性を示唆。逆張りの売りシグナルとなることがあります。",
         "priceLevels": {
           "resistance": {
-            "value": "$6,450",
-            "description": "心理的な節目。利益確定売りの壁。"
+            "value": "$6,500",
+            "description": "心理的な節目であり、エリオット波動分析などに基づく次の目標水準。ここを明確に超えるには、ポジティブなサプライズを伴う強い買い材料が必要です。"
           },
           "support": {
-            "value": "$6,350",
-            "description": "短期的な心理的支持線。割り込むと弱気転換。"
+            "value": "$6,372",
+            "description": "直近の押し目買いが入ったプルバック・サポート水準であり、38.2%フィボナッチ・リトレースメントとも重なる重要な短期的な防衛ラインです。"
           }
         },
         "putCallRatio": {
           "dailyValue": "0.72",
-          "movingAverage": "0.56",
-          "status": "警戒感の萌芽",
-          "summary": "日次レシオの急上昇は、一部投資家が下落ヘッジを始めている兆候です。"
+          "movingAverage": "0.55",
+          "status": "自己満足からの転換シグナル",
+          "summary": "日次レシオが移動平均を大幅に上回って急騰。価格上昇にもかかわらず、投資家が積極的に下落ヘッジ（プット買い）を行っており、警戒感の高まりを反映しています。"
         }
       },
       "details": {
         "internals": {
-          "headline": "プロの熱狂と個人の冷静：危険なセンチメントの乖離",
-          "text": "プロ投資家は極端に楽観的（歴史的には天井のサイン）である一方、個人は懐疑的です。この「スマートマネーの熱狂」と「ダムマネーの躊躇」の組み合わせは、ラリーの基盤が極めて脆弱であることを示しています。",
+          "headline": "プロの楽観、個人の警戒、オプション市場の恐怖：センチメントの三重乖離が示す市場の脆弱性",
+          "text": "現在の市場センチメントは、一枚岩の楽観や悲観では語れない、極めて複雑で矛盾した状況を呈している。この乖離を理解することは、短期的なリスクを把握する上で不可欠である。CNN Fear & Greed Indexは74という「強欲（Greed）」の領域にあるが、これは個人投資家の動向とは全く一致しない。米国個人投資家協会（AAII）調査では弱気派が平均を上回る一方、プロのニュースレター執筆者を対象としたInvestors Intelligence（II）調査では強気派が高い水準を維持しており、明確な乖離が見られる。このパズルを解く鍵はオプション市場にあり、プット・コール・レシオの急騰は、市場の深層心理に潜む恐怖を浮き彫りにしている。",
           "chartData": {
-            "labels": [
-              "Deere & Co",
-              "NVIDIA",
-              "Apple",
-              "Intel",
-              "Microsoft",
-              "Charter"
-            ],
-            "values": [
-              2.5,
-              1.8,
-              1.2,
-              -8.5,
-              -1.1,
-              -18.5
-            ]
+            "labels": ["Investors Intelligence (プロ)", "AAII (個人)"],
+            "values": [52.0, 36.8]
           }
         },
         "technicals": {
-          "headline": "上昇トレンドは継続、しかし過熱感とダイバージェンスが転換を示唆",
-          "text": "S&P 500は史上最高値圏にありますが、RSIは「買われすぎ」を示し、MACDは勢いの鈍化を示唆しています。より深刻なのは、指数が上昇する一方で市場の幅（A/Dライン）が追随していない「質の悪い」上昇であることです。",
+          "headline": "史上最高値の裏に潜む脆弱性：価格と市場の内部（ブレッド）の深刻なダイバージェンス",
+          "text": "テクニカル分析の観点から見ると、S&P 500は力強い上昇トレンドの只中にある。しかし、その価格上昇の内実は極めて脆弱である。最も懸念すべきは、価格と市場の健全性（ブレッド）との間に生じている深刻な「ネガティブ・ダイバージェンス」である。S&P 500指数が新高値を更新しているにもかかわらず、アドバンス・デクライン・ライン（A/Dライン）は追随できずに低下傾向にある。これは、指数の上昇がごく一部の巨大ハイテク株によって牽引されているだけで、大多数の銘柄は上昇していないことを意味する。このような狭いリーダーシップに依存したラリーは、歴史的に見て持続可能性が低く、市場全体が急落するリスクを内包している。",
           "chartData": {
-            "labels": [
-              "2025-07-21",
-              "2025-07-22",
-              "2025-07-23",
-              "2025-07-24",
-              "2025-07-25"
-            ],
-            "sp500": [
-              6334.3,
-              6335.6,
-              6380.1,
-              6385.9,
-              6388.6
-            ],
-            "ma50": [
-              6205.5,
-              6210.1,
-              6215.8,
-              6221.5,
-              6227
-            ],
-            "adl": [
-              150500,
-              150200,
-              151000,
-              151400,
-              152100
-            ]
+            "labels": ["2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25", "2025-07-28"],
+            "sp500": [6309.62, 6358.91, 6363.35, 6388.64, 6389.77],
+            "ma50": [6245.50, 6250.10, 6255.40, 6261.20, 6266.80],
+            "adl": [35210, 35250, 35230, 35180, 35150]
           }
         },
         "fundamentals": {
-          "headline": "好決算と金利期待が支える楽観論、VIXの低さは油断の証",
-          "text": "市場の楽観論は好調な企業決算とFRBの利下げ期待に支えられています。しかし、VIXの低水準は危険な自己満足を反映しており、来週のFOMCや主要決算といったイベントリスクに対し脆弱な状態です。",
+          "headline": "嵐の前の静けさ：低VIXが隠す、FRBと重要経済指標発表前のイベントリスク",
+          "text": "現在の市場心理を理解する上で最も重要な要素は、「極端な自己満足」と「目前に迫った高インパクトなイベントリスク」の危険な組み合わせである。VIX指数は極めて低い水準にあり、市場参加者が将来の大きな価格変動を想定していないことを示している。しかし、今週はFOMC、GDP、雇用統計と重要イベントが目白押しであり、この静けさは嵐の前の静けさと解釈すべきである。ネガティブなサプライズが発生した場合、ボラティリティが爆発的に増大する非対称なリスク構造となっている。",
           "vix": {
             "value": 14.93,
             "change": "-0.46",
-            "summary": "VIXは52週間の安値圏にあり、市場の極端な自己満足を示しています。予期せぬニュースがボラティリティの急上昇を引き起こす可能性があります。"
+            "status": "自己満足",
+            "summary": "VIXは歴史的な低水準にあり、市場の極端な自己満足（ complacency）を示している。これは、FRBの政策発表や重要経済指標といったイベントリスクを過小評価しており、予期せぬショックに対して脆弱な状態である。"
           },
           "aaiiSurvey": {
-            "date": "2025年7月24日調査",
+            "date": "2025年7月23日調査",
             "bullish": 36.8,
             "neutral": 29.2,
-            "bearish": 34,
-            "summary": "個人投資家はラリーに懐疑的でセンチメントはほぼ中立。広範な支持を欠いていることを示す警告サインです。"
+            "bearish": 34.0,
+            "summary": "個人投資家の楽観論は後退し、歴史的平均を下回っている。市場の上昇に一般大衆が追随していないことは、ラリーの健全性に対する疑問を投げかける。"
           },
           "investorsIntelligence": {
-            "date": "2025年7月23日調査",
-            "bullish": 60.8,
-            "bearish": 21.7,
-            "correction": 17.5,
-            "summary": "プロ投資家の極端な強気は強力な逆張り指標であり、「スマートマネー」が熱狂状態にあることを示唆します。"
+            "date": "2025年7月28日調査",
+            "bullish": 52.0,
+            "bearish": 22.0,
+            "correction": 26.0,
+            "summary": "プロの投資アドバイザーは依然として強気だが、過去の天井圏で見られた60%超の極端な楽観には至っていない。個人投資家とのセンチメントの乖離が顕著である。"
           },
           "points": [
-            "好調な第2四半期決算が、市場ラリーのファンダメンタルズ面での支えとなっている。",
-            "FRBによる利下げ期待が、流動性とリスク選好を後押ししている。",
-            "低いVIX指数とプロ投資家の極端な強気の組み合わせは、ネガティブなサプライズに非常に脆弱な環境を生み出している。"
+            "市場は、FRBの政策決定、GDP、雇用統計という3つの主要なイベントリスクを前に、極度の自己満足状態にある。",
+            "歴史的に割高なバリュエーションは、金利や経済成長見通しの変化に対して市場を非常に敏感にしている。",
+            "低いVIXと高いイベントリスクの組み合わせは、ネガティブサプライズに対する非対称な下落リスクを生み出している。"
           ]
         },
         "strategy": {
-          "headline": "守りを固め、利益を確保し、次の機会を待つ",
-          "basic": "既存ロングは部分的な利益確定を検討し、ストップロスを6,350直下に設定。新規ポジションは高値追いを避け、6,250〜6,300への調整を待つのが賢明です。",
-          "risk": "最大のリスクはFOMOによる「メルトアップ」相場です。弱気見方は、S&P 500が6,450を力強く上抜け、かつ市場の幅が改善した場合に無効となります。"
+          "headline": "慎重さが利益を守る：キャピタル・プリザベーションと選択的行動の時",
+          "basic": "現在の市場環境は、積極的なリスクテイクよりも、利益の確保と資本の保全（キャピタル・プリザベーション）を最優先すべき局面である。「ホールド」は、新規に買い向かうべきではないという戦術的な中立姿勢を意味する。既存のロングポジションに対しては、ストップロス注文を直近のサポートレベルである6,372ポイントまで積極的に引き上げるべきである。また、大きな含み益が出ているポジションについては、一部を利益確定し、リスクエクスポージャーを引き下げることが賢明である。",
+          "risk": "この戦略における最大のリスクは、FRBのタカ派的な声明や予想外に弱い経済指標の発表を受けて、市場が「ギャップダウン」することである。このリスクをヘッジする最善の方法は、イベント発生前にポジションサイズを減らしておくことである。本戦略が無効になる転換点は、S&P 500がサポートレベルである6,372ポイントを終値で明確に下回ることである。その場合、残りのロングポジションを決済し、戦術的なショートを検討すべきである。"
         }
       },
       "marketOverview": [
         {
-          "name": "S&P 500 (7/25終値)",
-          "value": "6,388.6",
-          "change": "+2.70 (+0.04%)",
+          "name": "S&P 500 (7/28終値)",
+          "value": "6,389.77",
+          "change": "+1.13 (+0.02%)",
           "isDown": false
         },
         {
-          "name": "S&P 500 先物",
-          "value": "6,385.50",
-          "change": "-3.10",
-          "isDown": true
+          "name": "Nasdaq-100",
+          "value": "21,542.10",
+          "change": "+25.50 (+0.12%)",
+          "isDown": false
         },
         {
           "name": "VIX指数",
           "value": "14.93",
-          "change": "-0.46 (-2.99%)",
+          "change": "-0.46 (-3.00%)",
           "isDown": true
         },
         {
           "name": "米国10年債利回り",
-          "value": "4.40%",
-          "change": "-0.02%",
-          "isDown": true
+          "value": "4.42%",
+          "change": "+0.02%",
+          "isDown": false
         }
       ],
       "hotStocks": [
         {
-          "name": "Intel (INTC)",
-          "price": "主な値下がり銘柄",
-          "description": "決算失望で-8.5%の急落。市場内部の亀裂を象徴。",
-          "isDown": true
-        },
-        {
-          "name": "Charter (CHTR)",
-          "price": "主な値下がり銘柄",
-          "description": "-18.5%の暴落。特定のセクターの弱さを示す。",
-          "isDown": true
-        },
-        {
-          "name": "Deere & Co (DE)",
+          "name": "NVIDIA (NVDA)",
           "price": "主な値上がり銘柄",
-          "description": "好決算を発表し、市場のセンチメントを一部下支え。",
+          "description": "巨大テック企業として指数を牽引。市場のリーダーシップを担う。",
           "isDown": false
+        },
+        {
+          "name": "Microsoft (MSFT)",
+          "price": "主な値上がり銘柄",
+          "description": "安定した業績を背景に、狭いリーダーシップの一角を占める。",
+          "isDown": false
+        },
+        {
+          "name": "NextEra Energy (NEE)",
+          "price": "主な値下がり銘柄",
+          "description": "市場全体の弱さを反映し、公益セクターは軟調な展開。",
+          "isDown": true
         }
       ]
     },
     "en": {
-      "session": "7月28日 market分析",
-      "date": "2025年7月28日",
+      "session": "July 29th Market Analysis",
+      "date": "July 29, 2025",
       "summary": {
         "evaluation": "Hold",
-        "score": 3,
-        "headline": "signs of exhaustion lurking behind record-breaking performance: can the market withstand the weight of its own success？",
-        "text": "S&P 500 is near all-time highs, but internal indicators show serious deterioration. The divergence between professional investor euphoria and individual investor caution is a contrarian sell signal. Short-term traders should prioritize risk management and avoid chasing highs in this phase."
+        "score": 7,
+        "headline": "Cracks Behind Record Highs: Market Health Deterioration and Sentiment Divergence Signal Caution",
+        "text": "While the S&P 500 continues to set records, the foundation of its advance has become significantly unstable. Internal market indicators (breadth) are deteriorating, suggesting the rally depends on only a few large-cap stocks. Sentiment is dangerously fragmented, with options markets showing increased hedging for downside. With major economic releases ahead and volatility at extreme lows, short-term traders face extremely high risk - avoid new buying, prioritize profit-taking and stop-loss adjustments."
       },
       "dashboard": {
         "breadth": {
-          "advancers": 5915,
-          "decliners": 3993,
-          "summary": "advancing stocks outnumber declining stocks, but, sharp declines in some major stocks suggest rally fragility."
+          "advancers": 210,
+          "decliners": 290,
+          "summary": "Market internals are weak, with index gains dependent on few large-caps. This 'negative divergence' signals uptrend fragility."
         },
         "sentimentVI": 74,
-        "sentimentVISummary": "the index is in \"Greed\" territory, reflecting widespread optimism and complacency. historically a precursor to correction.",
+        "sentimentVISummary": "Index is in 'Greed' territory, suggesting market optimism may be excessive. Can serve as contrarian sell signal.",
         "priceLevels": {
           "resistance": {
-            "value": "$6,450",
-            "description": "psychological level. Profit-taking wall."
+            "value": "$6,500",
+            "description": "Psychological milestone and next target based on Elliott Wave analysis. Clear break above requires positive surprise with strong buying catalyst."
           },
           "support": {
-            "value": "$6,350",
-            "description": "short-term psychological support. Break below signals bearish reversal."
+            "value": "$6,372",
+            "description": "Recent pullback support level where dip-buying emerged, coinciding with 38.2% Fibonacci retracement - key short-term defensive line."
           }
         },
         "putCallRatio": {
           "dailyValue": "0.72",
-          "movingAverage": "0.56",
-          "status": "emergence of caution",
-          "summary": "sharp rise in daily ratio signals some investors are starting downside hedging."
+          "movingAverage": "0.55",
+          "status": "Shift from Complacency Signal",
+          "summary": "Daily ratio surged well above moving average. Despite price gains, investors actively hedging downside (put buying), reflecting rising caution."
         }
       },
       "details": {
         "internals": {
-          "headline": "プロ 熱狂 and 個人 冷静: 危険なセンチメント 乖離",
-          "text": "professional investors 極端 楽観的 (歴史的  天井 サイン)  ある一方, 個人 懐疑的 す. こ 「スマートマネー 熱狂」 and 「ダムマネー 躊躇」 組み合わせ , ラリー 基盤 極めて脆弱 あるこ and  示しています.",
+          "headline": "Professional Optimism, Retail Caution, Options Fear: Triple Sentiment Divergence Reveals Market Fragility",
+          "text": "Current market sentiment presents an extremely complex and contradictory situation that cannot be described as monolithic optimism or pessimism. Understanding this divergence is essential for grasping short-term risks. The CNN Fear & Greed Index at 74 shows 'Greed' territory, but this completely misaligns with retail investor behavior. AAII survey shows bearish sentiment above average while Investors Intelligence (II) survey of professional newsletter writers maintains high bullish levels, creating clear divergence. The key to this puzzle lies in options markets, where the put-call ratio surge exposes underlying fear in market psychology.",
           "chartData": {
-            "labels": [
-              "Deere & Co",
-              "NVIDIA",
-              "Apple",
-              "Intel",
-              "Microsoft",
-              "Charter"
-            ],
-            "values": [
-              2.5,
-              1.8,
-              1.2,
-              -8.5,
-              -1.1,
-              -18.5
-            ]
+            "labels": ["Investors Intelligence (Pro)", "AAII (Retail)"],
+            "values": [52.0, 36.8]
           }
         },
         "technicals": {
-          "headline": "上昇トレンド 継続, しかし過熱感 and ダイバージェンス 転換 示唆",
-          "text": "S&P 500 near all-time highs あります , RSI 「買われすぎ」 示し, MACD 勢い 鈍化 示唆しています. より深刻な  , 指数 上昇する一方 market 幅 (A/Dライン)  追随していない「質 悪い」上昇 あるこ and  す.",
+          "headline": "Fragility Behind All-Time Highs: Serious Divergence Between Price and Market Internals (Breadth)",
+          "text": "From a technical analysis perspective, the S&P 500 is in a strong uptrend. However, the substance of this price advance is extremely fragile. Most concerning is the serious 'negative divergence' between price and market health (breadth). While the S&P 500 index sets new highs, the Advance-Decline Line (A/D Line) fails to follow and trends lower. This means the index advance is driven only by a handful of mega-cap tech stocks, while the majority of stocks aren't rising. Such rallies dependent on narrow leadership historically lack sustainability and harbor risks of broad market selloffs.",
           "chartData": {
-            "labels": [
-              "2025-07-21",
-              "2025-07-22",
-              "2025-07-23",
-              "2025-07-24",
-              "2025-07-25"
-            ],
-            "sp500": [
-              6334.3,
-              6335.6,
-              6380.1,
-              6385.9,
-              6388.6
-            ],
-            "ma50": [
-              6205.5,
-              6210.1,
-              6215.8,
-              6221.5,
-              6227
-            ],
-            "adl": [
-              150500,
-              150200,
-              151000,
-              151400,
-              152100
-            ]
+            "labels": ["2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25", "2025-07-28"],
+            "sp500": [6309.62, 6358.91, 6363.35, 6388.64, 6389.77],
+            "ma50": [6245.50, 6250.10, 6255.40, 6261.20, 6266.80],
+            "adl": [35210, 35250, 35230, 35180, 35150]
           }
         },
         "fundamentals": {
-          "headline": "好決算 and 金利期待 支える楽観論, VIX 低さ 油断 証",
-          "text": "market 楽観論 好調な企業決算 and FRB 利下げ期待 支えられています. しかし, VIX 低水準 危険な自己満足 反映しており, 来週 FOMCや主要決算 and いったイベントリスク 対し脆弱な状態 す.",
+          "headline": "Calm Before the Storm: Low VIX Masks Event Risk Before Fed and Major Economic Data",
+          "text": "The most critical factor in understanding current market psychology is the dangerous combination of 'extreme complacency' and 'imminent high-impact event risks.' The VIX index sits at extremely low levels, indicating market participants don't anticipate significant future price volatility. However, this week features a packed schedule of FOMC, GDP, and employment data - this calm should be interpreted as the calm before the storm. If negative surprises occur, we face an asymmetric risk structure where volatility could explode.",
           "vix": {
             "value": 14.93,
             "change": "-0.46",
-            "summary": "VIX 52週間 安値圏 あり, market 極端な自己満足 示しています. 予期せぬニュース ボラティリティ 急上昇 引き起こす可能性 あります."
+            "status": "Complacency",
+            "summary": "VIX at historically low levels shows extreme market complacency. This underestimates event risks like Fed policy announcements and major economic indicators, leaving markets vulnerable to unexpected shocks."
           },
           "aaiiSurvey": {
-            "date": "July 24, 2025調査",
+            "date": "July 23, 2025 Survey",
             "bullish": 36.8,
             "neutral": 29.2,
-            "bearish": 34,
-            "summary": "individual investors ラリー 懐疑的 センチメント ほぼNeutral. 広範な支持 欠いているこ and  示す警告サイン す."
+            "bearish": 34.0,
+            "summary": "Retail investor optimism has retreated below historical averages. The general public not following the market rally raises questions about rally health."
           },
           "investorsIntelligence": {
-            "date": "July 23, 2025調査",
-            "bullish": 60.8,
-            "bearish": 21.7,
-            "correction": 17.5,
-            "summary": "professional investors 極端なBullish 強力な逆張り指標 あり, 「スマートマネー」 熱狂状態 あるこ and  示唆します."
+            "date": "July 28, 2025 Survey",
+            "bullish": 52.0,
+            "bearish": 22.0,
+            "correction": 26.0,
+            "summary": "Professional investment advisors remain bullish but haven't reached the extreme 60%+ optimism seen at past market tops. Clear sentiment divergence with retail investors is notable."
           },
           "points": [
-            "好調な第2四半期決算 , marketラリー ファンダメンタルズ面  支え and なっている.",
-            "FRB よる利下げ期待 , 流動性 and リスク選好 後押ししている.",
-            "低いVIX index and professional investors 極端なBullish 組み合わせ , ネガティブなサプライズ 非常 脆弱な環境 生み出している."
+            "Markets are in extreme complacency ahead of three major event risks: Fed policy decision, GDP, and employment data.",
+            "Historically high valuations make markets highly sensitive to changes in interest rate and economic growth outlooks.",
+            "The combination of low VIX and high event risk creates asymmetric downside risk to negative surprises."
           ]
         },
         "strategy": {
-          "headline": "守り 固め, 利益 確保し, 次 機会 待つ",
-          "basic": "既存ロング 部分的な利益確定 検討し, ストップロス 6,350直下 設定. 新規ポジション 高値追い 避け, 6,250〜6,300へ 調整 待つ  賢明 す.",
-          "risk": "最大 リスク FOMO よる「メルトアップ」相場 す. Bearish見方 , S&P 500 6,450 力強く上抜け, かつmarket 幅 改善した場合 無効 and なります."
+          "headline": "Caution Preserves Profits: Time for Capital Preservation and Selective Action",
+          "basic": "Current market conditions prioritize profit securing and capital preservation over aggressive risk-taking. 'Hold' means tactical neutral stance against new buying. For existing long positions, aggressively raise stop-loss orders to recent support at 6,372 points. For positions with large unrealized gains, consider partial profit-taking to reduce risk exposure.",
+          "risk": "The biggest risk in this strategy is market 'gap down' following hawkish Fed statements or unexpectedly weak economic data. Best hedge is reducing position sizes before events. This strategy becomes invalid if S&P 500 clearly breaks below support at 6,372 on closing basis - then liquidate remaining longs and consider tactical shorts."
         }
       },
       "marketOverview": [
         {
-          "name": "S&P 500 (7/25 close)",
-          "value": "6,388.6",
-          "change": "+2.70 (+0.04%)",
+          "name": "S&P 500 (7/28 Close)",
+          "value": "6,389.77",
+          "change": "+1.13 (+0.02%)",
           "isDown": false
         },
         {
-          "name": "S&P 500 先物",
-          "value": "6,385.50",
-          "change": "-3.10",
-          "isDown": true
+          "name": "Nasdaq-100",
+          "value": "21,542.10",
+          "change": "+25.50 (+0.12%)",
+          "isDown": false
         },
         {
-          "name": "VIX index",
+          "name": "VIX Index",
           "value": "14.93",
-          "change": "-0.46 (-2.99%)",
+          "change": "-0.46 (-3.00%)",
           "isDown": true
         },
         {
-          "name": "US 10-year yield",
-          "value": "4.40%",
-          "change": "-0.02%",
-          "isDown": true
+          "name": "US 10Y Treasury Yield",
+          "value": "4.42%",
+          "change": "+0.02%",
+          "isDown": false
         }
       ],
       "hotStocks": [
         {
-          "name": "Intel (INTC)",
-          "price": "主な値下 り銘柄",
-          "description": "決算失望 -8.5% 急落. market内部 亀裂 象徴.",
-          "isDown": true
-        },
-        {
-          "name": "Charter (CHTR)",
-          "price": "主な値下 り銘柄",
-          "description": "-18.5% 暴落. 特定 セクター 弱さ 示す.",
-          "isDown": true
-        },
-        {
-          "name": "Deere & Co (DE)",
-          "price": "主な値上 り銘柄",
-          "description": "好決算 発表し, market センチメント 一部下支え.",
+          "name": "NVIDIA (NVDA)",
+          "price": "Major Gainer",
+          "description": "Leading mega-cap tech driving index gains. Maintains market leadership role.",
           "isDown": false
+        },
+        {
+          "name": "Microsoft (MSFT)",
+          "price": "Major Gainer",
+          "description": "Stable performance background, part of narrow leadership group.",
+          "isDown": false
+        },
+        {
+          "name": "NextEra Energy (NEE)",
+          "price": "Major Decliner",
+          "description": "Reflects broader market weakness, utilities sector showing soft performance.",
+          "isDown": true
         }
       ]
     }
