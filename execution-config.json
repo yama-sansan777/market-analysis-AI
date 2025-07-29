@@ -1,5 +1,5 @@
 {
-  "executionMode": "manual",
+  "executionMode": "automatic",
   "description": "Execution mode configuration",
   "modes": {
     "automatic": {
@@ -15,6 +15,6 @@
       "dataValidation": false
     }
   },
-  "branch": "manual-execution",
+  "branch": "main",
   "lastUpdated": "2025-07-29"
 }
