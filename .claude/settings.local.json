@@ -3,7 +3,11 @@
     "allow": [
       "Bash(start indicators.html)",
       "Bash(start \"\" \"C:\\Users\\TS2\\Desktop\\market-analysis-AI\\indicators.html\")",
-      "Bash(explorer:*)"
+      "Bash(explorer:*)",
+      "Bash(node:*)",
+      "Bash(rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }

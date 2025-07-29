@@ -1,0 +1,67 @@
+/* CSS Reset & Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-family-main);
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* フォントファミリーのクラス */
+.font-pacifico {
+  font-family: var(--font-family-display);
+}
+
+/* リンクのリセット */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* ボタンのリセット */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* リストのリセット */
+ul, ol {
+  list-style: none;
+}
+
+/* 画像のリセット */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* フォームのリセット */
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* ヘッダーのリセット */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+  line-height: 1.2;
+}

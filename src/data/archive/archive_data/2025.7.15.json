@@ -1,0 +1,306 @@
+{
+  "date": "2025年7月15日",
+  "session": "7月15日 市場分析",
+  "languages": {
+    "ja": {
+      "summary": {
+        "evaluation": "弱気 (短期的な売り)",
+        "score": 3,
+        "headline": "「極度の強欲」と最重要インフレ指標が激突、短期調整の嵐に備えよ",
+        "text": "2025年7月15日の米国市場は、史上最高値圏での推移という表面的な強さの裏で、深刻な警鐘が鳴る岐路に立たされています。市場心理は「極度の強欲」に達し、バリュエーションは歴史的に割高な水準です。この自己満足に満ちた市場が、本日発表される6月CPI（消費者物価指数）という最重要イベントに直面します。リスクとリターンの非対称性が極めて不利な状況であり、短期トレーダーは防御的なスタンスを取ることが賢明です。"
+      },
+      "dashboard": {
+        "breadth": {
+          "advancers": 0,
+          "decliners": 0,
+          "summary": "テクニカルなトレンドは強いものの、その上昇は一部のメガキャップ銘柄に牽引されており、広範な支持を欠いています。市場内部の健全性には疑問符が付きます。"
+        },
+        "sentimentVI": 76,
+        "sentimentVISummary": "CNN Fear & Greed指数は「極度の強欲」の領域にあり、市場参加者がリスクを過度に軽視していることを示唆します。これは歴史的に市場の天井を示す信頼性の高い逆張りシグナルです。",
+        "priceLevels": {
+          "resistance": {
+            "value": "$6,300",
+            "description": "心理的な節目となるレジスタンス"
+          },
+          "support": {
+            "value": "$6,220",
+            "description": "最初の下値支持線（マイナーサポート）"
+          }
+        },
+        "putCallRatio": {
+          "dailyValue": "0.53",
+          "movingAverage": "",
+          "status": "逆張り弱気シグナル",
+          "summary": "エクイティPut/Call Ratioが0.53という極端に低い水準にあります。これはトレーダーが下落ヘッジを全く行わず、市場に下落への警戒感が存在しないことを示す、極度の自己満足の表れです。"
+        }
+      },
+      "details": {
+        "internals": {
+          "headline": "楽観の頂点に潜む危険",
+          "text": "現在の市場心理は、単なる楽観論を超え、危険なほどの陶酔感に満ちています。プロの投資アドバイザーの楽観度を示すInvestors Intelligence調査では強気派が60.8%と危険水域に達する一方、個人投資家（AAII）は警戒感を強めており、典型的なラリー最終局面の乖離が見られます。VIX指数とPut/Callレシオの低さは、市場が悪材料に対して全く無防備であることを示しています。",
+          "chartData": {
+            "labels": [
+              "個人投資家 (AAII)",
+              "プロ投資家 (II)"
+            ],
+            "values": [
+              41.4,
+              60.8
+            ]
+          }
+        },
+        "technicals": {
+          "headline": "上昇トレンドの過熱と「エアポケット」のリスク",
+          "text": "S&P500やNasdaq100の移動平均線は強力な上昇トレンドを示していますが、RSIなどの短期オシレーターは「買われすぎ」の領域にあります。より深刻なのは、急激な上昇によって強固な支持線が遥か下方に置き去りにされていることです。主要な支持線である6,150ポイントまでの間にはテクニカルな真空地帯（エアポケット）が広がっており、下落が始まると急落するリスクがあります。",
+          "chartData": {
+            "labels": [
+              "レジスタンス",
+              "現在値",
+              "サポート1",
+              "サポート2 (メジャー)"
+            ],
+            "sp500": [
+              6300,
+              6268,
+              6220,
+              6150
+            ],
+            "ma50": [],
+            "adl": []
+          }
+        },
+        "fundamentals": {
+          "headline": "CPIと企業収益が市場の現実を問う",
+          "text": "本日最大のイベントは6月のCPI発表です。市場はインフレの再加速を予想しており、予想を上回る結果はFRBの利下げ期待を後退させ、長期金利の急騰を通じて株式市場に直接的なブレーキをかけるでしょう。また、本日より本格化する第2四半期決算シーズンは、過去6四半期で最も低い成長率が予想されており、特に銀行セクターの業績悪化が懸念されます。",
+          "vix": {
+            "value": 16.4,
+            "change": "",
+            "status": "低い恐怖感/自己満足",
+            "summary": "VIX指数は歴史的平均を下回る低い水準にあり、市場参加者が将来の株価変動リスクを極めて低く見積もっていることを示します。"
+          },
+          "aaiiSurvey": {
+            "date": "2025年7月15日調査",
+            "bullish": 41.4,
+            "neutral": 23,
+            "bearish": 35.6,
+            "summary": "個人投資家の間では楽観論が後退し、悲観論が歴史的平均を上回っており、高値への警戒感がうかがえます。"
+          },
+          "investorsIntelligence": {
+            "date": "2025年7月15日調査",
+            "bullish": 60.8,
+            "bearish": 21.7,
+            "correction": 17.5,
+            "summary": "プロのニュースレター執筆者の間では強気派が60%を超えており、市場が過度に楽観的であることを示す強力な逆張り売りシグナルです。"
+          },
+          "points": [
+            "6月CPIはインフレ再加速を示すと予想されています。",
+            "第2四半期の企業利益成長率は+4.8%と、2023年第4四半期以来の低水準になる見込みです。",
+            "米国10年債利回りは4.43%と高値圏にあり、株式のバリュエーションに圧力をかけています。"
+          ]
+        },
+        "strategy": {
+          "headline": "守りを固め、CPI後の動きに備える",
+          "basic": "本日の投資戦略は、防御を最優先とすべきです。CPI発表前に新たなロングポジションを構築するリスクは極めて高いです。既存のロングポジションはストップロスを引き上げ、部分的な利益確定を検討することが賢明です。エントリーを狙うなら、CPI後の調整で主要な支持線まで下落するのを待つべきです。",
+          "risk": "この戦略のリスクは、CPIが予想外に弱い数字となり、市場の利下げ期待が正当化されることです。その場合、ヘッジやショートポジションの解消を巻き込んだ急騰（ショートスクイーズ）が発生する可能性があります。"
+        }
+      },
+      "marketOverview": [
+        {
+          "name": "S&P 500 (概算)",
+          "value": "6,268.00",
+          "change": "",
+          "isDown": false
+        },
+        {
+          "name": "S&P 500 先物",
+          "value": "6,255.50",
+          "change": "-12.50",
+          "isDown": true
+        },
+        {
+          "name": "VIX指数",
+          "value": "16.40",
+          "change": "",
+          "isDown": false
+        },
+        {
+          "name": "米国10年債利回り",
+          "value": "4.43%",
+          "change": "+0.08%",
+          "isDown": false
+        }
+      ],
+      "hotStocks": [
+        {
+          "name": "JPMorgan Chase (JPM)",
+          "price": "決算発表予定",
+          "description": "本日決算発表。銀行セクターは大幅な減益が見込まれており、貸倒引当金や経済見通しに関するガイダンスが注目される。",
+          "isDown": false
+        },
+        {
+          "name": "Wells Fargo (WFC)",
+          "price": "決算発表予定",
+          "description": "本日決算発表。JPMと同様に、純金利マージンの動向と信用状況の悪化を示す兆候がないかが焦点となる。",
+          "isDown": false
+        },
+        {
+          "name": "Nike (NKE)",
+          "price": "決算発表済み",
+          "description": "既に決算を発表し、消費者の弱さや販促強化について警告を発している。個人消費の先行指標として注目される。",
+          "isDown": true
+        }
+      ]
+    },
+    "en": {
+      "summary": {
+        "evaluation": "Bearish (Short-term Sell)",
+        "score": 3,
+        "headline": "「極度 強欲」 and 最重要インフレ指標 激突, 短期調整 嵐 備えよ",
+        "text": "July 15, 2025 米国market , beneath surface strength of trading near all-time highs, standing at crossroads with serious alarm bells ringing. market psychology has reached \"extreme greed\", valuations at historically expensive levels す. this complacent market , 本日発表される6月CPI (消費者物価指数)  and いうfaces most critical event. risk-return asymmetry extremely unfavorableな状況 あり, short-term traders prudent to take defensive stance す."
+      },
+      "dashboard": {
+        "breadth": {
+          "advancers": 0,
+          "decliners": 0,
+          "summary": "テクニカルなトレンド 強いも  , そ 上昇 一部 メガキャップ銘柄 牽引されており, 広範な支持 欠いています. market内部 健全性  疑問符 付きます."
+        },
+        "sentimentVI": 76,
+        "sentimentVISummary": "CNN Fear & Greed指数 「極度 強欲」 領域 あり, market参加者 リスク 過度 軽視しているこ and  示唆します. これ 歴史的 market 天井 示す信頼性 高い逆張りシグナル す.",
+        "priceLevels": {
+          "resistance": {
+            "value": "$6,300",
+            "description": "心理的な節目 and なるレジスタンス"
+          },
+          "support": {
+            "value": "$6,220",
+            "description": "最初 下値支持線 (マイナーサポート)"
+          }
+        },
+        "putCallRatio": {
+          "dailyValue": "0.53",
+          "movingAverage": "",
+          "status": "逆張りBearishシグナル",
+          "summary": "エクイティPut/Call Ratio 0.53 and いう極端 低い水準 あります. これ トレーダー 下落ヘッジ 全く行わず, market 下落へ 警戒感 存在しないこ and  示す, extreme complacency 表れ す."
+        }
+      },
+      "details": {
+        "internals": {
+          "headline": "楽観 頂点 潜む危険",
+          "text": "現在 market心理 , 単なる楽観論 超え, 危険なほど 陶酔感 満ちています. プロ 投資アドバイザー 楽観度 示すInvestors Intelligence調査  Bullish派 60.8% and 危険水域 達する一方, individual investors (AAII)  警戒感 強めており, 典型的なラリー最終局面 乖離 見られます. VIX index and Put/Callレシオ 低さ , market 悪材料 対して全く無防備 あるこ and  示しています.",
+          "chartData": {
+            "labels": [
+              "individual investors (AAII)",
+              "professional investors (II)"
+            ],
+            "values": [
+              41.4,
+              60.8
+            ]
+          }
+        },
+        "technicals": {
+          "headline": "上昇トレンド 過熱 and 「エアポケット」 リスク",
+          "text": "S&P500やNasdaq100 移動平均線 強力な上昇トレンド 示しています , RSIなど 短期オシレーター 「買われすぎ」 領域 あります. より深刻な  , 急激な上昇 よって強固な支持線 遥か下方 置き去り されているこ and  す. 主要な支持線 ある6,150ポイントま  間  テクニカルな真空地帯 (エアポケット)  広 っており, 下落 始まる and 急落するリスク あります.",
+          "chartData": {
+            "labels": [
+              "レジスタンス",
+              "現在値",
+              "サポート1",
+              "サポート2 (メジャー)"
+            ],
+            "sp500": [
+              6300,
+              6268,
+              6220,
+              6150
+            ],
+            "ma50": [],
+            "adl": []
+          }
+        },
+        "fundamentals": {
+          "headline": "CPI and 企業収益 market 現実 問う",
+          "text": "本日最大 イベント 6月 CPI発表 す. market インフレ 再加速 予想しており, 予想 上回る結果 FRB 利下げ期待 後退させ, 長期金利 急騰 通じて株式market 直接的なブレーキ かける しょう. また, 本日より本格化する第2四半期決算シーズン , 過去6四半期 最も低い成長率 予想されており, 特 銀行セクター 業績悪化 懸念されます.",
+          "vix": {
+            "value": 16.4,
+            "change": "",
+            "status": "低い恐怖感/自己満足",
+            "summary": "VIX index 歴史的平均 下回る低い水準 あり, market参加者 将来 株価変動リスク 極めて低く見積もっているこ and  示します."
+          },
+          "aaiiSurvey": {
+            "date": "July 15, 2025調査",
+            "bullish": 41.4,
+            "neutral": 23,
+            "bearish": 35.6,
+            "summary": "individual investors 間  楽観論 後退し, 悲観論 歴史的平均 上回っており, 高値へ 警戒感 うか えます."
+          },
+          "investorsIntelligence": {
+            "date": "July 15, 2025調査",
+            "bullish": 60.8,
+            "bearish": 21.7,
+            "correction": 17.5,
+            "summary": "プロ ニュースレター執筆者 間  Bullish派 60% 超えており, market 過度 楽観的 あるこ and  示す強力な逆張りSellシグナル す."
+          },
+          "points": [
+            "6月CPI インフレ再加速 示す and 予想されています.",
+            "第2四半期 企業利益成長率 +4.8% and , 2023年第4四半期以来 低水準 なる見込み す.",
+            "US 10-year yield 4.43% and 高値圏 あり, 株式 バリュエーション 圧力 かけています."
+          ]
+        },
+        "strategy": {
+          "headline": "守り 固め, CPI後 動き 備える",
+          "basic": "本日 投資戦略 , 防御 最優先 and すべき す. CPI発表前 新たなロングポジション 構築するリスク 極めて高い す. 既存 ロングポジション ストップロス 引き上げ, 部分的な利益確定 検討するこ and  賢明 す. エントリー 狙うなら, CPI後 調整 主要な支持線ま 下落する  待つべき す.",
+          "risk": "こ 戦略 リスク , CPI 予想外 弱い数字 and なり, market 利下げ期待 正当化されるこ and  す. そ 場合, ヘッジやショートポジション 解消 巻き込んだ急騰 (ショートスクイーズ)  発生する可能性 あります."
+        }
+      },
+      "marketOverview": [
+        {
+          "name": "S&P 500 (概算)",
+          "value": "6,268.00",
+          "change": "",
+          "isDown": false
+        },
+        {
+          "name": "S&P 500 先物",
+          "value": "6,255.50",
+          "change": "-12.50",
+          "isDown": true
+        },
+        {
+          "name": "VIX index",
+          "value": "16.40",
+          "change": "",
+          "isDown": false
+        },
+        {
+          "name": "US 10-year yield",
+          "value": "4.43%",
+          "change": "+0.08%",
+          "isDown": false
+        }
+      ],
+      "hotStocks": [
+        {
+          "name": "JPMorgan Chase (JPM)",
+          "price": "決算発表予定",
+          "description": "本日決算発表. 銀行セクター 大幅な減益 見込まれており, 貸倒引当金や経済見通し 関するガイダンス 注目される.",
+          "isDown": false
+        },
+        {
+          "name": "Wells Fargo (WFC)",
+          "price": "決算発表予定",
+          "description": "本日決算発表. JPM and 同様 , 純金利マージン 動向 and 信用状況 悪化 示す兆候 ないか 焦点 and なる.",
+          "isDown": false
+        },
+        {
+          "name": "Nike (NKE)",
+          "price": "決算発表済み",
+          "description": "既 決算 発表し, 消費者 弱さや販促強化 ついて警告 発している. 個人消費 先行指標 and して注目される.",
+          "isDown": true
+        }
+      ],
+      "date": "July 15, 2025",
+      "session": "July 15 Market Analysis"
+    }
+  }
+}
