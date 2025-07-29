@@ -143,8 +143,8 @@
       "summary": {
         "evaluation": "Hold",
         "score": 7,
-        "headline": "Cracks Behind Record Highs: Market Health Deterioration and Sentiment Divergence Signal Caution",
-        "text": "While the S&P 500 continues to set records, the foundation of its advance has become significantly unstable. Internal market indicators (breadth) are deteriorating, suggesting the rally depends on only a few large-cap stocks. Sentiment is dangerously fragmented, with options markets showing increased hedging for downside. With major economic releases ahead and volatility at extreme lows, short-term traders face extremely high risk - avoid new buying, prioritize profit-taking and stop-loss adjustments."
+        "headline": "Cracks Behind Record Highs: Market Health Deterioration and Sentiment Divergence Signal Warning",
+        "text": "While the S&P 500 continues to set new records, the foundation of its advance has become significantly unstable. Internal market indicators (breadth) are deteriorating, suggesting the rally depends only on a few large-cap stocks. Sentiment is dangerously fragmented, with options markets showing increased hedging for downside protection. With major economic data releases ahead and volatility at extremely low levels, this presents extremely high risk for short-term traders - avoid new buying, prioritize profit-taking and raising stop-loss levels on existing positions."
       },
       "dashboard": {
         "breadth": {
@@ -157,24 +157,24 @@
         "priceLevels": {
           "resistance": {
             "value": "$6,500",
-            "description": "Psychological milestone and next target based on Elliott Wave analysis. Clear break above requires positive surprise with strong buying catalyst."
+            "description": "Psychological milestone and next target level based on Elliott Wave analysis. To clearly break above this level requires positive surprises with strong buying catalysts."
           },
           "support": {
             "value": "$6,372",
-            "description": "Recent pullback support level where dip-buying emerged, coinciding with 38.2% Fibonacci retracement - key short-term defensive line."
+            "description": "Recent pullback support level where dip-buying emerged, coinciding with 38.2% Fibonacci retracement - an important short-term defensive line."
           }
         },
         "putCallRatio": {
           "dailyValue": "0.72",
           "movingAverage": "0.55",
           "status": "Shift from Complacency Signal",
-          "summary": "Daily ratio surged well above moving average. Despite price gains, investors actively hedging downside (put buying), reflecting rising caution."
+          "summary": "Daily ratio surged well above moving average. Despite price gains, investors are actively hedging downside through put buying, reflecting rising caution and concern."
         }
       },
       "details": {
         "internals": {
           "headline": "Professional Optimism, Retail Caution, Options Fear: Triple Sentiment Divergence Reveals Market Fragility",
-          "text": "Current market sentiment presents an extremely complex and contradictory situation that cannot be described as monolithic optimism or pessimism. Understanding this divergence is essential for grasping short-term risks. The CNN Fear & Greed Index at 74 shows 'Greed' territory, but this completely misaligns with retail investor behavior. AAII survey shows bearish sentiment above average while Investors Intelligence (II) survey of professional newsletter writers maintains high bullish levels, creating clear divergence. The key to this puzzle lies in options markets, where the put-call ratio surge exposes underlying fear in market psychology.",
+          "text": "Current market sentiment presents an extremely complex and contradictory situation that cannot be described as uniform optimism or pessimism. Understanding this divergence is essential for grasping short-term risks. The CNN Fear & Greed Index at 74 shows 'Greed' territory, but this completely misaligns with retail investor behavior. The AAII survey shows bearish sentiment above average, while the Investors Intelligence (II) survey of professional newsletter writers maintains high bullish levels, creating clear divergence. The key to solving this puzzle lies in options markets, where the put-call ratio surge exposes the underlying fear lurking in market psychology.",
           "chartData": {
             "labels": ["Investors Intelligence (Pro)", "AAII (Retail)"],
             "values": [52.0, 36.8]
@@ -182,7 +182,7 @@
         },
         "technicals": {
           "headline": "Fragility Behind All-Time Highs: Serious Divergence Between Price and Market Internals (Breadth)",
-          "text": "From a technical analysis perspective, the S&P 500 is in a strong uptrend. However, the substance of this price advance is extremely fragile. Most concerning is the serious 'negative divergence' between price and market health (breadth). While the S&P 500 index sets new highs, the Advance-Decline Line (A/D Line) fails to follow and trends lower. This means the index advance is driven only by a handful of mega-cap tech stocks, while the majority of stocks aren't rising. Such rallies dependent on narrow leadership historically lack sustainability and harbor risks of broad market selloffs.",
+          "text": "From a technical analysis perspective, the S&P 500 is in the midst of a strong uptrend. However, the substance of this price advance is extremely fragile. Most concerning is the serious 'negative divergence' between price and market health (breadth). While the S&P 500 index continues to set new highs, the Advance-Decline Line (A/D Line) fails to follow suit and is trending lower. This means the index advance is being driven solely by a handful of mega-cap tech stocks, while the majority of stocks are not participating in the rally. Such rallies dependent on narrow leadership have historically lacked sustainability and harbor risks of broad market selloffs.",
           "chartData": {
             "labels": ["2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25", "2025-07-28"],
             "sp500": [6309.62, 6358.91, 6363.35, 6388.64, 6389.77],
@@ -192,26 +192,26 @@
         },
         "fundamentals": {
           "headline": "Calm Before the Storm: Low VIX Masks Event Risk Before Fed and Major Economic Data",
-          "text": "The most critical factor in understanding current market psychology is the dangerous combination of 'extreme complacency' and 'imminent high-impact event risks.' The VIX index sits at extremely low levels, indicating market participants don't anticipate significant future price volatility. However, this week features a packed schedule of FOMC, GDP, and employment data - this calm should be interpreted as the calm before the storm. If negative surprises occur, we face an asymmetric risk structure where volatility could explode.",
+          "text": "The most critical factor in understanding current market psychology is the dangerous combination of 'extreme complacency' and 'imminent high-impact event risks.' The VIX index sits at extremely low levels, indicating market participants are not anticipating significant future price volatility. However, this week features a packed schedule of FOMC meetings, GDP releases, and employment statistics - this calm should be interpreted as the calm before the storm. Should negative surprises occur, we face an asymmetric risk structure where volatility could explode exponentially.",
           "vix": {
             "value": 14.93,
             "change": "-0.46",
             "status": "Complacency",
-            "summary": "VIX at historically low levels shows extreme market complacency. This underestimates event risks like Fed policy announcements and major economic indicators, leaving markets vulnerable to unexpected shocks."
+            "summary": "VIX at historically low levels shows extreme market complacency. This underestimates event risks such as Fed policy announcements and major economic indicators, leaving markets vulnerable to unexpected shocks and volatility spikes."
           },
           "aaiiSurvey": {
             "date": "July 23, 2025 Survey",
             "bullish": 36.8,
             "neutral": 29.2,
             "bearish": 34.0,
-            "summary": "Retail investor optimism has retreated below historical averages. The general public not following the market rally raises questions about rally health."
+            "summary": "Retail investor optimism has retreated below historical averages. The general public's failure to follow the market rally raises serious questions about the rally's underlying health and sustainability."
           },
           "investorsIntelligence": {
             "date": "July 28, 2025 Survey",
             "bullish": 52.0,
             "bearish": 22.0,
             "correction": 26.0,
-            "summary": "Professional investment advisors remain bullish but haven't reached the extreme 60%+ optimism seen at past market tops. Clear sentiment divergence with retail investors is notable."
+            "summary": "Professional investment advisors remain bullish but have not reached the extreme 60%+ optimism levels seen at past market tops. The clear sentiment divergence with retail investors is particularly notable and concerning."
           },
           "points": [
             "Markets are in extreme complacency ahead of three major event risks: Fed policy decision, GDP, and employment data.",
@@ -221,8 +221,8 @@
         },
         "strategy": {
           "headline": "Caution Preserves Profits: Time for Capital Preservation and Selective Action",
-          "basic": "Current market conditions prioritize profit securing and capital preservation over aggressive risk-taking. 'Hold' means tactical neutral stance against new buying. For existing long positions, aggressively raise stop-loss orders to recent support at 6,372 points. For positions with large unrealized gains, consider partial profit-taking to reduce risk exposure.",
-          "risk": "The biggest risk in this strategy is market 'gap down' following hawkish Fed statements or unexpectedly weak economic data. Best hedge is reducing position sizes before events. This strategy becomes invalid if S&P 500 clearly breaks below support at 6,372 on closing basis - then liquidate remaining longs and consider tactical shorts."
+          "basic": "Current market conditions prioritize profit securing and capital preservation over aggressive risk-taking. 'Hold' signifies a tactical neutral stance, avoiding new buying. For existing long positions, aggressively raise stop-loss orders to the recent support level of 6,372 points. For positions with large unrealized gains, consider partial profit-taking to reduce overall risk exposure.",
+          "risk": "The biggest risk to this strategy is a market 'gap down' following hawkish Fed statements or unexpectedly weak economic data releases. The best hedge is reducing position sizes before these events occur. This strategy becomes invalid if the S&P 500 clearly breaks below the support level of 6,372 on a closing basis - at which point, liquidate remaining long positions and consider tactical short positions."
         }
       },
       "marketOverview": [

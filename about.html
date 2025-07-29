@@ -171,6 +171,12 @@ to { opacity: 1; transform: translateY(0); }
             <div class="flex items-center space-x-4">
                 <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
                 <button id="register-btn" class="bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+                <!-- 言語切り替えボタンをヘッダー内に配置 -->
+                <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                    <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
+                    <span class="text-gray-400 text-xs">|</span>
+                    <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
+                </div>
                 <button class="md:hidden text-gray-600"><i class="ri-menu-line ri-lg"></i></button>
             </div>
         </div>
