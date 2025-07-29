@@ -1,0 +1,40 @@
+{
+  "name": "market-analysis-automation",
+  "version": "2.0.0",
+  "description": "強化版自動市場分析システム",
+  "main": "auto_market_analysis_enhanced.js",
+  "scripts": {
+    "start": "node scheduler.js start",
+    "manual": "node scheduler.js manual",
+    "test": "node scheduler.js test",
+    "analyze": "node auto_market_analysis_enhanced.js",
+    "update": "node update_latest.js",
+    "build": "node ssg_integration.js",
+    "deploy": "npm run build && echo 'デプロイ完了'"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "node-cron": "^3.0.3",
+    "@google/generative-ai": "^0.2.0",
+    "dotenv": "^16.3.1",
+    "moment": "^2.29.4",
+    "winston": "^3.11.0",
+    "handlebars": "^4.7.8",
+    "zod": "^3.22.4",
+    "axios-retry": "^3.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "market-analysis",
+    "automation",
+    "gemini",
+    "trading",
+    "finance",
+    "ssg",
+    "static-site-generator"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>市場分析AI - {{languages.ja.session}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- ヘッダー -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div class="flex items-center">
+                    <img src="assets/logo.png" alt="Logo" class="h-8 w-auto">
+                    <h1 class="ml-3 text-xl font-semibold text-gray-900">市場分析AI</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleLanguage()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        <span data-lang="ja">English</span>
+                        <span data-lang="en" style="display: none;">日本語</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- サマリーセクション -->
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-2xl font-bold text-gray-900" data-lang="ja">{{languages.ja.summary.headline}}</h2>
+                    <h2 class="text-2xl font-bold text-gray-900" data-lang="en" style="display: none;">{{languages.en.summary.headline}}</h2>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-3 py-1 rounded-full text-sm font-medium
+                            {{#if (eq languages.ja.summary.evaluation "買い")}}bg-green-100 text-green-800{{/if}}
+                            {{#if (eq languages.ja.summary.evaluation "売り")}}bg-red-100 text-red-800{{/if}}
+                            {{#if (eq languages.ja.summary.evaluation "中立")}}bg-yellow-100 text-yellow-800{{/if}}">
+                            <span data-lang="ja">{{languages.ja.summary.evaluation}}</span>
+                            <span data-lang="en" style="display: none;">{{languages.en.summary.evaluation}}</span>
+                        </span>
+                        <span class="text-sm text-gray-500">スコア: {{languages.ja.summary.score}}/10</span>
+                    </div>
+                </div>
+                <p class="text-gray-700 leading-relaxed" data-lang="ja">{{languages.ja.summary.text}}</p>
+                <p class="text-gray-700 leading-relaxed" data-lang="en" style="display: none;">{{languages.en.summary.text}}</p>
+            </div>
+        </section>
+
+        <!-- ダッシュボードセクション -->
+        <section class="mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 市場の広がり -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">市場の広がり</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">上昇銘柄</span>
+                            <span class="font-medium">{{languages.ja.dashboard.breadth.advancers}}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">下落銘柄</span>
+                            <span class="font-medium">{{languages.ja.dashboard.breadth.decliners}}</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-4">{{languages.ja.dashboard.breadth.summary}}</p>
+                </div>
+
+                <!-- センチメント -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">センチメント</h3>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600">{{languages.ja.dashboard.sentimentVI}}</div>
+                        <p class="text-sm text-gray-500 mt-2">{{languages.ja.dashboard.sentimentVISummary}}</p>
+                    </div>
+                </div>
+
+                <!-- 価格レベル -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">価格レベル</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="text-sm text-gray-600">抵抗線</div>
+                            <div class="font-medium">{{languages.ja.dashboard.priceLevels.resistance.value}}</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-600">支持線</div>
+                            <div class="font-medium">{{languages.ja.dashboard.priceLevels.support.value}}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Put/Call Ratio -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Put/Call Ratio</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">日次</span>
+                            <span class="font-medium">{{languages.ja.dashboard.putCallRatio.dailyValue}}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">移動平均</span>
+                            <span class="font-medium">{{languages.ja.dashboard.putCallRatio.movingAverage}}</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-4">{{languages.ja.dashboard.putCallRatio.summary}}</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 詳細分析セクション -->
+        <section class="mb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- 内部構造 -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">{{languages.ja.details.internals.headline}}</h3>
+                    <p class="text-gray-700 mb-4">{{languages.ja.details.internals.text}}</p>
+                    <canvas id="internalsChart" width="400" height="200"></canvas>
+                </div>
+
+                <!-- テクニカル分析 -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">{{languages.ja.details.technicals.headline}}</h3>
+                    <p class="text-gray-700 mb-4">{{languages.ja.details.technicals.text}}</p>
+                    <canvas id="technicalsChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 市場概況 -->
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-6">市場概況</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {{#each languages.ja.marketOverview}}
+                    <div class="border rounded-lg p-4">
+                        <div class="text-sm text-gray-600">{{name}}</div>
+                        <div class="text-lg font-semibold">{{value}}</div>
+                        <div class="text-sm {{#if isDown}}text-red-600{{else}}text-green-600{{/if}}">{{change}}</div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </section>
+
+        <!-- 注目銘柄 -->
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-6">注目銘柄</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {{#each languages.ja.hotStocks}}
+                    <div class="border rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold">{{name}}</h4>
+                            <span class="text-sm {{#if isDown}}text-red-600{{else}}text-green-600{{/if}}">{{price}}</span>
+                        </div>
+                        <p class="text-sm text-gray-600">{{description}}</p>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-sm text-gray-400">© 2025 市場分析AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 言語切り替え機能
+        function toggleLanguage() {
+            const jaElements = document.querySelectorAll('[data-lang="ja"]');
+            const enElements = document.querySelectorAll('[data-lang="en"]');
+            
+            jaElements.forEach(el => {
+                el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            });
+            
+            enElements.forEach(el => {
+                el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            });
+        }
+
+        // チャート描画
+        function createCharts() {
+            // 内部構造チャート
+            const internalsCtx = document.getElementById('internalsChart').getContext('2d');
+            new Chart(internalsCtx, {
+                type: 'bar',
+                data: {
+                    labels: {{{json languages.ja.details.internals.chartData.labels}}},
+                    datasets: [{
+                        label: '変化率 (%)',
+                        data: {{{json languages.ja.details.internals.chartData.values}}},
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // テクニカルチャート
+            const technicalsCtx = document.getElementById('technicalsChart').getContext('2d');
+            new Chart(technicalsCtx, {
+                type: 'line',
+                data: {
+                    labels: {{{json languages.ja.details.technicals.chartData.labels}}},
+                    datasets: [{
+                        label: 'S&P 500',
+                        data: {{{json languages.ja.details.technicals.chartData.sp500}}},
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: false
+                    }, {
+                        label: 'MA50',
+                        data: {{{json languages.ja.details.technicals.chartData.ma50}}},
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // ページ読み込み時にチャートを描画
+        document.addEventListener('DOMContentLoaded', createCharts);
+    </script>
+</body>
+</html>
