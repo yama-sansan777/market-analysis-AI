@@ -1457,6 +1457,23 @@ const translations = {
 
 // Language switcher HTML
 function createLanguageSwitcher() {
+    // ヘッダー内の言語切り替えボタンが既に存在する場合は、それを使用
+    const headerSwitcher = document.getElementById('header-lang-switcher');
+    if (headerSwitcher) {
+        // ヘッダー内のボタンにイベントリスナーを追加
+        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const lang = this.getAttribute('data-lang');
+                switchLanguage(lang);
+            });
+        });
+        
+        // 初期状態を設定
+        updateHeaderLanguageButtons();
+        return headerSwitcher;
+    }
+    
+    // フォールバック: 固定位置のスイッチャーを作成（他のページ用）
     const switcher = document.createElement('div');
     switcher.id = 'lang-switcher';
     switcher.className = 'fixed top-4 right-4 z-50 bg-white rounded-lg shadow-lg border border-gray-200 p-2';
@@ -1479,6 +1496,21 @@ function createLanguageSwitcher() {
     return switcher;
 }
 
+// ヘッダー内の言語切り替えボタンの状態を更新する関数
+function updateHeaderLanguageButtons() {
+    const headerSwitcher = document.getElementById('header-lang-switcher');
+    if (headerSwitcher) {
+        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
+            const btnLang = btn.getAttribute('data-lang');
+            if (btnLang === currentLang) {
+                btn.className = 'lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors';
+            } else {
+                btn.className = 'lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors';
+            }
+        });
+    }
+}
+
 // Switch language function
 function switchLanguage(lang) {
     currentLang = lang;
@@ -1487,13 +1519,23 @@ function switchLanguage(lang) {
     // Update global currentLang for compatibility
     window.currentLang = lang;
     
-    // Update language switcher buttons
+    // Update language switcher buttons (both fixed and header)
     document.querySelectorAll('.lang-btn').forEach(btn => {
         const btnLang = btn.getAttribute('data-lang');
         if (btnLang === lang) {
-            btn.className = 'lang-btn bg-primary text-white px-3 py-1 rounded text-sm font-medium transition-colors';
+            // ヘッダー内のボタンの場合は小さいサイズ、固定位置のボタンの場合は通常サイズ
+            if (btn.closest('#header-lang-switcher')) {
+                btn.className = 'lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors';
+            } else {
+                btn.className = 'lang-btn bg-primary text-white px-3 py-1 rounded text-sm font-medium transition-colors';
+            }
         } else {
-            btn.className = 'lang-btn bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm font-medium transition-colors';
+            // ヘッダー内のボタンの場合は小さいサイズ、固定位置のボタンの場合は通常サイズ
+            if (btn.closest('#header-lang-switcher')) {
+                btn.className = 'lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors';
+            } else {
+                btn.className = 'lang-btn bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm font-medium transition-colors';
+            }
         }
     });
     
@@ -1534,9 +1576,24 @@ function switchLanguage(lang) {
 
 // Initialize language system
 function initLanguage() {
-    // Add language switcher to page
-    const switcher = createLanguageSwitcher();
-    document.body.appendChild(switcher);
+    // ヘッダー内の言語切り替えボタンが存在する場合は、それを使用
+    const headerSwitcher = document.getElementById('header-lang-switcher');
+    if (headerSwitcher) {
+        // ヘッダー内のボタンにイベントリスナーを追加
+        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const lang = this.getAttribute('data-lang');
+                switchLanguage(lang);
+            });
+        });
+        
+        // 初期状態を設定
+        updateHeaderLanguageButtons();
+    } else {
+        // ヘッダー内のボタンが存在しない場合は、固定位置のスイッチャーを追加
+        const switcher = createLanguageSwitcher();
+        document.body.appendChild(switcher);
+    }
     
     // Apply current language
     switchLanguage(currentLang);
