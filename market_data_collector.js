@@ -29,7 +29,7 @@ class MarketDataCollector {
         current: parseFloat(latest['4. close']),
         previous: parseFloat(previous['4. close']),
         change: parseFloat(latest['4. close']) - parseFloat(previous['4. close']),
-        changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100,
+        changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100),
         volume: parseInt(latest['5. volume']),
         high: parseFloat(latest['2. high']),
         low: parseFloat(latest['3. low'])
@@ -55,7 +55,7 @@ class MarketDataCollector {
         current: parseFloat(latest['4. close']),
         previous: parseFloat(previous['4. close']),
         change: parseFloat(latest['4. close']) - parseFloat(previous['4. close']),
-        changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100,
+        changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100),
         volume: parseInt(latest['5. volume'])
       };
     } catch (error) {
@@ -79,7 +79,7 @@ class MarketDataCollector {
         current: parseFloat(latest['4. close']),
         previous: parseFloat(previous['4. close']),
         change: parseFloat(latest['4. close']) - parseFloat(previous['4. close']),
-        changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100
+        changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100)
       };
     } catch (error) {
       console.error('VIXデータ取得エラー:', error.message);
@@ -170,7 +170,7 @@ class MarketDataCollector {
             name: this.getStockName(symbol),
             price: parseFloat(latest['4. close']),
             change: parseFloat(latest['4. close']) - parseFloat(previous['4. close']),
-            changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100,
+            changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100),
             volume: parseInt(latest['5. volume'])
           });
 
@@ -225,4 +225,90 @@ class MarketDataCollector {
   }
 }
 
+/**
+ * データ収集テスト用関数
+ * APIキーの設定状況を確認し、データ収集の準備状況をテストします
+ */
+async function testConnection() {
+    require('dotenv').config();
+    
+    console.log("🛠️ データ収集テストを開始します...");
+    console.log("==========================================");
+
+    const geminiKey = process.env.GEMINI_API_KEY;
+    const alphaVantageKey = process.env.ALPHA_VANTAGE_API_KEY;
+    const polygonKey = process.env.POLYGON_API_KEY;
+    const fmpKey = process.env.FMP_API_KEY;
+
+    let successCount = 0;
+    let totalTests = 4;
+
+    // Gemini AI APIキーのチェック
+    if (geminiKey && geminiKey !== 'your_gemini_api_key_here') {
+        console.log("✅ Gemini APIキーが設定されています。");
+        successCount++;
+    } else {
+        console.log("❌ Gemini APIキーが設定されていません。");
+        console.log("   👉 https://makersuite.google.com/app/apikey から取得してください");
+    }
+
+    // Alpha Vantage APIキーのチェック
+    if (alphaVantageKey && alphaVantageKey !== 'your_alpha_vantage_key_here') {
+        console.log("✅ Alpha Vantage APIキーが設定されています。");
+        successCount++;
+    } else {
+        console.log("❌ Alpha Vantage APIキーが設定されていません。");
+        console.log("   👉 https://www.alphavantage.co/support/#api-key から取得してください");
+    }
+
+    // Polygon APIキーのチェック
+    if (polygonKey && polygonKey !== 'your_polygon_api_key_here') {
+        console.log("✅ Polygon APIキーが設定されています。");
+        successCount++;
+    } else {
+        console.log("❌ Polygon APIキーが設定されていません。");
+        console.log("   👉 https://polygon.io/ から取得してください");
+    }
+
+    // Financial Modeling Prep APIキーのチェック
+    if (fmpKey && fmpKey !== 'your_fmp_api_key_here') {
+        console.log("✅ Financial Modeling Prep APIキーが設定されています。");
+        successCount++;
+    } else {
+        console.log("❌ Financial Modeling Prep APIキーが設定されていません。");
+        console.log("   👉 https://financialmodelingprep.com/developer/docs から取得してください");
+    }
+
+    console.log("==========================================");
+    console.log(`📊 テスト結果: ${successCount}/${totalTests} APIキーが設定済み`);
+    
+    if (successCount === totalTests) {
+        console.log("🎉 すべてのAPIキーが正常に設定されています！");
+        console.log("👍 Phase 2の準備が完了しました。");
+    } else if (successCount >= 2) {
+        console.log("⚠️  一部のAPIキーが未設定ですが、基本機能は動作します。");
+        console.log("💡 より多くの機能を利用するには、すべてのAPIキーを設定してください。");
+    } else {
+        console.log("🚨 APIキーの設定が不足しています。");
+        console.log("📋 .envファイルを作成し、必要なAPIキーを設定してください。");
+    }
+
+    console.log("----------");
+    console.log("👍 テスト完了");
+    console.log("");
+    
+    // 次のステップのガイダンス
+    if (successCount < totalTests) {
+        console.log("📝 次に行うこと:");
+        console.log("1. .envファイルを作成 (cp .env.example .env)");
+        console.log("2. 各APIサービスでAPIキーを取得");
+        console.log("3. .envファイルにAPIキーを記入");
+        console.log("4. 再度テストを実行 (npm test)");
+    } else {
+        console.log("🚀 次のステップ:");
+        console.log("   npm run manual でメイン機能をテストできます");
+    }
+}
+
 module.exports = MarketDataCollector;
+module.exports.testConnection = testConnection;

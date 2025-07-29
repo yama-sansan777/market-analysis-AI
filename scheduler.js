@@ -1,18 +1,23 @@
 const cron = require('node-cron');
 const MarketAnalysisAutomation = require('./auto_market_analysis');
 
+console.log('🚀 スケジューラーが起動しました。');
+console.log('毎日、日本時間の午後18時に市場分析を自動実行します。');
+console.log('このウィンドウを閉じるとスケジューラーは停止します。');
+
 class MarketAnalysisScheduler {
   constructor() {
     this.automation = new MarketAnalysisAutomation();
   }
 
-  // 毎日午前9時（日本時間）に実行
+  // 毎日午後18時（日本時間）に実行
   startDailySchedule() {
-    console.log('📅 スケジューラー開始: 毎日午前9時（日本時間）に実行');
+    console.log('📅 スケジューラー開始: 毎日午後18時（日本時間）に実行');
     
-    // 日本時間午前9時 = UTC午前0時
-    cron.schedule('0 0 * * *', async () => {
-      console.log('⏰ スケジュール実行開始...');
+    // 日本時間の月曜日から金曜日の毎日18:00に実行
+    // 書式: '分 時 日 月 曜日'
+    cron.schedule('0 18 * * 1-5', async () => {
+      console.log(`[SCHEDULE] 定時実行タスクを開始します: ${new Date().toLocaleString()}`);
       try {
         await this.automation.run();
         console.log('✅ スケジュール実行完了');
@@ -20,6 +25,7 @@ class MarketAnalysisScheduler {
         console.error('❌ スケジュール実行エラー:', error);
       }
     }, {
+      scheduled: true,
       timezone: "Asia/Tokyo"
     });
   }

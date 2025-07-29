@@ -581,8 +581,6 @@
                 if (rawData.session) {
                     rawData.languages.en.session = autoTranslateText(rawData.session);
                 }
-                
-                console.log('Generated English data:', rawData.languages.en);
             }
             
             const langData = rawData.languages[currentLang] || rawData.languages.ja;

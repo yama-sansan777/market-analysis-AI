@@ -7,7 +7,13 @@
       "Bash(node:*)",
       "Bash(rm:*)",
       "Bash(mkdir:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npm test)",
+      "Bash(git rm:*)",
+      "Bash(ls:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

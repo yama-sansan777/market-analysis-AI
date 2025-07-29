@@ -1,27 +1,23 @@
 {
-  "name": "market-analysis-automation",
-  "version": "2.0.0",
-  "description": "強化版自動市場分析システム",
-  "main": "auto_market_analysis_enhanced.js",
+  "name": "market-analysis-bot",
+  "version": "1.0.0",
+  "description": "AI駆動自動市場分析システム",
+  "main": "auto_market_analysis.js",
   "scripts": {
-    "start": "node scheduler.js start",
-    "manual": "node scheduler.js manual",
-    "test": "node scheduler.js test",
-    "analyze": "node auto_market_analysis_enhanced.js",
-    "update": "node update_latest.js",
-    "build": "node ssg_integration.js",
-    "deploy": "npm run build && echo 'デプロイ完了'"
+    "test": "node -e 'require(\"./market_data_collector.js\").testConnection()'",
+    "manual": "node auto_market_analysis.js",
+    "start": "node scheduler.js start"
   },
   "dependencies": {
-    "axios": "^1.6.0",
-    "node-cron": "^3.0.3",
     "@google/generative-ai": "^0.2.0",
-    "dotenv": "^16.3.1",
-    "moment": "^2.29.4",
-    "winston": "^3.11.0",
+    "axios": "^1.11.0",
+    "axios-retry": "^3.9.1",
+    "dotenv": "^16.6.1",
     "handlebars": "^4.7.8",
-    "zod": "^3.22.4",
-    "axios-retry": "^3.9.1"
+    "moment": "^2.29.4",
+    "node-cron": "^3.0.3",
+    "winston": "^3.11.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
@@ -36,5 +32,13 @@
     "static-site-generator"
   ],
   "author": "Your Name",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yama-sansan777/market-analysis-AI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yama-sansan777/market-analysis-AI/issues"
+  },
+  "homepage": "https://github.com/yama-sansan777/market-analysis-AI#readme"
 }
