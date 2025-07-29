@@ -1,0 +1,20 @@
+{
+  "executionMode": "manual",
+  "description": "Execution mode configuration",
+  "modes": {
+    "automatic": {
+      "description": "Automated execution with scheduled updates",
+      "scheduler": true,
+      "autoArchive": true,
+      "dataValidation": true
+    },
+    "manual": {
+      "description": "Manual execution for development and testing", 
+      "scheduler": false,
+      "autoArchive": false,
+      "dataValidation": false
+    }
+  },
+  "branch": "manual-execution",
+  "lastUpdated": "2025-07-29"
+}
