@@ -1589,6 +1589,12 @@ function initLanguage() {
         
         // 初期状態を設定
         updateHeaderLanguageButtons();
+        
+        // 既存の固定位置スイッチャーがあれば削除
+        const existingSwitcher = document.getElementById('lang-switcher');
+        if (existingSwitcher) {
+            existingSwitcher.remove();
+        }
     } else {
         // ヘッダー内のボタンが存在しない場合は、固定位置のスイッチャーを追加
         const switcher = createLanguageSwitcher();
