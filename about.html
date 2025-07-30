@@ -177,11 +177,29 @@ to { opacity: 1; transform: translateY(0); }
                     <span class="text-gray-400 text-xs">|</span>
                     <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
                 </div>
-                <button class="md:hidden text-gray-600"><i class="ri-menu-line ri-lg"></i></button>
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
             </div>
         </div>
     </div>
 </header>
+
+<!-- モバイルメニュー -->
+<div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+    <div class="px-4 py-2 space-y-1">
+        <a href="index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+        <a href="archive.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_archive">分析アーカイブ</a>
+        <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+        <a href="terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+        <a href="about.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50" data-lang="nav_about">サイトについて</a>
+        <div class="border-t border-gray-200 pt-2 mt-2">
+            <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+            <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+        </div>
+    </div>
+</div>
+
 <main class="container mx-auto px-4 py-8">
 <div class="mb-8">
 <h2 class="text-3xl font-bold mb-2" data-lang="about_title">サイトについて</h2>
@@ -577,6 +595,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize language system
     initLanguage();
     
+    // Initialize mobile menu
+    initializeMobileMenu();
+    
     // 未実装機能のアラート
     document.getElementById('login-btn').addEventListener('click', () => {
         alert('この機能は現在準備中です。ご期待ください！');
@@ -599,6 +620,46 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('この機能は現在準備中です。ご期待ください！');
     });
 });
+
+// Mobile menu functionality
+function initializeMobileMenu() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = mobileMenuButton.querySelector('i');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            
+            if (isHidden) {
+                // メニューを開く
+                mobileMenu.classList.remove('hidden');
+                menuIcon.className = 'ri-close-line ri-lg';
+            } else {
+                // メニューを閉じる
+                mobileMenu.classList.add('hidden');
+                menuIcon.className = 'ri-menu-line ri-lg';
+            }
+        });
+        
+        // メニューリンクをクリックしたときにメニューを閉じる
+        const menuLinks = mobileMenu.querySelectorAll('a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.add('hidden');
+                menuIcon.className = 'ri-menu-line ri-lg';
+            });
+        });
+        
+        // メニュー外をクリックしたときにメニューを閉じる
+        document.addEventListener('click', function(event) {
+            if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+                menuIcon.className = 'ri-menu-line ri-lg';
+            }
+        });
+    }
+}
 </script>
 </body>
 </html>

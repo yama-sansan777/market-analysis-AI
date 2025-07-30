@@ -148,13 +148,24 @@
                                 </nav>
                             </div>
                             <div class="flex items-center space-x-4">
-                                <button class="md:hidden text-gray-600">
+                                <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
                                     <i class="ri-menu-line ri-lg"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </header>
+                
+                <!-- モバイルメニュー -->
+                <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+                    <div class="px-4 py-2 space-y-1">
+                        <a href="index.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50">本日の分析</a>
+                        <a href="archive.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">分析アーカイブ</a>
+                        <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">テクニカル指標解説</a>
+                        <a href="terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">市場用語集</a>
+                        <a href="about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">サイトについて</a>
+                    </div>
+                </div>
                 
                 <div class="w-full px-6 py-10 md:px-12 lg:px-20">
                     <header class="mb-14 text-center">
@@ -1247,6 +1258,51 @@
             });
         });
     }
+
+    // Mobile menu functionality
+    function initializeMobileMenu() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = mobileMenuButton.querySelector('i');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                const isHidden = mobileMenu.classList.contains('hidden');
+                
+                if (isHidden) {
+                    // メニューを開く
+                    mobileMenu.classList.remove('hidden');
+                    menuIcon.className = 'ri-close-line ri-lg';
+                } else {
+                    // メニューを閉じる
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.className = 'ri-menu-line ri-lg';
+                }
+            });
+            
+            // メニューリンクをクリックしたときにメニューを閉じる
+            const menuLinks = mobileMenu.querySelectorAll('a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.className = 'ri-menu-line ri-lg';
+                });
+            });
+            
+            // メニュー外をクリックしたときにメニューを閉じる
+            document.addEventListener('click', function(event) {
+                if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.className = 'ri-menu-line ri-lg';
+                }
+            });
+        }
+    }
+
+    // Initialize mobile menu when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeMobileMenu();
+    });
 </script>
 </body>
 </html>
