@@ -773,7 +773,7 @@ const translations = {
         
         // Buttons
         login: 'Login',
-        register: 'Free Registration',
+        register: 'Sign Up',
         view_details: 'View Details',
         
         // Archive page
