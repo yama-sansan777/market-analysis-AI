@@ -79,13 +79,24 @@
 <span class="text-gray-400 text-xs">|</span>
 <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
 </div>
-<button class="md:hidden text-gray-600 ml-2">
+<button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2">
 <i class="ri-menu-line ri-lg"></i>
 </button>
 </div>
 </div>
 </div>
 </header>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-200">
+    <div class="px-4 py-2 space-y-1">
+        <a href="index.html" class="block py-2 text-primary font-medium" data-lang="nav_today">本日の市況分析</a>
+        <a href="archive.html" class="block py-2 text-gray-600 hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
+        <a href="indicators.html" class="block py-2 text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+        <a href="terms.html" class="block py-2 text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+        <a href="about.html" class="block py-2 text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+    </div>
+</div>
 
 <div class="w-full px-6 py-10 md:px-12 lg:px-20">
     <header class="mb-14 text-center">
@@ -963,6 +974,12 @@
             initLanguage();
         }
         
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
         // Load initial data
         loadReportData();
     });
