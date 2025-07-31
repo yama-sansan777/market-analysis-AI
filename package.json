@@ -4,12 +4,12 @@
   "description": "AI駆動自動市場分析システム",
   "main": "auto_market_analysis.js",
   "scripts": {
-    "test": "node -e 'require(\"./market_data_collector.js\").testConnection()'",
+    "test": "node -e 'const { collectAllMarketData } = require(\"./market_data_collector.js\"); collectAllMarketData().then(data => console.log(\"✅ データ収集テスト成功:\", data)).catch(console.error)'",
     "manual": "node auto_market_analysis.js",
-    "start": "node scheduler.js start"
+    "start": "node scheduler.js"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.2.0",
+    "@google/generative-ai": "^0.2.1",
     "axios": "^1.11.0",
     "axios-retry": "^3.9.1",
     "dotenv": "^16.6.1",

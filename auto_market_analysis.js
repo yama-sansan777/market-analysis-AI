@@ -1,311 +1,131 @@
 require('dotenv').config();
-const fs = require('fs');
-const path = require('path');
-const axios = require('axios');
+const fs = require('fs/promises');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { collectAllMarketData } = require('./market_data_collector.js');
 
-// 設定
-const CONFIG = {
-  geminiApiKey: process.env.GEMINI_API_KEY,
-  alphaVantageKey: process.env.ALPHA_VANTAGE_API_KEY,
-  polygonKey: process.env.POLYGON_API_KEY,
-  outputDir: './archive_data',
-  templateFile: './article_template_multilingual.json'
-};
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-class MarketAnalysisAutomation {
-  constructor() {
-    this.genAI = new GoogleGenerativeAI(CONFIG.geminiApiKey);
-    this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  }
-
-  // 1. 市場データ収集
-  async collectMarketData() {
-    console.log('📊 市場データを収集中...');
-    
-    const marketData = {
-      sp500: await this.getSP500Data(),
-      nasdaq: await this.getNasdaqData(),
-      vix: await this.getVIXData(),
-      sentiment: await this.getSentimentData(),
-      technical: await this.getTechnicalData(),
-      hotStocks: await this.getHotStocksData()
-    };
-
-    return marketData;
-  }
-
-  // 2. Gemini Deep Research実行
-  async runGeminiAnalysis(marketData) {
-    console.log('🤖 Gemini Deep Research実行中...');
-    
-    const prompt = this.buildAnalysisPrompt(marketData);
-    
-    const result = await this.model.generateContent(prompt);
-    const response = await result.response;
-    
-    return this.parseGeminiResponse(response.text());
-  }
-
-  // 3. JSON生成
-  async generateArticleJSON(analysisResult, marketData) {
-    console.log('📝 記事JSON生成中...');
-    
-    const template = JSON.parse(fs.readFileSync(CONFIG.templateFile, 'utf8'));
-    const today = new Date();
-    const fileName = `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}.json`;
-    
-    // テンプレートを分析結果で更新
-    const articleData = this.updateTemplateWithAnalysis(template, analysisResult, marketData);
-    
-    // ファイル保存
-    const filePath = path.join(CONFIG.outputDir, fileName);
-    fs.writeFileSync(filePath, JSON.stringify(articleData, null, 2));
-    
-    return fileName;
-  }
-
-  // 4. サイト更新
-  async updateWebsite(fileName) {
-    console.log('🌐 サイト更新中...');
-    
-    // update_latest.jsを実行
-    const { exec } = require('child_process');
-    
-    return new Promise((resolve, reject) => {
-      exec(`node update_latest.js "${fileName}"`, (error, stdout, stderr) => {
-        if (error) {
-          console.error('更新エラー:', error);
-          reject(error);
-        } else {
-          console.log('✅ サイト更新完了');
-          resolve(stdout);
-        }
-      });
-    });
-  }
-
-  // メイン実行関数
-  async run() {
-    try {
-      console.log('🚀 自動市場分析開始...');
-      
-      // 1. データ収集
-      const marketData = await this.collectMarketData();
-      
-      // 2. Gemini分析
-      const analysisResult = await this.runGeminiAnalysis(marketData);
-      
-      // 3. JSON生成
-      const fileName = await this.generateArticleJSON(analysisResult, marketData);
-      
-      // 4. サイト更新
-      await this.updateWebsite(fileName);
-      
-      console.log('🎉 自動分析完了！');
-      
-    } catch (error) {
-      console.error('❌ エラー:', error);
-      throw error;
+// Geminiに分析を依頼するためのプロンプト（指示文）を作成する関数
+function buildAnalysisPrompt(marketData) {
+  // あなたが提供したHTMLの`reportData`オブジェクトの構造を参考にします。
+  // これにより、AIは常に同じ形式のJSONを返すようになります。
+  const jsonStructure = `
+  {
+    "session": "string (例: 7月29日 市場分析)",
+    "date": "string (例: 2025年7月29日)",
+    "summary": {
+      "evaluation": "'売り' | '買い' | '中立'",
+      "score": "number (1から10)",
+      "headline": "string (20字程度のヘッドライン)",
+      "text": "string (200字程度の分析サマリー)"
+    },
+    "dashboard": {
+      "sentimentVI": ${marketData.fear_and_greed_index},
+      "sentimentVISummary": "string (Fear & Greed Indexに関するコメント)"
     }
   }
+  `;
 
-  // ヘルパー関数
-  buildAnalysisPrompt(marketData) {
-    return `
-以下の市場データを基に、米国市場の詳細分析を行ってください。
+  return `
+  あなたは優秀な金融アナリストです。以下の最新市場データを分析し、日本の短期トレーダー向けの市場分析レポートを生成してください。
 
-市場データ:
-${JSON.stringify(marketData, null, 2)}
+  # 市場データ:
+  - S&P 500 最新終値: ${marketData.sp500_price} (日付: ${marketData.sp500_date})
+  - CNN Fear & Greed Index: ${marketData.fear_and_greed_index} (0=Extreme Fear, 100=Extreme Greed)
 
-以下の形式で分析結果を提供してください：
+  # 指示:
+  - 必ず日本語で回答してください。
+  - 以下のJSON構造とデータ型に厳密に従って、分析結果のみを出力してください。
+  - JSONオブジェクト以外の余計なテキスト（例: 「はい、承知いたしました。」や、\`\`\`json ... \`\`\`のようなマークダウン）は絶対に出力しないでください。
 
-1. 評価: "買い"/"売り"/"中立"
-2. スコア: 1-10
-3. ヘッドライン: 簡潔で印象的なタイトル
-4. サマリーテキスト: 200-300文字の分析
-5. ダッシュボード分析
-6. 詳細分析（内部構造、テクニカル、ファンダメンタルズ）
-7. 戦略提案
-8. 注目銘柄
-
-日本語と英語の両方で提供してください。
-    `;
-  }
-
-  parseGeminiResponse(response) {
-    // Geminiの応答を構造化データに変換
-    // 実装詳細は後述
-    return {
-      evaluation: "売り",
-      score: 3,
-      headline: "分析結果",
-      // ... その他のフィールド
-    };
-  }
-
-  updateTemplateWithAnalysis(template, analysis, marketData) {
-    // テンプレートを分析結果で更新
-    // 実装詳細は後述
-    return template;
-  }
-
-  // API呼び出し関数（実装例）
-  async getSP500Data() {
-    // Alpha Vantage API使用例
-    const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=SPY&apikey=${CONFIG.alphaVantageKey}`;
-    const response = await axios.get(url);
-    return response.data;
-  }
-
-  async getNasdaqData() {
-    // 同様の実装
-    return {};
-  }
-
-  async getVIXData() {
-    // VIXデータ取得
-    return {};
-  }
-
-  async getSentimentData() {
-    // センチメントデータ取得
-    return {};
-  }
-
-  async getTechnicalData() {
-    // テクニカル指標取得
-    return {};
-  }
-
-  async getHotStocksData() {
-    // 注目銘柄データ取得
-    return {};
-  }
+  # 出力JSON構造:
+  ${jsonStructure}
+  `;
 }
 
-// テスト用の簡易実行関数
-async function testRun() {
-  console.log("🚀 手動実行テストが開始されました。");
-  console.log("==========================================");
-  console.log("📊 YOHOU US Stock AI - 自動市場分析システム");
-  console.log("==========================================");
+// Geminiに分析を依頼し、結果をJSONとして受け取る関数
+async function analyzeWithGemini(marketData) {
+    console.log('----------');
+    console.log('[STEP 2] Geminiによる市場分析を開始します。');
 
-  // 現在の設定状況を表示
-  function displayCurrentSettings() {
-      console.log("⚙️  現在の設定:");
-      console.log(`   - Node.js環境: ${process.version}`);
-      console.log(`   - 実行日時: ${new Date().toLocaleString('ja-JP')}`);
-      console.log(`   - 作業ディレクトリ: ${process.cwd()}`);
-      
-      // 環境変数のチェック（セキュリティのため最初の数文字のみ表示）
-      const geminiKey = process.env.GEMINI_API_KEY;
-      const alphaVantageKey = process.env.ALPHA_VANTAGE_API_KEY;
-      
-      console.log("   - APIキー状況:");
-      if (geminiKey && geminiKey !== 'your_gemini_api_key_here') {
-          console.log(`     ✅ Gemini API: ${geminiKey.substring(0, 8)}...`);
-      } else {
-          console.log("     ❌ Gemini API: 未設定");
-      }
-      
-      if (alphaVantageKey && alphaVantageKey !== 'your_alpha_vantage_key_here') {
-          console.log(`     ✅ Alpha Vantage: ${alphaVantageKey.substring(0, 8)}...`);
-      } else {
-          console.log("     ❌ Alpha Vantage: 未設定");
-      }
-  }
+    if (!marketData) {
+        console.error('[ERROR] 分析対象の市場データがありません。');
+        return null;
+    }
 
-  // システムの健全性チェック
-  function performHealthCheck() {
-      console.log("\n🔍 システム健全性チェック:");
-      
-      // 必要なディレクトリの存在確認
-      const requiredDirs = ['live_data', 'archive_data', 'src'];
-      requiredDirs.forEach(dir => {
-          if (fs.existsSync(path.join(__dirname, dir))) {
-              console.log(`   ✅ ${dir}/ ディレクトリ: 存在`);
-          } else {
-              console.log(`   ❌ ${dir}/ ディレクトリ: 不在`);
-          }
-      });
-      
-      // 主要ファイルの存在確認
-      const requiredFiles = [
-          'package.json',
-          'index.html',
-          'lang.js',
-          'live_data/latest.json'
-      ];
-      
-      requiredFiles.forEach(file => {
-          if (fs.existsSync(path.join(__dirname, file))) {
-              console.log(`   ✅ ${file}: 存在`);
-          } else {
-              console.log(`   ❌ ${file}: 不在`);
-          }
-      });
-  }
+    try {
+        const prompt = buildAnalysisPrompt(marketData);
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
 
-  // 将来の機能プレビュー
-  function showFutureFeatures() {
-      console.log("\n🔮 今後実装予定の機能:");
-      console.log("   📈 リアルタイム市場データ取得");
-      console.log("   🤖 AI駆動の市場分析生成");
-      console.log("   📊 チャートデータの自動更新");
-      console.log("   🌐 多言語分析レポート生成");
-      console.log("   ⏰ スケジュール自動実行");
-      console.log("   📧 分析結果の通知機能");
-      console.log("   🔍 異常値検出とアラート");
-      console.log("   📱 モバイル対応ダッシュボード");
-  }
+        // Geminiの出力をパース（解釈）してJSONオブジェクトに変換
+        // マークダウンのコードブロックが含まれている場合は除去
+        let cleanText = text.trim();
+        if (cleanText.startsWith('```json')) {
+            cleanText = cleanText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+        } else if (cleanText.startsWith('```')) {
+            cleanText = cleanText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+        }
+        
+        const analysisResult = JSON.parse(cleanText);
+        console.log('[SUCCESS] Geminiによる分析が完了しました。');
+        return analysisResult;
 
-  try {
-      displayCurrentSettings();
-      performHealthCheck();
-      showFutureFeatures();
-      
-      console.log("\n==========================================");
-      console.log("✅ Phase 1テスト実行完了！");
-      console.log("💡 将来的には、このファイルが市場分析の全自動化を実行します。");
-      console.log("📋 現在のテストでは、このメッセージが表示されれば成功です。");
-      console.log("==========================================");
-      
-      // 次のステップのガイダンス
-      console.log("\n📝 次に実行できるコマンド:");
-      console.log("   npm test     - APIキー設定状況のチェック");
-      console.log("   npm run manual - このテストの再実行");
-      console.log("   npm run update - データ更新スクリプトの実行");
-      
-      if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_gemini_api_key_here') {
-          console.log("   npm run analyze - 高度な分析の実行（APIキー設定済み）");
-      } else {
-          console.log("   💡 APIキーを設定すると、より多くの機能が利用できます");
-      }
-      
-  } catch (error) {
-      console.error("❌ エラーが発生しました:", error.message);
-      console.log("🔧 トラブルシューティング:");
-      console.log("   1. .envファイルが正しく設定されているか確認");
-      console.log("   2. npm install で依存関係をインストール");
-      console.log("   3. Node.jsのバージョンが12以上であることを確認");
-      process.exit(1);
-  }
+    } catch (error) {
+        console.error('[ERROR] Geminiでの分析中にエラーが発生しました:', error);
+        console.error('--- Geminiからの生データ ---');
+        // エラー時にGeminiが何を返したか確認できるようにログに残す
+        // const text = error.response ? error.response.text() : "レスポンスがありません";
+        // console.error(text);
+        // console.error('--------------------------');
+        return null;
+    }
 }
 
-// 実行判定
+// メインの実行関数
+async function runFullAnalysis() {
+    try {
+        console.log('=============================================');
+        console.log(`市場分析プロセスを開始します: ${new Date().toLocaleString()}`);
+        console.log('=============================================');
+        
+        // 1. データ収集
+        const marketData = await collectAllMarketData();
+
+        // 2. AIによる分析
+        const analysisJson = await analyzeWithGemini(marketData);
+
+        if (!analysisJson) {
+            throw new Error('分析結果のJSONが生成されませんでした。');
+        }
+        
+        // 3. 結果をファイルに保存
+        console.log('----------');
+        console.log('[STEP 3] 分析結果をファイルに保存します。');
+        const outputPath = 'reportData.json';
+        // JSONを整形して書き出す (null, 2 は読みやすくするためのインデント設定)
+        await fs.writeFile(outputPath, JSON.stringify(analysisJson, null, 2));
+        console.log(`[SUCCESS] 分析結果を ${outputPath} に保存しました。`);
+        console.log('=============================================');
+        console.log(`市場分析プロセスが正常に完了しました: ${new Date().toLocaleString()}`);
+        console.log('=============================================');
+
+    } catch (error) {
+        console.error(`[FATAL] プロセス全体で致命的なエラーが発生しました: ${error.message}`);
+        // エラーログをファイルに追記
+        const errorLogPath = 'error.log';
+        const errorMessage = `${new Date().toISOString()}: ${error.stack}\n`;
+        await fs.appendFile(errorLogPath, errorMessage);
+        console.error(`エラーの詳細は ${errorLogPath} を確認してください。`);
+    }
+}
+
+// このファイルが直接実行された場合にのみ、runFullAnalysisを実行
 if (require.main === module) {
-  
-  // APIキーが設定されている場合は本格的な分析を実行
-  if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_gemini_api_key_here') {
-    console.log("🔑 APIキーが設定されています。本格的な分析を実行します...");
-    const automation = new MarketAnalysisAutomation();
-    automation.run().catch(console.error);
-  } else {
-    // APIキーが未設定の場合はテスト実行
-    console.log("🔑 APIキーが未設定です。テストモードで実行します...");
-    testRun().catch(console.error);
-  }
+    runFullAnalysis();
 }
 
-module.exports = MarketAnalysisAutomation;
+module.exports = { runFullAnalysis };

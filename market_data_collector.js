@@ -1,314 +1,66 @@
+require('dotenv').config();
 const axios = require('axios');
-const moment = require('moment');
 
-class MarketDataCollector {
-  constructor() {
-    this.config = {
-      alphaVantageKey: process.env.ALPHA_VANTAGE_API_KEY,
-      polygonKey: process.env.POLYGON_API_KEY,
-      finnhubKey: process.env.FINNHUB_API_KEY
-    };
-  }
+const ALPHA_VANTAGE_API_KEY = process.env.ALPHA_VANTAGE_API_KEY;
 
-  // S&P 500データ取得
-  async getSP500Data() {
+// S&P 500の最新の終値を取得する関数
+async function getSP500Data() {
+    console.log('[INFO] S&P 500のデータを取得中...');
     try {
-      const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=SPY&apikey=${this.config.alphaVantageKey}`;
-      const response = await axios.get(url);
-      
-      if (response.data['Error Message']) {
-        throw new Error('Alpha Vantage API Error');
-      }
-
-      const timeSeries = response.data['Time Series (Daily)'];
-      const dates = Object.keys(timeSeries).sort().reverse();
-      const latest = timeSeries[dates[0]];
-      const previous = timeSeries[dates[1]];
-
-      return {
-        current: parseFloat(latest['4. close']),
-        previous: parseFloat(previous['4. close']),
-        change: parseFloat(latest['4. close']) - parseFloat(previous['4. close']),
-        changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100),
-        volume: parseInt(latest['5. volume']),
-        high: parseFloat(latest['2. high']),
-        low: parseFloat(latest['3. low'])
-      };
-    } catch (error) {
-      console.error('S&P 500データ取得エラー:', error.message);
-      return null;
-    }
-  }
-
-  // Nasdaqデータ取得
-  async getNasdaqData() {
-    try {
-      const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=QQQ&apikey=${this.config.alphaVantageKey}`;
-      const response = await axios.get(url);
-      
-      const timeSeries = response.data['Time Series (Daily)'];
-      const dates = Object.keys(timeSeries).sort().reverse();
-      const latest = timeSeries[dates[0]];
-      const previous = timeSeries[dates[1]];
-
-      return {
-        current: parseFloat(latest['4. close']),
-        previous: parseFloat(previous['4. close']),
-        change: parseFloat(latest['4. close']) - parseFloat(previous['4. close']),
-        changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100),
-        volume: parseInt(latest['5. volume'])
-      };
-    } catch (error) {
-      console.error('Nasdaqデータ取得エラー:', error.message);
-      return null;
-    }
-  }
-
-  // VIXデータ取得
-  async getVIXData() {
-    try {
-      const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=VIX&apikey=${this.config.alphaVantageKey}`;
-      const response = await axios.get(url);
-      
-      const timeSeries = response.data['Time Series (Daily)'];
-      const dates = Object.keys(timeSeries).sort().reverse();
-      const latest = timeSeries[dates[0]];
-      const previous = timeSeries[dates[1]];
-
-      return {
-        current: parseFloat(latest['4. close']),
-        previous: parseFloat(previous['4. close']),
-        change: parseFloat(latest['4. close']) - parseFloat(previous['4. close']),
-        changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100)
-      };
-    } catch (error) {
-      console.error('VIXデータ取得エラー:', error.message);
-      return null;
-    }
-  }
-
-  // センチメントデータ取得
-  async getSentimentData() {
-    try {
-      // Fear & Greed Index
-      const fearGreedResponse = await axios.get('https://api.alternative.me/fng/');
-      const fearGreedData = fearGreedResponse.data.data[0];
-
-      // Put/Call Ratio (簡易版)
-      const putCallRatio = await this.getPutCallRatio();
-
-      return {
-        fearGreedIndex: parseInt(fearGreedData.value),
-        fearGreedClassification: fearGreedData.value_classification,
-        putCallRatio: putCallRatio,
-        timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
-      };
-    } catch (error) {
-      console.error('センチメントデータ取得エラー:', error.message);
-      return null;
-    }
-  }
-
-  // Put/Call Ratio取得
-  async getPutCallRatio() {
-    try {
-      // 簡易版 - 実際の実装ではCBOE APIを使用
-      return {
-        daily: 0.57,
-        movingAverage: 0.54,
-        status: '極度の自己満足シグナル'
-      };
-    } catch (error) {
-      console.error('Put/Call Ratio取得エラー:', error.message);
-      return null;
-    }
-  }
-
-  // テクニカル指標取得
-  async getTechnicalData() {
-    try {
-      // RSI, MACD, 移動平均などの計算
-      const sp500Data = await this.getSP500Data();
-      
-      if (!sp500Data) return null;
-
-      // 簡易的なテクニカル計算
-      const technicalData = {
-        rsi: this.calculateRSI(sp500Data),
-        macd: this.calculateMACD(sp500Data),
-        movingAverages: this.calculateMovingAverages(sp500Data),
-        support: sp500Data.current * 0.98,
-        resistance: sp500Data.current * 1.02
-      };
-
-      return technicalData;
-    } catch (error) {
-      console.error('テクニカルデータ取得エラー:', error.message);
-      return null;
-    }
-  }
-
-  // 注目銘柄データ取得
-  async getHotStocksData() {
-    try {
-      // 主要銘柄のデータを取得
-      const stocks = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'NVDA'];
-      const stockData = [];
-
-      for (const symbol of stocks) {
-        try {
-          const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${this.config.alphaVantageKey}`;
-          const response = await axios.get(url);
-          
-          const timeSeries = response.data['Time Series (Daily)'];
-          const dates = Object.keys(timeSeries).sort().reverse();
-          const latest = timeSeries[dates[0]];
-          const previous = timeSeries[dates[1]];
-
-          stockData.push({
-            symbol: symbol,
-            name: this.getStockName(symbol),
-            price: parseFloat(latest['4. close']),
-            change: parseFloat(latest['4. close']) - parseFloat(previous['4. close']),
-            changePercent: ((parseFloat(latest['4. close']) - parseFloat(previous['4. close'])) / parseFloat(previous['4. close']) * 100),
-            volume: parseInt(latest['5. volume'])
-          });
-
-          // API制限を避けるため少し待機
-          await new Promise(resolve => setTimeout(resolve, 200));
-        } catch (error) {
-          console.error(`${symbol}データ取得エラー:`, error.message);
+        const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=SPY&apikey=${ALPHA_VANTAGE_API_KEY}&outputsize=compact`;
+        const response = await axios.get(url);
+        
+        // 最新の日付のデータを取得
+        const timeSeries = response.data['Time Series (Daily)'];
+        if (!timeSeries) {
+            throw new Error('Alpha Vantageから有効な時系列データが取得できませんでした。APIキーやAPIの制限を確認してください。');
         }
-      }
+        const latestDate = Object.keys(timeSeries)[0];
+        const latestData = timeSeries[latestDate];
 
-      return stockData;
+        console.log(`[SUCCESS] S&P 500のデータを取得しました (日付: ${latestDate})`);
+        return {
+            date: latestDate,
+            close: latestData['4. close'],
+        };
     } catch (error) {
-      console.error('注目銘柄データ取得エラー:', error.message);
-      return [];
-    }
-  }
-
-  // ヘルパー関数
-  calculateRSI(data) {
-    // 簡易的なRSI計算
-    return Math.random() * 100; // 実際の実装では過去14日間のデータを使用
-  }
-
-  calculateMACD(data) {
-    // 簡易的なMACD計算
-    return {
-      macd: Math.random() * 2 - 1,
-      signal: Math.random() * 2 - 1,
-      histogram: Math.random() * 2 - 1
-    };
-  }
-
-  calculateMovingAverages(data) {
-    // 簡易的な移動平均計算
-    return {
-      ma20: data.current * (0.98 + Math.random() * 0.04),
-      ma50: data.current * (0.96 + Math.random() * 0.08),
-      ma200: data.current * (0.92 + Math.random() * 0.16)
-    };
-  }
-
-  getStockName(symbol) {
-    const names = {
-      'AAPL': 'Apple Inc.',
-      'MSFT': 'Microsoft Corporation',
-      'GOOGL': 'Alphabet Inc.',
-      'AMZN': 'Amazon.com Inc.',
-      'TSLA': 'Tesla Inc.',
-      'NVDA': 'NVIDIA Corporation'
-    };
-    return names[symbol] || symbol;
-  }
-}
-
-/**
- * データ収集テスト用関数
- * APIキーの設定状況を確認し、データ収集の準備状況をテストします
- */
-async function testConnection() {
-    require('dotenv').config();
-    
-    console.log("🛠️ データ収集テストを開始します...");
-    console.log("==========================================");
-
-    const geminiKey = process.env.GEMINI_API_KEY;
-    const alphaVantageKey = process.env.ALPHA_VANTAGE_API_KEY;
-    const polygonKey = process.env.POLYGON_API_KEY;
-    const fmpKey = process.env.FMP_API_KEY;
-
-    let successCount = 0;
-    let totalTests = 4;
-
-    // Gemini AI APIキーのチェック
-    if (geminiKey && geminiKey !== 'your_gemini_api_key_here') {
-        console.log("✅ Gemini APIキーが設定されています。");
-        successCount++;
-    } else {
-        console.log("❌ Gemini APIキーが設定されていません。");
-        console.log("   👉 https://makersuite.google.com/app/apikey から取得してください");
-    }
-
-    // Alpha Vantage APIキーのチェック
-    if (alphaVantageKey && alphaVantageKey !== 'your_alpha_vantage_key_here') {
-        console.log("✅ Alpha Vantage APIキーが設定されています。");
-        successCount++;
-    } else {
-        console.log("❌ Alpha Vantage APIキーが設定されていません。");
-        console.log("   👉 https://www.alphavantage.co/support/#api-key から取得してください");
-    }
-
-    // Polygon APIキーのチェック
-    if (polygonKey && polygonKey !== 'your_polygon_api_key_here') {
-        console.log("✅ Polygon APIキーが設定されています。");
-        successCount++;
-    } else {
-        console.log("❌ Polygon APIキーが設定されていません。");
-        console.log("   👉 https://polygon.io/ から取得してください");
-    }
-
-    // Financial Modeling Prep APIキーのチェック
-    if (fmpKey && fmpKey !== 'your_fmp_api_key_here') {
-        console.log("✅ Financial Modeling Prep APIキーが設定されています。");
-        successCount++;
-    } else {
-        console.log("❌ Financial Modeling Prep APIキーが設定されていません。");
-        console.log("   👉 https://financialmodelingprep.com/developer/docs から取得してください");
-    }
-
-    console.log("==========================================");
-    console.log(`📊 テスト結果: ${successCount}/${totalTests} APIキーが設定済み`);
-    
-    if (successCount === totalTests) {
-        console.log("🎉 すべてのAPIキーが正常に設定されています！");
-        console.log("👍 Phase 2の準備が完了しました。");
-    } else if (successCount >= 2) {
-        console.log("⚠️  一部のAPIキーが未設定ですが、基本機能は動作します。");
-        console.log("💡 より多くの機能を利用するには、すべてのAPIキーを設定してください。");
-    } else {
-        console.log("🚨 APIキーの設定が不足しています。");
-        console.log("📋 .envファイルを作成し、必要なAPIキーを設定してください。");
-    }
-
-    console.log("----------");
-    console.log("👍 テスト完了");
-    console.log("");
-    
-    // 次のステップのガイダンス
-    if (successCount < totalTests) {
-        console.log("📝 次に行うこと:");
-        console.log("1. .envファイルを作成 (cp .env.example .env)");
-        console.log("2. 各APIサービスでAPIキーを取得");
-        console.log("3. .envファイルにAPIキーを記入");
-        console.log("4. 再度テストを実行 (npm test)");
-    } else {
-        console.log("🚀 次のステップ:");
-        console.log("   npm run manual でメイン機能をテストできます");
+        console.error('[ERROR] S&P 500データの取得に失敗しました:', error.message);
+        return null;
     }
 }
 
-module.exports = MarketDataCollector;
-module.exports.testConnection = testConnection;
+// Fear & Greed Indexを取得する関数（外部サイトから取得）
+async function getFearAndGreedIndex() {
+    console.log('[INFO] Fear & Greed Indexを取得中...');
+    try {
+        // 注: このAPIは非公式で、変更される可能性があります。
+        const response = await axios.get('https://api.alternative.me/fng/?limit=1');
+        const fngValue = response.data.data[0].value;
+        console.log(`[SUCCESS] Fear & Greed Indexを取得しました (値: ${fngValue})`);
+        return fngValue;
+    } catch (error) {
+        console.error('[ERROR] Fear & Greed Indexの取得に失敗しました:', error.message);
+        return null;
+    }
+}
+
+// すべての市場データを収集するメイン関数
+async function collectAllMarketData() {
+    console.log('----------');
+    console.log('[STEP 1] 市場データの収集を開始します。');
+    const sp500 = await getSP500Data();
+    const fearAndGreed = await getFearAndGreedIndex();
+    
+    if (!sp500 || !fearAndGreed) {
+        console.error('[FATAL] データ収集に失敗したため、処理を中断します。');
+        return null;
+    }
+
+    return {
+        sp500_price: sp500.close,
+        sp500_date: sp500.date,
+        fear_and_greed_index: fearAndGreed,
+    };
+}
+
+module.exports = { collectAllMarketData };
