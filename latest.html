@@ -63,12 +63,6 @@
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
-                <!-- 言語切り替えボタンをヘッダー内に配置 -->
-                <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
-                    <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
-                    <span class="text-gray-400 text-xs">|</span>
-                    <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
-                </div>
                 <button class="md:hidden text-gray-600">
                     <i class="ri-menu-line ri-lg"></i>
                 </button>
@@ -83,641 +77,7 @@
         <p class="mt-4 text-lg max-w-3xl mx-auto text-gray-600">短期トレーダーのためのデータ駆動型インサイト</p>
          <div class="mt-8 inline-flex items-center gap-6 rounded-xl bg-white border border-gray-200 px-8 py-4 shadow-sm">
             <p id="session" class="font-semibold text-indigo-700 text-2xl"></p>
-            <span class="text-gray-300 <!DOCTYPE html>
-                <html lang="ja">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>YOHOU 米国株AI - 市場分析</title>
-                    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
-                    <script>
-                        tailwind.config = {
-                            theme: {
-                                extend: {
-                                    colors: {
-                                        primary: '#2563EB',
-                                        secondary: '#DC2626',
-                                        bullish: '#10b981',
-                                        bearish: '#ef4444',
-                                        neutral: '#6b7280',
-                                    },
-                                    borderRadius: {
-                                        'none': '0px',
-                                        'sm': '4px',
-                                        DEFAULT: '8px',
-                                        'md': '12px',
-                                        'lg': '16px',
-                                        'xl': '20px',
-                                        '2xl': '24px',
-                                        '3xl': '32px',
-                                        'full': '9999px',
-                                        'button': '8px'
-                                    }
-                                }
-                            }
-                        }
-                    </script>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
-                    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-                    <link rel="preconnect" href="https://fonts.googleapis.com">
-                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-                    <style>
-                        body { font-family: 'Noto Sans JP', sans-serif; color: #1F2937; background-color: #f4f5f7; }
-                        .tab-panel { display: none; }
-                        .tab-panel.active { display: block; }
-                        .tab-button { padding: 0.8rem 1.2rem; font-size: 1.05rem; font-weight: 500; text-align: center; color: #6b7280; border-bottom: 3px solid transparent; transition: all 0.2s ease-in-out; cursor: pointer; }
-                        @media (min-width: 768px) { .tab-button { font-size: 1.2rem; } }
-                        .tab-button:not(.active):hover { background-color: #f9fafb; border-color: #d1d5db; color: #374151; transform: translateY(-2px); }
-                        .tab-button.active { border-color: #4338ca; color: #4338ca; background-color: #eef2ff; font-weight: 700; }
-                        .font-pacifico { font-family: 'Pacifico', cursive; }
-                    </style>
-                </head>
-                <body class="bg-gray-50 min-h-screen">
-                
-                <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-                    <div class="container mx-auto px-4 py-4">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-8">
-                                <a href="#" class="text-2xl md:text-3xl font-pacifico text-indigo-700">Market Insight</a>
-                                <nav class="hidden md:flex space-x-6">
-                                    <a href="#" class="text-primary font-medium border-b-2 border-primary pb-1">本日の分析</a>
-                                    <a href="#" class="text-gray-600 hover:text-primary">分析アーカイブ</a>
-                                    <a href="#" class="text-gray-600 hover:text-primary">テクニカル指標解説</a>
-                                </nav>
-                            </div>
-                            <div class="flex items-center space-x-4">
-                                <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
-                                    <i class="ri-menu-line ri-lg"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </header>
-                
-                <!-- モバイルメニュー -->
-                <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
-                    <div class="px-4 py-2 space-y-1">
-                        <a href="index.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50">本日の分析</a>
-                        <a href="archive.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">分析アーカイブ</a>
-                        <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">テクニカル指標解説</a>
-                        <a href="terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">市場用語集</a>
-                        <a href="about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">サイトについて</a>
-                    </div>
-                </div>
-                
-                <div class="w-full px-6 py-10 md:px-12 lg:px-20">
-                    <header class="mb-14 text-center">
-                        <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">S&P 500 インタラクティブ市場分析</h1>
-                        <p class="mt-4 text-lg max-w-3xl mx-auto text-gray-600">短期トレーダーのためのデータ駆動型インサイト</p>
-                         <div class="mt-8 inline-flex items-center gap-6 rounded-xl bg-white border border-gray-200 px-8 py-4 shadow-sm">
-                            <p id="session" class="font-semibold text-indigo-700 text-2xl"></p>
-                            <span class="text-gray-300 text-2xl">|</span>
-                            <p id="date" class="text-2xl font-medium flex items-center gap-3 text-gray-700"></p>
-                        </div>
-                    </header>
-                
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-14">
-                        <main class="lg:col-span-8">
-                            <section id="summary" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-12 text-center ring-1 ring-gray-200">
-                                <h2 class="text-3xl font-semibold text-gray-500 mb-5">総合評価</h2>
-                                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-6">
-                                    <span id="summary-evaluation" class="text-7xl md:text-9xl font-bold"></span>
-                                    <div class="text-left">
-                                        <p id="summary-score" class="text-6xl md:text-7xl font-bold text-gray-800 text-center sm:text-left"></p>
-                                        <div id="summary-stars" class="text-4xl text-yellow-400 mt-2 text-center sm:text-left"></div>
-                                    </div>
-                                </div>
-                                <p id="summary-headline" class="text-2xl md:text-3xl font-semibold text-gray-800 mt-5"></p>
-                                <p id="summary-text" class="max-w-4xl mx-auto text-gray-600 mt-4 leading-relaxed text-lg"></p>
-                            </section>
-                
-                            <section id="dashboard" class="mb-12">
-                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                                    <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
-                                        <h3 class="font-bold text-2xl mb-5 text-center">市場の健全性 (前日終値)</h3>
-                                        <div class="h-64" id="breadthChart"></div>
-                                        <p id="breadth-summary" class="text-center text-lg text-gray-600 mt-5"></p>
-                                    </div>
-                                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col items-center justify-center">
-                                        <h3 class="font-bold text-2xl mb-5 text-center">市場心理 (CNN Fear & Greed)</h3>
-                                        <div class="h-64 w-full" id="sentimentGauge"></div>
-                                        <p id="sentiment-summary" class="text-center text-lg text-gray-600 mt-5"></p>
-                                    </div>
-                                    <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col justify-center">
-                                        <h3 class="font-bold text-2xl mb-6 text-center">主要な価格帯</h3>
-                                        <div class="space-y-6">
-                                            <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
-                                                <p class="text-lg font-semibold text-red-700">上値抵抗線 (レジスタンス)</p>
-                                                <p id="resistance-value" class="text-4xl font-bold text-red-900"></p>
-                                                <p id="resistance-desc" class="text-base text-red-600"></p>
-                                            </div>
-                                            <div class="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg">
-                                                <p class="text-lg font-semibold text-blue-700">下値支持線 (サポート)</p>
-                                                <p id="support-value" class="text-4xl font-bold text-blue-900"></p>
-                                                <p id="support-desc" class="text-base text-blue-600"></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
-                                        <h3 class="font-bold text-2xl mb-5 text-center">エクイティ Put Call Ratio</h3>
-                                        <div id="put-call-ratio-container" class="text-center py-12"></div>
-                                         <p id="put-call-ratio-summary" class="text-center text-lg text-gray-600 mt-2"></p>
-                                    </div>
-                                </div>
-                            </section>
-                            
-                            <section id="details" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 ring-1 ring-gray-200">
-                                <div class="text-center mb-10">
-                                    <h3 class="text-4xl font-bold text-gray-800">詳細分析</h3>
-                                    <p class="text-gray-500 mt-3 text-xl">下のタブをクリックして、分析内容を切り替えられます</p>
-                                </div>
-                                <div class="border-b border-gray-300">
-                                    <nav class="flex flex-wrap -mb-px justify-center" id="tab-buttons">
-                                        <button data-tab="internals" class="tab-button active">市場の内部構造</button>
-                                        <button data-tab="technicals" class="tab-button">テクニカル分析</button>
-                                        <button data-tab="fundamentals" class="tab-button">ファンダメンタルズ & 心理</button>
-                                        <button data-tab="strategy" class="tab-button">投資戦略</button>
-                                    </nav>
-                                </div>
-                
-                                <div id="tab-panels" class="mt-10">
-                                    <div id="internals" class="tab-panel active space-y-6">
-                                        <h3 id="internals-headline" class="text-3xl font-bold"></h3>
-                                        <p id="internals-text" class="text-lg text-gray-700 leading-relaxed"></p>
-                                        <div class="h-96"><canvas id="contributionChart"></canvas></div>
-                                    </div>
-                                    <div id="technicals" class="tab-panel space-y-6">
-                                        <h3 id="technicals-headline" class="text-3xl font-bold"></h3>
-                                        <p id="technicals-text" class="text-lg text-gray-700 leading-relaxed"></p>
-                                        <div class="h-96"><canvas id="technicalChart"></canvas></div>
-                                    </div>
-                                    <div id="fundamentals" class="tab-panel space-y-6">
-                                        <h3 id="fundamentals-headline" class="text-3xl font-bold"></h3>
-                                        <p id="fundamentals-text" class="text-lg text-gray-700 leading-relaxed"></p>
-                                        
-                                        <div id="sentiment-indicators-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
-                                            <div id="aaii-container"></div>
-                                            <div class="space-y-8">
-                                                <div id="vix-container"></div>
-                                                <div id="ii-container"></div>
-                                            </div>
-                                        </div>
-                                        
-                                        <ul id="fundamentals-list" class="space-y-6 text-lg text-gray-700 pt-4"></ul>
-                                    </div>
-                                     <div id="strategy" class="tab-panel space-y-6">
-                                        <h3 id="strategy-headline" class="text-3xl font-bold"></h3>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                            <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
-                                                <h4 class="font-bold text-2xl text-gray-800 mb-3">基本戦略</h4>
-                                                <p id="strategy-basic" class="text-gray-600 leading-relaxed text-lg"></p>
-                                            </div>
-                                             <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
-                                                <h4 class="font-bold text-2xl text-gray-800 mb-3">リスク管理</h4>
-                                                <p id="strategy-risk" class="text-gray-600 leading-relaxed text-lg"></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </main>
-                        
-                        <aside class="lg:col-span-4 space-y-10">
-                            <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
-                                <h3 class="text-2xl font-bold mb-5 border-b pb-4">市場概況</h3>
-                                <div id="market-overview-container" class="space-y-5"></div>
-                            </div>
-                            <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
-                                <h3 class="text-2xl font-bold mb-5 border-b pb-4">注目銘柄 (Top Movers)</h3>
-                                <div id="hot-stocks-container" class="space-y-6"></div>
-                            </div>
-                        </aside>
-                    </div>
-                    
-                    <footer class="text-center text-sm text-gray-500 mt-20 py-8">
-                        <p>この分析は提供された情報に基づく予測であり、投資成果を保証するものではありません。</p>
-                        <p>Copyright &copy; 2025 Market Insight. All Rights Reserved.</p>
-                    </footer>
-                </div>
-                
-                <script>
-                    // データオブジェクト
-                    const reportData = {
-                      "session": "7月29日 市場分析",
-                      "date": "2025年7月29日",
-                      "summary": {
-                        "evaluation": "ホールド",
-                        "score": 7,
-                        "headline": "記録更新の裏に潜む亀裂：市場の健全性低下とセンチメントの乖離が示す警戒シグナル",
-                        "text": "S&P 500は記録更新を続けているが、その上昇の基盤は著しく不安定化している。市場の騰落を示す内部指標（ブレッド）は悪化しており、上昇が一部の大型株にのみ依存していることを示唆している。センチメントは危険なほどに分裂しており、オプション市場では下落への備えが急増している。主要経済指標の発表を前にボラティリティが極端に低い現状は、短期トレーダーにとって極めて高いリスクを示唆するため、新規の買いは見送り、既存ポジションの利益確定とストップロスの引き上げを優先すべきである。"
-                      },
-                      "dashboard": {
-                        "breadth": {
-                          "advancers": 210,
-                          "decliners": 290,
-                          "summary": "市場の内部は弱く、指数の上昇が一部の大型株に依存。この「ネガティブ・ダイバージェンス」は上昇トレンドの脆弱性の兆候です。"
-                        },
-                        "sentimentVI": 74,
-                        "sentimentVISummary": "指数は「強欲（Greed）」の領域にあり、市場の楽観が行き過ぎている可能性を示唆。逆張りの売りシグナルとなることがあります。",
-                        "priceLevels": {
-                          "resistance": {
-                            "value": "$6,500",
-                            "description": "心理的な節目であり、エリオット波動分析などに基づく次の目標水準。ここを明確に超えるには、ポジティブなサプライズを伴う強い買い材料が必要です。"
-                          },
-                          "support": {
-                            "value": "$6,372",
-                            "description": "直近の押し目買いが入ったプルバック・サポート水準であり、38.2%フィボナッチ・リトレースメントとも重なる重要な短期的な防衛ラインです。"
-                          }
-                        },
-                        "putCallRatio": {
-                          "dailyValue": "0.72",
-                          "movingAverage": "0.55",
-                          "status": "自己満足からの転換シグナル",
-                          "summary": "日次レシオが移動平均を大幅に上回って急騰。価格上昇にもかかわらず、投資家が積極的に下落ヘッジ（プット買い）を行っており、警戒感の高まりを反映しています。"
-                        }
-                      },
-                      "details": {
-                        "internals": {
-                          "headline": "プロの楽観、個人の警戒、オプション市場の恐怖：センチメントの三重乖離が示す市場の脆弱性",
-                          "text": "現在の市場センチメントは、一枚岩の楽観や悲観では語れない、極めて複雑で矛盾した状況を呈している。この乖離を理解することは、短期的なリスクを把握する上で不可欠である。CNN Fear & Greed Indexは74という「強欲（Greed）」の領域にあるが、これは個人投資家の動向とは全く一致しない。米国個人投資家協会（AAII）調査では弱気派が平均を上回る一方、プロのニュースレター執筆者を対象としたInvestors Intelligence（II）調査では強気派が高い水準を維持しており、明確な乖離が見られる。このパズルを解く鍵はオプション市場にあり、プット・コール・レシオの急騰は、市場の深層心理に潜む恐怖を浮き彫りにしている。",
-                          "chartData": {
-                            "labels": ['Investors Intelligence (プロ)', 'AAII (個人)'],
-                            "values": [52.0, 36.8]
-                          }
-                        },
-                        "technicals": {
-                          "headline": "史上最高値の裏に潜む脆弱性：価格と市場の内部（ブレッド）の深刻なダイバージェンス",
-                          "text": "テクニカル分析の観点から見ると、S&P 500は力強い上昇トレンドの只中にある。しかし、その価格上昇の内実は極めて脆弱である。最も懸念すべきは、価格と市場の健全性（ブレッド）との間に生じている深刻な「ネガティブ・ダイバージェンス」である。S&P 500指数が新高値を更新しているにもかかわらず、アドバンス・デクライン・ライン（A/Dライン）は追随できずに低下傾向にある。これは、指数の上昇がごく一部の巨大ハイテク株によって牽引されているだけで、大多数の銘柄は上昇していないことを意味する。このような狭いリーダーシップに依存したラリーは、歴史的に見て持続可能性が低く、市場全体が急落するリスクを内包している。",
-                          "chartData": {
-                            "labels": ["2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25", "2025-07-28"],
-                            "sp500": [6309.62, 6358.91, 6363.35, 6388.64, 6389.77],
-                            "ma50": [6245.50, 6250.10, 6255.40, 6261.20, 6266.80],
-                            "adl": [35210, 35250, 35230, 35180, 35150]
-                          }
-                        },
-                        "fundamentals": {
-                          "headline": "嵐の前の静けさ：低VIXが隠す、FRBと重要経済指標発表前のイベントリスク",
-                          "text": "現在の市場心理を理解する上で最も重要な要素は、「極端な自己満足」と「目前に迫った高インパクトなイベントリスク」の危険な組み合わせである。VIX指数は極めて低い水準にあり、市場参加者が将来の大きな価格変動を想定していないことを示している。しかし、今週はFOMC、GDP、雇用統計と重要イベントが目白押しであり、この静けさは嵐の前の静けさと解釈すべきである。ネガティブなサプライズが発生した場合、ボラティリティが爆発的に増大する非対称なリスク構造となっている。",
-                          "vix": {
-                              "value": 14.93,
-                              "change": "-0.46",
-                              "status": "自己満足",
-                              "summary": "VIXは歴史的な低水準にあり、市場の極端な自己満足（ complacency）を示している。これは、FRBの政策発表や重要経済指標といったイベントリスクを過小評価しており、予期せぬショックに対して脆弱な状態である。"
-                          },
-                          "aaiiSurvey": {
-                            "date": "2025年7月23日調査",
-                            "bullish": 36.8,
-                            "neutral": 29.2,
-                            "bearish": 34.0,
-                            "summary": "個人投資家の楽観論は後退し、歴史的平均を下回っている。市場の上昇に一般大衆が追随していないことは、ラリーの健全性に対する疑問を投げかける。"
-                          },
-                          "investorsIntelligence": {
-                              "date": "2025年7月28日調査",
-                              "bullish": 52.0,
-                              "bearish": 22.0,
-                              "correction": 26.0,
-                              "summary": "プロの投資アドバイザーは依然として強気だが、過去の天井圏で見られた60%超の極端な楽観には至っていない。個人投資家とのセンチメントの乖離が顕著である。"
-                          },
-                          "points": [
-                            "市場は、FRBの政策決定、GDP、雇用統計という3つの主要なイベントリスクを前に、極度の自己満足状態にある。",
-                            "歴史的に割高なバリュエーションは、金利や経済成長見通しの変化に対して市場を非常に敏感にしている。",
-                            "低いVIXと高いイベントリスクの組み合わせは、ネガティブサプライズに対する非対称な下落リスクを生み出している。"
-                          ]
-                        },
-                        "strategy": {
-                          "headline": "慎重さが利益を守る：キャピタル・プリザベーションと選択的行動の時",
-                          "basic": "現在の市場環境は、積極的なリスクテイクよりも、利益の確保と資本の保全（キャピタル・プリザベーション）を最優先すべき局面である。「ホールド」は、新規に買い向かうべきではないという戦術的な中立姿勢を意味する。既存のロングポジションに対しては、ストップロス注文を直近のサポートレベルである6,372ポイントまで積極的に引き上げるべきである。また、大きな含み益が出ているポジションについては、一部を利益確定し、リスクエクスポージャーを引き下げることが賢明である。",
-                          "risk": "この戦略における最大のリスクは、FRBのタカ派的な声明や予想外に弱い経済指標の発表を受けて、市場が「ギャップダウン」することである。このリスクをヘッジする最善の方法は、イベント発生前にポジションサイズを減らしておくことである。本戦略が無効になる転換点は、S&P 500がサポートレベルである6,372ポイントを終値で明確に下回ることである。その場合、残りのロングポジションを決済し、戦術的なショートを検討すべきである。"
-                        }
-                      },
-                      "marketOverview": [
-                        { "name": "S&P 500 (7/28終値)", "value": "6,389.77", "change": "+1.13 (+0.02%)", "isDown": false },
-                        { "name": "Nasdaq-100", "value": "21,542.10", "change": "+25.50 (+0.12%)", "isDown": false },
-                        { "name": "VIX指数", "value": "14.93", "change": "-0.46 (-3.00%)", "isDown": true },
-                        { "name": "米国10年債利回り", "value": "4.42%", "change": "+0.02%", "isDown": false }
-                      ],
-                      "hotStocks": [
-                        { "name": "NVIDIA (NVDA)", "price": "主な値上がり銘柄", "description": "巨大テック企業として指数を牽引。市場のリーダーシップを担う。", "isDown": false },
-                        { "name": "Microsoft (MSFT)", "price": "主な値上がり銘柄", "description": "安定した業績を背景に、狭いリーダーシップの一角を占める。", "isDown": false },
-                        { "name": "NextEra Energy (NEE)", "price": "主な値下がり銘柄", "description": "市場全体の弱さを反映し、公益セクターは軟調な展開。", "isDown": true }
-                      ]
-                    };
-                
-                    // メイン関数
-                    document.addEventListener('DOMContentLoaded', () => {
-                        populateHtmlElements(reportData);
-                        initializeAllCharts(reportData);
-                        initializeTabs();
-                    });
-                
-                    // HTML要素にデータを流し込む関数
-                    function populateHtmlElements(data) {
-                        // ヘッダー
-                        document.getElementById('session').textContent = data.session;
-                        document.getElementById('date').innerHTML = `<i class="ri-calendar-2-line text-gray-500"></i> ${data.date}`;
-                        
-                        // サマリー
-                        const summaryEval = document.getElementById('summary-evaluation');
-                        summaryEval.textContent = data.summary.evaluation;
-                        summaryEval.className = 'text-7xl md:text-9xl font-bold';
-                        if (data.summary.evaluation === '売り') {
-                            summaryEval.classList.add('text-red-600');
-                        } else if (data.summary.evaluation === '買い') {
-                            summaryEval.classList.add('text-blue-600');
-                        } else {
-                            summaryEval.classList.add('text-yellow-500');
-                        }
-                        
-                        document.getElementById('summary-score').innerHTML = `${data.summary.score}<span class="text-4xl text-gray-500">/10</span>`;
-                        document.getElementById('summary-stars').innerHTML = Array.from({ length: 10 }, (_, i) => i < data.summary.score ? '<span>★</span>' : '<span class="text-gray-300">★</span>').join('');
-                        document.getElementById('summary-headline').textContent = data.summary.headline;
-                        document.getElementById('summary-text').textContent = data.summary.text;
-                
-                        // ダッシュボード
-                        document.getElementById('breadth-summary').textContent = data.dashboard.breadth.summary;
-                        document.getElementById('sentiment-summary').textContent = data.dashboard.sentimentVISummary;
-                        document.getElementById('resistance-value').textContent = data.dashboard.priceLevels.resistance.value;
-                        document.getElementById('resistance-desc').textContent = data.dashboard.priceLevels.resistance.description;
-                        document.getElementById('support-value').textContent = data.dashboard.priceLevels.support.value;
-                        document.getElementById('support-desc').textContent = data.dashboard.priceLevels.support.description;
-                        
-                        const pcRatio = data.dashboard.putCallRatio;
-                        const pcRatioStatusColor = pcRatio.status.includes('シグナル') ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800';
-                        document.getElementById('put-call-ratio-container').innerHTML = `
-                            <div class="flex items-end justify-center gap-4">
-                                <p class="text-8xl font-bold text-gray-800">${pcRatio.dailyValue}</p>
-                                <div class="text-left mb-2">
-                                     <p class="text-xl font-semibold text-gray-500">当日レシオ</p>
-                                     <p class="text-xl font-bold text-gray-700">${pcRatio.movingAverage} <span class="text-base font-medium text-gray-500">(21日移動平均)</span></p>
-                                </div>
-                            </div>
-                            <p class="mt-5 px-6 py-2 inline-block ${pcRatioStatusColor} rounded-full text-lg font-semibold">${pcRatio.status}</p>`;
-                        document.getElementById('put-call-ratio-summary').textContent = pcRatio.summary;
-                        
-                        // 詳細分析タブ
-                        document.getElementById('internals-headline').textContent = data.details.internals.headline;
-                        document.getElementById('internals-text').textContent = data.details.internals.text;
-                        document.getElementById('technicals-headline').textContent = data.details.technicals.headline;
-                        document.getElementById('technicals-text').textContent = data.details.technicals.text;
-                        
-                        // ファンダメンタルズ & 心理
-                        const fundamentals = data.details.fundamentals;
-                        document.getElementById('fundamentals-headline').textContent = fundamentals.headline;
-                        document.getElementById('fundamentals-text').textContent = fundamentals.text;
-                        document.getElementById('fundamentals-list').innerHTML = fundamentals.points.map(point => `<li class="flex items-start"><span class="text-blue-500 mr-4 mt-1"><i class="ri-checkbox-circle-fill ri-xl"></i></span><div>${point}</div></li>`).join('');
-                
-                        // VIX
-                        const vix = fundamentals.vix;
-                        const vixColor = vix.change.startsWith('+') ? 'text-red-600' : 'text-green-600';
-                        document.getElementById('vix-container').innerHTML = `
-                            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
-                                <h4 class="text-2xl font-bold text-gray-800 mb-1">VIX (恐怖指数)</h4>
-                                <div class="flex items-baseline gap-4 mb-2">
-                                    <p class="text-5xl font-bold ${vixColor}">${vix.value}</p>
-                                    <p class="text-xl font-semibold ${vixColor}">${vix.change}</p>
-                                </div>
-                                <p class="mt-2 text-gray-600 text-lg leading-relaxed">${vix.summary}</p>
-                            </div>`;
-                
-                        // AAII Sentiment Survey
-                        const aaii = fundamentals.aaiiSurvey;
-                        document.getElementById('aaii-container').innerHTML = `
-                            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
-                                <h4 class="text-2xl font-bold text-gray-800 mb-1">AAII 個人投資家センチメント</h4>
-                                <p class="text-gray-500 mb-4">${aaii.date}</p>
-                                <div class="space-y-3">
-                                    <div class="flex items-center">
-                                        <span class="w-24 font-semibold text-bullish">強気</span>
-                                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bullish h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.bullish}%">${aaii.bullish}%</div></div>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <span class="w-24 font-semibold text-neutral">中立</span>
-                                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-neutral h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.neutral}%">${aaii.neutral}%</div></div>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <span class="w-24 font-semibold text-bearish">弱気</span>
-                                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bearish h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.bearish}%">${aaii.bearish}%</div></div>
-                                    </div>
-                                </div>
-                                <p class="mt-4 text-gray-600 text-lg leading-relaxed">${aaii.summary}</p>
-                            </div>
-                        `;
-                        
-                        // Investors Intelligence
-                        const ii = fundamentals.investorsIntelligence;
-                        document.getElementById('ii-container').innerHTML = `
-                            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
-                                <h4 class="text-2xl font-bold text-gray-800 mb-1">Investors Intelligence ブルベア指数</h4>
-                                 <p class="text-gray-500 mb-4">${ii.date}</p>
-                                <div class="space-y-3">
-                                    <div class="flex items-center">
-                                        <span class="w-28 font-semibold text-bullish">強気 (Bulls)</span>
-                                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bullish h-6 rounded-full text-center text-white font-bold" style="width: ${ii.bullish}%">${ii.bullish}%</div></div>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <span class="w-28 font-semibold text-bearish">弱気 (Bears)</span>
-                                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bearish h-6 rounded-full text-center text-white font-bold" style="width: ${ii.bearish}%">${ii.bearish}%</div></div>
-                                    </div>
-                                </div>
-                                 <p class="mt-4 text-gray-600 text-lg leading-relaxed">${ii.summary}</p>
-                            </div>`;
-                
-                        // 投資戦略
-                        document.getElementById('strategy-headline').textContent = data.details.strategy.headline;
-                        document.getElementById('strategy-basic').innerHTML = data.details.strategy.basic;
-                        document.getElementById('strategy-risk').innerHTML = data.details.strategy.risk;
-                
-                        // サイドバー
-                        document.getElementById('market-overview-container').innerHTML = data.marketOverview.map(market => `
-                            <div class="flex justify-between items-baseline">
-                                <div><p class="font-semibold text-xl text-gray-800">${market.name}</p><p class="text-base ${market.isDown ? 'text-red-600' : 'text-green-600'}">${market.change}</p></div>
-                                <p class="text-3xl font-bold text-gray-900">${market.value}</p>
-                            </div>`).join('');
-                
-                        document.getElementById('hot-stocks-container').innerHTML = data.hotStocks.map(stock => `
-                            <div>
-                                <div class="flex justify-between items-center mb-1"><p class="text-lg font-bold text-gray-800">${stock.name}</p><p class="text-lg font-semibold ${stock.isDown ? 'text-red-600' : 'text-green-600'}">${stock.price}</p></div>
-                                <p class="text-base text-gray-600">${stock.description}</p>
-                            </div>`).join('');
-                    }
-                
-                    // 全てのチャートを初期化・描画する関数
-                    function initializeAllCharts(data) {
-                        const FONT_SIZE_TITLE = 20, FONT_SIZE_LEGEND = 16, FONT_SIZE_AXIS = 14;
-                
-                        // 1. 市場の健全性 (ドーナツグラフ)
-                        const breadthChart = echarts.init(document.getElementById('breadthChart'));
-                        breadthChart.setOption({
-                            tooltip: { trigger: 'item' },
-                            legend: { bottom: '5%', left: 'center', textStyle: { fontSize: FONT_SIZE_LEGEND } },
-                            series: [{
-                                name: '市場の健全性', type: 'pie', radius: ['50%', '70%'], avoidLabelOverlap: false,
-                                label: { show: false, position: 'center' },
-                                emphasis: { label: { show: true, fontSize: '30', fontWeight: 'bold' } },
-                                labelLine: { show: false },
-                                data: [
-                                    { value: data.dashboard.breadth.decliners, name: '値下がり', itemStyle: { color: '#ef4444' } },
-                                    { value: data.dashboard.breadth.advancers, name: '値上がり', itemStyle: { color: '#3b82f6' } },
-                                ]
-                            }]
-                        });
-                
-                        // 2. 市場心理 (ゲージ) - CNN Fear & Greed Index
-                        const sentimentGauge = echarts.init(document.getElementById('sentimentGauge'));
-                        sentimentGauge.setOption({
-                            series: [{
-                                type: 'gauge', center: ['50%', '60%'], startAngle: 180, endAngle: 0, min: 0, max: 100, splitNumber: 10,
-                                itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [ { offset: 0, color: '#ef4444' }, { offset: 0.5, color: '#f59e0b' }, { offset: 1, color: '#10b981' }]}},
-                                progress: { show: true, width: 18 }, pointer: { show: true, length: '60%', width: 6 },
-                                axisLine: { lineStyle: { width: 18 } }, axisTick: { distance: -25, length: 7, lineStyle: { width: 1, color: '#999' } },
-                                splitLine: { distance: -30, length: 12, lineStyle: { width: 2, color: '#999' } },
-                                axisLabel: { distance: -10, color: '#999', fontSize: 16 },
-                                detail: { valueAnimation: true, fontSize: 40, fontWeight: 'bold', offsetCenter: [0, '40%'] },
-                                data: [{ value: data.dashboard.sentimentVI }]
-                            }]
-                        });
-                
-                        // 3. 寄与度チャート (横棒グラフ)
-                        new Chart(document.getElementById('contributionChart'), {
-                            type: 'bar',
-                            data: {
-                                labels: data.details.internals.chartData.labels,
-                                datasets: [{
-                                    label: '強気派の割合 (%)',
-                                    data: data.details.internals.chartData.values,
-                                    backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(16, 185, 129, 0.7)'],
-                                    borderColor: ['rgba(59, 130, 246, 1)', 'rgba(16, 185, 129, 1)'],
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-                                scales: { 
-                                    x: { 
-                                        ticks: { 
-                                            font: { size: FONT_SIZE_AXIS },
-                                            callback: function(value) { return value + '%'; }
-                                        },
-                                        max: 100
-                                    }, 
-                                    y: { ticks: { font: { size: FONT_SIZE_AXIS }}}
-                                },
-                                plugins: { 
-                                    title: { display: true, text: 'センチメントの乖離：プロ vs 個人', font: {size: 18}},
-                                    legend: { display: false },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function(context) {
-                                                return context.dataset.label + ': ' + context.formattedValue + '%';
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                
-                        // 4. テクニカルチャート (折れ線) with アドバンス・デクライン・ライン
-                        new Chart(document.getElementById('technicalChart'), {
-                            type: 'line',
-                            data: {
-                                labels: data.details.technicals.chartData.labels,
-                                datasets: [
-                                    { 
-                                        label: 'S&P 500', 
-                                        data: data.details.technicals.chartData.sp500, 
-                                        borderColor: '#1F2937', 
-                                        backgroundColor: 'rgba(31, 41, 55, 0.1)', 
-                                        fill: true, 
-                                        tension: 0.2, 
-                                        borderWidth: 2.5,
-                                        yAxisID: 'y' // 主Y軸（価格）
-                                    },
-                                    { 
-                                        label: '50日移動平均線', 
-                                        data: data.details.technicals.chartData.ma50, 
-                                        borderColor: '#f59e0b', 
-                                        borderDash: [5, 5], 
-                                        fill: false, 
-                                        pointRadius: 0, 
-                                        borderWidth: 2,
-                                        yAxisID: 'y'
-                                    },
-                                    {
-                                        label: 'アドバンス・デクライン・ライン (ADL)',
-                                        data: data.details.technicals.chartData.adl,
-                                        borderColor: '#8b5cf6', // 紫色
-                                        fill: false,
-                                        pointRadius: 2,
-                                        borderWidth: 2,
-                                        yAxisID: 'y1' // 第2Y軸（ADL）
-                                    }
-                                ]
-                            },
-                            options: {
-                                responsive: true, maintainAspectRatio: false,
-                                interaction: {
-                                    mode: 'index',
-                                    intersect: false,
-                                },
-                                scales: { 
-                                    x: { ticks: { font: { size: FONT_SIZE_AXIS }}},
-                                    y: { // 主Y軸 (左) - 価格用
-                                        type: 'linear',
-                                        display: true,
-                                        position: 'left',
-                                        ticks: { font: { size: FONT_SIZE_AXIS }}
-                                    },
-                                    y1: { // 第2Y軸 (右) - ADL用
-                                        type: 'linear',
-                                        display: true,
-                                        position: 'right',
-                                        ticks: { font: { size: FONT_SIZE_AXIS }},
-                                        grid: { // 両方の軸のグリッド線でチャートが乱雑になるのを防ぐ
-                                            drawOnChartArea: false, 
-                                        },
-                                    } 
-                                },
-                                plugins: { 
-                                    legend: { 
-                                        position: 'top', 
-                                        labels: { font: {size: FONT_SIZE_LEGEND}, padding: 15 }
-                                    },
-                                    tooltip: {
-                                        mode: 'index',
-                                        intersect: false
-                                    }
-                                }
-                            }
-                        });
-                        
-                        window.addEventListener('resize', () => {
-                            breadthChart.resize();
-                            sentimentGauge.resize();
-                        });
-                    }
-                
-                    // タブ機能を初期化する関数
-                    function initializeTabs() {
-                        const tabButtons = document.querySelectorAll('.tab-button');
-                        const tabPanels = document.querySelectorAll('.tab-panel');
-                        tabButtons.forEach(button => {
-                            button.addEventListener('click', () => {
-                                tabButtons.forEach(btn => btn.classList.remove('active'));
-                                button.classList.add('active');
-                
-                                const tabId = button.dataset.tab;
-                                tabPanels.forEach(panel => {
-                                    panel.id === tabId ? panel.classList.add('active') : panel.classList.remove('active');
-                                });
-                            });
-                        });
-                    }
-                </script>
-                </body>
-                </html>
-                text-2xl">|</span>
+            <span class="text-gray-300 text-2xl">|</span>
             <p id="date" class="text-2xl font-medium flex items-center gap-3 text-gray-700"></p>
         </div>
     </header>
@@ -849,103 +209,103 @@
 <script>
     // データオブジェクト
     const reportData = {
-      "session": "7月29日 市場分析",
-      "date": "2025年7月29日",
+      "session": "7月31日 市場分析",
+      "date": "2025年7月31日",
       "summary": {
-        "evaluation": "ホールド",
-        "score": 7,
-        "headline": "記録更新の裏に潜む亀裂：市場の健全性低下とセンチメントの乖離が示す警戒シグナル",
-        "text": "S&P 500は記録更新を続けているが、その上昇の基盤は著しく不安定化している。市場の騰落を示す内部指標（ブレッド）は悪化しており、上昇が一部の大型株にのみ依存していることを示唆している。センチメントは危険なほどに分裂しており、オプション市場では下落への備えが急増している。主要経済指標の発表を前にボラティリティが極端に低い現状は、短期トレーダーにとって極めて高いリスクを示唆するため、新規の買いは見送り、既存ポジションの利益確定とストップロスの引き上げを優先すべきである。"
+        "evaluation": "売り",
+        "score": 3,
+        "headline": "薄氷上のラリー：表面的な強気の裏に潜む深刻な脆弱性",
+        "text": "S&P 500は史上最高値圏で推移し、表面上は力強い強気相場が続いている。しかし、その内部構造は深刻な脆弱性を露呈している。市場の騰落数は悪化し、一部の大型株が指数を牽引する歪な構造が顕著である。センチメントは極端な楽観に傾き、逆張り指標としては危険水域だ。短期トレーダーは、この薄氷上のラリーに追随するリスクを最大限に警戒すべきである。"
       },
       "dashboard": {
         "breadth": {
-          "advancers": 210,
-          "decliners": 290,
-          "summary": "市場の内部は弱く、指数の上昇が一部の大型株に依存。この「ネガティブ・ダイバージェンス」は上昇トレンドの脆弱性の兆候です。"
+          "advancers": 1850,
+          "decliners": 3150,
+          "summary": "値下がり銘柄数が大幅に上回り、市場の広がりが著しく悪化していることを示す重大な警告シグナル。"
         },
         "sentimentVI": 74,
-        "sentimentVISummary": "指数は「強欲（Greed）」の領域にあり、市場の楽観が行き過ぎている可能性を示唆。逆張りの売りシグナルとなることがあります。",
+        "sentimentVISummary": "市場参加者の高い自己満足と楽観を示唆。しばしば市場の天井圏で観測される逆張りの売りシグナル。",
         "priceLevels": {
           "resistance": {
-            "value": "$6,500",
-            "description": "心理的な節目であり、エリオット波動分析などに基づく次の目標水準。ここを明確に超えるには、ポジティブなサプライズを伴う強い買い材料が必要です。"
+            "value": "$6,410",
+            "description": "直近の史上最高値水準であり、心理的な節目として強い上値抵抗線として機能する可能性が高い。"
           },
           "support": {
-            "value": "$6,372",
-            "description": "直近の押し目買いが入ったプルバック・サポート水準であり、38.2%フィボナッチ・リトレースメントとも重なる重要な短期的な防衛ラインです。"
+            "value": "$6,300",
+            "description": "心理的な大台であり、短期的な押し目買いの目処となりうる主要な下値支持線。"
           }
         },
         "putCallRatio": {
-          "dailyValue": "0.72",
-          "movingAverage": "0.55",
-          "status": "自己満足からの転換シグナル",
-          "summary": "日次レシオが移動平均を大幅に上回って急騰。価格上昇にもかかわらず、投資家が積極的に下落ヘッジ（プット買い）を行っており、警戒感の高まりを反映しています。"
+          "dailyValue": "0.59",
+          "movingAverage": "---",
+          "status": "自己満足シグナル",
+          "summary": "投資家が下落リスクをヘッジせず、上昇への投機に過度に傾いている状態。反転リスクを内包。"
         }
       },
       "details": {
         "internals": {
-          "headline": "プロの楽観、個人の警戒、オプション市場の恐怖：センチメントの三重乖離が示す市場の脆弱性",
-          "text": "現在の市場センチメントは、一枚岩の楽観や悲観では語れない、極めて複雑で矛盾した状況を呈している。この乖離を理解することは、短期的なリスクを把握する上で不可欠である。CNN Fear & Greed Indexは74という「強欲（Greed）」の領域にあるが、これは個人投資家の動向とは全く一致しない。米国個人投資家協会（AAII）調査では弱気派が平均を上回る一方、プロのニュースレター執筆者を対象としたInvestors Intelligence（II）調査では強気派が高い水準を維持しており、明確な乖離が見られる。このパズルを解く鍵はオプション市場にあり、プット・コール・レシオの急騰は、市場の深層心理に潜む恐怖を浮き彫りにしている。",
+          "headline": "歪な市場構造：一部の大型株が指数を牽引",
+          "text": "現在の市場は、ごく一部の巨大テック企業が指数を押し上げているだけで、市場全体の健全性はむしろ悪化しています。このチャートは、主要な大型株の騰落率を示しており、少数の銘柄がプラスに寄与する一方で、多くの銘柄がマイナスとなっている歪な構造を視覚化しています。",
           "chartData": {
-            "labels": ['Investors Intelligence (プロ)', 'AAII (個人)'],
-            "values": [52.0, 36.8]
+            "labels": ['NVIDIA', 'Microsoft', 'Broadcom', 'Eli Lilly', 'Caterpillar', 'UnitedHealth'],
+            "values": [1.8, 1.2, 0.9, -0.5, -1.1, -1.6]
           }
         },
         "technicals": {
-          "headline": "史上最高値の裏に潜む脆弱性：価格と市場の内部（ブレッド）の深刻なダイバージェンス",
-          "text": "テクニカル分析の観点から見ると、S&P 500は力強い上昇トレンドの只中にある。しかし、その価格上昇の内実は極めて脆弱である。最も懸念すべきは、価格と市場の健全性（ブレッド）との間に生じている深刻な「ネガティブ・ダイバージェンス」である。S&P 500指数が新高値を更新しているにもかかわらず、アドバンス・デクライン・ライン（A/Dライン）は追随できずに低下傾向にある。これは、指数の上昇がごく一部の巨大ハイテク株によって牽引されているだけで、大多数の銘柄は上昇していないことを意味する。このような狭いリーダーシップに依存したラリーは、歴史的に見て持続可能性が低く、市場全体が急落するリスクを内包している。",
+          "headline": "価格と内部指標の不協和音：弱気のダイバージェンスが警告するトレンド転換",
+          "text": "S&P 500の価格は史上最高値圏で推移する一方、市場の広がりを示すアドバンス・デクライン・ライン（ADL）は低下傾向にあります。この「弱気のダイバージェンス」は、一部の大型株が指数を牽引しているだけで、市場の大部分は既に弱含んでいることを示唆する典型的な天井のサインです。RSIやMACDといったモメンタム指標も勢いの鈍化を示しており、現在の上昇トレンドが持続不可能であることを強く警告しています。",
           "chartData": {
-            "labels": ["2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25", "2025-07-28"],
-            "sp500": [6309.62, 6358.91, 6363.35, 6388.64, 6389.77],
-            "ma50": [6245.50, 6250.10, 6255.40, 6261.20, 6266.80],
-            "adl": [35210, 35250, 35230, 35180, 35150]
+            "labels": ["2025-07-24", "2025-07-25", "2025-07-28", "2025-07-29", "2025-07-30"],
+            "sp500": [6363.35, 6388.64, 6389.77, 6370.86, 6362.90],
+            "ma50": [6105.50, 6116.20, 6127.00, 6138.00, 6149.00],
+            "adl": [45320, 45100, 44850, 44500, 44200]
           }
         },
         "fundamentals": {
-          "headline": "嵐の前の静けさ：低VIXが隠す、FRBと重要経済指標発表前のイベントリスク",
-          "text": "現在の市場心理を理解する上で最も重要な要素は、「極端な自己満足」と「目前に迫った高インパクトなイベントリスク」の危険な組み合わせである。VIX指数は極めて低い水準にあり、市場参加者が将来の大きな価格変動を想定していないことを示している。しかし、今週はFOMC、GDP、雇用統計と重要イベントが目白押しであり、この静けさは嵐の前の静けさと解釈すべきである。ネガティブなサプライズが発生した場合、ボラティリティが爆発的に増大する非対称なリスク構造となっている。",
+          "headline": "債券市場の警告と市場の自己満足：ファンダメンタルズとの乖離",
+          "text": "株式市場が楽観（低VIX）に沸く一方で、債券市場は将来の景気後退を警告（逆イールド）しています。この二つの市場間の認識のズレは極めて不安定な状態です。株式市場のセンチメントは移ろいやすいですが、経済のファンダメンタルズを示す債券市場の警告は、より重く受け止めるべきシグナルです。",
           "vix": {
-              "value": 14.93,
-              "change": "-0.46",
+              "value": 15.98,
+              "change": "+0.95",
               "status": "自己満足",
-              "summary": "VIXは歴史的な低水準にあり、市場の極端な自己満足（ complacency）を示している。これは、FRBの政策発表や重要経済指標といったイベントリスクを過小評価しており、予期せぬショックに対して脆弱な状態である。"
+              "summary": "VIXは依然として歴史的な低水準にあり、市場の恐怖心は極めて低い。相場が反転した際には下落が増幅されるリスクを示唆する。"
           },
           "aaiiSurvey": {
-            "date": "2025年7月23日調査",
-            "bullish": 36.8,
-            "neutral": 29.2,
-            "bearish": 34.0,
-            "summary": "個人投資家の楽観論は後退し、歴史的平均を下回っている。市場の上昇に一般大衆が追随していないことは、ラリーの健全性に対する疑問を投げかける。"
+            "date": "2025年7月30日週",
+            "bullish": 40.3,
+            "neutral": 26.7,
+            "bearish": 33.0,
+            "summary": "個人投資家はやや強気に傾いているが、歴史的な平均から大きく乖離しているわけではない。熱狂的な状態ではなく、センチメントは中立に近い楽観と言える。"
           },
           "investorsIntelligence": {
-              "date": "2025年7月28日調査",
-              "bullish": 52.0,
-              "bearish": 22.0,
-              "correction": 26.0,
-              "summary": "プロの投資アドバイザーは依然として強気だが、過去の天井圏で見られた60%超の極端な楽観には至っていない。個人投資家とのセンチメントの乖離が顕著である。"
+              "date": "2025年7月29日調査",
+              "bullish": 60.8,
+              "bearish": 21.7,
+              "correction": 17.5,
+              "summary": "ニュースレター執筆者（プロ）のセンチメントは60%を超え、極端な楽観を示している。これは逆張り指標として非常に強力な売りシグナル。"
           },
           "points": [
-            "市場は、FRBの政策決定、GDP、雇用統計という3つの主要なイベントリスクを前に、極度の自己満足状態にある。",
-            "歴史的に割高なバリュエーションは、金利や経済成長見通しの変化に対して市場を非常に敏感にしている。",
-            "低いVIXと高いイベントリスクの組み合わせは、ネガティブサプライズに対する非対称な下落リスクを生み出している。"
+            "株式市場の楽観（低VIX）と債券市場の悲観（逆イールド）が著しく乖離しており、不安定な状態にある。",
+            "プロの投資アドバイザーのセンチメントが極端な楽観に達しており、逆張りトレーダーにとっては絶好の売りシグナルとなっている。",
+            "市場の内部構造（騰落数、ADL）は、主要指数の上昇とは裏腹に悪化の一途をたどっており、ラリーの脆弱性を示している。"
           ]
         },
         "strategy": {
-          "headline": "慎重さが利益を守る：キャピタル・プリザベーションと選択的行動の時",
-          "basic": "現在の市場環境は、積極的なリスクテイクよりも、利益の確保と資本の保全（キャピタル・プリザベーション）を最優先すべき局面である。「ホールド」は、新規に買い向かうべきではないという戦術的な中立姿勢を意味する。既存のロングポジションに対しては、ストップロス注文を直近のサポートレベルである6,372ポイントまで積極的に引き上げるべきである。また、大きな含み益が出ているポジションについては、一部を利益確定し、リスクエクスポージャーを引き下げることが賢明である。",
-          "risk": "この戦略における最大のリスクは、FRBのタカ派的な声明や予想外に弱い経済指標の発表を受けて、市場が「ギャップダウン」することである。このリスクをヘッジする最善の方法は、イベント発生前にポジションサイズを減らしておくことである。本戦略が無効になる転換点は、S&P 500がサポートレベルである6,372ポイントを終値で明確に下回ることである。その場合、残りのロングポジションを決済し、戦術的なショートを検討すべきである。"
+          "headline": "逆張りの好機：リスク管理を徹底したショート戦略の構築",
+          "basic": "複数の警告シグナルは、現在が新規買いにはリスク・リワードが悪い局面であることを示唆。むしろ慎重な逆張りのショート（売り）ポジション構築の好機と捉えるべきである。<br><br>**エントリー**: 6,380〜6,410のレジスタンスゾーンへの反発時。<br>**損切り**: 6,430の終値ベースでのブレイク。<br>**利益確定**: 第一目標6,300、第二目標6,150。",
+          "risk": "最大のリスクは、投機的な勢いが予想以上に持続し、損切りラインに達すること。市場は長期間、非合理的な動きをすることがある。損切りラインを超えた場合は速やかにポジションを解消し、見立てを再評価する。内部指標の裏付けを伴わないブレイクアウトに固執すべきではない。"
         }
       },
       "marketOverview": [
-        { "name": "S&P 500 (7/28終値)", "value": "6,389.77", "change": "+1.13 (+0.02%)", "isDown": false },
-        { "name": "Nasdaq-100", "value": "21,542.10", "change": "+25.50 (+0.12%)", "isDown": false },
-        { "name": "VIX指数", "value": "14.93", "change": "-0.46 (-3.00%)", "isDown": true },
-        { "name": "米国10年債利回り", "value": "4.42%", "change": "+0.02%", "isDown": false }
+        { "name": "S&P 500 (7/30終値)", "value": "6,362.90", "change": "-7.96 (-0.12%)", "isDown": true },
+        { "name": "Nasdaq-100 (概算)", "value": "19,855.20", "change": "-25.80 (-0.13%)", "isDown": true },
+        { "name": "VIX指数", "value": "15.98", "change": "+0.95 (+6.32%)", "isDown": false },
+        { "name": "米国10年債利回り", "value": "1.91%", "change": "-0.02%", "isDown": true }
       ],
       "hotStocks": [
-        { "name": "NVIDIA (NVDA)", "price": "主な値上がり銘柄", "description": "巨大テック企業として指数を牽引。市場のリーダーシップを担う。", "isDown": false },
-        { "name": "Microsoft (MSFT)", "price": "主な値上がり銘柄", "description": "安定した業績を背景に、狭いリーダーシップの一角を占める。", "isDown": false },
-        { "name": "NextEra Energy (NEE)", "price": "主な値下がり銘柄", "description": "市場全体の弱さを反映し、公益セクターは軟調な展開。", "isDown": true }
+        { "name": "NVIDIA (NVDA)", "price": "+1.8%", "description": "AI関連の強い需要を背景に、市場全体が軟調な中でも指数を牽引。", "isDown": false },
+        { "name": "Microsoft (MSFT)", "price": "+1.2%", "description": "安定した収益基盤とクラウド事業の成長期待から、ディフェンシブな大型株として買われる。", "isDown": false },
+        { "name": "Caterpillar (CAT)", "price": "-1.1%", "description": "世界経済の減速懸念から売られ、市場の広がりがないことを示す一例。", "isDown": true }
       ]
     };
 
@@ -966,13 +326,7 @@
         const summaryEval = document.getElementById('summary-evaluation');
         summaryEval.textContent = data.summary.evaluation;
         summaryEval.className = 'text-7xl md:text-9xl font-bold';
-        if (data.summary.evaluation === '売り') {
-            summaryEval.classList.add('text-red-600');
-        } else if (data.summary.evaluation === '買い') {
-            summaryEval.classList.add('text-blue-600');
-        } else {
-            summaryEval.classList.add('text-yellow-500');
-        }
+        summaryEval.classList.add(data.summary.evaluation === '売り' ? 'text-red-600' : 'text-blue-600');
         
         document.getElementById('summary-score').innerHTML = `${data.summary.score}<span class="text-4xl text-gray-500">/10</span>`;
         document.getElementById('summary-stars').innerHTML = Array.from({ length: 10 }, (_, i) => i < data.summary.score ? '<span>★</span>' : '<span class="text-gray-300">★</span>').join('');
@@ -988,7 +342,6 @@
         document.getElementById('support-desc').textContent = data.dashboard.priceLevels.support.description;
         
         const pcRatio = data.dashboard.putCallRatio;
-        const pcRatioStatusColor = pcRatio.status.includes('シグナル') ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800';
         document.getElementById('put-call-ratio-container').innerHTML = `
             <div class="flex items-end justify-center gap-4">
                 <p class="text-8xl font-bold text-gray-800">${pcRatio.dailyValue}</p>
@@ -997,7 +350,7 @@
                      <p class="text-xl font-bold text-gray-700">${pcRatio.movingAverage} <span class="text-base font-medium text-gray-500">(21日移動平均)</span></p>
                 </div>
             </div>
-            <p class="mt-5 px-6 py-2 inline-block ${pcRatioStatusColor} rounded-full text-lg font-semibold">${pcRatio.status}</p>`;
+            <p class="mt-5 px-6 py-2 inline-block bg-red-100 text-red-800 rounded-full text-lg font-semibold">${pcRatio.status}</p>`;
         document.getElementById('put-call-ratio-summary').textContent = pcRatio.summary;
         
         // 詳細分析タブ
@@ -1014,13 +367,12 @@
 
         // VIX
         const vix = fundamentals.vix;
-        const vixColor = vix.change.startsWith('+') ? 'text-red-600' : 'text-green-600';
         document.getElementById('vix-container').innerHTML = `
             <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
                 <h4 class="text-2xl font-bold text-gray-800 mb-1">VIX (恐怖指数)</h4>
                 <div class="flex items-baseline gap-4 mb-2">
-                    <p class="text-5xl font-bold ${vixColor}">${vix.value}</p>
-                    <p class="text-xl font-semibold ${vixColor}">${vix.change}</p>
+                    <p class="text-5xl font-bold text-green-600">${vix.value}</p>
+                    <p class="text-xl font-semibold text-green-600">${vix.change}</p>
                 </div>
                 <p class="mt-2 text-gray-600 text-lg leading-relaxed">${vix.summary}</p>
             </div>`;
@@ -1129,10 +481,10 @@
             data: {
                 labels: data.details.internals.chartData.labels,
                 datasets: [{
-                    label: '強気派の割合 (%)',
+                    label: '騰落率 (%)',
                     data: data.details.internals.chartData.values,
-                    backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(16, 185, 129, 0.7)'],
-                    borderColor: ['rgba(59, 130, 246, 1)', 'rgba(16, 185, 129, 1)'],
+                    backgroundColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 0.7)' : 'rgba(16, 185, 129, 0.7)',
+                    borderColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(16, 185, 129, 1)',
                     borderWidth: 1
                 }]
             },
@@ -1143,13 +495,11 @@
                         ticks: { 
                             font: { size: FONT_SIZE_AXIS },
                             callback: function(value) { return value + '%'; }
-                        },
-                        max: 100
+                        }
                     }, 
                     y: { ticks: { font: { size: FONT_SIZE_AXIS }}}
                 },
                 plugins: { 
-                    title: { display: true, text: 'センチメントの乖離：プロ vs 個人', font: {size: 18}},
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
@@ -1258,51 +608,6 @@
             });
         });
     }
-
-    // Mobile menu functionality
-    function initializeMobileMenu() {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const menuIcon = mobileMenuButton.querySelector('i');
-        
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                const isHidden = mobileMenu.classList.contains('hidden');
-                
-                if (isHidden) {
-                    // メニューを開く
-                    mobileMenu.classList.remove('hidden');
-                    menuIcon.className = 'ri-close-line ri-lg';
-                } else {
-                    // メニューを閉じる
-                    mobileMenu.classList.add('hidden');
-                    menuIcon.className = 'ri-menu-line ri-lg';
-                }
-            });
-            
-            // メニューリンクをクリックしたときにメニューを閉じる
-            const menuLinks = mobileMenu.querySelectorAll('a');
-            menuLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileMenu.classList.add('hidden');
-                    menuIcon.className = 'ri-menu-line ri-lg';
-                });
-            });
-            
-            // メニュー外をクリックしたときにメニューを閉じる
-            document.addEventListener('click', function(event) {
-                if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
-                    mobileMenu.classList.add('hidden');
-                    menuIcon.className = 'ri-menu-line ri-lg';
-                }
-            });
-        }
-    }
-
-    // Initialize mobile menu when the page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeMobileMenu();
-    });
 </script>
 </body>
 </html>
