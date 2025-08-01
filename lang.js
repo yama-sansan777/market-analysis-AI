@@ -1645,7 +1645,25 @@ function switchLanguage(lang) {
 }
 
 // Initialize language system
-function initLanguage() {
+async function initLanguage() {
+    console.log('🚀 Initializing language system...');
+    
+    // 外部翻訳システムの初期化を試行（オプショナル）
+    if (window.loadExternalTranslations) {
+        try {
+            console.log('🔄 Attempting to load external translations...');
+            const externalLoaded = await window.loadExternalTranslations();
+            if (externalLoaded) {
+                console.log('✅ External translation system activated');
+                window.externalTranslationLoader.setCurrentLang(currentLang);
+            } else {
+                console.log('🔄 Using embedded translation system');
+            }
+        } catch (error) {
+            console.warn('⚠️ External translation initialization failed, using embedded system:', error);
+        }
+    }
+    
     // ヘッダー内の言語切り替えボタンが存在する場合は、それを使用
     const headerSwitcher = document.getElementById('header-lang-switcher');
     if (headerSwitcher) {
@@ -1675,8 +1693,17 @@ function initLanguage() {
     switchLanguage(currentLang);
 }
 
-// Get translation function
+// Get translation function (拡張版：外部翻訳システム対応)
 function getTranslation(key, lang = currentLang) {
+    // 外部翻訳システムが利用可能な場合は優先
+    if (window.externalTranslationLoader && window.externalTranslationLoader.isAvailable()) {
+        const externalTranslation = window.externalTranslationLoader.getTranslation(key, lang);
+        if (externalTranslation !== key) {
+            return externalTranslation;
+        }
+    }
+    
+    // フォールバック: 既存の埋め込み翻訳
     return translations[lang][key] || key;
 }
 
