@@ -1,205 +1,205 @@
 {
-  "date": "2025年7月31日",
-  "session": "7月31日 市場分析",
+  "date": "2025年8月1日",
+  "session": "8月1日 市場分析",
   "languages": {
     "ja": {
-      "session": "7月31日 市場分析",
-      "date": "2025年7月31日",
+      "session": "8月1日 市場分析",
+      "date": "2025年8月1日",
       "summary": {
         "evaluation": "売り",
         "score": 3,
-        "headline": "薄氷上のラリー：表面的な強気の裏に潜む深刻な脆弱性",
-        "text": "S&P 500は史上最高値圏で推移し、表面上は力強い強気相場が続いている。しかし、その内部構造は深刻な脆弱性を露呈している。市場の騰落数は悪化し、一部の大型株が指数を牽引する歪な構造が顕著である。センチメントは極端な楽観に傾き、逆張り指標としては危険水域だ。短期トレーダーは、この薄氷上のラリーに追随するリスクを最大限に警戒すべきである。"
+        "headline": "高値圏の蜃気楼：内部崩壊の兆候が顕著に",
+        "text": "S&P 500指数は史上最高値圏で推移しているが、その強さは見せかけに過ぎない。市場の内部構造を見ると、騰落銘柄数は大幅なマイナス圏にあり、アドバンス・デクライン・ラインとの深刻なダイバージェンスが発生している。これは、ごく一部の大型株が指数を牽引しているだけで、市場全体の健全性が著しく悪化していることを示唆する。センチメント面では、個人投資家の楽観とは裏腹に、プロの投資家はヘッジを急増させており、危険な乖離が生じている。短期トレーダーは、急落リスクが極めて高いことを認識すべきである。"
       },
       "dashboard": {
         "breadth": {
-          "advancers": 1850,
-          "decliners": 3150,
-          "summary": "値下がり銘柄数が大幅に上回り、市場の広がりが著しく悪化していることを示す重大な警告シグナル。"
+          "advancers": 1961,
+          "decliners": 3039,
+          "summary": "指数が高値圏にあるにもかかわらず、市場参加銘柄の大多数が下落しており、市場の内部的な健全性が極めて悪い状態にあることを示す警告シグナルである。"
         },
-        "sentimentVI": 74,
-        "sentimentVISummary": "市場参加者の高い自己満足と楽観を示唆。しばしば市場の天井圏で観測される逆張りの売りシグナル。",
+        "sentimentVI": 62.5,
+        "sentimentVISummary": "インデックスは依然として「Greed（強欲）」の領域にあるが、直近から低下。市場参加者の自己満足的な心理が依然として残存しているものの、足元で警戒感が芽生え始めていることを示唆する。",
         "priceLevels": {
           "resistance": {
-            "value": "$6,410",
-            "description": "直近の史上最高値水準であり、心理的な節目として強い上値抵抗線として機能する可能性が高い。"
+            "value": "6,427",
+            "description": "直近の日中史上最高値。この水準を明確に上抜けできない場合、下落トレンドへの転換点となる可能性が高い。"
           },
           "support": {
-            "value": "$6,300",
-            "description": "心理的な大台であり、短期的な押し目買いの目処となりうる主要な下値支持線。"
+            "value": "6,124",
+            "description": "重要な50日移動平均線。この水準を割り込むと、アルゴリズム取引による売りが加速する可能性が高い。"
           }
         },
         "putCallRatio": {
-          "dailyValue": "0.59",
-          "movingAverage": "0.68",
-          "status": "自己満足シグナル",
-          "summary": "投資家が下落リスクをヘッジせず、上昇への投機に過度に傾いている状態。反転リスクを内包。"
+          "dailyValue": "0.84",
+          "movingAverage": "0.59",
+          "status": "恐怖への急変",
+          "summary": "オプション市場の参加者が急激にプット（下落に備える権利）の購入を増やしたことを意味し、市場のセンチメントが楽観から恐怖へと急旋回した強力な証拠である。"
         }
       },
       "details": {
         "internals": {
-          "headline": "歪な市場構造：一部の大型株が指数を牽引",
-          "text": "現在の市場は、ごく一部の巨大テック企業が指数を押し上げているだけで、市場全体の健全性はむしろ悪化しています。このチャートは、主要な大型株の騰落率を示しており、少数の銘柄がプラスに寄与する一方で、多くの銘柄がマイナスとなっている歪な構造を視覚化しています。",
+          "headline": "プロの警戒と個人の楽観：危険なセンチメントの乖離",
+          "text": "現在の市場は、投資家層の間でセンチメントが著しく乖離するという、典型的な天井圏の兆候を示している。個人投資家が楽観に浸る一方で、いわゆる「スマートマネー」が静かに下落に備えているこの構図は、市場が非常に危険な状態にあることを物語っている。",
           "chartData": {
-            "labels": ["NVIDIA", "Microsoft", "Broadcom", "Eli Lilly", "Caterpillar", "UnitedHealth"],
-            "values": [1.8, 1.2, 0.9, -0.5, -1.1, -1.6]
+            "labels": ["AAPL", "MSFT", "NVDA", "GOOGL", "XOM", "JNJ"],
+            "values": [0.2, 0.1, -0.5, -0.8, -1.5, -1.2]
           }
         },
         "technicals": {
-          "headline": "価格と内部指標の不協和音：弱気のダイバージェンスが警告するトレンド転換",
-          "text": "S&P 500の価格は史上最高値圏で推移する一方、市場の広がりを示すアドバンス・デクライン・ライン（ADL）は低下傾向にあります。この「弱気のダイバージェンス」は、一部の大型株が指数を牽引しているだけで、市場の大部分は既に弱含んでいることを示唆する典型的な天井のサインです。RSIやMACDといったモメンタム指標も勢いの鈍化を示しており、現在の上昇トレンドが持続不可能であることを強く警告しています。",
+          "headline": "見せかけの上昇：A/Dラインとの深刻なネガティブ・ダイバージェンス",
+          "text": "S&P 500指数は史上最高値を更新したが、市場の広がりを示すアドバンス・デクライン・ライン（A/Dライン）は長期的な下落トレンドを形成している。この内部的な弱さは、現在のラリーが持続不可能であり、大規模な市場の天井形成期に見られる典型的な現象であることを示している。",
           "chartData": {
-            "labels": ["2025-07-24", "2025-07-25", "2025-07-28", "2025-07-29", "2025-07-30"],
-            "sp500": [6363.35, 6388.64, 6389.77, 6370.86, 6362.90],
-            "ma50": [6105.50, 6116.20, 6127.00, 6138.00, 6149.00],
-            "adl": [45320, 45100, 44850, 44500, 44200]
+            "labels": ["2025-07-25", "2025-07-28", "2025-07-29", "2025-07-30", "2025-07-31"],
+            "sp500": [6388.64, 6389.77, 6370.86, 6362.90, 6339.39],
+            "ma50": [6110.50, 6115.20, 6120.10, 6122.40, 6123.72],
+            "adl": [15200, 15150, 15000, 14850, 14700]
           }
         },
         "fundamentals": {
-          "headline": "債券市場の警告と市場の自己満足：ファンダメンタルズとの乖離",
-          "text": "株式市場が楽観（低VIX）に沸く一方で、債券市場は将来の景気後退を警告（逆イールド）しています。この二つの市場間の認識のズレは極めて不安定な状態です。株式市場のセンチメントは移ろいやすいですが、経済のファンダメンタルズを示す債券市場の警告は、より重く受け止めるべきシグナルです。",
+          "headline": "見かけ倒しのGDPと高止まりする金利：マクロ環境の逆風",
+          "text": "マクロ経済のファンダメンタルズも、見た目ほど株式市場を支えるものではない。見かけ上強いGDP成長率と根強いインフレという組み合わせは、FRBの金融政策の手足を縛り、市場の伝統的なセーフティネットであった「FRBプット」は事実上機能不全に陥っている。",
           "vix": {
-            "value": 15.98,
-            "change": "+0.95",
-            "status": "自己満足",
-            "summary": "VIXは依然として歴史的な低水準にあり、市場の恐怖心は極めて低い。相場が反転した際には下落が増幅されるリスクを示唆する。"
+            "value": 18.30,
+            "change": "+1.91%",
+            "status": "上昇中",
+            "summary": "VIX指数は上昇しているものの、まだパニック的な水準ではない。これは真のセリングクライマックスを迎えるまでには、株価がさらに下落する余地が残されていることを意味する。"
           },
           "aaiiSurvey": {
-            "date": "2025年7月30日週",
+            "date": "2025年7月30日終了週",
             "bullish": 40.3,
             "neutral": 26.7,
             "bearish": 33.0,
-            "summary": "個人投資家はやや強気に傾いているが、歴史的な平均から大きく乖離しているわけではない。熱狂的な状態ではなく、センチメントは中立に近い楽観と言える。"
+            "summary": "個人投資家は直近の高値を追い、より強気になっている。これは典型的な逆張りの売りシグナルである。"
           },
           "investorsIntelligence": {
-            "date": "2025年7月29日調査",
-            "bullish": 60.8,
-            "bearish": 21.7,
-            "correction": 17.5,
-            "summary": "ニュースレター執筆者（プロ）のセンチメントは60%を超え、極端な楽観を示している。これは逆張り指標として非常に強力な売りシグナル。"
+            "date": "2025年7月30日の週",
+            "bullish": 57.4,
+            "bearish": 21.9,
+            "correction": 20.7,
+            "summary": "ブルベア比率が2.62と、プロのニュースレター執筆者の間では「理不尽な熱狂」は見られない。個人投資家と比較して相対的に慎重なこの姿勢は、重要な警告である。"
           },
           "points": [
-            "株式市場の楽観（低VIX）と債券市場の悲観（逆イールド）が著しく乖離しており、不安定な状態にある。",
-            "プロの投資アドバイザーのセンチメントが極端な楽観に達しており、逆張りトレーダーにとっては絶好の売りシグナルとなっている。",
-            "市場の内部構造（騰落数、ADL）は、主要指数の上昇とは裏腹に悪化の一途をたどっており、ラリーの脆弱性を示している。"
+            "第2四半期の好調なGDPは輸入の急減による統計上の歪みであり、国内需要の弱さを覆い隠している。",
+            "根強いインフレ（PCE）と高い国債利回りはFRBの利下げを妨げ、市場の重要な支えを奪っている。",
+            "市場の基盤は崩れつつある。市場の広がり（A/Dライン）における深刻なネガティブ・ダイバージェンスと、センチメントの明確な乖離は、差し迫った下落を示唆している。"
           ]
         },
         "strategy": {
-          "headline": "逆張りの好機：リスク管理を徹底したショート戦略の構築",
-          "basic": "複数の警告シグナルは、現在が新規買いにはリスク・リワードが悪い局面であることを示唆。むしろ慎重な逆張りのショート（売り）ポジション構築の好機と捉えるべきである。エントリー: 6,380〜6,410のレジスタンスゾーンへの反発時。損切り: 6,430の終値ベースでのブレイク。利益確定: 第一目標6,300、第二目標6,150。",
-          "risk": "最大のリスクは、投機的な勢いが予想以上に持続し、損切りラインに達すること。市場は長期間、非合理的な動きをすることがある。損切りラインを超えた場合は速やかにポジションを解消し、見立てを再評価する。内部指標の裏付けを伴わないブレイクアウトに固執すべきではない。"
+          "headline": "ショート戦略を推奨：重要なサポート水準の攻防に注目",
+          "basic": "基本戦略として、S&P 500に対する戦術的なショート（売り）ポジションの構築を推奨する。エントリーのタイミングとしては、6,380～6,400ポイントでの弱い反発の失敗、もしくは50日移動平均線（約6,124）を明確に下抜けた時点が考えられる。",
+          "risk": "このショート戦略に対する最大のリスクは、AI関連の物語が内部指標の悪化をものともせずに相場を押し上げ続けることである。明確な損切りラインは、日足終値ベースで史上最高値である6,427ポイントを上回った水準に設定すべきである。"
         }
       },
       "marketOverview": [
-        { "name": "S&P 500 (7/30終値)", "value": "6,362.90", "change": "-7.96 (-0.12%)", "isDown": true },
-        { "name": "Nasdaq-100 (概算)", "value": "19,855.20", "change": "-25.80 (-0.13%)", "isDown": true },
-        { "name": "VIX指数", "value": "15.98", "change": "+0.95 (+6.32%)", "isDown": false },
-        { "name": "米国10年債利回り", "value": "4.32%", "change": "-0.02%", "isDown": true }
+        { "name": "S&P 500 (7/31終値)", "value": "6,339.39", "change": "-23.51 (-0.37%)", "isDown": true },
+        { "name": "Nasdaq-100 (代表値)", "value": "18,550.10", "change": "-80.20 (-0.43%)", "isDown": true },
+        { "name": "VIX指数", "value": "18.30", "change": "+0.34 (+1.91%)", "isDown": false },
+        { "name": "米国10年債利回り", "value": "4.39%", "change": "+0.02%", "isDown": false }
       ],
       "hotStocks": [
-        { "name": "NVIDIA (NVDA)", "price": "+1.8%", "description": "AI関連の強い需要を背景に、市場全体が軟調な中でも指数を牽引。", "isDown": false },
-        { "name": "Microsoft (MSFT)", "price": "+1.2%", "description": "安定した収益基盤とクラウド事業の成長期待から、ディフェンシブな大型株として買われる。", "isDown": false },
-        { "name": "Caterpillar (CAT)", "price": "-1.1%", "description": "世界経済の減速懸念から売られ、市場の広がりがないことを示す一例。", "isDown": true }
+        { "name": "Mega-Caps (e.g. MSFT, AAPL)", "price": "指数を牽引", "description": "ごく一部の巨大ハイテク株が指数を吊り上げ、市場の実態を覆い隠している。", "isDown": false },
+        { "name": "Broad Market (e.g. IWM)", "price": "下落基調", "description": "市場の大多数を占める中小型株は下落しており、内部的な弱さが深刻。", "isDown": true },
+        { "name": "Energy Sector (e.g. XOM)", "price": "減益見込み", "description": "8月1日の決算発表が予定されており、市場全体の収益見通しの重しとなっている。", "isDown": true }
       ]
     },
     "en": {
-      "session": "July 31st Market Analysis",
-      "date": "July 31, 2025",
+      "session": "August 1st Market Analysis",
+      "date": "August 1, 2025",
       "summary": {
         "evaluation": "Sell",
         "score": 3,
-        "headline": "Rally on Thin Ice: Serious Vulnerabilities Behind Surface Bullishness",
-        "text": "The S&P 500 continues to trade in record-high territory, with surface appearances suggesting a strong bull market continues. However, its internal structure reveals serious vulnerabilities. Market breadth deterioration and distorted structure where only a few large-cap stocks drive the index are prominent. Sentiment has tilted to extreme optimism, which is dangerous territory for contrarian indicators. Short-term traders should exercise maximum caution against the risks of following this rally on thin ice."
+        "headline": "Mirage at High Levels: Signs of Internal Collapse Are Prominent",
+        "text": "The S&P 500 index continues to trade near all-time highs, but this strength is merely superficial. Looking at the market's internal structure, advance-decline numbers are significantly in negative territory, with serious divergence from the Advance-Decline Line. This suggests that only a few large-cap stocks are driving the index while overall market health has deteriorated markedly. On the sentiment front, while individual investors remain optimistic, professional investors are rapidly increasing hedges, creating a dangerous divergence. Short-term traders should recognize that downside risk is extremely high."
       },
       "dashboard": {
         "breadth": {
-          "advancers": 1850,
-          "decliners": 3150,
-          "summary": "Declining stocks significantly outnumber advancing ones, indicating a critical warning signal of severely deteriorating market breadth."
+          "advancers": 1961,
+          "decliners": 3039,
+          "summary": "Despite the index being at high levels, the majority of market participants are declining, indicating a warning signal that the market's internal health is in an extremely poor state."
         },
-        "sentimentVI": 74,
-        "sentimentVISummary": "Suggests high complacency and optimism among market participants. A contrarian sell signal often observed near market tops.",
+        "sentimentVI": 62.5,
+        "sentimentVISummary": "The index remains in 'Greed' territory but has declined recently. While market participants' complacent psychology persists, it suggests that caution is beginning to emerge at current levels.",
         "priceLevels": {
           "resistance": {
-            "value": "$6,410",
-            "description": "Recent all-time high level that is likely to function as strong resistance due to its psychological significance."
+            "value": "6,427",
+            "description": "Recent intraday all-time high. If unable to clearly break above this level, it could become a turning point toward a downtrend."
           },
           "support": {
-            "value": "$6,300",
-            "description": "Psychological major level that could serve as a key support line for short-term dip buying."
+            "value": "6,124",
+            "description": "Important 50-day moving average. Breaking below this level could accelerate algorithmic selling."
           }
         },
         "putCallRatio": {
-          "dailyValue": "0.59",
-          "movingAverage": "0.68",
-          "status": "Complacency Signal",
-          "summary": "Investors are not hedging downside risk and are excessively tilted toward upside speculation. Contains reversal risk."
+          "dailyValue": "0.84",
+          "movingAverage": "0.59",
+          "status": "Sudden Shift to Fear",
+          "summary": "Options market participants have rapidly increased put (downside protection) purchases, powerful evidence that market sentiment has suddenly pivoted from optimism to fear."
         }
       },
       "details": {
         "internals": {
-          "headline": "Distorted Market Structure: A Few Large-Caps Drive the Index",
-          "text": "The current market is merely being pushed up by a very few giant tech companies, while overall market health is actually deteriorating. This chart shows the performance of major large-cap stocks, visualizing the distorted structure where a small number of stocks contribute positively while many stocks are negative.",
+          "headline": "Professional Caution vs. Retail Optimism: Dangerous Sentiment Divergence",
+          "text": "The current market shows a typical topping sign where sentiment is markedly divergent between investor classes. While individual investors bask in optimism, so-called 'smart money' is quietly preparing for declines, illustrating that the market is in a very dangerous state.",
           "chartData": {
-            "labels": ["NVIDIA", "Microsoft", "Broadcom", "Eli Lilly", "Caterpillar", "UnitedHealth"],
-            "values": [1.8, 1.2, 0.9, -0.5, -1.1, -1.6]
+            "labels": ["AAPL", "MSFT", "NVDA", "GOOGL", "XOM", "JNJ"],
+            "values": [0.2, 0.1, -0.5, -0.8, -1.5, -1.2]
           }
         },
         "technicals": {
-          "headline": "Discord Between Price and Internal Indicators: Bearish Divergence Warns of Trend Reversal",
-          "text": "While S&P 500 prices continue to trade near all-time highs, the Advance-Decline Line (ADL) showing market breadth is trending lower. This 'bearish divergence' is a typical topping sign suggesting that only a few large-caps are driving the index while the majority of the market is already weakening. Momentum indicators like RSI and MACD also show weakening momentum, strongly warning that the current uptrend is unsustainable.",
+          "headline": "Superficial Rise: Serious Negative Divergence with A/D Line",
+          "text": "While the S&P 500 index has updated all-time highs, the Advance-Decline Line (A/D Line) showing market breadth is forming a long-term downtrend. This internal weakness indicates that the current rally is unsustainable and represents a typical phenomenon seen during major market topping periods.",
           "chartData": {
-            "labels": ["2025-07-24", "2025-07-25", "2025-07-28", "2025-07-29", "2025-07-30"],
-            "sp500": [6363.35, 6388.64, 6389.77, 6370.86, 6362.90],
-            "ma50": [6105.50, 6116.20, 6127.00, 6138.00, 6149.00],
-            "adl": [45320, 45100, 44850, 44500, 44200]
+            "labels": ["2025-07-25", "2025-07-28", "2025-07-29", "2025-07-30", "2025-07-31"],
+            "sp500": [6388.64, 6389.77, 6370.86, 6362.90, 6339.39],
+            "ma50": [6110.50, 6115.20, 6120.10, 6122.40, 6123.72],
+            "adl": [15200, 15150, 15000, 14850, 14700]
           }
         },
         "fundamentals": {
-          "headline": "Bond Market Warnings and Market Complacency: Divergence from Fundamentals",
-          "text": "While equity markets are optimistic (low VIX), bond markets are warning of future recession (inverted yield curve). This disconnect between the two markets' perceptions is extremely unstable. While equity market sentiment is fickle, the bond market's warnings about economic fundamentals should be taken more seriously.",
+          "headline": "Hollow GDP and Persistent High Rates: Macroeconomic Headwinds",
+          "text": "Macroeconomic fundamentals don't support equity markets as much as they appear. The combination of seemingly strong GDP growth and persistent inflation ties the Fed's hands in monetary policy, effectively disabling the 'Fed Put' that has traditionally been the market's safety net.",
           "vix": {
-            "value": 15.98,
-            "change": "+0.95",
-            "status": "Complacent",
-            "summary": "VIX remains at historically low levels with extremely low market fear. Suggests risk of amplified declines when markets reverse."
+            "value": 18.30,
+            "change": "+1.91%",
+            "status": "Rising",
+            "summary": "While the VIX index is rising, it's not yet at panic levels. This means there's still room for stocks to fall further before reaching a true selling climax."
           },
           "aaiiSurvey": {
-            "date": "Week of July 30, 2025",
+            "date": "Week ending July 30, 2025",
             "bullish": 40.3,
             "neutral": 26.7,
             "bearish": 33.0,
-            "summary": "Individual investors are somewhat bullish but not significantly deviated from historical averages. Not in euphoric state; sentiment can be described as moderate optimism close to neutral."
+            "summary": "Individual investors are chasing recent highs and becoming more bullish. This is a typical contrarian sell signal."
           },
           "investorsIntelligence": {
-            "date": "Survey of July 29, 2025",
-            "bullish": 60.8,
-            "bearish": 21.7,
-            "correction": 17.5,
-            "summary": "Newsletter writers' (professionals) sentiment exceeds 60%, showing extreme optimism. This is a very powerful sell signal as a contrarian indicator."
+            "date": "Week of July 30, 2025",
+            "bullish": 57.4,
+            "bearish": 21.9,
+            "correction": 20.7,
+            "summary": "With a bull-bear ratio of 2.62, there's no 'irrational exuberance' among professional newsletter writers. This relatively cautious stance compared to individual investors is an important warning."
           },
           "points": [
-            "Equity market optimism (low VIX) and bond market pessimism (inverted yield) are significantly diverged, creating an unstable state.",
-            "Professional investment advisors' sentiment has reached extreme optimism, providing an excellent sell signal for contrarian traders.",
-            "Market internals (advance-decline numbers, ADL) continue to deteriorate contrary to major index gains, showing rally fragility."
+            "Strong Q2 GDP is statistically distorted by sharp import declines, masking domestic demand weakness.",
+            "Persistent inflation (PCE) and high Treasury yields prevent Fed rate cuts, removing crucial market support.",
+            "Market foundations are crumbling. Serious negative divergence in market breadth (A/D Line) and clear sentiment divergence suggest imminent decline."
           ]
         },
         "strategy": {
-          "headline": "Contrarian Opportunity: Building Short Strategy with Thorough Risk Management",
-          "basic": "Multiple warning signals suggest current conditions have poor risk-reward for new long positions. Rather, this should be viewed as an opportunity to carefully build contrarian short positions. Entry: On rebounds to 6,380-6,410 resistance zone. Stop-loss: Break above 6,430 on closing basis. Profit targets: First target 6,300, second target 6,150.",
-          "risk": "The biggest risk is speculative momentum persisting longer than expected and reaching stop-loss levels. Markets can behave irrationally for extended periods. If stop-loss levels are exceeded, positions should be quickly closed and analysis re-evaluated. Should not stubbornly hold onto breakouts not supported by internal indicators."
+          "headline": "Short Strategy Recommended: Focus on Key Support Level Battle",
+          "basic": "As a basic strategy, we recommend building tactical short positions against the S&P 500. Entry timing could be on failed weak rebounds at 6,380-6,400 points, or clear breaks below the 50-day moving average (approximately 6,124).",
+          "risk": "The biggest risk to this short strategy is AI-related narratives continuing to drive markets higher despite deteriorating internal indicators. Clear stop-loss should be set above the all-time high of 6,427 points on a daily closing basis."
         }
       },
       "marketOverview": [
-        { "name": "S&P 500 (7/30 Close)", "value": "6,362.90", "change": "-7.96 (-0.12%)", "isDown": true },
-        { "name": "Nasdaq-100 (Est.)", "value": "19,855.20", "change": "-25.80 (-0.13%)", "isDown": true },
-        { "name": "VIX Index", "value": "15.98", "change": "+0.95 (+6.32%)", "isDown": false },
-        { "name": "US 10-Year Yield", "value": "4.32%", "change": "-0.02%", "isDown": true }
+        { "name": "S&P 500 (7/31 Close)", "value": "6,339.39", "change": "-23.51 (-0.37%)", "isDown": true },
+        { "name": "Nasdaq-100 (Representative)", "value": "18,550.10", "change": "-80.20 (-0.43%)", "isDown": true },
+        { "name": "VIX Index", "value": "18.30", "change": "+0.34 (+1.91%)", "isDown": false },
+        { "name": "US 10-Year Yield", "value": "4.39%", "change": "+0.02%", "isDown": false }
       ],
       "hotStocks": [
-        { "name": "NVIDIA (NVDA)", "price": "+1.8%", "description": "Driven by strong AI-related demand, leading the index even as the overall market is soft.", "isDown": false },
-        { "name": "Microsoft (MSFT)", "price": "+1.2%", "description": "Bought as a defensive large-cap stock due to stable earnings base and cloud business growth expectations.", "isDown": false },
-        { "name": "Caterpillar (CAT)", "price": "-1.1%", "description": "Sold on global economic slowdown concerns, exemplifying lack of market breadth.", "isDown": true }
+        { "name": "Mega-Caps (e.g. MSFT, AAPL)", "price": "Leading Index", "description": "A very few giant tech stocks are propping up the index, masking market reality.", "isDown": false },
+        { "name": "Broad Market (e.g. IWM)", "price": "Declining Trend", "description": "Small and mid-cap stocks that make up the majority of the market are declining, showing serious internal weakness.", "isDown": true },
+        { "name": "Energy Sector (e.g. XOM)", "price": "Expected Decline", "description": "Earnings announcement scheduled for August 1st, weighing on overall market earnings outlook.", "isDown": true }
       ]
     }
   }
