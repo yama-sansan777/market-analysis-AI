@@ -51,6 +51,7 @@ coverage/
 # 自動生成ファイル
 dist/
 build/
+_site/
 
 # ローカル設定
 config/local.json
