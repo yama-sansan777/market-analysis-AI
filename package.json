@@ -9,7 +9,14 @@
     "start": "node scheduler.js",
     "build": "eleventy",
     "dev": "eleventy --serve",
-    "clean": "rm -rf _site"
+    "clean": "rm -rf _site",
+    "pm2:setup": "node -e \"console.log('Setting up PM2 for Deep Research...'); require('child_process').exec(process.platform === 'win32' ? 'scripts\\\\pm2-setup.bat' : 'bash scripts/pm2-setup.sh', (e,o,err) => { if(e) console.error(e); else console.log(o); })\"",
+    "pm2:start": "pm2 start ecosystem.config.js --env production",
+    "pm2:stop": "pm2 stop deep-research-scheduler",
+    "pm2:restart": "pm2 restart deep-research-scheduler",
+    "pm2:status": "pm2 status",
+    "pm2:logs": "pm2 logs deep-research-scheduler",
+    "pm2:monit": "pm2 monit"
   },
   "dependencies": {
     "@google/generative-ai": "^0.2.1",
