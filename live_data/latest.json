@@ -7,31 +7,162 @@
       "date": "2025年8月1日",
       "summary": {
         "evaluation": "中立",
-        "score": 6,
-        "headline": "S&P500横ばい、警戒感も残る",
-        "text": "S&P500は621.72で取引を終え、大きな変動は見られませんでした。CNN恐怖と欲望指数は55とやや強気ですが、現状維持を支持する指標も散見されます。短期トレーダーは、今後の経済指標や地政学的リスクを注視し、慎重な取引を心がけるべきです。現状では、明確なトレンドは確認できず、中立的なスタンスが適切と考えられます。ボラティリティの拡大に備え、リスク管理を徹底することが重要です。"
+        "score": 5,
+        "headline": "S&P500横ばい、市場心理は警戒感",
+        "text": "S&P500は横ばい推移。CNN恐怖と欲望指数は55とやや警戒感が強い。短期的なトレンドは不明瞭で、明確な買いシグナルも売りシグナルも見られない。今後の経済指標や企業決算に注目すべき局面。"
       },
       "dashboard": {
+        "breadth": {
+          "advancers": 0,
+          "decliners": 0,
+          "summary": "データ不足のためコメント不可"
+        },
         "sentimentVI": 55,
-        "sentimentVISummary": "恐怖と欲望指数は55と、やや強気ですが、極端な楽観視とは言えず、市場には依然として警戒感が残っていることを示唆しています。"
-      }
+        "sentimentVISummary": "恐怖と欲望指数は55で、警戒感と楽観感が混在する状態。市場参加者の心理は不安定と言える。",
+        "priceLevels": {
+          "resistance": {
+            "value": "630.00",
+            "description": "心理的節目の630ドル"
+          },
+          "support": {
+            "value": "610.00",
+            "description": "直近の安値付近"
+          }
+        },
+        "putCallRatio": {
+          "dailyValue": "0.70",
+          "movingAverage": "0.68",
+          "status": "中立",
+          "summary": "Put/Call比率は中立圏。明確な強気・弱気シグナルは確認できない。"
+        }
+      },
+      "marketOverview": [
+        {
+          "name": "S&P 500 (終値)",
+          "value": "621.7200",
+          "change": "0.00 (0.00%)",
+          "isDown": false
+        },
+        {
+          "name": "S&P 500 先物",
+          "value": "620.00",
+          "change": "0.00",
+          "isDown": false
+        },
+        {
+          "name": "VIX指数",
+          "value": "null",
+          "change": "null",
+          "isDown": null
+        },
+        {
+          "name": "米国10年債利回り",
+          "value": "null",
+          "change": "null",
+          "isDown": null
+        }
+      ],
+      "hotStocks": [
+        {
+          "name": "NVIDIA (NVDA)",
+          "price": "主な値下がり銘柄",
+          "description": "データ不足のためコメント不可",
+          "isDown": true
+        },
+        {
+          "name": "Apple (AAPL)",
+          "price": "主な値上がり銘柄",
+          "description": "データ不足のためコメント不可",
+          "isDown": false
+        },
+        {
+          "name": "JPMorgan Chase (JPM)",
+          "price": "主な値下がり銘柄",
+          "description": "データ不足のためコメント不可",
+          "isDown": true
+        }
+      ]
     },
     "en": {
       "session": "8月1日 市場分析 (EN)",
       "date": "2025年8月1日",
       "summary": {
         "evaluation": "neutral",
-        "score": 6,
-        "headline": "[EN] S&P500横ばい、警戒感も残る",
-        "text": "[EN] S&P500は621.72で取引を終え、大きな変動は見られませんでした。CNN恐怖と欲望指数は55とやや強気ですが、現状維持を支持する指標も散見されます。短期トレーダーは、今後の経済指標や地政学的リスクを注視し、慎重な取引を心がけるべきです。現状では、明確なトレンドは確認できず、中立的なスタンスが適切と考えられます。ボラティリティの拡大に備え、リスク管理を徹底することが重要です。"
+        "score": 5,
+        "headline": "[EN] S&P500横ばい、市場心理は警戒感",
+        "text": "[EN] S&P500は横ばい推移。CNN恐怖と欲望指数は55とやや警戒感が強い。短期的なトレンドは不明瞭で、明確な買いシグナルも売りシグナルも見られない。今後の経済指標や企業決算に注目すべき局面。"
       },
       "dashboard": {
-        "sentimentVI": 55,
-        "sentimentVISummary": "[EN] 恐怖と欲望指数は55と、やや強気ですが、極端な楽観視とは言えず、市場には依然として警戒感が残っていることを示唆しています。",
         "breadth": {
-          "summary": "[EN] Market breadth analysis"
+          "advancers": 0,
+          "decliners": 0,
+          "summary": "[EN] データ不足のためコメント不可"
+        },
+        "sentimentVI": 55,
+        "sentimentVISummary": "[EN] 恐怖と欲望指数は55で、警戒感と楽観感が混在する状態。市場参加者の心理は不安定と言える。",
+        "priceLevels": {
+          "resistance": {
+            "value": "630.00",
+            "description": "心理的節目の630ドル"
+          },
+          "support": {
+            "value": "610.00",
+            "description": "直近の安値付近"
+          }
+        },
+        "putCallRatio": {
+          "dailyValue": "0.70",
+          "movingAverage": "0.68",
+          "status": "中立",
+          "summary": "Put/Call比率は中立圏。明確な強気・弱気シグナルは確認できない。"
         }
-      }
+      },
+      "marketOverview": [
+        {
+          "name": "S&P 500 (終値)",
+          "value": "621.7200",
+          "change": "0.00 (0.00%)",
+          "isDown": false
+        },
+        {
+          "name": "S&P 500 先物",
+          "value": "620.00",
+          "change": "0.00",
+          "isDown": false
+        },
+        {
+          "name": "VIX指数",
+          "value": "null",
+          "change": "null",
+          "isDown": null
+        },
+        {
+          "name": "米国10年債利回り",
+          "value": "null",
+          "change": "null",
+          "isDown": null
+        }
+      ],
+      "hotStocks": [
+        {
+          "name": "NVIDIA (NVDA)",
+          "price": "主な値下がり銘柄",
+          "description": "データ不足のためコメント不可",
+          "isDown": true
+        },
+        {
+          "name": "Apple (AAPL)",
+          "price": "主な値上がり銘柄",
+          "description": "データ不足のためコメント不可",
+          "isDown": false
+        },
+        {
+          "name": "JPMorgan Chase (JPM)",
+          "price": "主な値下がり銘柄",
+          "description": "データ不足のためコメント不可",
+          "isDown": true
+        }
+      ]
     }
   }
 }
