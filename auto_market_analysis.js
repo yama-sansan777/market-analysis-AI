@@ -306,6 +306,13 @@ async function runFullAnalysis() {
         await fs.writeFile(outputPath, JSON.stringify(analysisJson, null, 2));
         console.log(`[SUCCESS] 分析結果を ${outputPath} に保存しました。`);
         
+        // STEP 5: Eleventy用の_data/reportData.jsonも更新
+        await fs.mkdir('_data', { recursive: true });
+        const eleventyPath = '_data/reportData.json';
+        // 日本語データのみを_data/reportData.jsonに保存（Eleventy互換性のため）
+        await fs.writeFile(eleventyPath, JSON.stringify(analysisJson.languages.ja, null, 2));
+        console.log(`[SUCCESS] Eleventy用データを ${eleventyPath} に保存しました。`);
+        
         // データ構造の検証レポート
         const jaData = analysisJson.languages.ja;
         console.log('[INFO] データ構造検証:');
