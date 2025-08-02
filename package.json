@@ -6,7 +6,10 @@
   "scripts": {
     "test": "node -e 'const { collectAllMarketData } = require(\"./market_data_collector.js\"); collectAllMarketData().then(data => console.log(\"✅ データ収集テスト成功:\", data)).catch(console.error)'",
     "manual": "node auto_market_analysis.js",
-    "start": "node scheduler.js"
+    "start": "node scheduler.js",
+    "build": "eleventy",
+    "dev": "eleventy --serve",
+    "clean": "rm -rf _site"
   },
   "dependencies": {
     "@google/generative-ai": "^0.2.1",
@@ -20,6 +23,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@11ty/eleventy": "^3.1.2",
     "nodemon": "^3.0.1"
   },
   "keywords": [

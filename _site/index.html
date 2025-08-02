@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOHOU US Stock AI - S&amp;P 500 市場分析</title>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#DC2626',
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="/translations/load.js"></script>
+    <script src="/lang.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; color: #1F2937; background-color: #f4f5f7; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        .tab-button { padding: 0.8rem 1.2rem; font-size: 1.05rem; font-weight: 500; text-align: center; color: #6b7280; border-bottom: 3px solid transparent; transition: all 0.2s ease-in-out; cursor: pointer; }
+        @media (min-width: 768px) { .tab-button { font-size: 1.2rem; } }
+        .tab-button:not(.active):hover { background-color: #f9fafb; border-color: #d1d5db; color: #374151; transform: translateY(-2px); }
+        .tab-button.active { border-color: #4338ca; color: #4338ca; background-color: #eef2ff; font-weight: 700; }
+        .font-pacifico { font-family: 'Pacifico', cursive; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<header class="bg-white border-b border-gray-200">
+<div class="container mx-auto px-4 py-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-8">
+<a href="/"><img src="/image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+<nav class="hidden md:flex space-x-6">
+<a href="/" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_today">本日の市況分析</a>
+<a href="/archive/" class="text-gray-600 hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
+<a href="/indicators/" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+<a href="/terms/" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+<a href="/about/" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50">
+<i class="ri-user-line"></i>
+<span data-lang="login">ログイン</span>
+</button>
+<button id="register-btn" class="hidden md:block bg-primary text-white px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50" data-lang="register">
+無料登録
+</button>
+<!-- 言語切り替えボタンをヘッダー内に配置 -->
+<div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+<button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
+<span class="text-gray-400 text-xs">|</span>
+<button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
+</div>
+<button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2">
+<i class="ri-menu-line ri-lg"></i>
+</button>
+</div>
+</div>
+</div>
+</header>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-200">
+    <div class="px-4 py-2 space-y-1">
+        <a href="/" class="block py-2 text-primary font-medium" data-lang="nav_today">本日の市況分析</a>
+        <a href="/archive/" class="block py-2 text-gray-600 hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
+        <a href="/indicators/" class="block py-2 text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+        <a href="/terms/" class="block py-2 text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+        <a href="/about/" class="block py-2 text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+    </div>
+</div>
+
+<main>
+    
+<div class="w-full px-6 py-10 md:px-12 lg:px-20">
+    <header class="mb-14 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight" data-lang="main_title">S&P 500 インタラクティブ市場分析</h1>
+        <p class="mt-4 text-lg max-w-3xl mx-auto text-gray-600" data-lang="main_subtitle">短期トレーダーのためのデータ駆動型インサイト</p>
+         <div class="mt-8 inline-flex items-center gap-6 rounded-xl bg-white border border-gray-200 px-8 py-4 shadow-sm">
+            <p id="session" class="font-semibold text-indigo-700 text-2xl"></p>
+            <span class="text-gray-300 text-2xl">|</span>
+            <p id="date" class="text-2xl font-medium flex items-center gap-3 text-gray-700"></p>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-14">
+        <main class="lg:col-span-8">
+            <!-- 総合評価セクション -->
+            <section id="summary" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-12 text-center ring-1 ring-gray-200">
+                <h2 class="text-3xl font-semibold text-gray-500 mb-5" data-lang="summary_title">総合評価</h2>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-6">
+                    <span id="summary-evaluation" class="text-7xl md:text-9xl font-bold"></span>
+                    <div class="text-left">
+                        <p id="summary-score" class="text-6xl md:text-7xl font-bold text-gray-800 text-center sm:text-left"></p>
+                        <div id="summary-stars" class="text-4xl text-yellow-400 mt-2 text-center sm:text-left"></div>
+                    </div>
+                </div>
+                <p id="summary-headline" class="text-2xl md:text-3xl font-semibold text-gray-800 mt-5"></p>
+                <p id="summary-text" class="max-w-4xl mx-auto text-gray-600 mt-4 leading-relaxed text-lg text-left"></p>
+            </section>
+
+            <!-- ダッシュボードセクション -->
+            <section id="dashboard" class="mb-12">
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
+                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="market_health_title">市場の健全性 (前日終値)</h3>
+                        <div class="h-64" id="breadthChart"></div>
+                        <p id="breadth-summary" class="text-left text-lg text-gray-600 mt-5"></p>
+                    </div>
+                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col items-center justify-center">
+                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="market_sentiment_title">市場心理 (CNN Fear & Greed)</h3>
+                        <div class="h-64 w-full" id="sentimentGauge"></div>
+                        <p id="sentiment-summary" class="text-left text-lg text-gray-600 mt-5"></p>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col justify-center">
+                        <h3 class="font-bold text-2xl mb-6 text-center" data-lang="price_levels_title">主要な価格帯</h3>
+                        <div class="space-y-6">
+                            <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
+                                <p class="text-lg font-semibold text-red-700" data-lang="resistance_level">上値抵抗線 (レジスタンス)</p>
+                                <p id="resistance-value" class="text-4xl font-bold text-red-900"></p>
+                                <p id="resistance-desc" class="text-base text-red-600"></p>
+                            </div>
+                            <div class="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg">
+                                <p class="text-lg font-semibold text-blue-700" data-lang="support_level">下値支持線 (サポート)</p>
+                                <p id="support-value" class="text-4xl font-bold text-blue-900"></p>
+                                <p id="support-desc" class="text-base text-blue-600"></p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
+                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="put_call_ratio_title">エクイティ Put Call Ratio</h3>
+                        <div id="put-call-ratio-container" class="text-center py-12"></div>
+                         <p id="put-call-ratio-summary" class="text-left text-lg text-gray-600 mt-2"></p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 詳細分析セクション -->
+            <section id="details" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 ring-1 ring-gray-200">
+                <div class="text-center mb-10">
+                    <h3 class="text-4xl font-bold text-gray-800" data-lang="detailed_analysis_title">詳細分析</h3>
+                    <p class="text-gray-500 mt-3 text-xl" data-lang="tab_instructions">下のタブをクリックして、分析内容を切り替えられます</p>
+                </div>
+                <div class="border-b border-gray-300">
+                    <nav class="flex flex-wrap -mb-px justify-center" id="tab-buttons">
+                        <button data-tab="internals" class="tab-button active" data-lang="tab_internals">市場の内部構造</button>
+                        <button data-tab="technicals" class="tab-button" data-lang="tab_technicals">テクニカル分析</button>
+                        <button data-tab="fundamentals" class="tab-button" data-lang="tab_fundamentals">ファンダメンタルズ & 心理</button>
+                        <button data-tab="strategy" class="tab-button" data-lang="tab_strategy">投資戦略</button>
+                    </nav>
+                </div>
+
+                <div id="tab-panels" class="mt-10">
+                    <div id="internals" class="tab-panel active space-y-6">
+                        <h3 id="internals-headline" class="text-3xl font-bold"></h3>
+                        <p id="internals-text" class="text-lg text-gray-700 leading-relaxed"></p>
+                        <div class="h-96"><canvas id="contributionChart"></canvas></div>
+                    </div>
+                    <div id="technicals" class="tab-panel space-y-6">
+                        <h3 id="technicals-headline" class="text-3xl font-bold"></h3>
+                        <p id="technicals-text" class="text-lg text-gray-700 leading-relaxed"></p>
+                        <div class="h-96"><canvas id="technicalChart"></canvas></div>
+                    </div>
+                    <div id="fundamentals" class="tab-panel space-y-6">
+                        <h3 id="fundamentals-headline" class="text-3xl font-bold"></h3>
+                        <p id="fundamentals-text" class="text-lg text-gray-700 leading-relaxed"></p>
+                        
+                        <div id="sentiment-indicators-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+                            <div id="aaii-container"></div>
+                            <div class="space-y-8">
+                                <div id="vix-container"></div>
+                                <div id="ii-container"></div>
+                            </div>
+                        </div>
+                        
+                        <ul id="fundamentals-list" class="space-y-6 text-lg text-gray-700 pt-4"></ul>
+                    </div>
+                     <div id="strategy" class="tab-panel space-y-6">
+                        <h3 id="strategy-headline" class="text-3xl font-bold"></h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
+                                <h4 class="font-bold text-2xl text-gray-800 mb-3" data-lang="basic_strategy">基本戦略</h4>
+                                <p id="strategy-basic" class="text-gray-600 leading-relaxed text-lg"></p>
+                            </div>
+                             <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
+                                <h4 class="font-bold text-2xl text-gray-800 mb-3" data-lang="risk_management">リスク管理</h4>
+                                <p id="strategy-risk" class="text-gray-600 leading-relaxed text-lg"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- サイドバー -->
+        <aside class="lg:col-span-4 space-y-10">
+            <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
+                <h3 class="text-2xl font-bold mb-5 border-b pb-4" data-lang="market_overview_title">市場概況</h3>
+                <div id="market-overview-container" class="space-y-5"></div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
+                <h3 class="text-2xl font-bold mb-5 border-b pb-4" data-lang="hot_stocks_title">注目銘柄 (Top Movers)</h3>
+                <div id="hot-stocks-container" class="space-y-6"></div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- Market Analysis JavaScript -->
+<script src="/js/market-analysis.js"></script>
+<script>
+    // データの読み込みとページへの反映を行うメイン関数
+    async function loadReportData() {
+        try {
+            // datafileパラメータ取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataFileName = urlParams.get('datafile');
+            // パラメータがあればarchive_dataから、なければlatest.json
+            const fileToFetch = dataFileName ? `archive_data/${dataFileName}` : 'live_data/latest.json';
+            
+            console.log('Fetching file:', fileToFetch);
+            
+            const response = await fetch(fileToFetch);
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTPエラー! ステータス: ${response.status}, ファイル: ${fileToFetch}`);
+            }
+            
+            const rawData = await response.json();
+            console.log('Raw JSON data loaded successfully');
+
+            // 多言語対応データの処理
+            const data = getLocalizedData(rawData);
+
+            // --- ページの各要素にデータをセット ---
+            populateHtmlElements(data);
+
+            // --- チャート描画 ---
+            initializeAllCharts(data);
+
+            // --- タブ切り替え機能の初期化 ---
+            initializeTabs();
+
+        } catch (error) {
+            console.error('データの読み込みまたは処理中にエラーが発生しました:', error);
+            // より詳細なエラー情報を表示
+            const errorDetails = `
+                エラー: ${error.message}
+                ファイル: ${dataFileName || 'live_data/latest.json'}
+                スタック: ${error.stack}
+            `;
+            document.body.innerHTML = `<div class="text-center p-10">
+                <h1 class="text-2xl font-bold text-red-600 mb-4">データの読み込みに失敗しました</h1>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-left max-w-2xl mx-auto">
+                    <h2 class="font-bold mb-2">エラー詳細:</h2>
+                    <pre class="text-sm text-red-700 whitespace-pre-wrap">${error.message}</pre>
+                    <h3 class="font-bold mt-4 mb-2">対処方法:</h3>
+                    <ul class="text-sm text-red-600 list-disc list-inside">
+                        <li>latest.jsonファイルが存在することを確認してください</li>
+                        <li>JSONファイルの形式が正しいことを確認してください</li>
+                        <li>ブラウザのデベロッパーツールで詳細なエラーを確認してください</li>
+                    </ul>
+                </div>
+            </div>`;
+        }
+    }
+    
+    // loadReportData関数をグローバルに公開（lang.jsから呼び出すため）
+    window.loadReportData = loadReportData;
+
+    // Initialize language system
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize current language from localStorage or default to 'ja'
+        window.currentLang = localStorage.getItem('language') || 'ja';
+        
+        // Initialize lang.js language system
+        if (window.initLanguage) {
+            initLanguage();
+        }
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Load initial data
+        loadReportData();
+    });
+</script>
+</main>
+
+<footer class="text-center text-sm text-gray-500 mt-20 py-8">
+    <p data-lang="footer_disclaimer">この分析は提供された情報に基づく予測であり、投資成果を保証するものではありません。</p>
+    <p data-lang="footer_copyright_text">Copyright &copy; 2025 Market Insight. All Rights Reserved.</p>
+</footer>
+
+<!-- Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-90LPDJBXLY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-90LPDJBXLY');
+</script>
+</body>
+</html>

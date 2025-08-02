@@ -1,0 +1,108 @@
+{
+  "date": "2025年1月27日",
+  "session": "米国株予測",
+  "languages": {
+    "ja": {
+      "summary": {
+        "evaluation": "買い",
+        "score": 75,
+        "headline": "米国市場開始前予測：S&P500上昇期待、テック株が牽引",
+        "text": "米国市場開始前の分析では、S&P500は前日比0.5%上昇が期待される。テック株の好調が市場を牽引し、特にAI関連銘柄が注目されている。前日の経済指標も好ましい結果を示しており、投資家心理は楽観的。ただし、利上げ観測については慎重な見方が続いている。"
+      },
+      "dashboard": {
+        "breadth": {
+          "summary": "上昇銘柄が優勢、市場環境は良好"
+        },
+        "sentimentVISummary": "投資家心理は楽観的、リスク選好度は中程度"
+      },
+      "details": {
+        "sectors": {
+          "technology": "テック株は前日比1.2%上昇期待",
+          "finance": "金融株は横ばい、利上げ観測が影響",
+          "energy": "エネルギー株は原油価格上昇で0.8%上昇期待"
+        },
+        "keyFactors": [
+          "AI関連銘柄の好調",
+          "企業決算の好調",
+          "利上げ観測の慎重な見方"
+        ]
+      },
+      "marketOverview": {
+        "trend": "上昇トレンド継続",
+        "volatility": "中程度",
+        "volume": "平均的"
+      },
+      "hotStocks": [
+        {
+          "symbol": "AAPL",
+          "name": "Apple Inc.",
+          "prediction": "前日比1.5%上昇期待",
+          "reason": "新製品発表期待"
+        },
+        {
+          "symbol": "NVDA",
+          "name": "NVIDIA Corporation",
+          "prediction": "前日比2.0%上昇期待",
+          "reason": "AI需要拡大"
+        },
+        {
+          "symbol": "TSLA",
+          "name": "Tesla, Inc.",
+          "prediction": "前日比0.8%上昇期待",
+          "reason": "電気自動車需要増加"
+        }
+      ]
+    },
+    "en": {
+      "summary": {
+        "evaluation": "buy",
+        "score": 75,
+        "headline": "Pre-Market Prediction: S&P 500 Expected to Rise, Tech Stocks Lead",
+        "text": "Pre-market analysis suggests the S&P 500 is expected to rise 0.5% from the previous close. Tech stocks are leading the market, with particular focus on AI-related stocks. Yesterday's economic indicators showed favorable results, maintaining optimistic investor sentiment. However, cautious views persist regarding rate hike expectations."
+      },
+      "dashboard": {
+        "breadth": {
+          "summary": "Advancing stocks dominate, market environment favorable"
+        },
+        "sentimentVISummary": "Investor sentiment optimistic, moderate risk appetite"
+      },
+      "details": {
+        "sectors": {
+          "technology": "Tech stocks expected to rise 1.2% from previous close",
+          "finance": "Financial stocks flat, affected by rate hike expectations",
+          "energy": "Energy stocks expected to rise 0.8% due to oil price increase"
+        },
+        "keyFactors": [
+          "Strong performance in AI-related stocks",
+          "Favorable corporate earnings",
+          "Cautious views on rate hike expectations"
+        ]
+      },
+      "marketOverview": {
+        "trend": "Uptrend continues",
+        "volatility": "Moderate",
+        "volume": "Average"
+      },
+      "hotStocks": [
+        {
+          "symbol": "AAPL",
+          "name": "Apple Inc.",
+          "prediction": "Expected to rise 1.5% from previous close",
+          "reason": "New product announcement expectations"
+        },
+        {
+          "symbol": "NVDA",
+          "name": "NVIDIA Corporation",
+          "prediction": "Expected to rise 2.0% from previous close",
+          "reason": "Expanding AI demand"
+        },
+        {
+          "symbol": "TSLA",
+          "name": "Tesla, Inc.",
+          "prediction": "Expected to rise 0.8% from previous close",
+          "reason": "Increasing electric vehicle demand"
+        }
+      ]
+    }
+  }
+}
