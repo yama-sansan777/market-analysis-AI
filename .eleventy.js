@@ -10,6 +10,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("lang.js");
   eleventyConfig.addPassthroughCopy("src/js");
   eleventyConfig.addPassthroughCopy("image");
+  eleventyConfig.addPassthroughCopy("test.html");
   
   // JSONデータファイルを監視対象に追加（開発時の自動リロード用）
   eleventyConfig.addWatchTarget("./live_data/");

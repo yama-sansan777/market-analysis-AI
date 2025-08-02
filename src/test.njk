@@ -1,0 +1,88 @@
+---
+layout: false
+permalink: /test/
+---
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page - JavaScript Loading</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffebee; color: red; }
+        .success { background: #e8f5e8; color: green; }
+    </style>
+</head>
+<body>
+    <h1>JavaScript Loading Test (Eleventy Generated)</h1>
+    <div id="results"></div>
+    
+    <script>
+        const results = document.getElementById('results');
+        
+        function addResult(text, isError = false) {
+            const div = document.createElement('div');
+            div.className = `test ${isError ? 'error' : 'success'}`;
+            div.textContent = text;
+            results.appendChild(div);
+        }
+        
+        // Test 1: Basic JavaScript execution
+        addResult('✓ Basic JavaScript is working');
+        
+        // Test 2: Load market-analysis.js
+        const script1 = document.createElement('script');
+        script1.src = '/js/market-analysis.js';
+        script1.onload = function() {
+            addResult('✓ market-analysis.js loaded successfully');
+            
+            // Test 3: Check if getLocalizedData function exists
+            if (typeof getLocalizedData === 'function') {
+                addResult('✓ getLocalizedData function is available');
+            } else {
+                addResult('✗ getLocalizedData function not found', true);
+            }
+        };
+        script1.onerror = function() {
+            addResult('✗ Failed to load market-analysis.js', true);
+        };
+        document.head.appendChild(script1);
+        
+        // Test 4: Load lang.js
+        const script2 = document.createElement('script');
+        script2.src = '/lang.js';
+        script2.onload = function() {
+            addResult('✓ lang.js loaded successfully');
+            
+            // Test 5: Check language initialization
+            if (typeof initLanguage === 'function') {
+                addResult('✓ initLanguage function is available');
+            } else {
+                addResult('✗ initLanguage function not found', true);
+            }
+        };
+        script2.onerror = function() {
+            addResult('✗ Failed to load lang.js', true);
+        };
+        document.head.appendChild(script2);
+        
+        // Test 6: Try to fetch JSON data
+        setTimeout(async () => {
+            try {
+                const response = await fetch('/live_data/latest.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    addResult(`✓ JSON data loaded: ${Object.keys(data).length} root keys`);
+                    addResult(`✓ Data structure: ${JSON.stringify(Object.keys(data))}`);
+                } else {
+                    addResult(`✗ JSON fetch failed: ${response.status}`, true);
+                }
+            } catch (error) {
+                addResult(`✗ JSON error: ${error.message}`, true);
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
