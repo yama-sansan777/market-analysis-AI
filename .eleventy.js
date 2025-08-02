@@ -2,6 +2,7 @@ module.exports = function(eleventyConfig) {
   // JSONファイルを静的ファイルとしてコピー
   eleventyConfig.addPassthroughCopy("live_data");
   eleventyConfig.addPassthroughCopy("archive_data");
+  eleventyConfig.addPassthroughCopy("_data");
   eleventyConfig.addPassthroughCopy("translations");
   
   // 静的アセットをそのままコピー
