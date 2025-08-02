@@ -50,15 +50,60 @@ jobs:
       - name: Verify Deep Research data files
         run: |
           echo "🔍 Checking Deep Research data files..."
+          echo "📍 Current working directory: $(pwd)"
+          echo "📁 Repository contents:"
+          ls -la
+          echo ""
+          
+          echo "🔍 Checking live_data/latest.json..."
           if [ -f "live_data/latest.json" ]; then
             echo "✅ live_data/latest.json exists"
-            head -5 live_data/latest.json
+            echo "📊 File size: $(wc -c < live_data/latest.json) bytes"
+            echo "📊 File modification: $(stat -c '%y' live_data/latest.json)"
+            echo "📄 First 10 lines:"
+            head -10 live_data/latest.json
+            echo ""
+            echo "📄 JSON structure check:"
+            if jq empty live_data/latest.json 2>/dev/null; then
+              echo "✅ Valid JSON format"
+              echo "🔍 Top-level keys:"
+              jq 'keys' live_data/latest.json 2>/dev/null || echo "❌ Failed to parse JSON keys"
+            else
+              echo "❌ Invalid JSON format"
+            fi
           else
             echo "⚠️ live_data/latest.json not found"
+            echo "📁 live_data directory contents:"
+            ls -la live_data/ 2>/dev/null || echo "❌ live_data directory not found"
           fi
+          echo ""
+          
+          echo "🔍 Checking _data/reportData.json..."
+          if [ -f "_data/reportData.json" ]; then
+            echo "✅ _data/reportData.json exists"
+            echo "📊 File size: $(wc -c < _data/reportData.json) bytes"
+            echo "📄 First 5 lines:"
+            head -5 _data/reportData.json
+          else
+            echo "⚠️ _data/reportData.json not found"
+            echo "📁 _data directory contents:"
+            ls -la _data/ 2>/dev/null || echo "❌ _data directory not found"
+          fi
+          echo ""
+          
+          echo "🔍 Checking archive_data..."
           if [ -d "archive_data" ]; then
             echo "✅ archive_data directory exists"
-            ls -la archive_data/ | head -5
+            echo "📊 Files count: $(find archive_data -name '*.json' | wc -l)"
+            echo "📁 Recent files:"
+            ls -la archive_data/ | head -10
+            echo "🔍 Checking manifest.json:"
+            if [ -f "archive_data/manifest.json" ]; then
+              echo "✅ manifest.json exists"
+              jq '.entries | length' archive_data/manifest.json 2>/dev/null || echo "❌ Failed to parse manifest"
+            else
+              echo "⚠️ manifest.json not found"
+            fi
           else
             echo "⚠️ archive_data directory not found"
           fi
