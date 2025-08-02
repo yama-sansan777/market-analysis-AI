@@ -3,14 +3,6 @@ name: Build and Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'live_data/**'
-      - 'archive_data/**'
-      - 'src/**'
-      - 'lang.js'
-      - 'translations/**'
-      - '.eleventy.js'
-      - 'package.json'
   workflow_dispatch:
 
 permissions:
