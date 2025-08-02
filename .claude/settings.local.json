@@ -17,7 +17,8 @@
       "Bash(git add:*)",
       "Bash(ls:*)",
       "Bash(npm run build:*)",
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "WebFetch(domain:yama-sansan777.github.io)"
     ],
     "deny": []
   }
