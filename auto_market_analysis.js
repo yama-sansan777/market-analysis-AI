@@ -2,13 +2,14 @@ require('dotenv').config();
 const fs = require('fs/promises');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { collectAllMarketData } = require('./market_data_collector.js');
+const { searchWeb } = require('./web_searcher.js'); // Web検索モジュールをインポート
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 // Geminiに分析を依頼するためのプロンプト（指示文）を作成する関数
-function buildAnalysisPrompt(marketData) {
+function buildAnalysisPrompt(marketData, searchResultsText) { // searchResultsText を引数に追加
   // 多言語構造に対応した完全なJSONスキーマを定義
   const jsonStructure = `
   {
@@ -113,19 +114,23 @@ function buildAnalysisPrompt(marketData) {
   `;
 
   return `
-  あなたは優秀な金融アナリストです。以下の最新市場データを分析し、日本の短期トレーダー向けの詳細な市場分析レポートを生成してください。
+  あなたは優秀な金融アナリストです。以下の「市場データ」と「最新のWeb検索結果」を**総合的に分析し**、単なる要約ではなく、深い洞察に基づいたレポートを生成してください。
+
+  # 市場データ:
+  - S&P 500 最新終値: ${marketData.sp500_price} (日付: ${marketData.sp500_date})
+  - CNN Fear & Greed Index: ${marketData.fear_and_greed_index}
+
+  # 最新のWeb検索結果:
+  ${searchResultsText}
 
   # 重要な指示:
   - 必ず日本語で回答してください
+  - 上記の「市場データ」と「最新のWeb検索結果」の両方を考慮して、なぜ市場がそのように動いたのかという**文脈**を含めて分析してください
   - 以下のJSON構造に厳密に従って出力してください
   - 全てのセクション（details.internals、details.technicals、details.fundamentals、details.strategy）を必ず含めてください
   - チャートデータ（chartData）は適切な値を推定して必ず生成してください
   - 市場概況とホットストックスには実際の価格と変動率を含めてください
   - JSONオブジェクト以外の余計なテキストは一切出力しないでください
-
-  # 市場データ:
-  - S&P 500 最新終値: ${marketData.sp500_price} (日付: ${marketData.sp500_date})
-  - CNN Fear & Greed Index: ${marketData.fear_and_greed_index}
 
   # 出力するJSON構造（この形式に厳密に従ってください）:
   ${jsonStructure}
@@ -133,15 +138,17 @@ function buildAnalysisPrompt(marketData) {
 }
 
 // JSONパース処理を改善（Markdownコードブロック除去、エラーハンドリング強化）
-async function analyzeWithGemini(marketData) {
+async function analyzeWithGemini(marketData, searchResultsText) { // searchResultsText を引数に追加
     console.log('----------');
-    console.log('[STEP 2] Geminiによる市場分析を開始します。');
+    console.log('[STEP 3] GeminiによるDeep Research分析を開始します。');
+    
     if (!marketData) {
         console.error('[ERROR] 分析対象の市場データがありません。');
         return null;
     }
+    
     try {
-        const prompt = buildAnalysisPrompt(marketData);
+        const prompt = buildAnalysisPrompt(marketData, searchResultsText);
         console.log('[DEBUG] AIプロンプトを送信中...');
         
         const result = await model.generateContent(prompt);
@@ -198,7 +205,6 @@ async function analyzeWithGemini(marketData) {
         
         // デバッグ用にレスポンステキストをファイルに保存
         if (typeof text !== 'undefined') {
-            const fs = require('fs/promises');
             const debugPath = 'debug_gemini_response.txt';
             await fs.writeFile(debugPath, `=== 生レスポンス ===\n${text}\n\n=== クリーニング後 ===\n${cleanText || 'undefined'}`);
             console.error(`[DEBUG] レスポンス内容を ${debugPath} に保存しました`);
@@ -207,6 +213,7 @@ async function analyzeWithGemini(marketData) {
         return null;
     }
 }
+
 // 簡易英語翻訳関数（基本的な用語の変換）
 function generateEnglishVersion(jaData) {
     const translations = {
@@ -245,18 +252,40 @@ function generateEnglishVersion(jaData) {
     return translateObjectRecursively(jaData);
 }
 
+// メインの実行関数を更新
 async function runFullAnalysis() {
     try {
         console.log('=============================================');
-        console.log(`市場分析プロセスを開始します: ${new Date().toLocaleString()}`);
+        console.log(`Deep Research プロセスを開始します: ${new Date().toLocaleString()}`);
         console.log('=============================================');
         
+        // STEP 1: 基本的な市場データを収集
         const marketData = await collectAllMarketData();
-        const analysisJson = await analyzeWithGemini(marketData);
+        if (!marketData) throw new Error('基本的な市場データの収集に失敗しました。');
+
+        // STEP 2: Web検索を実行
+        console.log('----------');
+        console.log('[STEP 2] リアルタイムWeb検索を開始します。');
+        const searchQueries = [
+            "S&P 500 market analysis today",
+            "US stock market sentiment",
+            "Federal Reserve latest comments",
+        ];
         
-        if (!analysisJson) {
-            throw new Error('分析結果のJSONが生成されませんでした。');
-        }
+        // 複数の検索を並行して実行
+        const searchPromises = searchQueries.map(query => searchWeb(query));
+        const searchResults = await Promise.all(searchPromises);
+
+        // 検索結果をプロンプト用に整形
+        const searchResultsText = searchQueries.map((query, index) => {
+            return `--- "${query}" の検索結果 ---\n${searchResults[index]}`;
+        }).join('\n\n');
+        
+        console.log('[DEBUG] Web検索結果の統合が完了しました');
+        
+        // STEP 3: AIによる分析
+        const analysisJson = await analyzeWithGemini(marketData, searchResultsText);
+        if (!analysisJson) throw new Error('分析結果のJSONが生成されませんでした。');
         
         // 英語版データを自動生成
         if (analysisJson.languages && analysisJson.languages.ja) {
@@ -267,11 +296,14 @@ async function runFullAnalysis() {
             analysisJson.languages.en.date = analysisJson.date;
         }
         
+        // STEP 4: 結果をファイルに保存
+        console.log('----------');
+        console.log('[STEP 4] 分析結果をファイルに保存します。');
+        
         // 正しい出力先に保存（live_data/latest.json）
         await fs.mkdir('live_data', { recursive: true });
         const outputPath = 'live_data/latest.json';
         await fs.writeFile(outputPath, JSON.stringify(analysisJson, null, 2));
-        
         console.log(`[SUCCESS] 分析結果を ${outputPath} に保存しました。`);
         
         // データ構造の検証レポート
@@ -285,11 +317,11 @@ async function runFullAnalysis() {
         console.log(`  - details.strategy: ${jaData.details?.strategy ? '✓' : '✗'}`);
         console.log(`  - marketOverview: ${jaData.marketOverview ? '✓' : '✗'}`);
         console.log(`  - hotStocks: ${jaData.hotStocks ? '✓' : '✗'}`);
-        
+
         console.log('=============================================');
-        console.log(`市場分析プロセスが正常に完了しました: ${new Date().toLocaleString()}`);
+        console.log(`Deep Research プロセスが正常に完了しました: ${new Date().toLocaleString()}`);
         console.log('=============================================');
-        
+
     } catch (error) {
         console.error(`[FATAL] プロセス全体で致命的なエラーが発生しました: ${error.message}`);
         const errorLogPath = 'error.log';
@@ -298,7 +330,9 @@ async function runFullAnalysis() {
         console.error(`エラーの詳細は ${errorLogPath} を確認してください。`);
     }
 }
+
 if (require.main === module) {
     runFullAnalysis();
 }
+
 module.exports = { runFullAnalysis };
