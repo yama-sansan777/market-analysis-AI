@@ -8,7 +8,7 @@ module.exports = function(eleventyConfig) {
   // 静的アセットをそのままコピー
   eleventyConfig.addPassthroughCopy("assets");
   eleventyConfig.addPassthroughCopy("lang.js");
-  eleventyConfig.addPassthroughCopy("src/js");
+  eleventyConfig.addPassthroughCopy({"src/js": "js"});
   eleventyConfig.addPassthroughCopy("image");
   eleventyConfig.addPassthroughCopy("test.html");
   
