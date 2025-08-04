@@ -1,0 +1,127 @@
+2025-08-02 22:42:40 [INFO] [ERROR_RESILIENCE] 🔌 サーキットブレーカー初期化: GoogleSearchAPI {"service":"deep-research-analyzer","failureThreshold":3,"recoveryTimeout":120000}
+2025-08-02 22:42:40 [INFO] [ERROR_RESILIENCE] 🔌 サーキットブレーカー初期化: GeminiAPI {"service":"deep-research-analyzer","failureThreshold":2,"recoveryTimeout":180000}
+2025-08-02 22:42:40 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-02 22:42:40 [INFO] [MARKET_ANALYZER] Deep Research プロセスを開始します: 2025/8/2 22:42:40 {"service":"deep-research-analyzer"}
+2025-08-02 22:42:40 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-02 22:42:40 [INFO] [MARKET_ANALYZER] 🚀 市場データ収集 プロセス開始 {"service":"deep-research-analyzer","process":"市場データ収集"}
+2025-08-02 22:42:42 [INFO] [MARKET_ANALYZER] ✅ 市場データ収集 プロセス成功 (1534ms) {"service":"deep-research-analyzer","process":"市場データ収集","duration":1534,"success":true}
+2025-08-02 22:42:42 [INFO] [MARKET_ANALYZER] 🚀 リアルタイムWeb検索 プロセス開始 {"service":"deep-research-analyzer","process":"リアルタイムWeb検索"}
+2025-08-02 22:42:42 [INFO] [MARKET_ANALYZER] Web検索クエリ実行 {"service":"deep-research-analyzer","queryCount":3,"queries":["S&P 500 market analysis today","US stock market sentiment","Federal Reserve latest comments"]}
+2025-08-02 22:42:42 [INFO] [WEB_SEARCHER] Web検索を実行中: "S&P 500 market analysis today" {"service":"deep-research-analyzer"}
+2025-08-02 22:42:42 [INFO] [WEB_SEARCHER] Web検索を実行中: "US stock market sentiment" {"service":"deep-research-analyzer"}
+2025-08-02 22:42:42 [INFO] [WEB_SEARCHER] Web検索を実行中: "Federal Reserve latest comments" {"service":"deep-research-analyzer"}
+2025-08-02 22:42:42 [INFO] [WEB_SEARCHER] 🔗 Google Custom Search API call SUCCESS (330ms) {"service":"deep-research-analyzer","api":"Google Custom Search","duration":330,"query":"S&P 500 market analysis today","statusCode":200,"resultCount":5}
+2025-08-02 22:42:42 [INFO] [WEB_SEARCHER] ✅ Web検索完了: "S&P 500 market analysis today" {"service":"deep-research-analyzer","query":"S&P 500 market analysis today","resultCount":5,"duration":330}
+2025-08-02 22:42:42 [INFO] [WEB_SEARCHER] 🔗 Google Custom Search API call SUCCESS (659ms) {"service":"deep-research-analyzer","api":"Google Custom Search","duration":659,"query":"Federal Reserve latest comments","statusCode":200,"resultCount":5}
+2025-08-02 22:42:42 [INFO] [WEB_SEARCHER] ✅ Web検索完了: "Federal Reserve latest comments" {"service":"deep-research-analyzer","query":"Federal Reserve latest comments","resultCount":5,"duration":659}
+2025-08-02 22:42:43 [INFO] [WEB_SEARCHER] 🔗 Google Custom Search API call SUCCESS (765ms) {"service":"deep-research-analyzer","api":"Google Custom Search","duration":765,"query":"US stock market sentiment","statusCode":200,"resultCount":5}
+2025-08-02 22:42:43 [INFO] [WEB_SEARCHER] ✅ Web検索完了: "US stock market sentiment" {"service":"deep-research-analyzer","query":"US stock market sentiment","resultCount":5,"duration":765}
+2025-08-02 22:42:43 [INFO] [MARKET_ANALYZER] ✅ Web検索結果の統合完了 {"service":"deep-research-analyzer","totalResultsLength":3637,"searchCount":3}
+2025-08-02 22:42:43 [INFO] [MARKET_ANALYZER] ✅ リアルタイムWeb検索 プロセス成功 (2305ms) {"service":"deep-research-analyzer","process":"リアルタイムWeb検索","duration":2305,"success":true}
+2025-08-02 22:42:43 [INFO] [MARKET_ANALYZER] 🚀 GeminiによるDeep Research分析 プロセス開始 {"service":"deep-research-analyzer","process":"GeminiによるDeep Research分析"}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] 🔗 Gemini AI API call SUCCESS (13501ms) {"service":"deep-research-analyzer","api":"Gemini AI","duration":13501,"responseLength":4559,"promptLength":8135}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] ✅ Gemini分析完了 {"service":"deep-research-analyzer","duration":13501,"dataStructure":["date","session","languages"],"japaneseDataStructure":["session","date","summary","dashboard","details","marketOverview","hotStocks"]}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] ✅ GeminiによるDeep Research分析 プロセス成功 (1754142176537ms) {"service":"deep-research-analyzer","process":"GeminiによるDeep Research分析","duration":1754142176537,"success":true}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] 英語版データを自動生成中... {"service":"deep-research-analyzer"}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] ✅ 英語版データ生成完了 {"service":"deep-research-analyzer"}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] 🚀 分析結果ファイル保存 プロセス開始 {"service":"deep-research-analyzer","process":"分析結果ファイル保存"}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] 📊 JSONファイル保存: 1件処理 {"service":"deep-research-analyzer","operation":"JSONファイル保存","recordCount":1,"filePath":"live_data/latest.json","fileSize":6048}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] 📊 Eleventy用データ保存: 1件処理 {"service":"deep-research-analyzer","operation":"Eleventy用データ保存","recordCount":1,"filePath":"_data/reportData.json"}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] ✅ 分析結果ファイル保存 プロセス成功 (15819ms) {"service":"deep-research-analyzer","process":"分析結果ファイル保存","duration":15819,"success":true}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] データ構造検証結果 {"service":"deep-research-analyzer","summary":true,"dashboard":true,"details.internals":true,"details.technicals":true,"details.fundamentals":true,"details.strategy":true,"marketOverview":true,"hotStocks":true}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] ✅ Deep Research プロセスが正常に完了しました (実行時間: 15819ms) {"service":"deep-research-analyzer","totalDuration":15819}
+2025-08-02 22:42:56 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [ERROR_RESILIENCE] 🔌 サーキットブレーカー初期化: GoogleSearchAPI {"service":"deep-research-analyzer","failureThreshold":3,"recoveryTimeout":120000}
+2025-08-02 22:43:46 [INFO] [ERROR_RESILIENCE] 🔌 サーキットブレーカー初期化: GeminiAPI {"service":"deep-research-analyzer","failureThreshold":2,"recoveryTimeout":180000}
+2025-08-02 22:43:46 [INFO] [SCHEDULER] 🚀 Deep Research スケジューラーが起動しました。 {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER] 市場開放時間に合わせてDeep Research分析を自動実行します: {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER]   📅 平日 22:30 (米国市場開場後の分析) {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER]   📅 平日 05:00 (米国市場終了後の分析) {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER]   🔍 毎日 12:00 (システムヘルスチェック) {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER] PM2またはターミナルを終了するとスケジューラーは停止します。 {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER] ⏰ Cronジョブをスケジュール中... {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER] 🔍 起動時ヘルスチェックを実行します {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [HEALTH_CHECK] 🔍 システムヘルスチェックを開始します {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER] ✅ Cronジョブのスケジュール設定が完了しました {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER] 📋 実行スケジュール: {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER]   🌅 平日 22:30 (米国市場開場後の分析) {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER]   🌙 平日 05:00 (米国市場終了後の分析) {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER]   🔍 毎日 12:00 (システムヘルスチェック) {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER]  {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER] 💡 手動実行する場合は以下のコマンドを実行してください: {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER]    runManualAnalysis() - Deep Research手動実行 {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER]    runHealthCheck() - ヘルスチェック手動実行 {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER]  {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [SCHEDULER] 🔍 手動ヘルスチェックを実行します {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [HEALTH_CHECK] 🔍 システムヘルスチェックを開始します {"service":"deep-research-analyzer"}
+2025-08-02 22:43:46 [INFO] [HEALTH_CHECK] ✅ システムヘルスチェック完了 {"service":"deep-research-analyzer","overall":"HEALTHY","alertCount":0,"checkResults":[{"check":"memory","status":"HEALTHY"},{"check":"disk","status":"HEALTHY"},{"check":"logs","status":"HEALTHY"},{"check":"apiConnectivity","status":"HEALTHY"},{"check":"circuitBreakers","status":"HEALTHY"},{"check":"dataIntegrity","status":"HEALTHY"}]}
+2025-08-02 22:43:46 [INFO] [SCHEDULER] ✅ 起動時ヘルスチェック完了 {"service":"deep-research-analyzer","overall":"HEALTHY"}
+2025-08-02 22:43:46 [INFO] [HEALTH_CHECK] ✅ システムヘルスチェック完了 {"service":"deep-research-analyzer","overall":"HEALTHY","alertCount":0,"checkResults":[{"check":"memory","status":"HEALTHY"},{"check":"disk","status":"HEALTHY"},{"check":"logs","status":"HEALTHY"},{"check":"apiConnectivity","status":"HEALTHY"},{"check":"circuitBreakers","status":"HEALTHY"},{"check":"dataIntegrity","status":"HEALTHY"}]}
+2025-08-03 12:00:00 [INFO] [SCHEDULER] 🔍 定期ヘルスチェックを開始します {"service":"deep-research-analyzer"}
+2025-08-03 12:00:00 [INFO] [HEALTH_CHECK] 🔍 システムヘルスチェックを開始します {"service":"deep-research-analyzer"}
+2025-08-03 12:00:00 [INFO] [HEALTH_CHECK] ✅ システムヘルスチェック完了 {"service":"deep-research-analyzer","overall":"HEALTHY","alertCount":0,"checkResults":[{"check":"memory","status":"HEALTHY"},{"check":"disk","status":"HEALTHY"},{"check":"logs","status":"HEALTHY"},{"check":"apiConnectivity","status":"HEALTHY"},{"check":"circuitBreakers","status":"HEALTHY"},{"check":"dataIntegrity","status":"HEALTHY"}]}
+2025-08-03 12:00:00 [INFO] [HEALTH_CHECK] 📊 ヘルスレポート保存: 1件処理 {"service":"deep-research-analyzer","operation":"ヘルスレポート保存","recordCount":1,"filename":"logs/health/health-report-2025-08-03T03-00-00-185Z.json"}
+2025-08-03 12:00:00 [INFO] [SCHEDULER] ✅ システムヘルスチェック正常完了 {"service":"deep-research-analyzer"}
+2025-08-04 12:00:00 [INFO] [SCHEDULER] 🔍 定期ヘルスチェックを開始します {"service":"deep-research-analyzer"}
+2025-08-04 12:00:00 [INFO] [HEALTH_CHECK] 🔍 システムヘルスチェックを開始します {"service":"deep-research-analyzer"}
+2025-08-04 12:00:00 [INFO] [HEALTH_CHECK] ✅ システムヘルスチェック完了 {"service":"deep-research-analyzer","overall":"HEALTHY","alertCount":0,"checkResults":[{"check":"memory","status":"HEALTHY"},{"check":"disk","status":"HEALTHY"},{"check":"logs","status":"HEALTHY"},{"check":"apiConnectivity","status":"HEALTHY"},{"check":"circuitBreakers","status":"HEALTHY"},{"check":"dataIntegrity","status":"HEALTHY"}]}
+2025-08-04 12:00:00 [INFO] [HEALTH_CHECK] 📊 ヘルスレポート保存: 1件処理 {"service":"deep-research-analyzer","operation":"ヘルスレポート保存","recordCount":1,"filename":"logs/health/health-report-2025-08-04T03-00-00-870Z.json"}
+2025-08-04 12:00:00 [INFO] [SCHEDULER] ✅ システムヘルスチェック正常完了 {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [ERROR_RESILIENCE] 🔌 サーキットブレーカー初期化: GoogleSearchAPI {"service":"deep-research-analyzer","failureThreshold":3,"recoveryTimeout":120000}
+2025-08-04 12:10:49 [INFO] [ERROR_RESILIENCE] 🔌 サーキットブレーカー初期化: GeminiAPI {"service":"deep-research-analyzer","failureThreshold":2,"recoveryTimeout":180000}
+2025-08-04 12:10:49 [INFO] [SCHEDULER] 🚀 Deep Research スケジューラーが起動しました。 {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER] 市場開放時間に合わせてDeep Research分析を自動実行します: {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER]   📅 平日 22:30 (米国市場開場後の分析) {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER]   📅 平日 05:00 (米国市場終了後の分析) {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER]   🔍 毎日 12:00 (システムヘルスチェック) {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER] PM2またはターミナルを終了するとスケジューラーは停止します。 {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER] ⏰ Cronジョブをスケジュール中... {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER] 🔍 起動時ヘルスチェックを実行します {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [HEALTH_CHECK] 🔍 システムヘルスチェックを開始します {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER] ✅ Cronジョブのスケジュール設定が完了しました {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER] 📋 実行スケジュール: {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER]   🌅 平日 22:30 (米国市場開場後の分析) {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER]   🌙 平日 05:00 (米国市場終了後の分析) {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER]   🔍 毎日 12:00 (システムヘルスチェック) {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER]  {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER] 💡 手動実行する場合は以下のコマンドを実行してください: {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER]    runManualAnalysis() - Deep Research手動実行 {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER]    runHealthCheck() - ヘルスチェック手動実行 {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [SCHEDULER]  {"service":"deep-research-analyzer"}
+2025-08-04 12:10:49 [INFO] [HEALTH_CHECK] ✅ システムヘルスチェック完了 {"service":"deep-research-analyzer","overall":"HEALTHY","alertCount":0,"checkResults":[{"check":"memory","status":"HEALTHY"},{"check":"disk","status":"HEALTHY"},{"check":"logs","status":"HEALTHY"},{"check":"apiConnectivity","status":"HEALTHY"},{"check":"circuitBreakers","status":"HEALTHY"},{"check":"dataIntegrity","status":"HEALTHY"}]}
+2025-08-04 12:10:49 [INFO] [SCHEDULER] ✅ 起動時ヘルスチェック完了 {"service":"deep-research-analyzer","overall":"HEALTHY"}
+2025-08-04 12:11:30 [INFO] [ERROR_RESILIENCE] 🔌 サーキットブレーカー初期化: GoogleSearchAPI {"service":"deep-research-analyzer","failureThreshold":3,"recoveryTimeout":120000}
+2025-08-04 12:11:30 [INFO] [ERROR_RESILIENCE] 🔌 サーキットブレーカー初期化: GeminiAPI {"service":"deep-research-analyzer","failureThreshold":2,"recoveryTimeout":180000}
+2025-08-04 12:11:30 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-04 12:11:30 [INFO] [MARKET_ANALYZER] Deep Research プロセスを開始します: 2025/8/4 12:11:30 {"service":"deep-research-analyzer"}
+2025-08-04 12:11:30 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-04 12:11:30 [INFO] [MARKET_ANALYZER] 🚀 市場データ収集 プロセス開始 {"service":"deep-research-analyzer","process":"市場データ収集"}
+2025-08-04 12:11:31 [INFO] [MARKET_ANALYZER] ✅ 市場データ収集 プロセス成功 (1113ms) {"service":"deep-research-analyzer","process":"市場データ収集","duration":1113,"success":true}
+2025-08-04 12:11:31 [INFO] [MARKET_ANALYZER] 🚀 リアルタイムWeb検索 プロセス開始 {"service":"deep-research-analyzer","process":"リアルタイムWeb検索"}
+2025-08-04 12:11:31 [INFO] [MARKET_ANALYZER] Web検索クエリ実行 {"service":"deep-research-analyzer","queryCount":3,"queries":["S&P 500 market analysis today","US stock market sentiment","Federal Reserve latest comments"]}
+2025-08-04 12:11:31 [INFO] [WEB_SEARCHER] Web検索を実行中: "S&P 500 market analysis today" {"service":"deep-research-analyzer"}
+2025-08-04 12:11:31 [INFO] [WEB_SEARCHER] Web検索を実行中: "US stock market sentiment" {"service":"deep-research-analyzer"}
+2025-08-04 12:11:31 [INFO] [WEB_SEARCHER] Web検索を実行中: "Federal Reserve latest comments" {"service":"deep-research-analyzer"}
+2025-08-04 12:11:32 [INFO] [WEB_SEARCHER] 🔗 Google Custom Search API call SUCCESS (409ms) {"service":"deep-research-analyzer","api":"Google Custom Search","duration":409,"query":"Federal Reserve latest comments","statusCode":200,"resultCount":5}
+2025-08-04 12:11:32 [INFO] [WEB_SEARCHER] ✅ Web検索完了: "Federal Reserve latest comments" {"service":"deep-research-analyzer","query":"Federal Reserve latest comments","resultCount":5,"duration":409}
+2025-08-04 12:11:32 [INFO] [WEB_SEARCHER] 🔗 Google Custom Search API call SUCCESS (589ms) {"service":"deep-research-analyzer","api":"Google Custom Search","duration":589,"query":"S&P 500 market analysis today","statusCode":200,"resultCount":5}
+2025-08-04 12:11:32 [INFO] [WEB_SEARCHER] ✅ Web検索完了: "S&P 500 market analysis today" {"service":"deep-research-analyzer","query":"S&P 500 market analysis today","resultCount":5,"duration":589}
+2025-08-04 12:11:32 [INFO] [WEB_SEARCHER] 🔗 Google Custom Search API call SUCCESS (722ms) {"service":"deep-research-analyzer","api":"Google Custom Search","duration":722,"query":"US stock market sentiment","statusCode":200,"resultCount":5}
+2025-08-04 12:11:32 [INFO] [WEB_SEARCHER] ✅ Web検索完了: "US stock market sentiment" {"service":"deep-research-analyzer","query":"US stock market sentiment","resultCount":5,"duration":722}
+2025-08-04 12:11:32 [INFO] [MARKET_ANALYZER] ✅ Web検索結果の統合完了 {"service":"deep-research-analyzer","totalResultsLength":3637,"searchCount":3}
+2025-08-04 12:11:32 [INFO] [MARKET_ANALYZER] ✅ リアルタイムWeb検索 プロセス成功 (1840ms) {"service":"deep-research-analyzer","process":"リアルタイムWeb検索","duration":1840,"success":true}
+2025-08-04 12:11:32 [INFO] [MARKET_ANALYZER] 🚀 GeminiによるDeep Research分析 プロセス開始 {"service":"deep-research-analyzer","process":"GeminiによるDeep Research分析"}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] 🔗 Gemini AI API call SUCCESS (13216ms) {"service":"deep-research-analyzer","api":"Gemini AI","duration":13216,"responseLength":4161,"promptLength":8135}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] ✅ Gemini分析完了 {"service":"deep-research-analyzer","duration":13216,"dataStructure":["date","session","languages"],"japaneseDataStructure":["session","date","summary","dashboard","details","marketOverview","hotStocks"]}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] ✅ GeminiによるDeep Research分析 プロセス成功 (1754277105552ms) {"service":"deep-research-analyzer","process":"GeminiによるDeep Research分析","duration":1754277105552,"success":true}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] 英語版データを自動生成中... {"service":"deep-research-analyzer"}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] ✅ 英語版データ生成完了 {"service":"deep-research-analyzer"}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] 🚀 分析結果ファイル保存 プロセス開始 {"service":"deep-research-analyzer","process":"分析結果ファイル保存"}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] 📊 JSONファイル保存: 1件処理 {"service":"deep-research-analyzer","operation":"JSONファイル保存","recordCount":1,"filePath":"live_data/latest.json","fileSize":5915}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] 📊 Eleventy用データ保存: 1件処理 {"service":"deep-research-analyzer","operation":"Eleventy用データ保存","recordCount":1,"filePath":"_data/reportData.json"}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] ✅ 分析結果ファイル保存 プロセス成功 (15071ms) {"service":"deep-research-analyzer","process":"分析結果ファイル保存","duration":15071,"success":true}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] データ構造検証結果 {"service":"deep-research-analyzer","summary":true,"dashboard":true,"details.internals":true,"details.technicals":true,"details.fundamentals":true,"details.strategy":true,"marketOverview":true,"hotStocks":true}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] ✅ Deep Research プロセスが正常に完了しました (実行時間: 15072ms) {"service":"deep-research-analyzer","totalDuration":15072}
+2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}

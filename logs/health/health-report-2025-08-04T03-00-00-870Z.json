@@ -1,0 +1,110 @@
+{
+  "timestamp": "2025-08-04T03:00:00.853Z",
+  "overall": "HEALTHY",
+  "checks": {
+    "memory": {
+      "status": "HEALTHY",
+      "details": {
+        "rss": "48MB",
+        "heapUsed": "11MB",
+        "heapTotal": "12MB",
+        "external": "3MB"
+      },
+      "threshold": "500MB",
+      "message": "メモリ使用量は正常です"
+    },
+    "disk": {
+      "status": "HEALTHY",
+      "details": {
+        "totalLogSize": "0MB",
+        "logFileCount": 7
+      },
+      "threshold": "100MB",
+      "message": "ディスク使用量は正常です"
+    },
+    "logs": {
+      "status": "HEALTHY",
+      "details": {
+        "existingFiles": [
+          "error.log",
+          "success.log",
+          "combined.log"
+        ],
+        "missingFiles": [],
+        "totalFiles": 3
+      },
+      "message": "ログファイルは正常です"
+    },
+    "apiConnectivity": {
+      "status": "HEALTHY",
+      "details": {
+        "googleSearchAPI": "CONFIGURED",
+        "geminiAPI": "CONFIGURED",
+        "hasGoogleApiKey": true,
+        "hasSearchEngineId": true,
+        "hasGeminiApiKey": true
+      },
+      "message": "API設定は正常です"
+    },
+    "circuitBreakers": {
+      "status": "HEALTHY",
+      "details": {
+        "circuitBreakers": [
+          {
+            "name": "GoogleSearchAPI",
+            "state": "CLOSED",
+            "failureCount": 0,
+            "successCount": 0,
+            "totalCalls": 0,
+            "failureRate": "0%"
+          }
+        ],
+        "openCircuits": 0,
+        "totalCircuits": 1
+      },
+      "message": "サーキットブレーカーは正常です"
+    },
+    "dataIntegrity": {
+      "status": "HEALTHY",
+      "details": {
+        "files": {
+          "live_data/latest.json": {
+            "exists": true,
+            "isValidJSON": true,
+            "hasRequiredStructure": "2025年8月2日",
+            "fileSize": 10170
+          },
+          "_data/reportData.json": {
+            "exists": true,
+            "isValidJSON": true,
+            "hasRequiredStructure": "2025年8月2日",
+            "fileSize": 4310
+          }
+        },
+        "healthyFiles": 2,
+        "totalFiles": 2
+      },
+      "message": "データファイルは正常です"
+    }
+  },
+  "metrics": {
+    "uptime": 134173,
+    "nodeVersion": "v22.17.0",
+    "platform": "win32",
+    "arch": "x64",
+    "processId": 22952,
+    "memoryUsage": {
+      "rss": 52236288,
+      "heapTotal": 12382208,
+      "heapUsed": 11198048,
+      "external": 3653591,
+      "arrayBuffers": 109584
+    },
+    "cpuUsage": {
+      "user": 69500000,
+      "system": 12703000
+    },
+    "timestamp": "2025-08-04T03:00:00.868Z"
+  },
+  "alerts": []
+}

@@ -1,0 +1,206 @@
+{
+  "date": "2025年7月30日",
+  "session": "7月30日 市場分析",
+  "languages": {
+    "ja": {
+      "session": "7月30日 市場分析",
+      "date": "2025年7月30日",
+      "summary": {
+        "evaluation": "売り",
+        "score": 3,
+        "headline": "記録的上昇の終焉：内部崩壊の兆候が迫り来る下落を示唆",
+        "text": "S&P 500は記録的な高値圏で推移しているが、その表面的な強さとは裏腹に、市場の内部構造は深刻な脆弱性を示している。騰落数の悪化、オプション市場における極端な投機熱、企業インサイダーによる大量の売り、そしてテクニカル指標のダイバージェンスは、現在のラリーがごく一部の銘柄に支えられた砂上の楼閣であることを示唆しており、短期的に大幅な調整が入るリスクが極めて高い。"
+      },
+      "dashboard": {
+        "breadth": {
+          "advancers": 169,
+          "decliners": 331,
+          "summary": "指数が高値圏にあるにも関わらず、値下がり銘柄数が値上がりを圧倒。市場の健全性が著しく悪化している警告シグナルです。"
+        },
+        "sentimentVI": 75,
+        "sentimentVISummary": "市場心理は「強欲(Greed)」の領域にあり、過度な楽観は自己満足の表れです。逆張りの観点からは調整が近い危険な兆候です。",
+        "priceLevels": {
+          "resistance": {
+            "value": "6,409 - 6,426",
+            "description": "直近の史上最高値とピボットポイントが重なる強力な上値抵抗線。"
+          },
+          "support": {
+            "value": "6,353 - 6,363",
+            "description": "ピボットポイントと当日の安値圏から成る短期的な最初の防衛ライン。"
+          }
+        },
+        "putCallRatio": {
+          "dailyValue": "0.57",
+          "movingAverage": "0.68",
+          "status": "危険な自己満足シグナル",
+          "summary": "レシオの歴史的な低水準は、投資家が下落リスクを軽視し、投機的なコール買いに熱狂していることを示します。典型的な逆張りシグナルです。"
+        }
+      },
+      "details": {
+        "internals": {
+          "headline": "引き裂かれた市場心理：陶酔する投機家と警戒するインサイダーの衝突",
+          "text": "現在の市場センチメントは、投資家層によって全く異なる景色を見せており、その乖離は市場の転換点を示唆する重要なシグナルです。オプション市場では危険なレベルの投機熱が見られる一方、企業の内部情報を最もよく知るインサイダーは積極的に自社株を売却しています。この矛盾は、市場が非常に不安定な状態にあることを示しています。",
+          "chartData": {
+            "labels": ["個人投資家(AAII)", "プロの投資家(II)", "オプション投機家", "企業インサイダー"],
+            "values": [0, 2.62, 10, -9.47]
+          }
+        },
+        "technicals": {
+          "headline": "圧迫される上昇トレンド：価格と騰落指数のダイバージェンスが消耗を示唆",
+          "text": "最も重大なテクニカル上の警告は、価格と市場の幅（Breadth）との間の深刻なダイバージェンスです。S&P 500が史上最高値を更新する一方、市場全体の健全性を示す騰落株線（ADL）はそれに追随せず、むしろ軟調に推移しています。これは、ラリーの基盤が内部から崩れ始めていることを示す信頼性の高いシグナルです。",
+          "chartData": {
+            "labels": ["2025-07-23", "2025-07-24", "2025-07-25", "2025-07-28", "2025-07-29"],
+            "sp500": [6358.91, 6363.35, 6388.64, 6389.77, 6370.86],
+            "ma50": [6108.11, 6108.11, 6108.11, 6108.11, 6108.11],
+            "adl": [25000, 24850, 24900, 24700, 24500]
+          }
+        },
+        "fundamentals": {
+          "headline": "FRBの影、精彩を欠く企業収益、イールドカーブの警告",
+          "text": "ファンダメンタルズの状況は、強弱材料が混在する地雷原のようです。市場が固唾をのんで見守るのは、本日発表されるFOMCの政策金利決定と第2四半期のGDP速報値です。タカ派的なトーンや期待外れの数値が出れば、市場を混乱させるには十分でしょう。",
+          "vix": {
+            "value": 15.98,
+            "change": "+6.32%",
+            "status": "上昇",
+            "summary": "VIXの上昇は、FOMCやGDP発表を前に、機関投資家がヘッジ目的のオプションを買い入れていることを示唆します。「スマートマネー」がリスクを軽視していない証拠です。"
+          },
+          "aaiiSurvey": {
+            "date": "2025年7月24日の週",
+            "bullish": 36.8,
+            "neutral": 29.2,
+            "bearish": 34.0,
+            "summary": "個人投資家はラリーへの確信を失い、中立へと逃避しています。これは、強気センチメントの勢いが衰えていることを示します。"
+          },
+          "investorsIntelligence": {
+            "date": "2025年7月25日終了週",
+            "bullish": 55.1,
+            "bearish": 21.0,
+            "correction": 23.9,
+            "summary": "プロの投資アドバイザーは強気を維持していますが、極端な陶酔レベルには達していません。ラリーに乗りつつも一定の警戒感を保っていることを示唆しています。"
+          },
+          "points": [
+            "市場は本日、FOMCの政策決定と第2四半期GDP発表という重大なイベントリスクに直面している。",
+            "10年債と3ヶ月債の逆イールドは、市場が現在無視しているものの、強力なリセッションの先行指標である。",
+            "第2四半期の利益成長は減速しており、予想PER 22.4倍というバリュエーションは、ファンダメンタルズが裏付けていない完璧なシナリオを織り込んでいる。"
+          ]
+        },
+        "strategy": {
+          "headline": "戦術的防御：キャピタル保全を最優先し、ボラティリティに備えよ",
+          "basic": "既存のロングポジションは、部分的な利益確定を検討し、ストップロスを重要支持帯の6,350直下に引き上げるべきです。新規のロングは見送り、積極的なトレーダーは6,350を明確に下抜けた場合に戦術的な売りを検討します。",
+          "risk": "最大のリスクは、FRBのタカ派転換や期待外れのGDPによる「リスクオフ」の連鎖です。市場の脆弱な内部構造が「エアポケット」現象（急落）を引き起こす可能性があります。6,350を割り込んだら、短期下降トレンド開始と判断し、「押し目買い」は厳禁です。"
+        }
+      },
+      "marketOverview": [
+        { "name": "S&P 500 (7/29終値)", "value": "6,370.86", "change": "-18.91 (-0.30%)", "isDown": true },
+        { "name": "S&P 500 先物", "value": "6,365.50", "change": "-5.25", "isDown": true },
+        { "name": "VIX指数", "value": "15.98", "change": "+0.95 (+6.32%)", "isDown": false },
+        { "name": "米国10年債利回り", "value": "4.32%", "change": "-0.02%", "isDown": true }
+      ],
+      "hotStocks": [
+        { "name": "Apple (AAPL)", "price": "主な値下がり銘柄", "description": "金利上昇懸念と利益確定売りに押され、ハイテクセクターの重しとなる可能性。", "isDown": true },
+        { "name": "NVIDIA (NVDA)", "price": "主な値下がり銘柄", "description": "バリュエーションへの懸念から、マクロ経済の不確実性に対して脆弱。", "isDown": true },
+        { "name": "Johnson & Johnson (JNJ)", "price": "相対的な強さ", "description": "ディフェンシブ銘柄として、市場の不確実性が高まる中で資金の逃避先となる可能性。", "isDown": false }
+      ]
+    },
+    "en": {
+      "session": "July 30th Market Analysis",
+      "date": "July 30, 2025",
+      "summary": {
+        "evaluation": "Sell",
+        "score": 3,
+        "headline": "End of Record Rally: Internal Collapse Signals Imminent Decline",
+        "text": "While the S&P 500 continues to trade in record-high territory, beneath its superficial strength lies a market structure showing severe vulnerability. Deteriorating advance-decline ratios, extreme speculation in options markets, massive insider selling, and technical divergences suggest the current rally is a house of cards supported by only a handful of stocks, with extremely high risk of significant short-term correction."
+      },
+      "dashboard": {
+        "breadth": {
+          "advancers": 169,
+          "decliners": 331,
+          "summary": "Despite indices at high levels, declining stocks overwhelm advancing ones. This is a warning signal of severely deteriorating market health."
+        },
+        "sentimentVI": 75,
+        "sentimentVISummary": "Market psychology is in 'Greed' territory, with excessive optimism reflecting complacency. From a contrarian perspective, this is a dangerous sign that correction is near.",
+        "priceLevels": {
+          "resistance": {
+            "value": "6,409 - 6,426",
+            "description": "Strong resistance where recent all-time highs and pivot points converge."
+          },
+          "support": {
+            "value": "6,353 - 6,363",
+            "description": "First line of short-term defense formed by pivot points and daily lows."
+          }
+        },
+        "putCallRatio": {
+          "dailyValue": "0.57",
+          "movingAverage": "0.68",
+          "status": "Dangerous Complacency Signal",
+          "summary": "The historically low ratio shows investors are dismissing downside risk and are euphoric about speculative call buying. This is a typical contrarian signal."
+        }
+      },
+      "details": {
+        "internals": {
+          "headline": "Torn Market Psychology: Euphoric Speculators vs. Cautious Insiders",
+          "text": "Current market sentiment shows completely different landscapes depending on investor type, with this divergence being a crucial signal suggesting market turning point. While options markets show dangerous levels of speculation, corporate insiders with the best internal information are actively selling their shares. This contradiction indicates the market is in a highly unstable state.",
+          "chartData": {
+            "labels": ["Individual Investors (AAII)", "Professional Investors (II)", "Options Speculators", "Corporate Insiders"],
+            "values": [0, 2.62, 10, -9.47]
+          }
+        },
+        "technicals": {
+          "headline": "Pressured Uptrend: Price-Breadth Divergence Suggests Exhaustion",
+          "text": "The most critical technical warning is the severe divergence between price and market breadth. While the S&P 500 continues to make new all-time highs, the Advance-Decline Line (ADL) that shows overall market health fails to follow and actually trends lower. This is a reliable signal that the rally's foundation is crumbling from within.",
+          "chartData": {
+            "labels": ["2025-07-23", "2025-07-24", "2025-07-25", "2025-07-28", "2025-07-29"],
+            "sp500": [6358.91, 6363.35, 6388.64, 6389.77, 6370.86],
+            "ma50": [6108.11, 6108.11, 6108.11, 6108.11, 6108.11],
+            "adl": [25000, 24850, 24900, 24700, 24500]
+          }
+        },
+        "fundamentals": {
+          "headline": "Fed's Shadow, Lackluster Earnings, and Yield Curve Warnings",
+          "text": "The fundamental landscape resembles a minefield of mixed signals. Markets hold their breath for today's FOMC policy decision and Q2 GDP preliminary data. Hawkish tones or disappointing numbers would be sufficient to shake up markets.",
+          "vix": {
+            "value": 15.98,
+            "change": "+6.32%",
+            "status": "Rising",
+            "summary": "VIX's rise suggests institutional investors are buying hedging options ahead of FOMC and GDP announcements. Evidence that 'smart money' is not dismissing risk."
+          },
+          "aaiiSurvey": {
+            "date": "Week of July 24, 2025",
+            "bullish": 36.8,
+            "neutral": 29.2,
+            "bearish": 34.0,
+            "summary": "Individual investors are losing conviction in the rally and fleeing to neutral territory. This shows bullish sentiment momentum is waning."
+          },
+          "investorsIntelligence": {
+            "date": "Week ending July 25, 2025",
+            "bullish": 55.1,
+            "bearish": 21.0,
+            "correction": 23.9,
+            "summary": "Professional investment advisors maintain bullish stance but haven't reached extreme euphoric levels. Suggests they're riding the rally while maintaining some caution."
+          },
+          "points": [
+            "Market faces major event risk today with FOMC policy decision and Q2 GDP announcement.",
+            "The 10-year/3-month yield curve inversion remains a powerful recession predictor that markets are currently ignoring.",
+            "Q2 earnings growth is decelerating, with 22.4x forward P/E ratio pricing in a perfect scenario not supported by fundamentals."
+          ]
+        },
+        "strategy": {
+          "headline": "Tactical Defense: Prioritize Capital Preservation and Prepare for Volatility",
+          "basic": "Existing long positions should consider partial profit-taking and raise stop-losses just below the key support zone of 6,350. Avoid new longs, and aggressive traders should consider tactical shorts if 6,350 is clearly breached.",
+          "risk": "The biggest risk is a 'risk-off' cascade from Fed hawkishness or disappointing GDP. The market's fragile internal structure could trigger an 'air pocket' phenomenon (sharp decline). If 6,350 is broken, judge it as the start of a short-term downtrend and avoid any 'buy the dip' strategies."
+        }
+      },
+      "marketOverview": [
+        { "name": "S&P 500 (7/29 Close)", "value": "6,370.86", "change": "-18.91 (-0.30%)", "isDown": true },
+        { "name": "S&P 500 Futures", "value": "6,365.50", "change": "-5.25", "isDown": true },
+        { "name": "VIX Index", "value": "15.98", "change": "+0.95 (+6.32%)", "isDown": false },
+        { "name": "US 10-Year Yield", "value": "4.32%", "change": "-0.02%", "isDown": true }
+      ],
+      "hotStocks": [
+        { "name": "Apple (AAPL)", "price": "Major Decliner", "description": "Pressured by interest rate concerns and profit-taking, potentially weighing on tech sector.", "isDown": true },
+        { "name": "NVIDIA (NVDA)", "price": "Major Decliner", "description": "Vulnerable to macroeconomic uncertainty due to valuation concerns.", "isDown": true },
+        { "name": "Johnson & Johnson (JNJ)", "price": "Relative Strength", "description": "As a defensive stock, potential safe haven as market uncertainty increases.", "isDown": false }
+      ]
+    }
+  }
+}
