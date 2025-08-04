@@ -3,10 +3,23 @@ const fs = require('fs/promises');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { collectAllMarketData } = require('./market_data_collector.js');
 const { searchWeb } = require('./web_searcher.js'); // Web検索モジュールをインポート
+const { createModuleLogger, logErrorAnalysis } = require('./utils/logger');
+const { withRetry, withTimeout, CircuitBreaker, retryConditions } = require('./utils/errorResilience');
+
+// モジュール専用ロガー
+const logger = createModuleLogger('MARKET_ANALYZER');
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+// Gemini API用サーキットブレーカー
+const geminiCircuitBreaker = new CircuitBreaker({
+    name: 'GeminiAPI',
+    failureThreshold: 2,
+    recoveryTimeout: 180000, // 3分
+    monitoringWindow: 600000  // 10分
+});
 
 // Geminiに分析を依頼するためのプロンプト（指示文）を作成する関数
 function buildAnalysisPrompt(marketData, searchResultsText) { // searchResultsText を引数に追加
@@ -139,79 +152,136 @@ function buildAnalysisPrompt(marketData, searchResultsText) { // searchResultsTe
 
 // JSONパース処理を改善（Markdownコードブロック除去、エラーハンドリング強化）
 async function analyzeWithGemini(marketData, searchResultsText) { // searchResultsText を引数に追加
-    console.log('----------');
-    console.log('[STEP 3] GeminiによるDeep Research分析を開始します。');
+    logger.processStart('GeminiによるDeep Research分析');
     
     if (!marketData) {
-        console.error('[ERROR] 分析対象の市場データがありません。');
+        logger.error('分析対象の市場データがありません');
         return null;
     }
     
+    const geminiOperation = async () => {
+        return await geminiCircuitBreaker.execute(async () => {
+            return await withTimeout(async () => {
+                return await performGeminiAnalysis(marketData, searchResultsText);
+            }, 45000, 'Gemini分析'); // 45秒タイムアウト
+        }, 'Gemini分析');
+    };
+
     try {
-        const prompt = buildAnalysisPrompt(marketData, searchResultsText);
-        console.log('[DEBUG] AIプロンプトを送信中...');
-        
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
-        
-        console.log('[DEBUG] Geminiからの生レスポンス長:', text.length);
-        console.log('[DEBUG] 生レスポンスの最初の200文字:', text.substring(0, 200));
-        
-        // Markdownコードブロックを確実に除去
-        let cleanText = text.trim();
-        
-        // 複数のMarkdownパターンに対応
-        cleanText = cleanText
-            // ```json ... ``` パターン
-            .replace(/^```json\s*/g, '')
-            .replace(/^```JSON\s*/g, '')
-            .replace(/```\s*$/g, '')
-            // ``` ... ``` パターン
-            .replace(/^```\s*/g, '')
-            .replace(/```\s*$/g, '')
-            // その他の余計なテキストを除去
-            .replace(/^[^{]*/, '') // JSON開始前の余計なテキスト
-            .replace(/[^}]*$/, '') // JSON終了後の余計なテキスト
-            .trim();
-        
-        console.log('[DEBUG] クリーニング後のテキスト長:', cleanText.length);
-        console.log('[DEBUG] クリーニング後の最初の200文字:', cleanText.substring(0, 200));
-        
-        // JSON構造検証
-        if (!cleanText.startsWith('{') || !cleanText.endsWith('}')) {
-            throw new Error('無効なJSON形式: 正しい{ }で囲まれていません');
+        const analysisResult = await withRetry(geminiOperation, {
+            maxRetries: 2,
+            baseDelay: 5000,
+            maxDelay: 15000,
+            backoffMultiplier: 3,
+            retryCondition: (error) => {
+                // API制限、レート制限、一時的なサービス不可のみリトライ
+                return error.message.includes('quota') ||
+                       error.message.includes('rate limit') ||
+                       error.message.includes('service unavailable') ||
+                       error.message.includes('timeout') ||
+                       retryConditions.networkErrors(error);
+            },
+            operationName: 'Gemini分析'
+        });
+
+        if (analysisResult) {
+            logger.processEnd('GeminiによるDeep Research分析', Date.now(), true);
         }
-        
-        const analysisResult = JSON.parse(cleanText);
-        
-        // データ構造検証
-        if (!analysisResult.languages || !analysisResult.languages.ja) {
-            throw new Error('必須の多言語構造（languages.ja）が見つかりません');
-        }
-        
-        if (!analysisResult.languages.ja.details) {
-            throw new Error('必須のdetailsセクションが見つかりません');
-        }
-        
-        console.log('[SUCCESS] Geminiによる分析が完了しました。');
-        console.log('[DEBUG] 生成されたデータ構造:', Object.keys(analysisResult));
-        console.log('[DEBUG] 日本語データ構造:', Object.keys(analysisResult.languages.ja));
-        
+
         return analysisResult;
+
     } catch (error) {
-        console.error('[ERROR] Geminiでの分析中にエラーが発生しました:', error.message);
-        console.error('[ERROR] エラースタック:', error.stack);
+        logger.processEnd('GeminiによるDeep Research分析', Date.now(), false);
+        logErrorAnalysis(error, { 
+            marketData: !!marketData, 
+            searchResultsLength: searchResultsText?.length || 0 
+        });
         
-        // デバッグ用にレスポンステキストをファイルに保存
-        if (typeof text !== 'undefined') {
-            const debugPath = 'debug_gemini_response.txt';
-            await fs.writeFile(debugPath, `=== 生レスポンス ===\n${text}\n\n=== クリーニング後 ===\n${cleanText || 'undefined'}`);
-            console.error(`[DEBUG] レスポンス内容を ${debugPath} に保存しました`);
-        }
+        // サーキットブレーカーの統計情報をログ出力
+        const cbStats = geminiCircuitBreaker.getStats();
+        logger.warn('Gemini APIサーキットブレーカー状態', cbStats);
         
         return null;
     }
+}
+
+/**
+ * 実際のGemini API呼び出しを行う内部関数
+ * @param {Object} marketData - 市場データ
+ * @param {string} searchResultsText - Web検索結果
+ * @returns {Promise<Object>} - 分析結果
+ */
+async function performGeminiAnalysis(marketData, searchResultsText) {
+    const startTime = Date.now();
+    const prompt = buildAnalysisPrompt(marketData, searchResultsText);
+    
+    logger.debug('Gemini APIプロンプト送信', { 
+        promptLength: prompt.length,
+        marketDataKeys: Object.keys(marketData),
+        searchResultsLength: searchResultsText?.length || 0
+    });
+    
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    
+    const duration = Date.now() - startTime;
+    logger.apiCall('Gemini AI', 'SUCCESS', duration, {
+        responseLength: text.length,
+        promptLength: prompt.length
+    });
+    
+    logger.debug('Gemini生レスポンス受信', { 
+        responseLength: text.length,
+        firstChars: text.substring(0, 200)
+    });
+    
+    // Markdownコードブロックを確実に除去
+    let cleanText = text.trim();
+    
+    // 複数のMarkdownパターンに対応
+    cleanText = cleanText
+        // ```json ... ``` パターン
+        .replace(/^```json\s*/g, '')
+        .replace(/^```JSON\s*/g, '')
+        .replace(/```\s*$/g, '')
+        // ``` ... ``` パターン
+        .replace(/^```\s*/g, '')
+        .replace(/```\s*$/g, '')
+        // その他の余計なテキストを除去
+        .replace(/^[^{]*/, '') // JSON開始前の余計なテキスト
+        .replace(/[^}]*$/, '') // JSON終了後の余計なテキスト
+        .trim();
+    
+    logger.debug('JSONクリーニング完了', { 
+        originalLength: text.length,
+        cleanedLength: cleanText.length,
+        firstChars: cleanText.substring(0, 200)
+    });
+    
+    // JSON構造検証
+    if (!cleanText.startsWith('{') || !cleanText.endsWith('}')) {
+        throw new Error('無効なJSON形式: 正しい{ }で囲まれていません');
+    }
+    
+    const analysisResult = JSON.parse(cleanText);
+    
+    // データ構造検証
+    if (!analysisResult.languages || !analysisResult.languages.ja) {
+        throw new Error('必須の多言語構造（languages.ja）が見つかりません');
+    }
+    
+    if (!analysisResult.languages.ja.details) {
+        throw new Error('必須のdetailsセクションが見つかりません');
+    }
+    
+    logger.success('Gemini分析完了', {
+        duration,
+        dataStructure: Object.keys(analysisResult),
+        japaneseDataStructure: Object.keys(analysisResult.languages.ja)
+    });
+    
+    return analysisResult;
 }
 
 // 簡易英語翻訳関数（基本的な用語の変換）
@@ -254,23 +324,31 @@ function generateEnglishVersion(jaData) {
 
 // メインの実行関数を更新
 async function runFullAnalysis() {
+    const processStartTime = Date.now();
+    
     try {
-        console.log('=============================================');
-        console.log(`Deep Research プロセスを開始します: ${new Date().toLocaleString()}`);
-        console.log('=============================================');
+        logger.info('=============================================');
+        logger.info(`Deep Research プロセスを開始します: ${new Date().toLocaleString()}`);
+        logger.info('=============================================');
         
         // STEP 1: 基本的な市場データを収集
+        logger.processStart('市場データ収集');
         const marketData = await collectAllMarketData();
         if (!marketData) throw new Error('基本的な市場データの収集に失敗しました。');
+        logger.processEnd('市場データ収集', Date.now() - processStartTime, true);
 
         // STEP 2: Web検索を実行
-        console.log('----------');
-        console.log('[STEP 2] リアルタイムWeb検索を開始します。');
+        logger.processStart('リアルタイムWeb検索');
         const searchQueries = [
             "S&P 500 market analysis today",
             "US stock market sentiment",
             "Federal Reserve latest comments",
         ];
+        
+        logger.info('Web検索クエリ実行', { 
+            queryCount: searchQueries.length,
+            queries: searchQueries 
+        });
         
         // 複数の検索を並行して実行
         const searchPromises = searchQueries.map(query => searchWeb(query));
@@ -281,7 +359,11 @@ async function runFullAnalysis() {
             return `--- "${query}" の検索結果 ---\n${searchResults[index]}`;
         }).join('\n\n');
         
-        console.log('[DEBUG] Web検索結果の統合が完了しました');
+        logger.success('Web検索結果の統合完了', {
+            totalResultsLength: searchResultsText.length,
+            searchCount: searchResults.length
+        });
+        logger.processEnd('リアルタイムWeb検索', Date.now() - processStartTime, true);
         
         // STEP 3: AIによる分析
         const analysisJson = await analyzeWithGemini(marketData, searchResultsText);
@@ -289,52 +371,80 @@ async function runFullAnalysis() {
         
         // 英語版データを自動生成
         if (analysisJson.languages && analysisJson.languages.ja) {
-            console.log('[INFO] 英語版データを自動生成中...');
+            logger.info('英語版データを自動生成中...');
             analysisJson.languages.en = generateEnglishVersion(analysisJson.languages.ja);
             // 英語版の基本情報を設定
             analysisJson.languages.en.session = analysisJson.session.replace('市場分析', 'Market Analysis') + ' (EN)';
             analysisJson.languages.en.date = analysisJson.date;
+            logger.success('英語版データ生成完了');
         }
         
         // STEP 4: 結果をファイルに保存
-        console.log('----------');
-        console.log('[STEP 4] 分析結果をファイルに保存します。');
+        logger.processStart('分析結果ファイル保存');
         
         // 正しい出力先に保存（live_data/latest.json）
         await fs.mkdir('live_data', { recursive: true });
         const outputPath = 'live_data/latest.json';
         await fs.writeFile(outputPath, JSON.stringify(analysisJson, null, 2));
-        console.log(`[SUCCESS] 分析結果を ${outputPath} に保存しました。`);
+        logger.dataOperation('JSONファイル保存', 1, { 
+            filePath: outputPath,
+            fileSize: JSON.stringify(analysisJson).length 
+        });
         
         // STEP 5: Eleventy用の_data/reportData.jsonも更新
         await fs.mkdir('_data', { recursive: true });
         const eleventyPath = '_data/reportData.json';
         // 日本語データのみを_data/reportData.jsonに保存（Eleventy互換性のため）
         await fs.writeFile(eleventyPath, JSON.stringify(analysisJson.languages.ja, null, 2));
-        console.log(`[SUCCESS] Eleventy用データを ${eleventyPath} に保存しました。`);
+        logger.dataOperation('Eleventy用データ保存', 1, { 
+            filePath: eleventyPath 
+        });
+        
+        logger.processEnd('分析結果ファイル保存', Date.now() - processStartTime, true);
         
         // データ構造の検証レポート
         const jaData = analysisJson.languages.ja;
-        console.log('[INFO] データ構造検証:');
-        console.log(`  - summary: ${jaData.summary ? '✓' : '✗'}`);
-        console.log(`  - dashboard: ${jaData.dashboard ? '✓' : '✗'}`);
-        console.log(`  - details.internals: ${jaData.details?.internals ? '✓' : '✗'}`);
-        console.log(`  - details.technicals: ${jaData.details?.technicals ? '✓' : '✗'}`);
-        console.log(`  - details.fundamentals: ${jaData.details?.fundamentals ? '✓' : '✗'}`);
-        console.log(`  - details.strategy: ${jaData.details?.strategy ? '✓' : '✗'}`);
-        console.log(`  - marketOverview: ${jaData.marketOverview ? '✓' : '✗'}`);
-        console.log(`  - hotStocks: ${jaData.hotStocks ? '✓' : '✗'}`);
+        const validationResults = {
+            summary: !!jaData.summary,
+            dashboard: !!jaData.dashboard,
+            'details.internals': !!jaData.details?.internals,
+            'details.technicals': !!jaData.details?.technicals,
+            'details.fundamentals': !!jaData.details?.fundamentals,
+            'details.strategy': !!jaData.details?.strategy,
+            marketOverview: !!jaData.marketOverview,
+            hotStocks: !!jaData.hotStocks
+        };
+        
+        logger.info('データ構造検証結果', validationResults);
 
-        console.log('=============================================');
-        console.log(`Deep Research プロセスが正常に完了しました: ${new Date().toLocaleString()}`);
-        console.log('=============================================');
+        const totalDuration = Date.now() - processStartTime;
+        logger.info('=============================================');
+        logger.success(`Deep Research プロセスが正常に完了しました (実行時間: ${totalDuration}ms)`, {
+            totalDuration,
+            timestamp: new Date().toLocaleString()
+        });
+        logger.info('=============================================');
 
     } catch (error) {
-        console.error(`[FATAL] プロセス全体で致命的なエラーが発生しました: ${error.message}`);
-        const errorLogPath = 'error.log';
-        const errorMessage = `${new Date().toISOString()}: ${error.stack}\n`;
-        await fs.appendFile(errorLogPath, errorMessage);
-        console.error(`エラーの詳細は ${errorLogPath} を確認してください。`);
+        const totalDuration = Date.now() - processStartTime;
+        logger.error(`プロセス全体で致命的なエラーが発生しました (実行時間: ${totalDuration}ms)`, {
+            totalDuration,
+            errorMessage: error.message
+        });
+        
+        logErrorAnalysis(error, { 
+            processStep: 'runFullAnalysis',
+            duration: totalDuration
+        });
+        
+        // エラーの詳細をファイルに記録
+        const errorLogPath = 'logs/critical_errors.log';
+        const errorMessage = `${new Date().toISOString()}: CRITICAL ERROR - ${error.message}\n${error.stack}\n\n`;
+        await fs.appendFile(errorLogPath, errorMessage).catch(() => {
+            // ログファイル書き込みエラーは無視（ログシステム自体のエラーを避けるため）
+        });
+        
+        throw error; // エラーを再スロー
     }
 }
 

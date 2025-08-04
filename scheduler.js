@@ -1,27 +1,17 @@
 const cron = require('node-cron');
 const { exec } = require('child_process');
 const { runFullAnalysis } = require('./auto_market_analysis.js');
-const winston = require('winston');
+const { createModuleLogger, logSystemHealth } = require('./utils/logger');
+const { performSystemHealthCheck, saveHealthReport } = require('./utils/healthCheck');
 
-// ログ設定
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.printf(({ timestamp, level, message }) => {
-            return `${timestamp} [${level.toUpperCase()}] ${message}`;
-        })
-    ),
-    transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: 'logs/scheduler.log' })
-    ]
-});
+// モジュール専用ロガー
+const logger = createModuleLogger('SCHEDULER');
 
 logger.info('🚀 Deep Research スケジューラーが起動しました。');
 logger.info('市場開放時間に合わせてDeep Research分析を自動実行します:');
-logger.info('  📅 平日 午前9:30 (米国市場開場直後)');
-logger.info('  📅 平日 午後6:00 (米国市場終了後)');
+logger.info('  📅 平日 22:30 (米国市場開場後の分析)');
+logger.info('  📅 平日 05:00 (米国市場終了後の分析)');
+logger.info('  🔍 毎日 12:00 (システムヘルスチェック)');
 logger.info('PM2またはターミナルを終了するとスケジューラーは停止します。');
 
 // GitHubに変更をプッシュする関数
@@ -123,14 +113,65 @@ cron.schedule('0 5 * * 2-6', () => runAnalysisAndPush('市場終了後'), {
     timezone: "Asia/Tokyo"
 });
 
-// 3. 手動実行用の関数をグローバルに公開
+// 3. 定期ヘルスチェック (毎日12:00)
+cron.schedule('0 12 * * *', async () => {
+    logger.info('🔍 定期ヘルスチェックを開始します');
+    try {
+        const healthStatus = await performSystemHealthCheck();
+        await saveHealthReport(healthStatus);
+        
+        if (healthStatus.overall !== 'HEALTHY') {
+            logger.warn('システムヘルスチェックで問題を検出', {
+                overall: healthStatus.overall,
+                alertCount: healthStatus.alerts.length
+            });
+        } else {
+            logger.success('システムヘルスチェック正常完了');
+        }
+    } catch (error) {
+        logger.error('ヘルスチェック実行エラー', { error: error.message });
+    }
+}, {
+    scheduled: true,
+    timezone: "Asia/Tokyo"
+});
+
+// 4. 手動実行用の関数をグローバルに公開
 global.runManualAnalysis = () => runAnalysisAndPush('手動実行');
+global.runHealthCheck = async () => {
+    logger.info('🔍 手動ヘルスチェックを実行します');
+    const healthStatus = await performSystemHealthCheck();
+    console.log(JSON.stringify(healthStatus, null, 2));
+    return healthStatus;
+};
+
+// 5. 起動時にシステムヘルスチェックを実行
+(async () => {
+    try {
+        logger.info('🔍 起動時ヘルスチェックを実行します');
+        const healthStatus = await performSystemHealthCheck();
+        
+        if (healthStatus.overall === 'CRITICAL') {
+            logger.error('起動時ヘルスチェックで重大な問題を検出', {
+                alertCount: healthStatus.alerts.length
+            });
+        } else {
+            logger.success('起動時ヘルスチェック完了', {
+                overall: healthStatus.overall
+            });
+        }
+    } catch (error) {
+        logger.error('起動時ヘルスチェックエラー', { error: error.message });
+    }
+})();
 
 logger.info('✅ Cronジョブのスケジュール設定が完了しました');
 logger.info('📋 実行スケジュール:');
 logger.info('  🌅 平日 22:30 (米国市場開場後の分析)');
 logger.info('  🌙 平日 05:00 (米国市場終了後の分析)');
+logger.info('  🔍 毎日 12:00 (システムヘルスチェック)');
 logger.info('');
 logger.info('💡 手動実行する場合は以下のコマンドを実行してください:');
-logger.info('   runManualAnalysis()');
+logger.info('   runManualAnalysis() - Deep Research手動実行');
+logger.info('   runHealthCheck() - ヘルスチェック手動実行');
 logger.info('');
