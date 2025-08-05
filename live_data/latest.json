@@ -1,205 +1,203 @@
 {
-  "date": "2025年8月4日",
-  "session": "8月4日 市場分析",
+  "date": "2025年8月5日",
+  "session": "8月5日 市場分析",
   "languages": {
     "ja": {
-      "session": "8月4日 市場分析",
-      "date": "2025年8月4日",
+      "session": "8月5日 市場分析",
+      "date": "2025年8月5日",
       "summary": {
-        "evaluation": "売り",
-        "score": 9,
-        "headline": "自己満足のバブル崩壊：過剰な楽観センチメントが厳しい現実に衝突、続落を示唆",
-        "text": "市場は、専門家と個人投資家の双方における危険な水準の強気センチメントという、極めて脆弱な状態で週末を迎えました。この自己満足が作り出した土台は、予想外に弱い7月の雇用統計と新たな関税の発表という二重の衝撃によって粉砕されました。結果として生じた急落は、広範な銘柄に及ぶ売り、VIXの急騰、そして債券市場への明確な資金逃避を伴っており、単なる調整ではないことを示唆しています。短期トレーダーへの最大の警告は、最近の陶酔的なセンチメントと現在の厳しい価格行動との間の著しい乖離です。これは下落トレンドへの転換を示す古典的なシグナルであり、安易な「押し目買い」は厳に慎むべきです。"
+        "evaluation": "ホールド",
+        "score": 4,
+        "headline": "反発ラリーの裏に潜む脆弱性：FRB期待とテクニカル悪化の綱引き",
+        "text": "8月4日のS&P 500は大幅反発しましたが、このラリーは脆弱な基盤の上にあります。テクニカル指標は弱気なダイバージェンスを示し、オプション市場では極度の満足感が観測されるなど、警戒信号が点灯しています。短期トレーダーは現在の水準からこの反発を追うべきではなく、急反落のリスクに備え、より明確なシグナルを待つことが賢明です。"
       },
       "dashboard": {
         "breadth": {
-          "advancers": 100,
-          "decliners": 274,
-          "summary": "値下がり銘柄が値上がり銘柄を圧倒的に上回っており、市場全体にわたる広範な売り圧力（ディストリビューション）が存在することを示しています。"
+          "advancers": 4480,
+          "decliners": 1000,
+          "summary": "圧倒的な買い優勢ですが、一日だけの力強い動きでは市場内部構造の完全な修復は判断できず、「ブルトラップ」のリスクを内包しています。"
         },
-        "sentimentVI": 50,
-        "sentimentVISummary": "先週の「強欲」から「中立」への急落は、市場参加者が不意を突かれたことを示し、強気ポジションの巻き戻しが始まったことを示唆します。",
+        "sentimentVI": 50.05,
+        "sentimentVISummary": "インデックスは「中立」領域にあり、大幅な株価上昇にもかかわらず市場心理が「強欲」に傾いていない点は、反発への確信が伴っていないことを示唆しています。",
         "priceLevels": {
           "resistance": {
-            "value": "6330 - 6360",
-            "description": "旧サポートであり、今や強力な上値抵抗線（レジスタンス）に転換しました。"
+            "value": "6,390",
+            "description": "このレベルを明確に上抜けできない場合、ラリーの勢いが失速する可能性があります。"
           },
           "support": {
-            "value": "6200 - 6215",
-            "description": "金曜日の安値と200日移動平均線が控える重要な支持帯です。"
+            "value": "6,080",
+            "description": "この水準を割り込むと、上昇トレンドが終了し、大規模な調整に入るシグナルとなります。"
           }
         },
         "putCallRatio": {
-          "dailyValue": "0.75",
-          "movingAverage": "0.58",
-          "status": "恐怖の急騰",
-          "summary": "レシオの急騰は、投資家がパニック的に下落に備えるプット・オプションを買い急いだことを示しています。"
+          "dailyValue": "0.61",
+          "movingAverage": "0.59",
+          "status": "極度の満足感、警戒シグナル",
+          "summary": "投資家が下落リスクへのヘッジを怠っており、過度な楽観は市場の脆弱性を示唆する逆張りシグナルです。"
         }
       },
       "details": {
         "internals": {
-          "headline": "危険なコンセンサス：専門家と個人投資家が共に過剰な強気心理に囚われた",
-          "text": "専門家（II調査）と個人投資家（AAII調査）が一体となった強気のコンセンサスが形成されたまさにその時、市場は最も脆弱になっていました。この過剰な楽観こそが急落の絶好の燃料となり、高値で捕らえられた強気派は、今や潜在的な売り圧力となります。",
+          "headline": "市場上昇は一部の大型株に限定",
+          "text": "月曜日の騰落レシオは非常に強かったものの、これは前週を通じて悪化していた累積ADLのトレンドを一日で覆すには力不足です。累積ADLはS&P 500指数が高値を試す中で「より低い高値（lower high）」を形成している可能性が高く、市場上昇の範囲が一部の大型株に限定されていることを示すダイバージェンスの一形態です。",
           "chartData": {
-            "labels": ["Investors Intelligence (専門家)", "AAII (個人投資家)"],
-            "values": [60.8, 40.3]
+            "labels": ["情報技術", "ヘルスケア", "一般消費財", "金融", "公益事業", "エネルギー"],
+            "values": [0.8, 0.5, 0.4, -0.1, -0.2, -0.3]
           }
         },
         "technicals": {
-          "headline": "テクニカルな崖からの転落：主要な移動平均線を割り込み、モメンタムは決定的に弱気へ",
-          "text": "S&P 500は中期トレンドの生命線と見なされる50日移動平均線（約6332）を明確に下方ブレイクしました。この重要な支持線の喪失は、市場の主導権が強気派から弱気派へ完全に移ったことを示す、重大なシグナルです。RSIやMACDもこの弱気転換を裏付けています。",
+          "headline": "価格とモメンタムの危険な乖離（ダイバージェンス）",
+          "text": "S&P 500は力強く反発しましたが、価格動向の裏側では複数のテクニカル指標が深刻な警告を発しています。最も懸念すべきは、価格とモメンタム指標（RSI, MACD）との間に生じている明確な「ベアリッシュ・ダイバージェンス」です。これは上昇が持続的な買いの勢いを欠いていることを示唆します。現在の市場は典型的な「ブルトラップ（強気の罠）」の様相を呈しています。",
           "chartData": {
-            "labels": ["2025-07-28", "2025-07-29", "2025-07-30", "2025-07-31", "2025-08-01"],
-            "sp500": [6389.77, 6370.86, 6362.90, 6339.39, 6238.01],
-            "ma50": [6328.00, 6329.50, 6330.50, 6331.50, 6332.34],
-            "adl": [25000, 24950, 24900, 24800, 24500]
+            "labels": ["2025-07-29", "2025-07-30", "2025-07-31", "2025-08-01", "2025-08-04"],
+            "sp500": [6339.39, 6345.41, 6318.12, 6238.01, 6329.94],
+            "ma50": [6234.35, 6238.50, 6242.10, 6245.00, 6248.20],
+            "adl": [25500, 25650, 25300, 24500, 27980]
           }
         },
         "fundamentals": {
-          "headline": "物語の転換点：「ソフトランディング」から「景気後退懸念」へ、債券市場が警鐘",
-          "text": "市場の焦点は、過去の好決算から将来の経済に対する恐怖へと一瞬でシフトしました。労働市場の亀裂と貿易戦争の再燃という二重の衝撃が、この転換を引き起こしました。",
+          "headline": "プロと個人の温度差：逆張りシグナル点灯か",
+          "text": "現在の市場心理には、投資家層の間で注目すべき乖離が見られます。プロ投資家（II調査）は極端な楽観を示しており、これは歴史的に信頼性の高い逆張り（売り）シグナルです。一方、個人投資家（AAII調査）は慎重な姿勢を崩しておらず、市場全体を巻き込んだ陶酔感には至っていません。この乖離は、相場の最終局面で「スマートマネー」がポジションを売り渡す「分配」の初期段階である可能性を示唆し、急落リスクをはらんでいます。",
           "vix": {
-            "value": 20.38,
-            "change": "+3.66",
-            "status": "警戒",
-            "summary": "VIXが20の大台を大きく超え、市場が平穏な状態から高い警戒状態へと移行したことを意味します。自己満足の状態は完全に消え去りました。"
+            "value": 17.43,
+            "change": "-0.09",
+            "summary": "VIXの急低下は、市場が経済リスクを過小評価し、自己満足に陥っていることを示します。不意の悪材料に対して市場は脆弱です。"
           },
           "aaiiSurvey": {
-            "date": "2025年7月31日週",
+            "date": "2025年7月30日週",
             "bullish": 40.3,
             "neutral": 26.7,
             "bearish": 33.0,
-            "summary": "個人投資家の強気センチメントは歴史的平均を上回っており、下落に対する備えができていなかったことを示しています。"
+            "summary": "個人投資家は強気に傾いているものの、依然として3分の1が弱気であり、全面的な陶酔感には至っていません。これは、ラリーへの参加が限定的であることを示唆しています。"
           },
           "investorsIntelligence": {
-            "date": "2025年7月30日",
+            "date": "2025年8月5日週",
             "bullish": 60.8,
             "bearish": 21.7,
             "correction": 17.5,
-            "summary": "専門家の間で強気派が60%を超えるという極端な楽観は、市場が天井に近いことを示す強力な逆張りシグナルです。"
+            "summary": "プロの間で強気センチメントが60%を超える極端なレベルに達しています。これは歴史的に信頼性の高い逆張り（売り）シグナルであり、市場の過熱と調整リスクの高まりを示唆します。"
           },
           "points": [
-            "極端な強気センチメントと、雇用悪化・関税という二重のネガティブ・ショックが衝突し、市場の地合いが完全に反転した。",
-            "テクニカル面では50日移動平均線を割り込む決定的なブレイクダウンが発生し、中期的な下降トレンドへの転換が示唆された。",
-            "債券利回りの急低下とVIXの急騰は、投資家心理が「貪欲」から「恐怖」へとシフトし、明確なリスクオフ環境に突入したことを裏付けている。"
+            "7月の雇用統計の悪化が、市場の利下げ期待を80%以上にまで押し上げました。",
+            "10年債利回りの急低下はこの利下げ期待を裏付けていますが、イールドカーブの逆転は景気後退リスクを示唆し続けています。",
+            "VIXの急落は、市場が経済の弱さという「現実」よりも金融緩和という「期待」に焦点を当て、自己満足に陥っていることを示しています。"
           ]
         },
         "strategy": {
-          "headline": "防御を固め、戻りを売る：下落トレンドにおける戦術的アプローチ",
-          "basic": "現在の市場環境では、極めて防御的なスタンスが求められます。経験豊富な短期トレーダーにとっては、弱い戻りを売る戦略が有効です。新規のショート（売り）ポジションを構築する理想的なゾーンは、6300-6330の価格帯です。",
-          "risk": "この弱気シナリオに対する最大のリスクは、急な政策転換や、金曜日の雇用統計を完全に覆すような強力な経済指標の発表です。S&P 500が50日移動平均線を終値で回復した場合、戦略の見直しが必要となります。"
+          "headline": "短期的な上昇を狙いつつ、出口戦略を明確に",
+          "basic": "積極的な新規ポジション構築は推奨されません。既存のロングポジションは維持しつつ、ストップロスを月曜安値（約6,250）直下に引き上げます。新規で入る場合は、6,280～6,300への押し目を待ち、小さなポジションで検討します。利益確定目標は抵抗線である6,390直下です。",
+          "risk": "最大のリスクは、今後の経済指標（特にCPI）が市場の利下げ期待を後退させる「物語の変化」です。S&P 500が月曜安値を下回った場合は、全てのロングポジションを決済すべき危険信号です。不確実性が高いため、ポジションサイズは通常より小さく抑えることが賢明です。"
         }
       },
       "marketOverview": [
-        { "name": "S&P 500", "value": "6,238.01", "change": "-1.60%", "isDown": true },
-        { "name": "Nasdaq-100", "value": "21,426.33", "change": "-1.96%", "isDown": true },
-        { "name": "VIX指数", "value": "20.38", "change": "+3.66", "isDown": false },
-        { "name": "米国10年債利回り", "value": "4.22%", "change": "-0.15", "isDown": true }
+        { "name": "S&P 500 (8/4終値)", "value": "6,329.94", "change": "+91.93 (+1.47%)", "isDown": false },
+        { "name": "S&P 500 先物", "value": "6,332.50", "change": "+2.56", "isDown": false },
+        { "name": "VIX指数", "value": "17.43", "change": "-0.09 (-0.51%)", "isDown": true },
+        { "name": "米国10年債利回り", "value": "4.23%", "change": "-0.08%", "isDown": true }
       ],
       "hotStocks": [
-        { "name": "ハイテク株全般", "price": "主要な値下がりセクター", "description": "金利上昇懸念と関税のニュースで、特に大きな売り圧力に直面。", "isDown": true },
-        { "name": "安全資産関連 (国債ETF等)", "price": "主要な値上がりセクター", "description": "リスクオフムードの中、投資家の資金が逃避先として流入。", "isDown": false },
-        { "name": "S&P 500 ベアETF", "price": "主要な値上がり銘柄", "description": "市場の下落から利益を得るため、短期トレーダーからの買いが集まる。", "isDown": false }
+        { "name": "大型ハイテク株", "price": "指数を牽引", "description": "金利低下期待を背景にラリーを主導するが、過熱感とダイバージェンスには注意が必要。", "isDown": false },
+        { "name": "景気敏感株", "price": "上値重い", "description": "雇用統計の悪化を受け、経済の先行き懸念から買いが手控えられている。", "isDown": true },
+        { "name": "高配当・ディフェンシブ株", "price": "資金の逃避先", "description": "不透明な市場環境の中で、相対的に安定したパフォーマンスが期待されるセクター。", "isDown": false }
       ]
     },
     "en": {
-      "session": "August 4th Market Analysis",
-      "date": "August 4, 2025",
+      "session": "August 5th Market Analysis",
+      "date": "August 5, 2025",
       "summary": {
-        "evaluation": "Sell",
-        "score": 9,
-        "headline": "Bubble of Complacency Bursts: Excessive Optimism Collides with Harsh Reality, Signaling Further Decline",
-        "text": "The market entered the weekend in an extremely vulnerable state, with dangerously high levels of bullish sentiment among both professionals and individual investors. This foundation of complacency was shattered by the double shock of unexpectedly weak July employment data and new tariff announcements. The resulting plunge was accompanied by broad-based selling, VIX surge, and clear flight to bonds, suggesting this is more than just a correction. The key warning for short-term traders is the stark divergence between recent euphoric sentiment and current harsh price action. This is a classic signal of trend reversal to the downside, and easy 'buy-the-dip' strategies should be strictly avoided."
+        "evaluation": "Hold",
+        "score": 4,
+        "headline": "Fragility Lurks Behind Rebound Rally: Tug-of-War Between Fed Expectations and Technical Deterioration",
+        "text": "The S&P 500's sharp rebound on August 4th sits on a fragile foundation. Technical indicators show bearish divergences, and options markets display extreme complacency, raising warning flags. Short-term traders should not chase this rebound from current levels and would be wise to prepare for sharp pullback risks while waiting for clearer signals."
       },
       "dashboard": {
         "breadth": {
-          "advancers": 100,
-          "decliners": 274,
-          "summary": "Declining stocks overwhelmingly outnumber advancing stocks, indicating broad-based selling pressure (distribution) across the entire market."
+          "advancers": 4480,
+          "decliners": 1000,
+          "summary": "Overwhelming buying dominance, but one day of strong action cannot fully assess market internal structure repair, harboring 'bull trap' risks."
         },
-        "sentimentVI": 50,
-        "sentimentVISummary": "The rapid fall from last week's 'Greed' to 'Neutral' shows market participants were caught off guard, suggesting the unwinding of bullish positions has begun.",
+        "sentimentVI": 50.05,
+        "sentimentVISummary": "The index remains in 'neutral' territory. Despite significant stock gains, market psychology hasn't tilted toward 'greed', suggesting lack of conviction in the rebound.",
         "priceLevels": {
           "resistance": {
-            "value": "6330 - 6360",
-            "description": "Former support that has now converted to strong overhead resistance."
+            "value": "6,390",
+            "description": "Failure to clearly break above this level could see rally momentum stall."
           },
           "support": {
-            "value": "6200 - 6215",
-            "description": "Critical support zone where Friday's lows and the 200-day moving average converge."
+            "value": "6,080",
+            "description": "Breaking below this level would signal end of uptrend and entry into major correction."
           }
         },
         "putCallRatio": {
-          "dailyValue": "0.75",
-          "movingAverage": "0.58",
-          "status": "Fear Surge",
-          "summary": "The ratio surge shows investors panic-bought put options as downside protection, indicating rapid sentiment shift."
+          "dailyValue": "0.61",
+          "movingAverage": "0.59",
+          "status": "Extreme Complacency, Warning Signal",
+          "summary": "Investors are neglecting downside hedging, and excessive optimism suggests market vulnerability as a contrarian signal."
         }
       },
       "details": {
         "internals": {
-          "headline": "Dangerous Consensus: Professionals and Retail Both Caught in Excessive Bullishness",
-          "text": "Just when both professionals (II survey) and individual investors (AAII survey) formed a unified bullish consensus, the market became most vulnerable. This excessive optimism provided perfect fuel for the sharp decline, and bulls caught at highs now represent potential selling pressure.",
+          "headline": "Market Rise Limited to Select Large Caps",
+          "text": "While Monday's advance-decline ratio was very strong, it's insufficient to reverse the cumulative ADL trend that deteriorated throughout the prior week in a single day. The cumulative ADL is likely forming a 'lower high' as the S&P 500 tests highs, representing a form of divergence showing market gains are limited to select large caps.",
           "chartData": {
-            "labels": ["Investors Intelligence (Professionals)", "AAII (Individual Investors)"],
-            "values": [60.8, 40.3]
+            "labels": ["Information Technology", "Healthcare", "Consumer Discretionary", "Financials", "Utilities", "Energy"],
+            "values": [0.8, 0.5, 0.4, -0.1, -0.2, -0.3]
           }
         },
         "technicals": {
-          "headline": "Technical Cliff Dive: Key Moving Average Breached, Momentum Decisively Bearish",
-          "text": "The S&P 500 clearly broke below the 50-day moving average (approximately 6332), considered the lifeline of intermediate trends. This loss of crucial support is a critical signal that market leadership has completely shifted from bulls to bears. RSI and MACD confirm this bearish reversal.",
+          "headline": "Dangerous Divergence Between Price and Momentum",
+          "text": "While the S&P 500 rebounded strongly, multiple technical indicators are issuing serious warnings beneath the surface price action. Most concerning is the clear 'bearish divergence' between price and momentum indicators (RSI, MACD). This suggests the advance lacks sustained buying momentum. The current market displays typical 'bull trap' characteristics.",
           "chartData": {
-            "labels": ["2025-07-28", "2025-07-29", "2025-07-30", "2025-07-31", "2025-08-01"],
-            "sp500": [6389.77, 6370.86, 6362.90, 6339.39, 6238.01],
-            "ma50": [6328.00, 6329.50, 6330.50, 6331.50, 6332.34],
-            "adl": [25000, 24950, 24900, 24800, 24500]
+            "labels": ["2025-07-29", "2025-07-30", "2025-07-31", "2025-08-01", "2025-08-04"],
+            "sp500": [6339.39, 6345.41, 6318.12, 6238.01, 6329.94],
+            "ma50": [6234.35, 6238.50, 6242.10, 6245.00, 6248.20],
+            "adl": [25500, 25650, 25300, 24500, 27980]
           }
         },
         "fundamentals": {
-          "headline": "Narrative Turning Point: From 'Soft Landing' to 'Recession Fears', Bond Market Sounds Alarm",
-          "text": "Market focus instantly shifted from past good earnings to future economic fears. The double shock of labor market cracks and renewed trade war triggered this transformation.",
+          "headline": "Professional vs Retail Temperature Gap: Contrarian Signal Flashing?",
+          "text": "Current market psychology shows notable divergence between investor groups. Professional investors (II survey) display extreme optimism, historically a reliable contrarian (sell) signal. Meanwhile, individual investors (AAII survey) maintain cautious stance, not reaching market-wide euphoria. This divergence suggests possible early stages of 'distribution' where 'smart money' sells positions to others in market's final phase, harboring sharp decline risks.",
           "vix": {
-            "value": 20.38,
-            "change": "+3.66",
-            "status": "Alert",
-            "summary": "The VIX breaking well above the 20 threshold means the market has transitioned from calm to high alert status. The complacent state has completely vanished."
+            "value": 17.43,
+            "change": "-0.09",
+            "summary": "The VIX's sharp decline shows the market is underestimating economic risks and falling into complacency. The market is vulnerable to unexpected negative news."
           },
           "aaiiSurvey": {
-            "date": "Week of July 31, 2025",
+            "date": "Week of July 30, 2025",
             "bullish": 40.3,
             "neutral": 26.7,
             "bearish": 33.0,
-            "summary": "Individual investor bullish sentiment above historical averages shows they were unprepared for the decline."
+            "summary": "While individual investors lean bullish, one-third remain bearish, not reaching full euphoria. This suggests limited participation in the rally."
           },
           "investorsIntelligence": {
-            "date": "July 30, 2025",
+            "date": "Week of August 5, 2025",
             "bullish": 60.8,
             "bearish": 21.7,
             "correction": 17.5,
-            "summary": "Extreme optimism with bulls exceeding 60% among professionals is a powerful contrarian signal that the market was near a peak."
+            "summary": "Bullish sentiment among professionals has reached extreme levels above 60%. This is historically a reliable contrarian (sell) signal, suggesting market overheating and rising correction risks."
           },
           "points": [
-            "Extreme bullish sentiment collided with the double negative shock of employment deterioration and tariffs, completely reversing market tone.",
-            "Technically, a decisive breakdown below the 50-day moving average occurred, suggesting a shift to intermediate-term downtrend.",
-            "The sharp decline in bond yields and VIX surge confirm investor psychology shifted from 'greed' to 'fear', entering a clear risk-off environment."
+            "July employment data deterioration pushed market rate cut expectations above 80%.",
+            "The sharp decline in 10-year yields supports these rate cut expectations, but yield curve inversion continues to suggest recession risks.",
+            "The VIX plunge shows the market is focusing on financial easing 'expectations' rather than economic weakness 'reality', falling into complacency."
           ]
         },
         "strategy": {
-          "headline": "Fortify Defense and Sell Rallies: Tactical Approach in Downtrend",
-          "basic": "The current market environment demands an extremely defensive stance. For experienced short-term traders, selling weak rallies is an effective strategy. The ideal zone for establishing new short positions is the 6300-6330 price range.",
-          "risk": "The biggest risk to this bearish scenario is sudden policy reversal or strong economic data that completely contradicts Friday's employment report. If the S&P 500 recovers above the 50-day moving average on a closing basis, strategy revision would be necessary."
+          "headline": "Target Short-term Gains While Clarifying Exit Strategy",
+          "basic": "Aggressive new position building is not recommended. Maintain existing long positions while raising stop losses just below Monday's lows (around 6,250). For new entries, wait for pullbacks to 6,280-6,300 range and consider small positions. Profit-taking target is just below resistance at 6,390.",
+          "risk": "The biggest risk is future economic data (especially CPI) retreating market rate cut expectations through 'narrative change'. If the S&P 500 falls below Monday's lows, it's a danger signal to close all long positions. Given high uncertainty, position sizes should be kept smaller than usual."
         }
       },
       "marketOverview": [
-        { "name": "S&P 500", "value": "6,238.01", "change": "-1.60%", "isDown": true },
-        { "name": "Nasdaq-100", "value": "21,426.33", "change": "-1.96%", "isDown": true },
-        { "name": "VIX Index", "value": "20.38", "change": "+3.66", "isDown": false },
-        { "name": "US 10-Year Yield", "value": "4.22%", "change": "-0.15", "isDown": true }
+        { "name": "S&P 500 (8/4 Close)", "value": "6,329.94", "change": "+91.93 (+1.47%)", "isDown": false },
+        { "name": "S&P 500 Futures", "value": "6,332.50", "change": "+2.56", "isDown": false },
+        { "name": "VIX Index", "value": "17.43", "change": "-0.09 (-0.51%)", "isDown": true },
+        { "name": "US 10-Year Yield", "value": "4.23%", "change": "-0.08%", "isDown": true }
       ],
       "hotStocks": [
-        { "name": "Tech Stocks Overall", "price": "Major Declining Sector", "description": "Facing significant selling pressure from interest rate concerns and tariff news.", "isDown": true },
-        { "name": "Safe Haven Assets (Treasury ETFs)", "price": "Major Rising Sector", "description": "In risk-off mood, investor funds flow to safe havens.", "isDown": false },
-        { "name": "S&P 500 Bear ETFs", "price": "Major Rising Securities", "description": "Short-term traders buying to profit from market decline.", "isDown": false }
+        { "name": "Large-Cap Tech Stocks", "price": "Index Leaders", "description": "Leading the rally on rate cut expectations, but overheating and divergences require caution.", "isDown": false },
+        { "name": "Cyclical Stocks", "price": "Heavy Overhead", "description": "Buying restrained due to economic outlook concerns following employment data deterioration.", "isDown": true },
+        { "name": "High Dividend/Defensive Stocks", "price": "Safe Haven", "description": "Sector expected to deliver relatively stable performance in uncertain market environment.", "isDown": false }
       ]
     }
   }
