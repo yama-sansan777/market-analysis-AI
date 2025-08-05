@@ -139,7 +139,7 @@
                      <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col items-center justify-center">
                         <h3 class="font-bold text-2xl mb-5 text-center" data-lang="market_sentiment_title">市場心理 (CNN Fear & Greed)</h3>
                         <div class="h-64 w-full" id="sentimentGauge"></div>
-                        <p id="sentiment-summary" class="text-left text-lg text-gray-600 mt-5"></p>
+                        <p id="sentiment-summary" class="text-center text-lg text-gray-600 mt-5"></p>
                     </div>
                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col justify-center">
                         <h3 class="font-bold text-2xl mb-6 text-center" data-lang="price_levels_title">主要な価格帯</h3>
@@ -267,7 +267,7 @@
             populateHtmlElements(data);
 
             // --- チャート描画 ---
-            initializeAllCharts(data);
+            initializeAllCharts(data, currentLang);
 
             // --- タブ切り替え機能の初期化 ---
             initializeTabs();
@@ -631,9 +631,30 @@
         
         // サマリー
         const summaryEval = document.getElementById('summary-evaluation');
-        summaryEval.textContent = data.summary.evaluation;
-        summaryEval.className = 'text-7xl md:text-9xl font-bold';
-        summaryEval.classList.add(data.summary.evaluation === '売り' ? 'text-red-600' : 'text-blue-600');
+        
+        // 評価ラベルの多言語対応
+        const evaluationTranslations = {
+            '売り': currentLang === 'en' ? 'Sell' : '売り',
+            '買い': currentLang === 'en' ? 'Buy' : '買い',
+            '中立': currentLang === 'en' ? 'Neutral' : '中立',
+            'ホールド': currentLang === 'en' ? 'Hold' : 'ホールド'
+        };
+        
+        const translatedEvaluation = evaluationTranslations[data.summary.evaluation] || data.summary.evaluation;
+        summaryEval.textContent = translatedEvaluation;
+        
+        // 色の決定（日本語の元データに基づく）
+        const getEvaluationColor = (evaluation) => {
+            switch(evaluation) {
+                case '売り': return 'text-red-600';
+                case '買い': return 'text-blue-600';
+                case '中立':
+                case 'ホールド': return 'text-gray-600';
+                default: return 'text-gray-600';
+            }
+        };
+        
+        summaryEval.className = `text-7xl md:text-9xl font-bold ${getEvaluationColor(data.summary.evaluation)}`;
         
         document.getElementById('summary-score').innerHTML = `${data.summary.score}<span class="text-4xl text-gray-500">/10</span>`;
         document.getElementById('summary-stars').innerHTML = Array.from({ length: 10 }, (_, i) => i < data.summary.score ? '<span>★</span>' : '<span class="text-gray-300">★</span>').join('');
@@ -649,7 +670,6 @@
         document.getElementById('support-desc').textContent = data.dashboard.priceLevels.support.description;
         
         const pcRatio = data.dashboard.putCallRatio;
-        const currentLang = window.currentLang || 'ja';
         const dailyRatioLabel = currentLang === 'en' ? 'Daily Ratio' : '当日レシオ';
         const movingAverageLabel = currentLang === 'en' ? '(21-day Moving Average)' : '(21日移動平均)';
         
@@ -793,7 +813,7 @@
     }
 
     // 全てのチャートを初期化・描画する関数
-    function initializeAllCharts(data) {
+    function initializeAllCharts(data, currentLang) {
         const FONT_SIZE_TITLE = 20, FONT_SIZE_LEGEND = 16, FONT_SIZE_AXIS = 14;
 
         // 既存のチャートを破棄
@@ -801,7 +821,6 @@
 
         // 1. 市場の健全性 (ドーナツグラフ)
         chartInstances.breadthChart = echarts.init(document.getElementById('breadthChart'));
-        const currentLang = window.currentLang || 'ja';
         const chartLabels = {
             health: currentLang === 'en' ? 'Market Health' : '市場の健全性',
             decliners: currentLang === 'en' ? 'Decliners' : '値下がり',
@@ -824,21 +843,91 @@
 
         // 2. 市場心理 (ゲージ) - CNN Fear & Greed Index
         chartInstances.sentimentGauge = echarts.init(document.getElementById('sentimentGauge'));
+        
+        // センチメントゲージの多言語ラベル定義
+        const sentimentLabels = {
+            title: currentLang === 'en' ? 'Market Sentiment' : '市場心理',
+            extreme_fear: currentLang === 'en' ? 'Extreme Fear' : '極度の恐怖',
+            fear: currentLang === 'en' ? 'Fear' : '恐怖',
+            neutral: currentLang === 'en' ? 'Neutral' : '中立',
+            greed: currentLang === 'en' ? 'Greed' : '強欲',
+            extreme_greed: currentLang === 'en' ? 'Extreme Greed' : '極度の強欲'
+        };
+        
+        // センチメント値に応じたラベル取得関数
+        const getSentimentLabel = (value) => {
+            if (value <= 25) return sentimentLabels.extreme_fear;
+            if (value <= 45) return sentimentLabels.fear;
+            if (value <= 55) return sentimentLabels.neutral;
+            if (value <= 75) return sentimentLabels.greed;
+            return sentimentLabels.extreme_greed;
+        };
+        
         chartInstances.sentimentGauge.setOption({
             series: [{
-                type: 'gauge', center: ['50%', '60%'], startAngle: 180, endAngle: 0, min: 0, max: 100, splitNumber: 10,
-                itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [ { offset: 0, color: '#ef4444' }, { offset: 0.5, color: '#f59e0b' }, { offset: 1, color: '#10b981' }]}},
-                progress: { show: true, width: 18 }, pointer: { show: true, length: '60%', width: 6 },
-                axisLine: { lineStyle: { width: 18 } }, axisTick: { distance: -25, length: 7, lineStyle: { width: 1, color: '#999' } },
+                type: 'gauge',
+                center: ['50%', '60%'],
+                startAngle: 180,
+                endAngle: 0,
+                min: 0,
+                max: 100,
+                splitNumber: 10,
+                itemStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 0, y: 0, x2: 1, y2: 0,
+                        colorStops: [
+                            { offset: 0, color: '#ef4444' },
+                            { offset: 0.5, color: '#f59e0b' },
+                            { offset: 1, color: '#10b981' }
+                        ]
+                    }
+                },
+                progress: { show: true, width: 18 },
+                pointer: { show: true, length: '60%', width: 6 },
+                axisLine: { lineStyle: { width: 18 } },
+                axisTick: { distance: -25, length: 7, lineStyle: { width: 1, color: '#999' } },
                 splitLine: { distance: -30, length: 12, lineStyle: { width: 2, color: '#999' } },
-                axisLabel: { distance: -10, color: '#999', fontSize: 16 },
-                detail: { valueAnimation: true, fontSize: 40, fontWeight: 'bold', offsetCenter: [0, '40%'] },
-                data: [{ value: data.dashboard.sentimentVI }]
+                axisLabel: { 
+                    distance: -10, 
+                    color: '#999', 
+                    fontSize: 16,
+                    formatter: function(value) {
+                        // 特定の値でのみラベル表示（多言語対応）
+                        if (value === 0) return currentLang === 'en' ? 'Fear  ' : '恐怖  '; // 右に移動（スペース追加）
+                        if (value === 50) return currentLang === 'en' ? 'Neutral' : '中立';
+                        if (value === 100) return currentLang === 'en' ? '  Greed' : '  強欲'; // 左に移動（スペース追加）
+                        return '';
+                    }
+                },
+                detail: { 
+                    valueAnimation: true, 
+                    fontSize: 40, 
+                    fontWeight: 'bold', 
+                    offsetCenter: [0, '40%'],
+                    formatter: '{value}'
+                },
+                data: [{ 
+                    value: data.dashboard.sentimentVI,
+                    name: getSentimentLabel(data.dashboard.sentimentVI),
+                    title: {
+                        show: true,
+                        offsetCenter: [0, '70%'],
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        color: '#374151'
+                    }
+                }]
             }]
         });
 
         // 3. 寄与度チャート (横棒グラフ)
         const contributionLabel = currentLang === 'en' ? 'S&P 500 Impact' : 'S&P 500への影響';
+        const contributionChartLabels = {
+            title: currentLang === 'en' ? 'Market Sentiment Analysis' : 'セクター別センチメント分析',
+            xAxisLabel: currentLang === 'en' ? 'Bullish Sentiment (%)' : '強気センチメント (%)',
+            tooltipSuffix: currentLang === 'en' ? '% bullish' : '% 強気'
+        };
         
         chartInstances.contributionChart = new Chart(document.getElementById('contributionChart'), {
             type: 'bar',
@@ -853,13 +942,44 @@
                 }]
             },
             options: {
-                indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                indexAxis: 'y', 
+                responsive: true, 
+                maintainAspectRatio: false,
                 scales: { 
-                    x: { ticks: { font: { size: FONT_SIZE_AXIS }, callback: (v) => v + '%' }}, 
-                    y: { ticks: { font: { size: FONT_SIZE_AXIS }}}
+                    x: { 
+                        title: {
+                            display: true,
+                            text: contributionChartLabels.xAxisLabel,
+                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
+                            color: '#374151'
+                        },
+                        ticks: { 
+                            font: { size: FONT_SIZE_AXIS }, 
+                            callback: (v) => v + '%' 
+                        }
+                    }, 
+                    y: { 
+                        ticks: { 
+                            font: { size: FONT_SIZE_AXIS }
+                        }
+                    }
                 },
                 plugins: { 
-                    legend: { display: false }
+                    title: {
+                        display: true,
+                        text: contributionChartLabels.title,
+                        font: { size: FONT_SIZE_TITLE, weight: 'bold' },
+                        color: '#1F2937',
+                        padding: { bottom: 20 }
+                    },
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.x + contributionChartLabels.tooltipSuffix;
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -867,6 +987,12 @@
         // 4. テクニカルチャート (折れ線) with アドバンス・デクライン・ライン
         const ma50Label = currentLang === 'en' ? '50-day Moving Average' : '50日移動平均線';
         const adlLabel = currentLang === 'en' ? 'Advance-Decline Line (ADL)' : 'アドバンス・デクライン・ライン (ADL)';
+        const technicalChartLabels = {
+            title: currentLang === 'en' ? 'Technical Analysis: Price & Market Breadth' : 'テクニカル分析：価格と市場の幅',
+            priceAxisLabel: currentLang === 'en' ? 'S&P 500 Price' : 'S&P 500価格',
+            adlAxisLabel: currentLang === 'en' ? 'ADL Index' : 'ADL指数',
+            dateLabel: currentLang === 'en' ? 'Date' : '日付'
+        };
         
         chartInstances.technicalChart = new Chart(document.getElementById('technicalChart'), {
             type: 'line',
@@ -905,37 +1031,92 @@
                 ]
             },
             options: {
-                responsive: true, maintainAspectRatio: false,
+                responsive: true, 
+                maintainAspectRatio: false,
                 interaction: {
                     mode: 'index',
                     intersect: false,
                 },
                 scales: { 
-                    x: { ticks: { font: { size: FONT_SIZE_AXIS }}},
+                    x: { 
+                        title: {
+                            display: true,
+                            text: technicalChartLabels.dateLabel,
+                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
+                            color: '#374151'
+                        },
+                        ticks: { font: { size: FONT_SIZE_AXIS }}
+                    },
                     y: { // 主Y軸 (左) - 価格用
                         type: 'linear',
                         display: true,
                         position: 'left',
-                        ticks: { font: { size: FONT_SIZE_AXIS }}
+                        title: {
+                            display: true,
+                            text: technicalChartLabels.priceAxisLabel,
+                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
+                            color: '#374151'
+                        },
+                        ticks: { 
+                            font: { size: FONT_SIZE_AXIS },
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
                     },
                     y1: { // 第2Y軸 (右) - ADL用
                         type: 'linear',
                         display: true,
                         position: 'right',
-                        ticks: { font: { size: FONT_SIZE_AXIS }},
+                        title: {
+                            display: true,
+                            text: technicalChartLabels.adlAxisLabel,
+                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
+                            color: '#8b5cf6'
+                        },
+                        ticks: { 
+                            font: { size: FONT_SIZE_AXIS },
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        },
                         grid: { // 両方の軸のグリッド線でチャートが乱雑になるのを防ぐ
                             drawOnChartArea: false, 
                         },
                     } 
                 },
                 plugins: { 
+                    title: {
+                        display: true,
+                        text: technicalChartLabels.title,
+                        font: { size: FONT_SIZE_TITLE, weight: 'bold' },
+                        color: '#1F2937',
+                        padding: { bottom: 20 }
+                    },
                     legend: { 
                         position: 'top', 
                         labels: { font: {size: FONT_SIZE_LEGEND}, padding: 15 }
                     },
                     tooltip: {
                         mode: 'index',
-                        intersect: false
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                const value = context.parsed.y;
+                                if (context.dataset.yAxisID === 'y1') {
+                                    // ADL values
+                                    label += value.toLocaleString();
+                                } else {
+                                    // Price values
+                                    label += value.toLocaleString();
+                                }
+                                return label;
+                            }
+                        }
                     }
                 }
             }

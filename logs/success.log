@@ -125,3 +125,62 @@
 2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
 2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] ✅ Deep Research プロセスが正常に完了しました (実行時間: 15072ms) {"service":"deep-research-analyzer","totalDuration":15072}
 2025-08-04 12:11:45 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [SCHEDULER] ======================================== {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [SCHEDULER] [SCHEDULE] 市場開場後タスクを開始します: 2025/8/4 22:30:00 {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [SCHEDULER] ======================================== {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [SCHEDULER] 📊 Step 1: Deep Research市場分析を実行中... {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [MARKET_ANALYZER] Deep Research プロセスを開始します: 2025/8/4 22:30:00 {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [MARKET_ANALYZER] 🚀 市場データ収集 プロセス開始 {"service":"deep-research-analyzer","process":"市場データ収集"}
+2025-08-04 22:30:00 [INFO] [SCHEDULER] ======================================== {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [SCHEDULER] [SCHEDULE] 市場開場後タスクを開始します: 2025/8/4 22:30:00 {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [SCHEDULER] ======================================== {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [SCHEDULER] 📊 Step 1: Deep Research市場分析を実行中... {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [MARKET_ANALYZER] Deep Research プロセスを開始します: 2025/8/4 22:30:00 {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-04 22:30:00 [INFO] [MARKET_ANALYZER] 🚀 市場データ収集 プロセス開始 {"service":"deep-research-analyzer","process":"市場データ収集"}
+2025-08-04 22:30:02 [INFO] [MARKET_ANALYZER] ✅ 市場データ収集 プロセス成功 (2791ms) {"service":"deep-research-analyzer","process":"市場データ収集","duration":2791,"success":true}
+2025-08-04 22:30:02 [INFO] [MARKET_ANALYZER] 🚀 リアルタイムWeb検索 プロセス開始 {"service":"deep-research-analyzer","process":"リアルタイムWeb検索"}
+2025-08-04 22:30:02 [INFO] [MARKET_ANALYZER] Web検索クエリ実行 {"service":"deep-research-analyzer","queryCount":3,"queries":["S&P 500 market analysis today","US stock market sentiment","Federal Reserve latest comments"]}
+2025-08-04 22:30:02 [INFO] [WEB_SEARCHER] Web検索を実行中: "S&P 500 market analysis today" {"service":"deep-research-analyzer"}
+2025-08-04 22:30:02 [INFO] [WEB_SEARCHER] Web検索を実行中: "US stock market sentiment" {"service":"deep-research-analyzer"}
+2025-08-04 22:30:02 [INFO] [WEB_SEARCHER] Web検索を実行中: "Federal Reserve latest comments" {"service":"deep-research-analyzer"}
+2025-08-04 22:30:04 [INFO] [WEB_SEARCHER] 🔗 Google Custom Search API call SUCCESS (1152ms) {"service":"deep-research-analyzer","api":"Google Custom Search","duration":1152,"query":"Federal Reserve latest comments","statusCode":200,"resultCount":5}
+2025-08-04 22:30:04 [INFO] [WEB_SEARCHER] ✅ Web検索完了: "Federal Reserve latest comments" {"service":"deep-research-analyzer","query":"Federal Reserve latest comments","resultCount":5,"duration":1152}
+2025-08-04 22:30:04 [INFO] [WEB_SEARCHER] 🔗 Google Custom Search API call SUCCESS (1192ms) {"service":"deep-research-analyzer","api":"Google Custom Search","duration":1192,"query":"S&P 500 market analysis today","statusCode":200,"resultCount":5}
+2025-08-04 22:30:04 [INFO] [WEB_SEARCHER] ✅ Web検索完了: "S&P 500 market analysis today" {"service":"deep-research-analyzer","query":"S&P 500 market analysis today","resultCount":5,"duration":1192}
+2025-08-04 22:30:04 [INFO] [WEB_SEARCHER] 🔗 Google Custom Search API call SUCCESS (1610ms) {"service":"deep-research-analyzer","api":"Google Custom Search","duration":1610,"query":"US stock market sentiment","statusCode":200,"resultCount":5}
+2025-08-04 22:30:04 [INFO] [WEB_SEARCHER] ✅ Web検索完了: "US stock market sentiment" {"service":"deep-research-analyzer","query":"US stock market sentiment","resultCount":5,"duration":1610}
+2025-08-04 22:30:04 [INFO] [MARKET_ANALYZER] ✅ Web検索結果の統合完了 {"service":"deep-research-analyzer","totalResultsLength":3637,"searchCount":3}
+2025-08-04 22:30:04 [INFO] [MARKET_ANALYZER] ✅ リアルタイムWeb検索 プロセス成功 (4408ms) {"service":"deep-research-analyzer","process":"リアルタイムWeb検索","duration":4408,"success":true}
+2025-08-04 22:30:04 [INFO] [MARKET_ANALYZER] 🚀 GeminiによるDeep Research分析 プロセス開始 {"service":"deep-research-analyzer","process":"GeminiによるDeep Research分析"}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] 🔗 Gemini AI API call SUCCESS (14287ms) {"service":"deep-research-analyzer","api":"Gemini AI","duration":14287,"responseLength":4273,"promptLength":8135}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] ✅ Gemini分析完了 {"service":"deep-research-analyzer","duration":14287,"dataStructure":["date","session","languages"],"japaneseDataStructure":["session","date","summary","dashboard","details","marketOverview","hotStocks"]}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] ✅ GeminiによるDeep Research分析 プロセス成功 (1754314218804ms) {"service":"deep-research-analyzer","process":"GeminiによるDeep Research分析","duration":1754314218804,"success":true}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] 英語版データを自動生成中... {"service":"deep-research-analyzer"}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] ✅ 英語版データ生成完了 {"service":"deep-research-analyzer"}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] 🚀 分析結果ファイル保存 プロセス開始 {"service":"deep-research-analyzer","process":"分析結果ファイル保存"}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] 📊 JSONファイル保存: 1件処理 {"service":"deep-research-analyzer","operation":"JSONファイル保存","recordCount":1,"filePath":"live_data/latest.json","fileSize":6122}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] 📊 Eleventy用データ保存: 1件処理 {"service":"deep-research-analyzer","operation":"Eleventy用データ保存","recordCount":1,"filePath":"_data/reportData.json"}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] ✅ 分析結果ファイル保存 プロセス成功 (18702ms) {"service":"deep-research-analyzer","process":"分析結果ファイル保存","duration":18702,"success":true}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] データ構造検証結果 {"service":"deep-research-analyzer","summary":true,"dashboard":true,"details.internals":true,"details.technicals":true,"details.fundamentals":true,"details.strategy":true,"marketOverview":true,"hotStocks":true}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] ✅ Deep Research プロセスが正常に完了しました (実行時間: 18703ms) {"service":"deep-research-analyzer","totalDuration":18703}
+2025-08-04 22:30:18 [INFO] [MARKET_ANALYZER] ============================================= {"service":"deep-research-analyzer"}
+2025-08-04 22:30:18 [INFO] [SCHEDULER] ✅ Deep Research分析が完了しました {"service":"deep-research-analyzer"}
+2025-08-04 22:30:18 [INFO] [SCHEDULER] 📤 Step 2: GitHubプッシュを実行中... {"service":"deep-research-analyzer"}
+2025-08-04 22:30:18 [INFO] [SCHEDULER] 📤 GitHubにDeep Research結果をプッシュしています... {"service":"deep-research-analyzer"}
+2025-08-04 22:30:20 [INFO] [SCHEDULER] ✓ git add live_data/ archive_data/ 完了 {"service":"deep-research-analyzer"}
+2025-08-04 22:30:20 [WARN] [SCHEDULER] stderr: warning: in the working copy of 'live_data/latest.json', LF will be replaced by CRLF the next time Git touches it
+ {"service":"deep-research-analyzer"}
+2025-08-04 22:30:20 [INFO] [SCHEDULER] ✓ git commit -m "Deep Research: Auto-update market analysis data - 2025-08-04 13:30:18" 完了 {"service":"deep-research-analyzer"}
+2025-08-04 22:30:22 [INFO] [SCHEDULER] ✓ git push origin main 完了 {"service":"deep-research-analyzer"}
+2025-08-04 22:30:22 [WARN] [SCHEDULER] stderr: Everything up-to-date
+ {"service":"deep-research-analyzer"}
+2025-08-04 22:30:22 [INFO] [SCHEDULER] ✅ GitHubプッシュが完了しました {"service":"deep-research-analyzer"}
+2025-08-04 22:30:22 [INFO] [SCHEDULER] ======================================== {"service":"deep-research-analyzer"}
+2025-08-04 22:30:22 [INFO] [SCHEDULER] ✅ すべてのタスクが完了しました (実行時間: 23秒) {"service":"deep-research-analyzer"}
+2025-08-04 22:30:22 [INFO] [SCHEDULER] 🔄 GitHub Actionsがサイトビルドとデプロイを自動実行します {"service":"deep-research-analyzer"}
+2025-08-04 22:30:22 [INFO] [SCHEDULER] ======================================== {"service":"deep-research-analyzer"}

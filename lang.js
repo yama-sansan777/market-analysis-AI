@@ -1625,23 +1625,21 @@ function switchLanguage(lang) {
         }
     });
     
-    // Reload data for index.html if loadReportData function exists
+    // Page-specific reloading and rendering
     if (typeof window.loadReportData === 'function') {
+        // For index.html - reload data and redraw all charts with new language
+        console.log('🔄 Reloading data for language change...');
         window.loadReportData();
-    }
-    
-    // Re-render content for archive.html if renderAll function exists
-    if (typeof window.renderAll === 'function') {
+    } else if (typeof window.renderAll === 'function') {
+        // For archive.html - re-render content
+        console.log('🔄 Re-rendering archive content for language change...');
         window.renderAll();
     }
     
-    // Reload data to apply auto-translation for charts and dynamic content
-    if (window.loadReportData) {
-        window.loadReportData();
-    }
-    
-    // Trigger custom event for dynamic content
+    // Trigger custom event for any additional dynamic content that might need updating
     document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
+    
+    console.log(`✅ Language switched to: ${lang}`);
 }
 
 // Initialize language system
