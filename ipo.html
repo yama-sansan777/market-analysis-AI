@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOHOU 米国株AI - IPO分析 & スケジュール (2025年8月第2週)</title>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#DC2626',
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                        'grade-s': '#D97706', // Amber 600
+                        'grade-a': '#2563EB', // Blue 600
+                        'grade-b': '#10B981', // Emerald 500
+                        'grade-c': '#6B7280', // Gray 500
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; color: #1F2937; background-color: #f4f5f7; }
+        .font-pacifico { font-family: 'Pacifico', cursive; }
+        .grade-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-weight: 700;
+            color: white;
+            font-size: 1.25rem;
+        }
+        .ipo-card, .ipo-table-row {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .ipo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .ipo-table-row:hover {
+            background-color: #F9FAFB;
+        }
+        .modal-bg {
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            max-height: 90vh;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<header class="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-8">
+                <a href="#" class="flex items-center space-x-2">
+                    <span class="font-pacifico text-2xl text-primary">YOHOU</span>
+                    <span class="text-xs text-gray-500 hidden sm:inline">米国株AI</span>
+                </a>
+                <nav class="hidden md:flex space-x-6 text-gray-600">
+                    <a href="#" class="hover:text-primary">本日の市況分析</a>
+                    <a href="#" class="hover:text-primary">分析アーカイブ</a>
+                    <a href="#" class="text-primary font-medium border-b-2 border-primary pb-1">IPOスケジュール</a>
+                    <a href="#" class="hover:text-primary">テクニカル指標解説</a>
+                    <a href="#" class="hover:text-primary">市場用語集</a>
+                    <a href="#" class="hover:text-primary">サイトについて</a>
+                </nav>
+            </div>
+            <div class="flex items-center space-x-1 md:space-x-4">
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+    <div class="px-4 py-2 space-y-1">
+        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">本日の市況分析</a>
+        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">分析アーカイブ</a>
+        <a href="#" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50">IPOスケジュール</a>
+        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">テクニカル指標解説</a>
+        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">市場用語集</a>
+        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">サイトについて</a>
+    </div>
+</div>
+
+<div class="w-full px-4 sm:px-6 py-10 md:px-12 lg:px-20">
+    <header class="mb-14 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">米国株IPOスケジュール＆AI分析</h1>
+        <p class="mt-4 text-lg max-w-3xl mx-auto text-gray-600">未来のテンバガーを探す、データ駆動型のIPO情報</p>
+         <div class="mt-8 inline-flex items-center gap-6 rounded-xl bg-white border border-gray-200 px-8 py-4 shadow-sm">
+            <p class="text-2xl font-medium flex items-center gap-3 text-gray-700">
+                <i class="ri-calendar-check-line text-gray-500"></i>
+                <span>2025年8月第2週</span>
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <section id="featured-ipos" class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+                <i class="ri-fire-fill text-red-500"></i>
+                今週の注目IPO銘柄
+            </h2>
+            <div id="featured-ipo-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            </div>
+        </section>
+
+        <section id="ipo-schedule">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+                 <i class="ri-calendar-2-line text-indigo-500"></i>
+                IPOスケジュール一覧
+            </h2>
+            
+            <div class="bg-white rounded-2xl shadow-lg ring-1 ring-gray-200 overflow-hidden">
+                <div class="hidden md:block">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600">上場日</th>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600">企業名 / ティッカー</th>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600 text-center">AI評価</th>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600">事業概要</th>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600">公募価格</th>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600">主幹事</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ipo-schedule-body"></tbody>
+                    </table>
+                </div>
+                <div id="ipo-schedule-cards" class="md:hidden grid grid-cols-1 divide-y divide-gray-200"></div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="text-center text-sm text-gray-500 mt-20 py-8">
+        <p>この分析は提供された情報に基づく予測であり、投資成果を保証するものではありません。</p>
+        <p>© 2025 YOHOU US Stocks AI. All rights reserved.</p>
+    </footer>
+</div>
+
+<!-- Modal Structure -->
+<div id="ipo-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-bg hidden">
+    <div id="modal-content" class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-y-auto modal-content relative">
+        <!-- Content will be injected by JS -->
+    </div>
+</div>
+
+<script>
+const ipoData = [
+    {
+        companyName: "Firefly Aerospace, Inc.",
+        ticker: "FLY",
+        listingDate: "2025/08/07",
+        aiRating: "S",
+        evaluationText: "注目度「高」",
+        shortDescription: "エンドツーエンドの宇宙・防衛技術企業。商業企業として初の月面着陸に成功。",
+        priceRange: "$35.00 - $39.00",
+        underwriter: "Goldman Sachs, J.P. Morgan",
+        fullDescription: "Firefly Aerospaceは、打ち上げサービス、月面着陸、軌道上での車両運用を含む、包括的なミッションソリューションを提供するエンドツーエンドの宇宙・防衛技術企業です。2017年に設立され、テキサス州シーダーパークに本社を置いています。運用可能な1,000kg級ロケット「Alpha」と、実績のある月着陸船「Blue Ghost」を保有する米国唯一の企業というユニークなポジションにあります。",
+        valuation: "約52億ドル",
+        financials: {
+            revenue2024: 60.8,
+            netIncome2024: -231.1,
+            revenueGrowth: 10.1,
+            revenueQ1_2025: 55.9,
+            netIncomeQ1_2025: -60.1
+        },
+        strengths: [
+            "商業企業として世界初の月面着陸成功という技術的実績",
+            "NASA等との契約による11億ドルの巨額な受注残高",
+            "設計から試験まで一貫して行う垂直統合モデル"
+        ],
+        risks: [
+            "継続的な赤字経営と多額のキャッシュ消費",
+            "一度の失敗が致命傷になりかねない打ち上げリスク",
+            "収益の大部分を少数の政府契約に依存"
+        ]
+    },
+    {
+        companyName: "WhiteFiber, Inc.",
+        ticker: "WYFI",
+        listingDate: "2025/08/07",
+        aiRating: "S",
+        evaluationText: "注目度「高」",
+        shortDescription: "生成AIワークロードに特化したGPU-as-a-Serviceを提供。直近四半期で黒字転換。",
+        priceRange: "$15.00 - $17.00",
+        underwriter: "B. Riley Securities, Needham",
+        fullDescription: "WhiteFiberは、AIインフラソリューションの専門プロバイダーです。自社で高性能コンピューティング（HPC）データセンターを所有し、生成AIのワークロード（トレーニングや推論）に特化したクラウドベースのGPUサービスを提供しています。Bit Digital, Inc. (BTBT)からスピンオフする形で設立されました。",
+        valuation: "約6.2億 - 8.3億ドル",
+        financials: {
+            revenue2024: 51.2,
+            netIncome2024: -4.2,
+            revenueQ1_2025: 16.8,
+            netIncomeQ1_2025: 0.9
+        },
+        strengths: [
+            "AIブームの恩恵を直接受ける純粋なAIインフラ銘柄",
+            "直近四半期での黒字転換を達成し「利益を伴う成長」を実現",
+            "インフラを自社所有する垂直統合モデルによるコスト管理"
+        ],
+        risks: [
+            "親会社が議決権の過半数を握り、一般株主の影響力が限定的",
+            "AWS、CoreWeaveなどクラウド大手・専門企業との激しい競争",
+            "NVIDIA等、特定サプライヤーへの高い依存度"
+        ]
+    },
+    {
+        companyName: "Heartflow, Inc.",
+        ticker: "HTFL",
+        listingDate: "2025/08/08",
+        aiRating: "B",
+        evaluationText: "慎重",
+        shortDescription: "AIを活用し、冠動脈疾患を非侵襲的に診断するツールを開発。",
+        priceRange: "$15.00 - $17.00",
+        underwriter: "J.P. Morgan, Morgan Stanley",
+        fullDescription: "Heartflowは、AIを活用した冠動脈疾患（CAD）の非侵襲的診断ツールを開発した医療技術企業です。主力製品であるHeartflowプラットフォームは、標準的な心臓CTスキャンデータからAIアルゴリズムを用いて患者固有の冠動脈3Dモデルを生成し、医師の診断を支援します。",
+        valuation: "約12.4億ドル",
+        financials: {
+            revenue2024: 125.8,
+            netIncome2024: -96.4,
+            revenueGrowth: 44.3
+        },
+        strengths: [
+            "AI診断による非侵襲的なアプローチで臨床ニーズに対応",
+            "前年比44%増という力強い売上成長と市場浸透力",
+            "巨大な市場規模を持つ冠動脈疾患がターゲット"
+        ],
+        risks: [
+            "継続的な赤字と不透明な黒字化への道筋",
+            "事業モデルが保険会社による保険適用と償還率に大きく依存",
+            "FDA等の規制当局からの承認取得というハードル"
+        ]
+    },
+    {
+        companyName: "CTW Cayman",
+        ticker: "CTW",
+        listingDate: "2025/08/05",
+        aiRating: "B",
+        evaluationText: "慎重",
+        shortDescription: "日本の人気IPを基にしたHTML5ゲームプラットフォーム「G123.jp」を運営。",
+        priceRange: "$5.00 - $6.00",
+        underwriter: "Kingswood, TFI Securities",
+        fullDescription: "CTW Caymanは、日本の人気アニメや漫画の知的財産（IP）を基にした基本プレイ無料のゲームに特化した、ウェブベースのHTML5ゲームプラットフォーム「G123.jp」を運営しています。ダウンロード不要で即座にプレイできる点が特徴で、世界最大のIPベースHTML5ゲームプラットフォームであると主張しています。",
+        valuation: "約3.1億 - 3.8億ドル",
+        financials: {
+            revenue2024: 68.4,
+            netIncome2024: 6.0,
+            revenueGrowth: 8.7
+        },
+        strengths: [
+            "現在のIPO市場では希少な、実績のある黒字ビジネスモデル",
+            "日本のIPベースHTML5ゲームというニッチ市場のリーダー",
+            "アプリストア手数料を回避できる資本効率の高いモデル"
+        ],
+        risks: [
+            "「Vivid Army」など少数のヒットゲームへの高い収益依存",
+            "事業の根幹をIPライセンス契約に依存",
+            "IPO規模が小さく、上場後の流動性に懸念"
+        ]
+    },
+    {
+        companyName: "Picard Medical, Inc.",
+        ticker: "PMI",
+        listingDate: "2025/08/11",
+        aiRating: "C",
+        evaluationText: "見送り",
+        shortDescription: "FDA承認の唯一の完全人工心臓「SynCardia」を製造・販売。",
+        priceRange: "$3.50 - $4.50",
+        underwriter: "WestPark Capital",
+        fullDescription: "Picard Medicalは、末期の両心室不全に苦しむ患者のための植込み型システムであるSynCardia完全人工心臓（TAH）の開発、製造、販売を行っています。FDAが承認している唯一の完全人工心臓であり、ドナー心臓を待つ間の「移植への橋渡し」として機能します。",
+        valuation: "約2.9億ドル",
+        financials: {
+            revenue2024: 4.4,
+            netIncome2024: -21.1,
+            revenueGrowth: -12.0
+        },
+        strengths: [
+            "FDAが承認した市場唯一の完全人工心臓という独占的製品",
+            "2,100件以上の植込み実績を持つ救命技術"
+        ],
+        risks: [
+            "売上減少と赤字拡大が続き、企業の継続性に疑問",
+            "製造が職人の手作業に依存し、スケールが困難",
+            "将来の成長が不確実な適応拡大の承認に依存"
+        ]
+    },
+    {
+        companyName: "Quantumsphere Acq. Corp.",
+        ticker: "QUMSU",
+        listingDate: "2025/08/07",
+        aiRating: "C",
+        evaluationText: "見送り",
+        shortDescription: "未公開企業との合併を目的とする特別目的買収会社（SPAC）。",
+        priceRange: "$10.00",
+        underwriter: "SPAC Advisory Partners",
+        fullDescription: "Quantumsphere Acquisition Corporationは、「ブランクチェック・カンパニー」としても知られる特別目的買収会社（SPAC）です。商業的な事業活動を行わないシェルカンパニーであり、IPOを通じて資金を調達し、その資金で未公開企業を買収することを唯一の目的としています。",
+        valuation: "N/A",
+        financials: {
+            revenue2024: 0,
+            netIncome2024: 0
+        },
+        strengths: [
+            "IPO時点では元本割れリスクが限定的（償還権があるため）",
+            "有望な未公開企業への投資機会の可能性"
+        ],
+        risks: [
+            "投資の成否がスポンサーの案件発掘・交渉能力に完全に依存",
+            "過去のデータではde-SPAC企業のパフォーマンスは市場平均を下回る傾向",
+            "一般投資家には複雑で分かりにくい仕組み"
+        ]
+    }
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+    const featuredIpos = ipoData.filter(ipo => ipo.aiRating === 'S');
+    populateFeaturedIpos(featuredIpos);
+    populateIpoSchedule(ipoData);
+    setupEventListeners();
+});
+
+function setupEventListeners() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    }
+
+    document.body.addEventListener('click', (e) => {
+        const targetElement = e.target.closest('.ipo-card, .ipo-table-row');
+        if (targetElement) {
+            const ticker = targetElement.dataset.ticker;
+            openModal(ticker);
+        }
+    });
+}
+
+function populateFeaturedIpos(ipos) {
+    const container = document.getElementById('featured-ipo-container');
+    if (!container) return;
+    
+    container.innerHTML = ipos.map(ipo => `
+        <div class="ipo-card bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col" data-ticker="${ipo.ticker}">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-medium text-gray-500">${ipo.listingDate} 上場予定</p>
+                <div class="grade-badge bg-grade-${ipo.aiRating.toLowerCase()}">${ipo.aiRating}</div>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900">${ipo.companyName}</h3>
+            <p class="text-lg font-semibold text-primary mb-3">${ipo.ticker}</p>
+            <p class="text-gray-600 leading-relaxed flex-grow">${ipo.shortDescription}</p>
+            <div class="mt-6 pt-6 border-t border-gray-200">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-semibold text-gray-500">仮条件価格</span>
+                    <span class="font-bold text-xl text-gray-800">${ipo.priceRange}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="font-semibold text-gray-500">主幹事</span>
+                    <span class="font-semibold text-gray-700">${ipo.underwriter}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function populateIpoSchedule(schedule) {
+    const tbody = document.getElementById('ipo-schedule-body');
+    if (tbody) {
+        tbody.innerHTML = schedule.map(item => `
+            <tr class="ipo-table-row border-b border-gray-200 last:border-b-0" data-ticker="${item.ticker}">
+                <td class="px-6 py-5 text-base font-medium text-gray-800">${item.listingDate}</td>
+                <td class="px-6 py-5">
+                    <p class="text-base font-bold text-gray-900">${item.companyName}</p>
+                    <p class="text-sm font-medium text-gray-500">${item.ticker}</p>
+                </td>
+                <td class="px-6 py-5 text-center">
+                    <div class="grade-badge bg-grade-${item.aiRating.toLowerCase()}">${item.aiRating}</div>
+                </td>
+                <td class="px-6 py-5 text-sm text-gray-700 max-w-xs truncate">${item.shortDescription}</td>
+                <td class="px-6 py-5 text-base font-bold text-gray-800">${item.priceRange}</td>
+                <td class="px-6 py-5 text-sm font-medium text-gray-700">${item.underwriter}</td>
+            </tr>
+        `).join('');
+    }
+
+    const cardsContainer = document.getElementById('ipo-schedule-cards');
+    if (cardsContainer) {
+        cardsContainer.innerHTML = schedule.map(item => `
+            <div class="ipo-card p-4" data-ticker="${item.ticker}">
+                <div class="flex items-start justify-between mb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">${item.companyName}</h3>
+                        <p class="text-md font-semibold text-primary">${item.ticker}</p>
+                    </div>
+                    <div class="grade-badge bg-grade-${item.aiRating.toLowerCase()}">${item.aiRating}</div>
+                </div>
+                <p class="text-sm text-gray-500 mb-3">${item.listingDate} 上場予定</p>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">${item.shortDescription}</p>
+                <div class="pt-4 border-t border-gray-100 text-sm">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-semibold text-gray-500">公募価格</span>
+                        <span class="font-bold text-gray-800">${item.priceRange}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-gray-500">主幹事</span>
+                        <span class="font-semibold text-gray-700">${item.underwriter}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function openModal(ticker) {
+    const data = ipoData.find(d => d.ticker === ticker);
+    if (!data) return;
+
+    const modal = document.getElementById('ipo-modal');
+    const modalContent = document.getElementById('modal-content');
+
+    modalContent.innerHTML = `
+        <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
+            <i class="ri-close-line ri-2x"></i>
+        </button>
+        <div class="p-6 sm:p-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900">${data.companyName}</h2>
+                    <p class="text-xl font-semibold text-primary">${data.ticker}</p>
+                </div>
+                <div class="mt-3 sm:mt-0 text-left sm:text-right">
+                    <span class="text-lg font-bold px-4 py-2 rounded-lg bg-grade-${data.aiRating.toLowerCase()} text-white">AI評価: ${data.aiRating} (${data.evaluationText})</span>
+                </div>
+            </div>
+            
+            <div class="mb-6 text-sm text-gray-600">
+                ${data.fullDescription}
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center border-y border-gray-200 py-4 mb-6">
+                <div>
+                    <p class="text-xs text-gray-500">上場日</p>
+                    <p class="font-bold text-md text-gray-800">${data.listingDate}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">価格レンジ</p>
+                    <p class="font-bold text-md text-gray-800">${data.priceRange}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">想定時価総額</p>
+                    <p class="font-bold text-md text-gray-800">${data.valuation}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">主幹事</p>
+                    <p class="font-bold text-md text-gray-800">${data.underwriter}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold text-lg mb-3 text-gray-800">業績ハイライト</h4>
+                    <div class="h-64"><canvas id="financials-chart"></canvas></div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-3 text-gray-800">強みとリスク</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <h5 class="font-semibold text-green-600 flex items-center gap-2"><i class="ri-arrow-up-circle-fill"></i>強み</h5>
+                            <ul class="list-disc list-inside mt-1 space-y-1 text-gray-600 text-sm">
+                                ${data.strengths.map(s => `<li>${s}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold text-red-600 flex items-center gap-2"><i class="ri-arrow-down-circle-fill"></i>リスク</h5>
+                            <ul class="list-disc list-inside mt-1 space-y-1 text-gray-600 text-sm">
+                                ${data.risks.map(r => `<li>${r}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    document.getElementById('close-modal').onclick = closeModal;
+    modal.onclick = (e) => {
+        if (e.target.id === 'ipo-modal') closeModal();
+    };
+
+    renderFinancialsChart(data.financials);
+}
+
+function closeModal() {
+    const modal = document.getElementById('ipo-modal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+function renderFinancialsChart(financials) {
+    const ctx = document.getElementById('financials-chart').getContext('2d');
+    const labels = [];
+    const revenueData = [];
+    const netIncomeData = [];
+
+    if (financials.revenue2024 !== undefined) {
+        labels.push('2024年');
+        revenueData.push(financials.revenue2024);
+        netIncomeData.push(financials.netIncome2024);
+    }
+    if (financials.revenueQ1_2025 !== undefined) {
+        labels.push('2025年Q1');
+        revenueData.push(financials.revenueQ1_2025);
+        netIncomeData.push(financials.netIncomeQ1_2025);
+    }
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: '売上高',
+                    data: revenueData,
+                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: '純利益',
+                    data: netIncomeData,
+                    backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                    borderColor: 'rgba(239, 68, 68, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: {
+                        callback: function(value) {
+                            return value + 'M';
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: '金額 (百万ドル)'
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.raw.toLocaleString()}百万ドル`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+</script>
+</body>
+</html>
