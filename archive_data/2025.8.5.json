@@ -1,10 +1,10 @@
 {
-  "date": "2025年8月6日",
-  "session": "8月6日 市場分析",
+  "date": "2025年8月5日",
+  "session": "8月5日 市場分析",
   "languages": {
     "ja": {
-      "session": "8月6日 市場分析",
-      "date": "2025年8月6日",
+      "session": "8月5日 市場分析",
+      "date": "2025年8月5日",
       "summary": {
         "evaluation": "ホールド",
         "score": 4,
@@ -102,8 +102,8 @@
       ]
     },
     "en": {
-      "session": "August 6th Market Analysis",
-      "date": "August 6, 2025",
+      "session": "August 5th Market Analysis",
+      "date": "August 5, 2025",
       "summary": {
         "evaluation": "Hold",
         "score": 4,
