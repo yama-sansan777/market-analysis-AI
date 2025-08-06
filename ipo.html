@@ -41,6 +41,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <script src="translations/load.js"></script>
+    <script src="lang.js"></script>
     <style>
         body { font-family: 'Noto Sans JP', sans-serif; color: #1F2937; background-color: #f4f5f7; }
         .font-pacifico { font-family: 'Pacifico', cursive; }
@@ -77,24 +79,29 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-<header class="bg-white border-b border-gray-200 sticky top-0 z-40">
+<header class="bg-white border-b border-gray-200">
     <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-8">
-                <a href="#" class="flex items-center space-x-2">
-                    <span class="font-pacifico text-2xl text-primary">YOHOU</span>
-                    <span class="text-xs text-gray-500 hidden sm:inline">米国株AI</span>
-                </a>
+                <a href="index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
                 <nav class="hidden md:flex space-x-6 text-gray-600">
-                    <a href="#" class="hover:text-primary">本日の市況分析</a>
-                    <a href="#" class="hover:text-primary">分析アーカイブ</a>
-                    <a href="#" class="text-primary font-medium border-b-2 border-primary pb-1">IPOスケジュール</a>
-                    <a href="#" class="hover:text-primary">テクニカル指標解説</a>
-                    <a href="#" class="hover:text-primary">市場用語集</a>
-                    <a href="#" class="hover:text-primary">サイトについて</a>
+                    <a href="index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                    <a href="archive.html" class="hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
+                    <a href="ipo.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_ipo">IPOスケジュール</a>
+                    <a href="indicators.html" class="hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                    <a href="terms.html" class="hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                    <a href="about.html" class="hover:text-primary" data-lang="nav_about">サイトについて</a>
                 </nav>
             </div>
             <div class="flex items-center space-x-1 md:space-x-4">
+                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                <!-- 言語切り替えボタンをヘッダー内に配置 -->
+                <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                    <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
+                    <span class="text-gray-400 text-xs">|</span>
+                    <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
+                </div>
                 <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
                     <i class="ri-menu-line ri-lg"></i>
                 </button>
@@ -103,14 +110,19 @@
     </div>
 </header>
 
+<!-- モバイルメニュー -->
 <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
     <div class="px-4 py-2 space-y-1">
-        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">本日の市況分析</a>
-        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">分析アーカイブ</a>
-        <a href="#" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50">IPOスケジュール</a>
-        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">テクニカル指標解説</a>
-        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">市場用語集</a>
-        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">サイトについて</a>
+        <a href="index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+        <a href="archive.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_archive">分析アーカイブ</a>
+        <a href="ipo.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50" data-lang="nav_ipo">IPOスケジュール</a>
+        <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+        <a href="terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+        <a href="about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+        <div class="border-t border-gray-200 pt-2 mt-2">
+            <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+            <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+        </div>
     </div>
 </div>
 
@@ -165,7 +177,7 @@
     
     <footer class="text-center text-sm text-gray-500 mt-20 py-8">
         <p>この分析は提供された情報に基づく予測であり、投資成果を保証するものではありません。</p>
-        <p>© 2025 YOHOU US Stocks AI. All rights reserved.</p>
+        <p>© 2025 株式会社BizRom東京. All rights reserved.</p>
     </footer>
 </div>
 
@@ -594,6 +606,65 @@ function renderFinancialsChart(financials) {
             }
         }
     });
+}
+
+// Initialize language system first
+window.currentLang = localStorage.getItem('language') || 'ja';
+
+// Initialize lang.js language system
+if (window.initLanguage) {
+    initLanguage();
+}
+
+// Initialize mobile menu
+initializeMobileMenu();
+
+// 未実装機能のアラート
+document.getElementById('login-btn').addEventListener('click', () => {
+    alert('この機能は現在準備中です。ご期待ください！');
+});
+document.getElementById('register-btn').addEventListener('click', () => {
+    alert('この機能は現在準備中です。ご期待ください！');
+});
+
+// Mobile menu functionality
+function initializeMobileMenu() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = mobileMenuButton.querySelector('i');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            
+            if (isHidden) {
+                // メニューを開く
+                mobileMenu.classList.remove('hidden');
+                menuIcon.className = 'ri-close-line ri-lg';
+            } else {
+                // メニューを閉じる
+                mobileMenu.classList.add('hidden');
+                menuIcon.className = 'ri-menu-line ri-lg';
+            }
+        });
+        
+        // メニューリンクをクリックしたときにメニューを閉じる
+        const menuLinks = mobileMenu.querySelectorAll('a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.add('hidden');
+                menuIcon.className = 'ri-menu-line ri-lg';
+            });
+        });
+        
+        // メニュー外をクリックしたときにメニューを閉じる
+        document.addEventListener('click', function(event) {
+            if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+                menuIcon.className = 'ri-menu-line ri-lg';
+            }
+        });
+    }
 }
 </script>
 </body>
