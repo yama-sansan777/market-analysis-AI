@@ -134,7 +134,9 @@
                  <i class="ri-calendar-2-line text-indigo-500"></i>
                 IPOスケジュール一覧
             </h2>
-            <div class="bg-white rounded-2xl shadow-lg ring-1 ring-gray-200 overflow-x-auto">
+            
+            <!-- デスクトップ用テーブル -->
+            <div class="hidden md:block bg-white rounded-2xl shadow-lg ring-1 ring-gray-200 overflow-x-auto">
                 <table class="w-full text-left">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
@@ -149,6 +151,10 @@
                     <tbody id="ipo-schedule-body">
                         </tbody>
                 </table>
+            </div>
+            
+            <!-- モバイル用カード表示 -->
+            <div id="ipo-schedule-cards" class="md:hidden grid grid-cols-1 gap-6">
             </div>
         </section>
     </main>
@@ -307,28 +313,55 @@ function populateFeaturedIpos(ipos) {
 
 
 /**
- * IPOスケジュールテーブルを生成
+ * IPOスケジュールテーブルとカードを生成
  * @param {Array} schedule - IPOスケジュールデータの配列
  */
 function populateIpoSchedule(schedule) {
+    // デスクトップ用テーブル
     const tbody = document.getElementById('ipo-schedule-body');
-    if (!tbody) return;
+    if (tbody) {
+        tbody.innerHTML = schedule.map(item => `
+            <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-5 text-lg font-medium text-gray-800">${item.listingDate}</td>
+                <td class="px-6 py-5">
+                    <p class="text-lg font-bold text-gray-900">${item.companyName}</p>
+                    <p class="text-base font-medium text-gray-500">${item.ticker}</p>
+                </td>
+                <td class="px-6 py-5 text-center">
+                    <div class="grade-badge bg-grade-${item.aiRating.toLowerCase()}">${item.aiRating}</div>
+                </td>
+                <td class="px-6 py-5 text-base text-gray-700">${item.description}</td>
+                <td class="px-6 py-5 text-lg font-bold text-gray-800">${item.price}</td>
+                <td class="px-6 py-5 text-base font-medium text-gray-700">${item.underwriter}</td>
+            </tr>
+        `).join('');
+    }
 
-    tbody.innerHTML = schedule.map(item => `
-        <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-            <td class="px-6 py-5 text-lg font-medium text-gray-800">${item.listingDate}</td>
-            <td class="px-6 py-5">
-                <p class="text-lg font-bold text-gray-900">${item.companyName}</p>
-                <p class="text-base font-medium text-gray-500">${item.ticker}</p>
-            </td>
-            <td class="px-6 py-5 text-center">
-                <div class="grade-badge bg-grade-${item.aiRating.toLowerCase()}">${item.aiRating}</div>
-            </td>
-            <td class="px-6 py-5 text-base text-gray-700">${item.description}</td>
-            <td class="px-6 py-5 text-lg font-bold text-gray-800">${item.price}</td>
-            <td class="px-6 py-5 text-base font-medium text-gray-700">${item.underwriter}</td>
-        </tr>
-    `).join('');
+    // モバイル用カード
+    const cardsContainer = document.getElementById('ipo-schedule-cards');
+    if (cardsContainer) {
+        cardsContainer.innerHTML = schedule.map(item => `
+            <div class="bg-white rounded-2xl shadow-lg p-6 ring-1 ring-gray-200">
+                <div class="flex items-center justify-between mb-4">
+                    <p class="text-sm font-medium text-gray-500">${item.listingDate} 上場予定</p>
+                    <div class="grade-badge bg-grade-${item.aiRating.toLowerCase()}">${item.aiRating}</div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">${item.companyName}</h3>
+                <p class="text-lg font-semibold text-primary mb-3">${item.ticker}</p>
+                <p class="text-gray-600 leading-relaxed mb-4">${item.description}</p>
+                <div class="pt-4 border-t border-gray-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-gray-500">公募価格</span>
+                        <span class="font-bold text-lg text-gray-800">${item.price}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-gray-500">主幹事</span>
+                        <span class="font-semibold text-gray-700">${item.underwriter}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
 }
 
 </script>
