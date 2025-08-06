@@ -63,13 +63,25 @@
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
-                <button class="md:hidden text-gray-600">
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
                     <i class="ri-menu-line ri-lg"></i>
                 </button>
             </div>
         </div>
     </div>
 </header>
+
+<!-- モバイルメニュー -->
+<div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+    <div class="px-4 py-2 space-y-1">
+        <a href="index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+        <a href="archive.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_archive">分析アーカイブ</a>
+        <a href="example.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+        <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+        <a href="terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+        <a href="about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+    </div>
+</div>
 
 <div class="w-full px-6 py-10 md:px-12 lg:px-20">
     <header class="mb-14 text-center">
@@ -209,102 +221,104 @@
 <script>
     // データオブジェクト
     const reportData = {
-      "session": "8月5日 市場分析",
-      "date": "2025年8月5日",
+      "session": "8月6日 市場分析",
+      "date": "2025年8月6日",
       "summary": {
-        "evaluation": "ホールド",
-        "score": 4,
-        "headline": "反発ラリーの裏に潜む脆弱性：FRB期待とテクニカル悪化の綱引き",
-        "text": "8月4日のS&P 500は大幅反発しましたが、このラリーは脆弱な基盤の上にあります。テクニカル指標は弱気なダイバージェンスを示し、オプション市場では極度の満足感が観測されるなど、警戒信号が点灯しています。短期トレーダーは現在の水準からこの反発を追うべきではなく、急反落のリスクに備え、より明確なシグナルを待つことが賢明です。"
+        "evaluation": "売り",
+        "score": 3,
+        "headline": "巨人が揺らぐ足元：見せかけの強さと内部崩壊の狭間で",
+        "text": "市場は極めて危険な岐路に立たされている。S&P 500は主要な心理的節目である6,300ポイントの維持に失敗し、弱気の兆候が顕著になっている。この価格行動は、騰落レシオの悪化が示す市場の健全性の著しい低下と、オプション市場に見られる極端な自己満足（低いプット・コール・レシオ）という危険な状況下で発生している。さらに、低調な雇用統計やサービス業PMIが示すマクロ経済の減速懸念が、この脆弱な市場構造に追い打ちをかけている。短期トレーダーは、主要な支持線のブレイクが急激な下落を引き起こす可能性に最大限の警戒を要する。"
       },
       "dashboard": {
         "breadth": {
-          "advancers": 4480,
-          "decliners": 1000,
-          "summary": "圧倒的な買い優勢ですが、一日だけの力強い動きでは市場内部構造の完全な修復は判断できず、「ブルトラップ」のリスクを内包しています。"
+          "advancers": 2216,
+          "decliners": 2365,
+          "summary": "主要指数が小幅な動きに留まったにもかかわらず、市場全体では値下がり銘柄数が値上がり銘柄数を上回った。これは市場の広範な部分が下落していることを示唆しており、不健全な状態にあることを裏付けている。"
         },
-        "sentimentVI": 50.05,
-        "sentimentVISummary": "インデックスは「中立」領域にあり、大幅な株価上昇にもかかわらず市場心理が「強欲」に傾いていない点は、反発への確信が伴っていないことを示唆しています。",
+        "sentimentVI": 55,
+        "sentimentVISummary": "インデックスは「中立」圏内にあり、それ自体は強いシグナルを発していない。しかし、この中立的な数値は、他の指標が示す極度の楽観を覆い隠している可能性があり、逆張りの観点からは警戒が必要である。",
         "priceLevels": {
           "resistance": {
-            "value": "6,390",
-            "description": "このレベルを明確に上抜けできない場合、ラリーの勢いが失速する可能性があります。"
+            "value": "6,350",
+            "description": "直近のFOMC後の安値圏で形成されたレジスタンスゾーン。短期的な弱気見通しを覆すには、この水準を明確に上抜ける必要がある。"
           },
           "support": {
-            "value": "6,080",
-            "description": "この水準を割り込むと、上昇トレンドが終了し、大規模な調整に入るシグナルとなります。"
+            "value": "6,300",
+            "description": "重要な心理的節目であり、テクニカルなピボットポイント。この水準を持続的に下回る場合、さらなる下落の引き金となる可能性が高い。"
           }
         },
         "putCallRatio": {
-          "dailyValue": "0.61",
-          "movingAverage": "0.59",
-          "status": "極度の満足感、警戒シグナル",
-          "summary": "投資家が下落リスクへのヘッジを怠っており、過度な楽観は市場の脆弱性を示唆する逆張りシグナルです。"
+          "dailyValue": "0.58",
+          "movingAverage": "N/A",
+          "status": "極度の自己満足シグナル",
+          "summary": "このレシオは、市場参加者が下落リスクをほとんどヘッジしていない状態にあることを示しており、歴史的に強力な逆張り指標である。"
         }
       },
       "details": {
         "internals": {
-          "headline": "市場上昇は一部の大型株に限定",
-          "text": "月曜日の騰落レシオは非常に強かったものの、これは前週を通じて悪化していた累積ADLのトレンドを一日で覆すには力不足です。累積ADLはS&P 500指数が高値を試す中で「より低い高値（lower high）」を形成している可能性が高く、市場上昇の範囲が一部の大型株に限定されていることを示すダイバージェンスの一形態です。",
+          "headline": "プロの油断、個人の楽観：危険なセンチメントの乖離",
+          "text": "現在の市場センチメントは、複数の指標間で危険な乖離を示しており、表面的な落ち着きとは裏腹に、内部的なリスクが著しく高まっている。最も警戒すべきは、オプション市場に見られる極度の自己満足である。CBOEエクイティ・プット・コール・レシオの日次値は0.58という極めて低い水準を記録した。これは、投資家が、その土台が崩れつつあるにもかかわらず、上昇し続ける主要指数だけを見て強気の賭けを続けている典型的な状況である。",
           "chartData": {
-            "labels": ['情報技術', 'ヘルスケア', '一般消費財', '金融', '公益事業', 'エネルギー'],
-            "values": [0.8, 0.5, 0.4, -0.1, -0.2, -0.3]
+            "labels": ['NVIDIA', 'Apple', 'Microsoft', 'Amazon', 'Meta', 'JPMorgan Chase'],
+            "values": [-0.8, -0.5, -0.3, -0.6, -0.4, 0.2]
           }
         },
         "technicals": {
-          "headline": "価格とモメンタムの危険な乖離（ダイバージェンス）",
-          "text": "S&P 500は力強く反発しましたが、価格動向の裏側では複数のテクニカル指標が深刻な警告を発しています。最も懸念すべきは、価格とモメンタム指標（RSI, MACD）との間に生じている明確な「ベアリッシュ・ダイバージェンス」です。これは上昇が持続的な買いの勢いを欠いていることを示唆します。現在の市場は典型的な「ブルトラップ（強気の罠）」の様相を呈しています。",
+          "headline": "価格と騰落の深刻なダイバージェンス：上昇トレンドへの警告",
+          "text": "テクニカル分析の観点から最も懸念されるのは、S&P 500指数の価格とアドバンス・デクライン・ライン（ADL）との間に生じている明確なベアリッシュ・ダイバージェンスである。S&P 500が高値圏で推移しているにもかかわらず、ADLは下降トレンドを続けている。これは、上昇に参加している銘柄の数が減少し、トレンドが内部的な強さを失い、反転しやすい状態にあることを示す古典的な警告シグナルである。",
           "chartData": {
-            "labels": ["2025-07-29", "2025-07-30", "2025-07-31", "2025-08-01", "2025-08-04"],
-            "sp500": [6339.39, 6345.41, 6318.12, 6238.01, 6329.94],
-            "ma50": [6234.35, 6238.50, 6242.10, 6245.00, 6248.20],
-            "adl": [25500, 25650, 25300, 24500, 27980]
+            "labels": ["2025-07-30", "2025-07-31", "2025-08-01", "2025-08-04", "2025-08-05"],
+            "sp500": [6362.90, 6339.39, 6238.01, 6329.94, 6299.19],
+            "ma50": [6130, 6135, 6140, 6145, 6148.52],
+            "adl": [1500, 1450, 1300, 1250, 1200]
           }
         },
         "fundamentals": {
-          "headline": "プロと個人の温度差：逆張りシグナル点灯か",
-          "text": "現在の市場心理には、投資家層の間で注目すべき乖離が見られます。プロ投資家（II調査）は極端な楽観を示しており、これは歴史的に信頼性の高い逆張り（売り）シグナルです。一方、個人投資家（AAII調査）は慎重な姿勢を崩しておらず、市場全体を巻き込んだ陶酔感には至っていません。この乖離は、相場の最終局面で「スマートマネー」がポジションを売り渡す「分配」の初期段階である可能性を示唆し、急落リスクをはらんでいます。",
+          "headline": "景気減速の影と金融緩和期待の綱引き",
+          "text": "現在の市場は、悪化する経済指標と、それに伴う金融緩和期待という二つの相反する力の綱引きによって動かされている。市場が単なる金融緩和の期待よりも、実体経済の悪化（リセッションリスク）そのものを恐れ始めている可能性があり、今後の弱い経済指標は、直接的な売り材料となるリスクがある。",
           "vix": {
-              "value": 17.43,
-              "change": "-0.09",
-              "summary": "VIXの急低下は、市場が経済リスクを過小評価し、自己満足に陥っていることを示します。不意の悪材料に対して市場は脆弱です。"
+              "value": 17.85,
+              "change": "+0.33 (+1.88%)",
+              "status": "警戒",
+              "summary": "VIXは依然として低い水準にあるが、徐々に上昇している。これは自己満足が支配的ながらも、恐怖感が市場に忍び寄り始めていることを示唆する。"
           },
           "aaiiSurvey": {
-            "date": "2025年7月30日週",
+            "date": "2025年7月30日終了週",
             "bullish": 40.3,
             "neutral": 26.7,
             "bearish": 33.0,
-            "summary": "個人投資家は強気に傾いているものの、依然として3分の1が弱気であり、全面的な陶酔感には至っていません。これは、ラリーへの参加が限定的であることを示唆しています。"
+            "summary": "個人投資家は中程度に楽観的であり、強気派の割合は歴史的平均を上回っている。逆張り指標として見れば、わずかに弱気の材料と解釈できる。"
           },
           "investorsIntelligence": {
-              "date": "2025年8月5日週",
-              "bullish": 60.8,
-              "bearish": 21.7,
-              "correction": 17.5,
-              "summary": "プロの間で強気センチメントが60%を超える極端なレベルに達しています。これは歴史的に信頼性の高い逆張り（売り）シグナルであり、市場の過熱と調整リスクの高まりを示唆します。"
+              "date": "N/A",
+              "bullish": "N/A",
+              "bearish": "N/A",
+              "correction": "N/A",
+              "summary": "ニュースレター執筆者を対象とするこの調査の最新データは入手できなかったが、オプション市場の状況から、プロ層も恐怖感を抱いていない可能性が高い。"
           },
+
           "points": [
-            "7月の雇用統計の悪化が、市場の利下げ期待を80%以上にまで押し上げました。",
-            "10年債利回りの急低下はこの利下げ期待を裏付けていますが、イールドカーブの逆転は景気後退リスクを示唆し続けています。",
-            "VIXの急落は、市場が経済の弱さという「現実」よりも金融緩和という「期待」に焦点を当て、自己満足に陥っていることを示しています。"
+            "ネガティブ・ダイバージェンス: S&P 500の価格と、低下し続けるアドバンス・デクライン・ラインとの間の乖離は、最も重大なテクニカルな警告である。",
+            "極度の自己満足: 0.58というエクイティ・プット・コール・レシオは、市場に恐怖感が欠如していることを示し、突然のショックに対して脆弱な状態にある。",
+            "経済減速: 弱い雇用統計とサービス業のデータは、経済の物語を「ソフトランディング」から「リセッション」へとシフトさせつつある。"
           ]
         },
         "strategy": {
-          "headline": "短期的な上昇を狙いつつ、出口戦略を明確に",
-          "basic": "積極的な新規ポジション構築は推奨されません。既存のロングポジションは維持しつつ、ストップロスを月曜安値（約6,250）直下に引き上げます。新規で入る場合は、6,280～6,300への押し目を待ち、小さなポジションで検討します。利益確定目標は抵抗線である6,390直下です。",
-          "risk": "最大のリスクは、今後の経済指標（特にCPI）が市場の利下げ期待を後退させる「物語の変化」です。S&P 500が月曜安値を下回った場合は、全てのロングポジションを決済すべき危険信号です。不確実性が高いため、ポジションサイズは通常より小さく抑えることが賢明です。"
+          "headline": "下値支持線のブレイクを狙う短期的な売り戦略",
+          "basic": "複数のネガティブなシグナルは短期的な弱気スタンスを正当化する。S&P 500が重要なサポートレベルである6,300ポイントを終値で明確に下抜けた場合に、短期的な売りポジションを構築する。第一の利益確定目標は6,220〜6,240ポイントのサポートゾーンとする。",
+          "risk": "この戦略における最大のリスクは、「悪いニュースは良いニュース」という市場心理が再燃することである。FRB当局者からのハト派的な発言などが出た場合、強力なショートスクイーズが発生する可能性がある。損切りラインは6,350ポイントを終値で上抜けた場合とする。"
         }
       },
       "marketOverview": [
-        { "name": "S&P 500 (8/4終値)", "value": "6,329.94", "change": "+91.93 (+1.47%)", "isDown": false },
-        { "name": "S&P 500 先物", "value": "6,332.50", "change": "+2.56", "isDown": false },
-        { "name": "VIX指数", "value": "17.43", "change": "-0.09 (-0.51%)", "isDown": true },
-        { "name": "米国10年債利回り", "value": "4.23%", "change": "-0.08%", "isDown": true }
+        { "name": "S&P 500 (8/5終値)", "value": "6,299.19", "change": "-30.75 (-0.49%)", "isDown": true },
+        { "name": "S&P 500 先物", "value": "6,285.00", "change": "-14.19", "isDown": true },
+        { "name": "VIX指数", "value": "17.85", "change": "+0.33 (+1.88%)", "isDown": false },
+        { "name": "米国10年債利回り", "value": "4.45%", "change": "-0.07%", "isDown": true }
       ],
       "hotStocks": [
-        { "name": "大型ハイテク株", "price": "指数を牽引", "description": "金利低下期待を背景にラリーを主導するが、過熱感とダイバージェンスには注意が必要。", "isDown": false },
-        { "name": "景気敏感株", "price": "上値重い", "description": "雇用統計の悪化を受け、経済の先行き懸念から買いが手控えられている。", "isDown": true },
-        { "name": "高配当・ディフェンシブ株", "price": "資金の逃避先", "description": "不透明な市場環境の中で、相対的に安定したパフォーマンスが期待されるセクター。", "isDown": false }
+        { "name": "NVIDIA (NVDA)", "price": "主な値下がり銘柄", "description": "金利動向への懸念と市場全体の弱さから売り圧力がかかる可能性。", "isDown": true },
+        { "name": "Caterpillar (CAT)", "price": "主な値下がり銘柄", "description": "決算発表で関税リスクに言及しており、景気減速懸念から売り優勢。", "isDown": true },
+        { "name": "JPMorgan Chase (JPM)", "price": "中立", "description": "金利低下は銀行収益にマイナスだが、市場の不確実性からディフェンシブな動きも。", "isDown": false }
       ]
     };
 
@@ -325,13 +339,7 @@
         const summaryEval = document.getElementById('summary-evaluation');
         summaryEval.textContent = data.summary.evaluation;
         summaryEval.className = 'text-7xl md:text-9xl font-bold';
-        if (data.summary.evaluation === '売り') {
-            summaryEval.classList.add('text-red-600');
-        } else if (data.summary.evaluation === '買い') {
-            summaryEval.classList.add('text-blue-600');
-        } else {
-            summaryEval.classList.add('text-yellow-500');
-        }
+        summaryEval.classList.add(data.summary.evaluation === '売り' ? 'text-red-600' : 'text-blue-600');
         
         document.getElementById('summary-score').innerHTML = `${data.summary.score}<span class="text-4xl text-gray-500">/10</span>`;
         document.getElementById('summary-stars').innerHTML = Array.from({ length: 10 }, (_, i) => i < data.summary.score ? '<span>★</span>' : '<span class="text-gray-300">★</span>').join('');
@@ -347,7 +355,6 @@
         document.getElementById('support-desc').textContent = data.dashboard.priceLevels.support.description;
         
         const pcRatio = data.dashboard.putCallRatio;
-        const pcRatioIsBearish = pcRatio.dailyValue > pcRatio.movingAverage;
         document.getElementById('put-call-ratio-container').innerHTML = `
             <div class="flex items-end justify-center gap-4">
                 <p class="text-8xl font-bold text-gray-800">${pcRatio.dailyValue}</p>
@@ -356,7 +363,7 @@
                      <p class="text-xl font-bold text-gray-700">${pcRatio.movingAverage} <span class="text-base font-medium text-gray-500">(21日移動平均)</span></p>
                 </div>
             </div>
-            <p class="mt-5 px-6 py-2 inline-block ${pcRatioIsBearish ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'} rounded-full text-lg font-semibold">${pcRatio.status}</p>`;
+            <p class="mt-5 px-6 py-2 inline-block bg-red-100 text-red-800 rounded-full text-lg font-semibold">${pcRatio.status}</p>`;
         document.getElementById('put-call-ratio-summary').textContent = pcRatio.summary;
         
         // 詳細分析タブ
@@ -409,6 +416,8 @@
         
         // Investors Intelligence
         const ii = fundamentals.investorsIntelligence;
+        const iiBullish = isNaN(parseFloat(ii.bullish)) ? 0 : ii.bullish;
+        const iiBearish = isNaN(parseFloat(ii.bearish)) ? 0 : ii.bearish;
         document.getElementById('ii-container').innerHTML = `
             <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
                 <h4 class="text-2xl font-bold text-gray-800 mb-1">Investors Intelligence ブルベア指数</h4>
@@ -416,11 +425,11 @@
                 <div class="space-y-3">
                     <div class="flex items-center">
                         <span class="w-28 font-semibold text-bullish">強気 (Bulls)</span>
-                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bullish h-6 rounded-full text-center text-white font-bold" style="width: ${ii.bullish}%">${ii.bullish}%</div></div>
+                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bullish h-6 rounded-full text-center text-white font-bold" style="width: ${iiBullish}%">${ii.bullish}</div></div>
                     </div>
                     <div class="flex items-center">
                         <span class="w-28 font-semibold text-bearish">弱気 (Bears)</span>
-                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bearish h-6 rounded-full text-center text-white font-bold" style="width: ${ii.bearish}%">${ii.bearish}%</div></div>
+                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bearish h-6 rounded-full text-center text-white font-bold" style="width: ${iiBearish}%">${ii.bearish}</div></div>
                     </div>
                 </div>
                  <p class="mt-4 text-gray-600 text-lg leading-relaxed">${ii.summary}</p>
@@ -487,7 +496,7 @@
             data: {
                 labels: data.details.internals.chartData.labels,
                 datasets: [{
-                    label: 'セクター寄与度',
+                    label: '寄与度',
                     data: data.details.internals.chartData.values,
                     backgroundColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 0.7)' : 'rgba(59, 130, 246, 0.7)',
                     borderColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(59, 130, 246, 1)',
@@ -500,7 +509,7 @@
                     x: { 
                         ticks: { 
                             font: { size: FONT_SIZE_AXIS },
-                            callback: function(value) { return value + '%'; }
+                            callback: function(value) { return value; }
                         }
                     }, 
                     y: { ticks: { font: { size: FONT_SIZE_AXIS }}}
@@ -510,7 +519,7 @@
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return context.dataset.label + ': ' + context.formattedValue + '%';
+                                return context.dataset.label + ': ' + context.formattedValue;
                             }
                         }
                     }
@@ -614,6 +623,18 @@
             });
         });
     }
+
+    // モバイルメニューの切り替え機能
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
 </script>
 </body>
 </html>
