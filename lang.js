@@ -7,6 +7,7 @@ const translations = {
         // Navigation
         nav_today: '本日の市況分析',
         nav_archive: '分析アーカイブ',
+        nav_ipo: 'IPOスケジュール',
         nav_indicators: 'テクニカル指標解説',
         nav_terms: '市場用語集',
         nav_about: 'サイトについて',
@@ -767,6 +768,7 @@ const translations = {
         // Navigation
         nav_today: 'Today\'s Market Analysis',
         nav_archive: 'Analysis Archive',
+        nav_ipo: 'IPO Schedule',
         nav_indicators: 'Technical Indicators',
         nav_terms: 'Market Terms',
         nav_about: 'About',
