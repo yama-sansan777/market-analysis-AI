@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'deep-research-scheduler',
       script: 'scheduler.js',
-      cwd: '/path/to/market-analysis-AI',
+      cwd: 'C:\\Users\\TS2\\Desktop\\market-analysis-AI',
       
       // 実行設定
       instances: 1,
