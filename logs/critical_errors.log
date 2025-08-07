@@ -4,3 +4,9 @@ Error: 分析結果のJSONが生成されませんでした。
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
     at async runAnalysisAndPush (C:\Users\TS2\Desktop\market-analysis-AI\scheduler.js:67:9)
 
+2025-08-06T20:00:01.829Z: CRITICAL ERROR - 分析結果のJSONが生成されませんでした。
+Error: 分析結果のJSONが生成されませんでした。
+    at runFullAnalysis (C:\Users\TS2\Desktop\market-analysis-AI\auto_market_analysis.js:370:34)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async runAnalysisAndPush (C:\Users\TS2\Desktop\market-analysis-AI\scheduler.js:67:9)
+
