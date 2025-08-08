@@ -1,0 +1,204 @@
+{
+  "date": "2025年8月7日",
+  "session": "8月7日 市場分析",
+  "languages": {
+    "ja": {
+      "session": "8月7日 市場分析",
+      "date": "2025年8月7日",
+      "summary": {
+        "evaluation": "ホールド",
+        "score": 5,
+        "headline": "脆弱な高値圏での綱引き：好決算 vs. 弱まるモメンタムとセンチメントの亀裂",
+        "text": "米国市場は、力強い第2四半期決算という強固なファンダメンタルズと、弱気なテクニカル指標および分裂した投資家心理との間で激しい綱引きを演じています。このため、短期的な方向性は極めて不透明です。積極的な買いや売りを仕掛けるにはリスクが高く、慎重な姿勢が求められます。特に、価格上昇とモメンタム指標の間に見られる「ベアッシュ・ダイバージェンス」は、上昇エネルギーの枯渇を示唆する重要な警告シグナルです。"
+      },
+      "dashboard": {
+        "breadth": {
+          "advancers": 2330,
+          "decliners": 2080,
+          "summary": "値上がり銘柄数が値下がりを上回ったものの、その差は僅かであり、市場全体の上昇が一部の大型株に支えられている可能性を示唆しています。"
+        },
+        "sentimentVI": 56,
+        "sentimentVISummary": "CNN Fear & Greed指数は先週の「貪欲」から「中立」へ後退。市場参加者の楽観が急速に冷え込んでいることを示しています。",
+        "priceLevels": {
+          "resistance": {
+            "value": "6,366",
+            "description": "過去のサポートが抵抗線に転換した重要水準"
+          },
+          "support": {
+            "value": "6,240",
+            "description": "過去に反発実績のある心理的な節目"
+          }
+        },
+        "putCallRatio": {
+          "dailyValue": "0.62",
+          "movingAverage": "0.59",
+          "status": "自己満足シグナル",
+          "summary": "レシオは歴史的に低い水準にあり、オプション市場の参加者が下落リスクに対するヘッジを怠っていることを示唆しています。"
+        }
+      },
+      "details": {
+        "internals": {
+          "headline": "個人投資家の極端な恐怖 vs. プロの冷静さ",
+          "text": "個人投資家(AAII)のセンチメントは極端な悲観に傾いており、これは歴史的に逆張りの買いシグナルとされます。一方で、プロの投資家(II)は冷静さを保っており、この乖離は市場の転換点でよく見られるパターンです。ただし、オプション市場のプット・コール・レシオは歴史的な低水準にあり、市場が下落ショックに対して無防備であることを示唆しています。",
+          "chartData": {
+            "labels": ["個人投資家 (AAII)", "プロ投資家 (II)"],
+            "values": [43.2, 18.0]
+          }
+        },
+        "technicals": {
+          "headline": "価格は上昇、しかしモメンタムは失速：危険なベアッシュ・ダイバージェンスが形成中",
+          "text": "S&P 500の価格は短期的な上昇トレンドを維持していますが、RSIやMACDといったモメンタム指標がピークを切り下げており、「ベアッシュ・ダイバージェンス」を形成しています。これは上昇エネルギーの枯渇を示し、トレンド転換のリスクが高まっていることを示す典型的な先行指標です。また、現在の上昇はごく一部の大型株に牽引されており、幅広い銘柄の支持を欠いています。",
+          "chartData": {
+            "labels": ["2025-08-01", "2025-08-04", "2025-08-05", "2025-08-06", "2025-08-07"],
+            "sp500": [6238.01, 6329.94, 6299.19, 6345.06, 6345.06],
+            "ma50": [6335.81, 6335.81, 6335.81, 6335.81, 6335.81],
+            "adl": [24500, 24600, 24550, 24650, 24680]
+          }
+        },
+        "fundamentals": {
+          "headline": "好決算という追い風と、高バリュエーション・地政学リスクという逆風の攻防",
+          "text": "市場は、好調な企業業績という強力な追い風と、複数の深刻な逆風との間で板挟みになっています。第2四半期決算は力強いものの、歴史的に割高な株価バリュエーション、景気後退のシグナルとされる「逆イールド」、そして貿易摩擦などの地政学リスクによって影を落としています。",
+          "vix": {
+            "value": 16.22,
+            "change": "-0.37",
+            "summary": "VIX指数は低い水準にあり、市場にパニックは見られません。しかし、これは「自己満足」の表れとも解釈でき、市場の無防備さを示唆しています。"
+          },
+          "aaiiSurvey": {
+            "date": "2025年8月6日調査",
+            "bullish": 34.9,
+            "neutral": 21.9,
+            "bearish": 43.2,
+            "summary": "個人投資家が著しく弱気に傾いており、逆張りの観点からは強力な強気シグナルと見なされることが多い状況です。"
+          },
+          "investorsIntelligence": {
+            "date": "2025年7月29日調査",
+            "bullish": 43.1,
+            "bearish": 18.0,
+            "correction": 38.9,
+            "summary": "プロの投資家は過度に楽観的になることなく、慎重な姿勢を維持しており、市場に過熱感はありません。"
+          },
+          "points": [
+            "好調な企業収益が、現在の株価水準に対する最も強力な論理的根拠となっています。",
+            "株価のバリュエーションは歴史的に見て割高であり、将来の成長期待が既に価格に反映されているため、上昇余地は限定的かもしれません。",
+            "貿易摩擦や関税に関する政治的なニュースフローが、市場のボラティリティを高める最大のリスク要因として常に存在します。"
+          ]
+        },
+        "strategy": {
+          "headline": "狭いレンジでの戦術的ロング：重要なサポート水準を背にした短期売買",
+          "basic": "個人投資家の極端な恐怖心とテクニカルな反発を根拠に、限定的な買い戦略を提案します。6,280〜6,300ポイントのサポートゾーンへの押し目を狙い、6,360〜6,366ポイントのレジスタンスゾーンでの迅速な利益確定を目指します。",
+          "risk": "この戦略の最大のリスクは、テクニカルな弱気シグナルがセンチメント指標よりも正確であると判明するケースです。損切りラインの6,220ポイントを終値で下回った場合は、即座に全てのロングポジションを手仕舞い、戦略をショート（売り）へ転換する必要があります。"
+        }
+      },
+      "marketOverview": [
+        { "name": "S&P 500 (8/6終値)", "value": "6,345.06", "change": "+33.12 (+0.52%)", "isDown": false },
+        { "name": "Nasdaq-100", "value": "18,807.9", "change": "+111.3 (+0.59%)", "isDown": false },
+        { "name": "VIX指数", "value": "16.22", "change": "-0.37 (-2.23%)", "isDown": true },
+        { "name": "米国10年債利回り", "value": "4.15%", "change": "-0.02%", "isDown": true }
+      ],
+      "hotStocks": [
+        { "name": "AAPL", "price": "大型ハイテク株", "description": "決算発表後の上昇を維持し、市場を牽引。", "isDown": false },
+        { "name": "XOM", "price": "エネルギー株", "description": "原油価格の上昇を受けて堅調に推移。", "isDown": false },
+        { "name": "PFE", "price": "ヘルスケア株", "description": "ディフェンシブ銘柄として資金が流入。", "isDown": false }
+      ]
+    },
+    "en": {
+      "session": "August 7th Market Analysis",
+      "date": "August 7, 2025",
+      "summary": {
+        "evaluation": "Hold",
+        "score": 5,
+        "headline": "Fragile High Ground Tug-of-War: Strong Earnings vs. Weakening Momentum and Sentiment Cracks",
+        "text": "The US market is engaged in an intense tug-of-war between strong Q2 earnings as solid fundamentals and bearish technical indicators along with divided investor sentiment. This makes short-term direction extremely uncertain. It's too risky to aggressively buy or sell, requiring a cautious stance. In particular, the 'bearish divergence' seen between price rises and momentum indicators is an important warning signal suggesting exhaustion of upward energy."
+      },
+      "dashboard": {
+        "breadth": {
+          "advancers": 2330,
+          "decliners": 2080,
+          "summary": "While advancing stocks outnumbered declining ones, the margin is slim, suggesting the overall market rise may be supported by a few large caps."
+        },
+        "sentimentVI": 56,
+        "sentimentVISummary": "CNN Fear & Greed Index retreated from last week's 'Greed' to 'Neutral', showing market participants' optimism is rapidly cooling.",
+        "priceLevels": {
+          "resistance": {
+            "value": "6,366",
+            "description": "Important level where past support has turned into resistance"
+          },
+          "support": {
+            "value": "6,240",
+            "description": "Psychological level with past bounce history"
+          }
+        },
+        "putCallRatio": {
+          "dailyValue": "0.62",
+          "movingAverage": "0.59",
+          "status": "Complacency Signal",
+          "summary": "The ratio is at historically low levels, suggesting options market participants are neglecting downside risk hedging."
+        }
+      },
+      "details": {
+        "internals": {
+          "headline": "Retail Investors' Extreme Fear vs. Professional Composure",
+          "text": "Individual investor (AAII) sentiment is tilted toward extreme pessimism, historically considered a contrarian buy signal. Meanwhile, professional investors (II) maintain composure, and this divergence is a pattern often seen at market turning points. However, options market put-call ratios are at historically low levels, suggesting the market is defenseless against downside shocks.",
+          "chartData": {
+            "labels": ["Individual Investors (AAII)", "Professional Investors (II)"],
+            "values": [43.2, 18.0]
+          }
+        },
+        "technicals": {
+          "headline": "Price Rising but Momentum Stalling: Dangerous Bearish Divergence Forming",
+          "text": "While S&P 500 prices maintain a short-term upward trend, momentum indicators like RSI and MACD are cutting lower peaks, forming 'bearish divergence'. This shows exhaustion of upward energy and is a typical leading indicator of rising trend reversal risks. Additionally, the current rise is driven by a very few large caps, lacking broad-based stock support.",
+          "chartData": {
+            "labels": ["2025-08-01", "2025-08-04", "2025-08-05", "2025-08-06", "2025-08-07"],
+            "sp500": [6238.01, 6329.94, 6299.19, 6345.06, 6345.06],
+            "ma50": [6335.81, 6335.81, 6335.81, 6335.81, 6335.81],
+            "adl": [24500, 24600, 24550, 24680]
+          }
+        },
+        "fundamentals": {
+          "headline": "Strong Earnings Tailwinds Battle High Valuations and Geopolitical Headwinds",
+          "text": "The market is caught between strong corporate performance as powerful tailwinds and multiple serious headwinds. While Q2 earnings are robust, they're overshadowed by historically expensive stock valuations, 'inverted yield' signaling recession, and geopolitical risks like trade friction.",
+          "vix": {
+            "value": 16.22,
+            "change": "-0.37",
+            "summary": "VIX index remains at low levels with no market panic visible. However, this can be interpreted as 'complacency', suggesting market defenselessness."
+          },
+          "aaiiSurvey": {
+            "date": "August 6, 2025 Survey",
+            "bullish": 34.9,
+            "neutral": 21.9,
+            "bearish": 43.2,
+            "summary": "Individual investors are markedly bearish, a situation often considered a strong bullish signal from a contrarian perspective."
+          },
+          "investorsIntelligence": {
+            "date": "July 29, 2025 Survey",
+            "bullish": 43.1,
+            "bearish": 18.0,
+            "correction": 38.9,
+            "summary": "Professional investors maintain cautious stance without becoming overly optimistic, showing no market overheating."
+          },
+          "points": [
+            "Strong corporate earnings provide the most powerful logical basis for current stock price levels.",
+            "Stock valuations are historically expensive, with future growth expectations already priced in, potentially limiting upside room.",
+            "Political news flow regarding trade friction and tariffs constantly exists as the biggest risk factor heightening market volatility."
+          ]
+        },
+        "strategy": {
+          "headline": "Tactical Long in Narrow Range: Short-term Trading Against Important Support Levels",
+          "basic": "We propose a limited buying strategy based on individual investors' extreme fear and technical rebounds. Target pullbacks to the 6,280-6,300 point support zone, aiming for quick profit-taking at the 6,360-6,366 point resistance zone.",
+          "risk": "The biggest risk of this strategy is if technical bearish signals prove more accurate than sentiment indicators. If the S&P 500 closes below the 6,220 point stop-loss line, all long positions must be immediately closed and strategy switched to short (sell)."
+        }
+      },
+      "marketOverview": [
+        { "name": "S&P 500 (8/6 Close)", "value": "6,345.06", "change": "+33.12 (+0.52%)", "isDown": false },
+        { "name": "Nasdaq-100", "value": "18,807.9", "change": "+111.3 (+0.59%)", "isDown": false },
+        { "name": "VIX Index", "value": "16.22", "change": "-0.37 (-2.23%)", "isDown": true },
+        { "name": "US 10-Year Yield", "value": "4.15%", "change": "-0.02%", "isDown": true }
+      ],
+      "hotStocks": [
+        { "name": "AAPL", "price": "Large Tech Stocks", "description": "Maintaining post-earnings gains and leading the market.", "isDown": false },
+        { "name": "XOM", "price": "Energy Stocks", "description": "Moving solidly on rising oil prices.", "isDown": false },
+        { "name": "PFE", "price": "Healthcare Stocks", "description": "Funds flowing into defensive stocks.", "isDown": false }
+      ]
+    }
+  }
+}
