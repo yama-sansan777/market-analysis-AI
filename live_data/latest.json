@@ -1,203 +1,269 @@
 {
-  "date": "2025年8月8日",
-  "session": "8月8日 市場分析",
+  "date": "2025年8月11日",
+  "session": "8月11日 市場分析",
   "languages": {
     "ja": {
-      "session": "8月8日 市場分析",
-      "date": "2025年8月8日",
+      "session": "8月11日 市場分析",
+      "date": "2025年8月11日",
       "summary": {
         "evaluation": "ホールド",
         "score": 4,
-        "headline": "高値圏での危険な乖離：好決算と悪化する内部構造の綱引き",
-        "text": "S&P 500は、力強い決算に支えられ最高値圏で取引されていますが、市場の内部構造は著しく悪化しています。上昇を支える銘柄の先鋭化、センチメントの大きな乖離は、市場が急な調整に対して脆弱であることを示唆しており、短期トレーダーは最大限の警戒が必要です。"
+        "headline": "高値更新の裏に潜む警戒シグナル：センチメントの乖離と内部構造の悪化が示唆する市場の脆弱性",
+        "text": "S&P 500は史上最高値圏で推移し、短期的には上昇モメンタムが継続しています。しかし、市場内部では深刻な警告シグナルが点灯している。市場の騰落数は悪化し、一部の大型株が指数を牽引する歪な構造（ベアリッシュ・ダイバージェンス）が顕著である。さらに、個人投資家の悲観とプロ投資家の極端な楽観が乖離しており、市場心理は不安定だ。FRBの利下げ期待が下支えしているが、これは経済の弱さへの懸念が背景にあり、諸刃の剣である。現在のトレンドには乗りつつも、下値支持線を割り込んだ場合の即時撤退を準備すべき局面だ。"
       },
       "dashboard": {
         "breadth": {
-          "advancers": 203,
-          "decliners": 300,
-          "summary": "値下がり銘柄数が値上がりを上回り、ラリーが一部の銘柄に依存していることを示す内部悪化のシグナルです。"
+          "advancers": 1815,
+          "decliners": 2622,
+          "summary": "指数が上昇する日でも値下がり銘柄数が上回る場面が見られ、ラリーが一部の大型株に依存している脆弱な状態を示唆している。"
         },
         "sentimentVI": 66,
-        "sentimentVISummary": "指数は「Greed（強欲）」を示しますが、他の指標との乖離が大きく、市場の深刻な内部分裂を反映していません。",
+        "sentimentVISummary": "インデックスは「Greed（強欲）」の領域にあり、市場参加者がリスクを軽視し楽観に傾いている状態を示す。逆張りの観点からは警戒が必要。",
         "priceLevels": {
           "resistance": {
-            "value": "6,400-6,420",
-            "description": "直近の上昇が失速した重要抵抗帯。"
+            "value": "$6,427",
+            "description": "直近の史上最高値水準。強力な心理的抵抗線として機能。"
           },
           "support": {
-            "value": "6,300-6,315",
-            "description": "20日移動平均線が合流する重要支持帯。"
+            "value": "$6,200",
+            "description": "8月1日の安値圏であり、50日移動平均線が接近する重要なテクニカル支持帯。"
           }
         },
         "putCallRatio": {
-          "dailyValue": "0.57",
-          "movingAverage": "0.65",
-          "status": "危険な自己満足シグナル",
-          "summary": "投機家の過度な楽観を示し、歴史的に市場の天井圏で見られる逆張りの売りシグナルです。"
+          "dailyValue": "0.64",
+          "movingAverage": "0.64",
+          "status": "自己満足シグナル",
+          "summary": "投資家が下落リスクをほとんど警戒しておらず、極めて楽観的であることを示す。逆張り指標としては、市場が脆弱になっていることを示唆。"
         }
       },
       "details": {
         "internals": {
-          "headline": "分裂した市場心理：恐怖におびえる個人投資家と、無防備なオプション投機家",
-          "text": "現在の市場は、近年に見られないほど深刻なセンチメントの乖離によって特徴づけられています。個人投資家の極端な恐怖は逆張りの買いシグナルですが、オプション市場では投機家の危険な楽観が蔓延しており、これは逆張りの売りシグナルです。この矛盾は、機関投資家が静かに下落への備えを進めていることを示唆しており、現在のラリーが「質の低い」燃料に支えられていることを意味します。",
+          "headline": "専門家は楽観、個人は悲観：市場の危険な心理的乖離",
+          "text": "現在の市場は、投資家グループ間でセンチメントが著しく乖離するという、典型的ではないが重要な局面にある。この乖離自体が、市場の不安定さを示すシグナルである。個人投資家の恐怖が下値を支える一方で、プロ投資家の楽観はすでにポジションが最大限に傾いている（買い余力が尽きている）ことを意味する。この状況は非対称なリスクを生み出す。ひとたび予期せぬ悪材料が出れば、楽観に浸っていたプロ投資家は一斉に売りに転じ、相場は急落する可能性がある。",
           "chartData": {
-            "labels": ["個人(AAII) - 強気", "個人(AAII) - 弱気", "プロ(II) - 強気", "プロ(II) - 弱気", "投機家(P/C) - 強気"],
-            "values": [34.9, -43.2, 23.6, -58.9, 100]
+            "labels": ["NVIDIA", "Apple", "Microsoft", "Amazon", "Meta", "NextEra Energy"],
+            "values": [1.5, 1.2, 0.9, 0.5, 0.3, -0.4]
           }
         },
         "technicals": {
-          "headline": "上昇トレンドの疲弊：価格と市場の健全性の間に広がる危険な亀裂",
-          "text": "S&P 500の価格自体は高値圏を維持していますが、市場の幅（ブレッド）を示すアドバンス・デクライン（A/D）ラインは下落を続けています。これは典型的な「弱気のダイバージェンス」であり、ラリーがごく一握りの巨大ハイテク銘柄に支えられていることを示唆します。いわば、「将軍」だけが前進し、「兵士」は退却している状態であり、市場の天井が近いことを示す教科書的な警告サインです。",
+          "headline": "上昇トレンドに潜む警告：価格と指標のベアリッシュ・ダイバージェンス",
+          "text": "S&P 500は力強い上昇トレンドの中にあるが、その裏側で複数の深刻な警告シグナルが点灯している。最大の懸念は、価格と市場の内部構造（ブレッド）との間に生じている「ベアリッシュ・ダイバージェンス」である。これは、S&P 500指数が最高値に迫る一方、市場全体の健全性を示すアドバンス・デクライン・ライン（ADL）が上昇に追随せず、むしろ低下傾向にある現象を指す。このような「中身の伴わない上昇」は、ラリーの基盤が非常に脆弱であることを意味し、過去の市場の天井形成時によく見られた危険な兆候である。短期トレーダーは、現在の市場が「市場全体」ではなく、実質的に「一握りの巨大ハイテク株」に賭けている状態であることを認識する必要がある。",
           "chartData": {
             "labels": ["2025-08-04", "2025-08-05", "2025-08-06", "2025-08-07", "2025-08-08"],
-            "sp500": [6325, 6330, 6350, 6340, 6345],
-            "ma50": [6150, 6155, 6160, 6165, 6167],
-            "adl": [25400, 25350, 25320, 25280, 25250]
+            "sp500": [6329.94, 6299.19, 6345.06, 6340.00, 6389.45],
+            "ma50": [6162, 6167, 6172, 6175, 6177],
+            "adl": [35200, 34950, 35050, 34600, 34400]
           }
         },
         "fundamentals": {
-          "headline": "過去を映す好決算、未来を曇らせる景気後退の影",
-          "text": "市場は、非常に好調な第2四半期決算という過去のデータに固執し、景気先行指数が示す将来の暗い経済見通しを無視しています。この乖離は持続不可能であり、次回のCPI報告が市場の自己満足を打ち砕く触媒となる可能性があります。",
+          "headline": "FRBの利下げ期待が支える、割高感の否めない市場",
+          "text": "最大の支柱は好調な第2四半期決算だが、バリュエーションは明らかに割高な水準にある。S&P 500のフォワードP/Eレシオは22.1倍で、過去平均を著しく上回る。もう一つの柱はFRBによる9月の利下げ期待だが、その背景は景気減速への懸念へとシフトしている。市場は「悪いニュースは（利下げ期待を高めるため）良いニュースだ」という危険なパラダイムに陥っているが、これは長続きしない。ある時点で、市場の関心は企業収益の悪化という現実に必ずシフトする。",
           "vix": {
-            "value": 16.32,
-            "change": "-0.25",
-            "summary": "VIX指数は低い、自己満足的な領域にあります。これは安全を示唆するものではなく、市場が重大なリスクを過小評価していることを示しています。"
+            "value": 15.80,
+            "change": "-0.77",
+            "status": "安定",
+            "summary": "歴史的に低い水準で、市場の恐怖感が後退し自己満足的なムードが広がっていることを示している。"
           },
           "aaiiSurvey": {
-            "date": "2025年8月6日調査",
+            "date": "2025年8月6日週",
             "bullish": 34.9,
             "neutral": 21.9,
             "bearish": 43.2,
-            "summary": "個人投資家は異常なほど悲観的です。これは、売るべき投資家がすでに売り終えた可能性を示唆する、強力な逆張りの買いシグナルです。"
+            "summary": "個人投資家は著しく悲観に傾いている。これは逆張り指標としては強気と解釈できるが、プロのセンチメントとの大きな乖離は、市場全体の心理状態が非常に不安定であることを物語っている。"
           },
           "investorsIntelligence": {
-            "date": "2025年8月6日調査",
-            "bullish": 23.6,
-            "bearish": 58.9,
-            "correction": 17.5,
-            "summary": "プロのニュースレター執筆者も同様に悲観的で、強気派の割合は歴史的な低水準にあります。これも逆張りの買いシグナルです。"
+            "date": "2025年8月6日",
+            "bullish": 57.3,
+            "bearish": 21.7,
+            "correction": 21.0,
+            "summary": "ニュースレター執筆者などのプロ投資家は依然として非常に楽観的である。ブルベア比率（強気派と弱気派の比率）は2.64倍と高い水準にあり、市場が過熱気味で、調整が近いことを示す逆張りの警告シグナルと見なされる。"
           },
           "points": [
-            "市場は過去の好調な企業業績に固執し、将来の暗い経済見通しを無視しています。この乖離は持続不可能です。",
-            "安定した10年債利回りは短期的なプラス材料ですが、根強く残るイールドカーブの逆転は、未解決の長期的な景気後退シグナルです。",
-            "次回のCPI報告が市場の次の試金石です。高い数値が出れば、市場の自己満足を打ち砕き、FRBの政策と景気後退リスクの再評価を強制する可能性があります。"
+            "強気の材料: 好調な企業決算、FRBの利下げ期待、明確な上昇トレンド。",
+            "弱気の材料: 割高なバリュエーション、価格と市場ブレッドのベアリッシュ・ダイバージェンス。",
+            "最大のリスク: 「悪いニュースは良いニュース」という市場心理が突然変化するリスク。"
           ]
         },
         "strategy": {
-          "headline": "防御を固め、引き金を引くのを待て",
-          "basic": "最優先すべき戦略はリスク削減です。既存ロングポジションには6,300ポイント直下で厳格なストップロスを設定。この局面での新規ロングは非推奨。6,300を明確に下抜けた場合に限り、戦術的なショートを検討します。",
-          "risk": "この弱気見通しの最大のリスクは、悲観論を燃料とする「メルトアップ（暴騰）」です。もし来週のCPIが予想外に低く、FRBがハト派に転換すれば、大規模なショートカバーを引き起こす可能性があります。いかなるショートポジションも、6,380-6,400のゾーンを上抜けたら即座に損切りするハードストップが必須です。"
+          "headline": "上昇の波に乗りつつ、出口戦略を明確に",
+          "basic": "基本戦略は「買い」または「ホールド」。トレンドに逆らわないが、リスク管理を徹底する。新規買いは小さなサイズで押し目を待つのが賢明。保有ポジションは史上最高値6,427付近で一部利益確定を推奨。全てのロングポジションに、最重要支持線である6,200をわずかに下回る水準（例：6,190）に厳格なストップロス注文を設定することが不可欠。",
+          "risk": "最大のリスクは、複数のダイバージェンスが一斉に下方向に解消されること。S&P 500が終値で6,200を明確に割り込んだ場合、短期的な上昇トレンドの終焉と判断し、全てのロングポジションを機械的に清算し、即座に守りの姿勢（キャッシュポジション）に転換すべき。"
         }
       },
       "marketOverview": [
-        { "name": "S&P 500 (8/8終値)", "value": "6,345.00", "change": "+5.00 (+0.08%)", "isDown": false },
-        { "name": "Nasdaq-100", "value": "19,850.10", "change": "+50.20 (+0.25%)", "isDown": false },
-        { "name": "VIX指数", "value": "16.32", "change": "-0.25 (-1.51%)", "isDown": true },
-        { "name": "米国10年債利回り", "value": "4.23%", "change": "+0.01%", "isDown": false }
+        {
+          "name": "S&P 500 (8/8終値)",
+          "value": "6,389.45",
+          "change": "+49.45 (+0.78%)",
+          "isDown": false
+        },
+        {
+          "name": "Nasdaq 100 (8/8終値)",
+          "value": "21,540.20",
+          "change": "+234.50 (+1.10%)",
+          "isDown": false
+        },
+        {
+          "name": "VIX指数",
+          "value": "15.80",
+          "change": "-0.77 (-4.65%)",
+          "isDown": true
+        },
+        {
+          "name": "米国10年債利回り",
+          "value": "4.25%",
+          "change": "-0.02%",
+          "isDown": true
+        }
       ],
       "hotStocks": [
-        { "name": "AI関連銘柄", "price": "上昇を牽引", "description": "市場の狭いリーダーシップを象徴。一部の巨大AI関連企業が指数を支えている。", "isDown": false },
-        { "name": "景気敏感株", "price": "下落", "description": "関税や景気後退への懸念から、工業株や素材株などが弱い動き。", "isDown": true },
-        { "name": "金融株", "price": "横ばい", "description": "安定した金利環境はプラスだが、景気後退懸念が重しとなっている。", "isDown": true }
+        {
+          "name": "NVIDIA (NVDA)",
+          "price": "主要な上昇銘柄",
+          "description": "AI関連の強い需要を背景に、市場全体を牽引するリーダー。",
+          "isDown": false
+        },
+        {
+          "name": "Apple (AAPL)",
+          "price": "主要な上昇銘柄",
+          "description": "巨大テック企業のリーダーとして、指数を押し上げる主要因。",
+          "isDown": false
+        },
+        {
+          "name": "NextEra Energy (NEE)",
+          "price": "主な値下がり銘柄",
+          "description": "金利への懸念から、公益事業セクターは軟調な展開。",
+          "isDown": true
+        }
       ]
     },
     "en": {
-      "session": "August 8th Market Analysis",
-      "date": "August 8, 2025",
+      "session": "August 11th Market Analysis (EN)",
+      "date": "August 11, 2025",
       "summary": {
         "evaluation": "Hold",
         "score": 4,
-        "headline": "Dangerous Divergence at High Levels: Strong Earnings vs. Deteriorating Market Internals",
-        "text": "The S&P 500 trades near record highs supported by strong earnings, but market internals have significantly deteriorated. The narrowing leadership and major sentiment divergences suggest the market is vulnerable to sharp corrections, requiring maximum caution from short-term traders."
+        "headline": "Warning Signals Behind Record Highs: Sentiment Divergence and Internal Deterioration Suggest Market Vulnerability",
+        "text": "The S&P 500 continues to trade near record highs with short-term upward momentum persisting. However, serious warning signals are flashing within the market internals. Market breadth has deteriorated, with a distorted structure where a few large-cap stocks drive the index (bearish divergence) becoming prominent. Furthermore, the divergence between retail investor pessimism and professional investor extreme optimism creates unstable market psychology. While Fed rate cut expectations provide support, this is a double-edged sword as it reflects concerns about economic weakness. The current approach should be riding the trend while preparing for immediate withdrawal if key support levels are breached."
       },
       "dashboard": {
         "breadth": {
-          "advancers": 203,
-          "decliners": 300,
-          "summary": "Declining issues outnumber advancing ones, signaling internal deterioration as the rally depends on a few stocks."
+          "advancers": 1815,
+          "decliners": 2622,
+          "summary": "Even on days when indices rise, declining issues often outnumber advancing ones, suggesting a fragile state where the rally depends on a few large-cap stocks."
         },
         "sentimentVI": 66,
-        "sentimentVISummary": "The index shows 'Greed' but large divergences with other indicators don't reflect the market's serious internal divisions.",
+        "sentimentVISummary": "The index is in 'Greed' territory, indicating market participants are underestimating risks and leaning toward optimism. Caution is needed from a contrarian perspective.",
         "priceLevels": {
           "resistance": {
-            "value": "6,400-6,420",
-            "description": "Key resistance zone where recent advances stalled."
+            "value": "$6,427",
+            "description": "Recent record high level. Functions as a strong psychological resistance line."
           },
           "support": {
-            "value": "6,300-6,315",
-            "description": "Important support zone where 20-day moving average converges."
+            "value": "$6,200",
+            "description": "August 1st low zone where the 50-day moving average approaches - an important technical support band."
           }
         },
         "putCallRatio": {
-          "dailyValue": "0.57",
-          "movingAverage": "0.65",
-          "status": "Dangerous Complacency Signal",
-          "summary": "Shows excessive optimism among speculators, historically a contrarian sell signal seen at market tops."
+          "dailyValue": "0.64",
+          "movingAverage": "0.64",
+          "status": "Complacency Signal",
+          "summary": "Shows investors are barely concerned about downside risks and are extremely optimistic. As a contrarian indicator, this suggests the market is becoming vulnerable."
         }
       },
       "details": {
         "internals": {
-          "headline": "Divided Market Psychology: Fearful Retail vs. Complacent Option Speculators",
-          "text": "The current market is characterized by unprecedented sentiment divergence. While retail investor extreme fear provides contrarian buy signals, dangerous optimism prevails in options markets as contrarian sell signals. This contradiction suggests institutions are quietly preparing for declines, meaning the current rally is fueled by 'low quality' sources.",
+          "headline": "Professionals Optimistic, Retail Pessimistic: Dangerous Psychological Divergence in Markets",
+          "text": "The current market is in an atypical but important phase where sentiment diverges significantly between investor groups. This divergence itself is a signal of market instability. While retail investor fear supports the downside, professional investor optimism means positions are already maximally tilted (buying power exhausted). This situation creates asymmetric risk. If unexpected negative news emerges, professionals who were basking in optimism could turn to selling en masse, potentially causing a sharp market decline.",
           "chartData": {
-            "labels": ["Retail(AAII) - Bullish", "Retail(AAII) - Bearish", "Pro(II) - Bullish", "Pro(II) - Bearish", "Speculators(P/C) - Bullish"],
-            "values": [34.9, -43.2, 23.6, -58.9, 100]
+            "labels": ["NVIDIA", "Apple", "Microsoft", "Amazon", "Meta", "NextEra Energy"],
+            "values": [1.5, 1.2, 0.9, 0.5, 0.3, -0.4]
           }
         },
         "technicals": {
-          "headline": "Uptrend Exhaustion: Dangerous Cracks Between Price and Market Health",
-          "text": "While S&P 500 prices remain at high levels, the Advance-Decline line showing market breadth continues declining. This is classic 'bearish divergence', suggesting the rally depends on a handful of mega-cap tech stocks. It's like 'generals' advancing while 'soldiers' retreat - a textbook warning sign of approaching market tops.",
-          "chartData": {
-            "labels": ["2025-08-04", "2025-08-05", "2025-08-06", "2025-08-07", "2025-08-08"],
-            "sp500": [6325, 6330, 6350, 6340, 6345],
-            "ma50": [6150, 6155, 6160, 6165, 6167],
-            "adl": [25400, 25350, 25320, 25280, 25250]
-          }
+          "headline": "Warning Signs Lurking in Uptrend: Bearish Divergence Between Price and Indicators",
+          "text": "While the S&P 500 is in a strong uptrend, multiple serious warning signals are flashing behind the scenes. The biggest concern is the 'bearish divergence' occurring between price and market internals (breadth). This refers to the phenomenon where the S&P 500 index approaches record highs while the Advance-Decline Line (ADL), which shows overall market health, fails to follow the rise and instead tends downward. Such 'hollow rises' mean the rally's foundation is very fragile - a dangerous sign commonly seen during past market top formations. Short-term traders need to recognize that the current market is essentially betting on 'a handful of mega-cap tech stocks' rather than 'the overall market.'"
         },
         "fundamentals": {
-          "headline": "Strong Past Earnings vs. Dark Economic Future Shadows",
-          "text": "The market clings to very strong Q2 earnings as past data while ignoring dark future economic outlooks shown by leading indicators. This divergence is unsustainable, and the next CPI report could serve as a catalyst to shatter market complacency.",
+          "headline": "Market Supported by Fed Rate Cut Expectations Despite Overvaluation Concerns",
+          "text": "The biggest pillar is strong Q2 earnings, but valuations are clearly at expensive levels. The S&P 500's forward P/E ratio is 22.1x, significantly above historical averages. Another pillar is expectations for Fed rate cuts in September, but the background has shifted to concerns about economic slowdown. The market has fallen into the dangerous paradigm that 'bad news is good news (because it raises rate cut expectations),' but this won't last long. At some point, market focus will inevitably shift to the reality of deteriorating corporate earnings.",
           "vix": {
-            "value": 16.32,
-            "change": "-0.25",
-            "summary": "VIX index remains in low, complacent territory. This doesn't suggest safety but shows the market is underestimating significant risks."
+            "value": 15.80,
+            "change": "-0.77",
+            "status": "Stable",
+            "summary": "At historically low levels, showing market fear has receded and a complacent mood is spreading."
           },
           "aaiiSurvey": {
-            "date": "August 6, 2025 Survey",
+            "date": "Week of August 6, 2025",
             "bullish": 34.9,
             "neutral": 21.9,
             "bearish": 43.2,
-            "summary": "Individual investors are abnormally pessimistic. This suggests a strong contrarian buy signal as sellers may have already finished selling."
+            "summary": "Individual investors are markedly pessimistic. While this can be interpreted as bullish from a contrarian perspective, the large divergence with professional sentiment indicates the overall market psychology is very unstable."
           },
           "investorsIntelligence": {
-            "date": "August 6, 2025 Survey",
-            "bullish": 23.6,
-            "bearish": 58.9,
-            "correction": 17.5,
-            "summary": "Professional newsletter writers are similarly pessimistic, with bullish percentages at historically low levels. This is also a contrarian buy signal."
+            "date": "August 6, 2025",
+            "bullish": 57.3,
+            "bearish": 21.7,
+            "correction": 21.0,
+            "summary": "Professional investors like newsletter writers remain very optimistic. The bull-bear ratio (ratio of bullish to bearish) is at a high 2.64x, considered a contrarian warning signal indicating the market is overheated and correction is near."
           },
           "points": [
-            "The market clings to past strong corporate performance while ignoring dark future economic outlooks. This divergence is unsustainable.",
-            "Stable 10-year yields are short-term positive, but persistent yield curve inversion remains an unresolved long-term recession signal.",
-            "The next CPI report will be the market's next litmus test. High numbers could shatter market complacency and force reassessment of Fed policy and recession risks."
+            "Bullish factors: Strong corporate earnings, Fed rate cut expectations, clear uptrend.",
+            "Bearish factors: Expensive valuations, bearish divergence between price and market breadth.",
+            "Biggest risk: Risk of sudden change in market psychology of 'bad news is good news.'"
           ]
         },
         "strategy": {
-          "headline": "Strengthen Defense and Wait for the Trigger",
-          "basic": "Risk reduction should be the top priority strategy. Set strict stop losses just below 6,300 points for existing long positions. New longs not recommended at this stage. Consider tactical shorts only if 6,300 is clearly broken.",
-          "risk": "The biggest risk to this bearish outlook is pessimism-fueled 'melt-up'. If next week's CPI is unexpectedly low and the Fed turns dovish, it could trigger massive short covering. Any short positions must have hard stops that immediately cut losses if the 6,380-6,400 zone is breached."
+          "headline": "Ride the Wave Up While Keeping Exit Strategy Clear",
+          "basic": "Basic strategy is 'Buy' or 'Hold.' Don't fight the trend but implement thorough risk management. For new purchases, it's wise to wait for pullbacks with small position sizes. For existing positions, partial profit-taking near record highs around 6,427 is recommended. It's essential to set strict stop-loss orders for all long positions at levels slightly below the crucial support line of 6,200 (e.g., 6,190).",
+          "risk": "The biggest risk is multiple divergences resolving simultaneously to the downside. If the S&P 500 clearly breaks below 6,200 on a closing basis, judge this as the end of the short-term uptrend and mechanically liquidate all long positions, immediately shifting to a defensive stance (cash position)."
         }
       },
       "marketOverview": [
-        { "name": "S&P 500 (8/8 Close)", "value": "6,345.00", "change": "+5.00 (+0.08%)", "isDown": false },
-        { "name": "Nasdaq-100", "value": "19,850.10", "change": "+50.20 (+0.25%)", "isDown": false },
-        { "name": "VIX Index", "value": "16.32", "change": "-0.25 (-1.51%)", "isDown": true },
-        { "name": "US 10-Year Yield", "value": "4.23%", "change": "+0.01%", "isDown": false }
+        {
+          "name": "S&P 500 (8/8 Close)",
+          "value": "6,389.45",
+          "change": "+49.45 (+0.78%)",
+          "isDown": false
+        },
+        {
+          "name": "Nasdaq 100 (8/8 Close)",
+          "value": "21,540.20",
+          "change": "+234.50 (+1.10%)",
+          "isDown": false
+        },
+        {
+          "name": "VIX Index",
+          "value": "15.80",
+          "change": "-0.77 (-4.65%)",
+          "isDown": true
+        },
+        {
+          "name": "US 10-Year Yield",
+          "value": "4.25%",
+          "change": "-0.02%",
+          "isDown": true
+        }
       ],
       "hotStocks": [
-        { "name": "AI-Related Stocks", "price": "Leading Gains", "description": "Symbolizing narrow market leadership. A few mega AI companies are supporting the index.", "isDown": false },
-        { "name": "Cyclical Stocks", "price": "Declining", "description": "Industrial and materials stocks showing weakness amid tariff and recession concerns.", "isDown": true },
-        { "name": "Financial Stocks", "price": "Sideways", "description": "Stable interest rate environment is positive, but recession concerns weigh on the sector.", "isDown": true }
+        {
+          "name": "NVIDIA (NVDA)",
+          "price": "Major Gainer",
+          "description": "Leading the overall market backed by strong AI-related demand.",
+          "isDown": false
+        },
+        {
+          "name": "Apple (AAPL)",
+          "price": "Major Gainer",
+          "description": "As a leader among mega-cap tech companies, a major factor pushing up the index.",
+          "isDown": false
+        },
+        {
+          "name": "NextEra Energy (NEE)",
+          "price": "Major Decliner",
+          "description": "Utilities sector showing weakness due to interest rate concerns.",
+          "isDown": true
+        }
       ]
     }
   }
