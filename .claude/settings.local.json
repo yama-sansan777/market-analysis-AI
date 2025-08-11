@@ -18,7 +18,9 @@
       "Bash(ls:*)",
       "Bash(npm run build:*)",
       "Bash(touch:*)",
-      "WebFetch(domain:yama-sansan777.github.io)"
+      "WebFetch(domain:yama-sansan777.github.io)",
+      "Bash(pm2 restart:*)",
+      "Bash(pm2 list:*)"
     ],
     "deny": []
   }

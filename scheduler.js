@@ -113,7 +113,39 @@ cron.schedule('0 5 * * 2-6', () => runAnalysisAndPush('市場終了後'), {
     timezone: "Asia/Tokyo"
 });
 
-// 3. 定期ヘルスチェック (毎日12:00)
+// 3. テスト実行 (今日16:00) - 本日のみ
+const today = new Date();
+const targetDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+cron.schedule('0 16 * * *', () => {
+    const now = new Date();
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    // 今日のみ実行
+    if (nowDate.getTime() === targetDate.getTime()) {
+        logger.info('🎯 本日16:00 テスト実行を開始します');
+        runAnalysisAndPush('本日16時テスト実行');
+    }
+}, {
+    scheduled: true,
+    timezone: "Asia/Tokyo"
+});
+
+// 4. テスト実行 (今日21:00) - 本日のみ、記事生成用
+cron.schedule('0 21 * * *', () => {
+    const now = new Date();
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    // 今日のみ実行
+    if (nowDate.getTime() === targetDate.getTime()) {
+        logger.info('🎯 本日21:00 記事生成を開始します');
+        runAnalysisAndPush('本日21時 記事生成');
+    }
+}, {
+    scheduled: true,
+    timezone: "Asia/Tokyo"
+});
+
+// 5. 定期ヘルスチェック (毎日12:00)
 cron.schedule('0 12 * * *', async () => {
     logger.info('🔍 定期ヘルスチェックを開始します');
     try {
@@ -136,7 +168,7 @@ cron.schedule('0 12 * * *', async () => {
     timezone: "Asia/Tokyo"
 });
 
-// 4. 手動実行用の関数をグローバルに公開
+// 6. 手動実行用の関数をグローバルに公開
 global.runManualAnalysis = () => runAnalysisAndPush('手動実行');
 global.runHealthCheck = async () => {
     logger.info('🔍 手動ヘルスチェックを実行します');

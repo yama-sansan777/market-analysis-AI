@@ -22,104 +22,38 @@ const geminiCircuitBreaker = new CircuitBreaker({
 });
 
 // Geminiに分析を依頼するためのプロンプト（指示文）を作成する関数
-function buildAnalysisPrompt(marketData, searchResultsText) { // searchResultsText を引数に追加
-  // 多言語構造に対応した完全なJSONスキーマを定義
+function buildAnalysisPrompt(marketData, searchResultsText) { 
+  // 簡潔なJSONスキーマを定義
   const jsonStructure = `
   {
-    "date": "string (例: 2025年8月2日)",
-    "session": "string (例: 8月2日 市場分析)",
+    "date": "${new Date().toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'})}",
+    "session": "${new Date().toLocaleDateString('ja-JP', {month: 'long', day: 'numeric'})} 市場分析",
     "languages": {
       "ja": {
-        "session": "string (例: 8月2日 市場分析)",
-        "date": "string (例: 2025年8月2日)",
-        "summary": {
-          "evaluation": "'売り' | '買い' | '中立'",
-          "score": "number (1-10の整数)",
-          "headline": "string (30字程度のヘッドライン)",
-          "text": "string (200字程度の分析サマリー)"
-        },
+        "session": "${new Date().toLocaleDateString('ja-JP', {month: 'long', day: 'numeric'})} 市場分析",
+        "date": "${new Date().toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'})}",
+        "summary": { "evaluation": "買い|売り|中立", "score": 1-10, "headline": "短いヘッドライン", "text": "分析要約" },
         "dashboard": {
-          "breadth": { 
-            "advancers": "number (値上がり銘柄数)", 
-            "decliners": "number (値下がり銘柄数)", 
-            "summary": "string (市場健全性に関するコメント)" 
-          },
+          "breadth": { "advancers": 2000, "decliners": 1500, "summary": "市場概況" },
           "sentimentVI": ${marketData.fear_and_greed_index},
-          "sentimentVISummary": "string (Fear & Greed Indexについてのコメント)",
-          "priceLevels": {
-            "resistance": { "value": "string (例: 5,100.00)", "description": "string (抵抗線の説明)" },
-            "support": { "value": "string (例: 5,050.00)", "description": "string (支持線の説明)" }
-          },
-          "putCallRatio": { 
-            "dailyValue": "string (例: 0.75)", 
-            "movingAverage": "string (例: 0.65)", 
-            "status": "string ('弱気シグナル' | '強気シグナル' | '中立')", 
-            "summary": "string (Put/Call比率の解説)" 
-          }
+          "sentimentVISummary": "Fear&Greedの解説",
+          "priceLevels": { "resistance": {"value": "650", "description": "抵抗線"}, "support": {"value": "620", "description": "支持線"} },
+          "putCallRatio": { "dailyValue": "0.80", "movingAverage": "0.75", "status": "弱気シグナル", "summary": "Put/Call解説" }
         },
         "details": {
-          "internals": {
-            "headline": "string (市場内部構造の見出し)",
-            "text": "string (市場内部構造の詳細分析)",
-            "chartData": {
-              "labels": ["セクター1", "セクター2", "セクター3", "セクター4", "セクター5", "セクター6"],
-              "values": [2.1, -1.5, 0.8, -0.3, 1.2, -0.7]
-            }
-          },
-          "technicals": {
-            "headline": "string (テクニカル分析の見出し)",
-            "text": "string (テクニカル分析の詳細)",
-            "chartData": {
-              "labels": ["7/29", "7/30", "7/31", "8/1", "8/2"],
-              "sp500": [5100, 5120, 5095, 5110, 5125],
-              "ma50": [5090, 5092, 5094, 5096, 5098],
-              "adl": [2500, 2480, 2460, 2470, 2485]
-            }
-          },
-          "fundamentals": {
-            "headline": "string (ファンダメンタルズ分析の見出し)",
-            "text": "string (ファンダメンタルズ分析の詳細)",
-            "vix": { 
-              "value": 18.5, 
-              "change": "+1.2 (+6.9%)", 
-              "status": "上昇", 
-              "summary": "string (VIX指数の状況説明)" 
-            },
-            "aaiiSurvey": { 
-              "date": "2025年8月1日", 
-              "bullish": 35, 
-              "neutral": 30, 
-              "bearish": 35, 
-              "summary": "string (AAII調査の分析)" 
-            },
-            "investorsIntelligence": { 
-              "date": "2025年8月1日", 
-              "bullish": 45, 
-              "bearish": 25, 
-              "correction": 30, 
-              "summary": "string (II調査の分析)" 
-            },
-            "points": [
-              "string (ファンダメンタルズのポイント1)",
-              "string (ファンダメンタルズのポイント2)"
-            ]
-          },
-          "strategy": {
-            "headline": "string (投資戦略の見出し)",
-            "basic": "string (基本的な投資戦略の説明)",
-            "risk": "string (リスク管理の説明)"
-          }
+          "internals": { "headline": "内部構造", "text": "セクター分析", "chartData": { "labels": ["Tech","Energy","Finance","Healthcare","Consumer","Materials"], "values": [2.1,-1.5,0.8,-0.3,1.2,-0.7] } },
+          "technicals": { "headline": "テクニカル", "text": "チャート分析", "chartData": { "labels": ["8/7","8/8","8/9","8/10","8/11"], "sp500": [630,635,640,638,642],
+              "ma50": [620,625,630,632,635], "adl": [1500,1520,1540,1530,1550] } },
+          "fundamentals": { "headline": "ファンダメンタルズ", "text": "経済指標分析", "vix": {"value": 18, "change": "+1.2", "status": "上昇", "summary": "不安増大"}, "aaiiSurvey": {"date": "2025年8月11日", "bullish": 40, "neutral": 30, "bearish": 30, "summary": "中立"}, "investorsIntelligence": {"date": "2025年8月11日", "bullish": 45, "bearish": 25, "correction": 30, "summary": "強気優勢"}, "points": ["インフレ動向","FRB政策"] },
+          "strategy": { "headline": "投資戦略", "basic": "慎重な楽観", "risk": "リスク管理必須" }
         },
         "marketOverview": [
-          { "name": "S&P 500 (終値)", "value": "${marketData.sp500_price}", "change": "string (例: +12.50 (+0.25%))", "isDown": false },
-          { "name": "S&P 500 先物", "value": "string (例: 5,125.25)", "change": "string (例: +8.75)", "isDown": false },
-          { "name": "VIX指数", "value": "string (例: 18.45)", "change": "string (例: +1.20)", "isDown": false },
-          { "name": "米国10年債利回り", "value": "string (例: 4.25%)", "change": "string (例: +0.05%)", "isDown": false }
+          {"name": "S&P 500 (終値)", "value": "${marketData.sp500_price}", "change": "+5.00 (+0.75%)", "isDown": false},
+          {"name": "VIX指数", "value": "18.0", "change": "+1.2", "isDown": false}
         ],
         "hotStocks": [
-          { "name": "NVIDIA (NVDA)", "price": "string (例: $125.50)", "description": "string (注目理由の説明)", "isDown": false },
-          { "name": "Apple (AAPL)", "price": "string (例: $185.25)", "description": "string (注目理由の説明)", "isDown": true },
-          { "name": "Microsoft (MSFT)", "price": "string (例: $415.75)", "description": "string (注目理由の説明)", "isDown": false }
+          {"name": "NVIDIA (NVDA)", "price": "$450", "description": "AI関連", "isDown": false},
+          {"name": "Apple (AAPL)", "price": "$185", "description": "iPhone好調", "isDown": false}
         ]
       }
     }
@@ -130,14 +64,16 @@ function buildAnalysisPrompt(marketData, searchResultsText) { // searchResultsTe
   あなたは優秀な金融アナリストです。以下の「市場データ」と「最新のWeb検索結果」を**総合的に分析し**、単なる要約ではなく、深い洞察に基づいたレポートを生成してください。
 
   # 市場データ:
-  - S&P 500 最新終値: ${marketData.sp500_price} (日付: ${marketData.sp500_date})
+  - S&P 500 最新終値: ${marketData.sp500_price} (データ日付: ${marketData.sp500_date})
   - CNN Fear & Greed Index: ${marketData.fear_and_greed_index}
+  - 分析実行日: ${new Date().toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'})}
 
   # 最新のWeb検索結果:
   ${searchResultsText}
 
   # 重要な指示:
   - 必ず日本語で回答してください
+  - 分析記事の日付は、分析実行日（${new Date().toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'})}）を使用してください
   - 上記の「市場データ」と「最新のWeb検索結果」の両方を考慮して、なぜ市場がそのように動いたのかという**文脈**を含めて分析してください
   - 以下のJSON構造に厳密に従って出力してください
   - 全てのセクション（details.internals、details.technicals、details.fundamentals、details.strategy）を必ず含めてください
@@ -163,21 +99,24 @@ async function analyzeWithGemini(marketData, searchResultsText) { // searchResul
         return await geminiCircuitBreaker.execute(async () => {
             return await withTimeout(async () => {
                 return await performGeminiAnalysis(marketData, searchResultsText);
-            }, 45000, 'Gemini分析'); // 45秒タイムアウト
+            }, 90000, 'Gemini分析'); // 90秒タイムアウト
         }, 'Gemini分析');
     };
 
     try {
         const analysisResult = await withRetry(geminiOperation, {
-            maxRetries: 2,
-            baseDelay: 5000,
-            maxDelay: 15000,
-            backoffMultiplier: 3,
+            maxRetries: 4,
+            baseDelay: 10000,
+            maxDelay: 60000,
+            backoffMultiplier: 2,
             retryCondition: (error) => {
-                // API制限、レート制限、一時的なサービス不可のみリトライ
+                // API制限、レート制限、一時的なサービス不可、503エラーもリトライ対象に追加
                 return error.message.includes('quota') ||
                        error.message.includes('rate limit') ||
                        error.message.includes('service unavailable') ||
+                       error.message.includes('Service Unavailable') ||
+                       error.message.includes('overloaded') ||
+                       error.message.includes('503') ||
                        error.message.includes('timeout') ||
                        retryConditions.networkErrors(error);
             },
@@ -379,7 +318,39 @@ async function runFullAnalysis() {
             logger.success('英語版データ生成完了');
         }
         
-        // STEP 4: 結果をファイルに保存
+        // STEP 4: 現在のlatest.jsonをアーカイブ（存在する場合）
+        const currentLatestPath = 'live_data/latest.json';
+        try {
+            const currentData = JSON.parse(await fs.readFile(currentLatestPath, 'utf8').catch(() => '{}'));
+            
+            // 日付から適切なファイル名を生成
+            const date = currentData.date || currentData.languages?.ja?.date;
+            if (date && currentData.date) {
+                logger.info('📁 現在の分析をアーカイブ中...', { date });
+                
+                let archiveFileName = date
+                    .replace(/年/g, '.')
+                    .replace(/月/g, '.')
+                    .replace(/日/g, '')
+                    .replace(/\s+/g, '') + '.json';
+                
+                await fs.mkdir('archive_data', { recursive: true });
+                const archivePath = `archive_data/${archiveFileName}`;
+                
+                // 同じファイルが存在しない場合のみアーカイブ
+                try {
+                    await fs.access(archivePath);
+                    logger.info(`📁 アーカイブファイル既存: ${archiveFileName}`);
+                } catch {
+                    await fs.writeFile(archivePath, JSON.stringify(currentData, null, 2));
+                    logger.info(`📁 アーカイブ完了: ${archiveFileName}`);
+                }
+            }
+        } catch (error) {
+            logger.warn('アーカイブ処理でエラーが発生しましたが、処理を続行します', { error: error.message });
+        }
+
+        // STEP 5: 結果をファイルに保存
         logger.processStart('分析結果ファイル保存');
         
         // 正しい出力先に保存（live_data/latest.json）
@@ -391,7 +362,7 @@ async function runFullAnalysis() {
             fileSize: JSON.stringify(analysisJson).length 
         });
         
-        // STEP 5: Eleventy用の_data/reportData.jsonも更新
+        // STEP 6: Eleventy用の_data/reportData.jsonも更新
         await fs.mkdir('_data', { recursive: true });
         const eleventyPath = '_data/reportData.json';
         // 日本語データのみを_data/reportData.jsonに保存（Eleventy互換性のため）
