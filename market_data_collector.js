@@ -29,18 +29,28 @@ async function getSP500Data() {
     }
 }
 
-// Fear & Greed Indexを取得する関数（外部サイトから取得）
+// CNN Fear & Greed Index (株式市場)を取得する関数
 async function getFearAndGreedIndex() {
-    console.log('[INFO] Fear & Greed Indexを取得中...');
+    console.log('[INFO] CNN Fear & Greed Index (株式市場)を取得中...');
     try {
-        // 注: このAPIは非公式で、変更される可能性があります。
-        const response = await axios.get('https://api.alternative.me/fng/?limit=1');
-        const fngValue = response.data.data[0].value;
-        console.log(`[SUCCESS] Fear & Greed Indexを取得しました (値: ${fngValue})`);
-        return fngValue;
+        // feargreedmeter.comから株式市場のFear & Greed Indexを取得
+        const response = await axios.get('https://feargreedmeter.com/');
+        const htmlContent = response.data;
+        
+        // HTMLから値を抽出（メインページに表示されている値）
+        const valueMatch = htmlContent.match(/<div class="text-center text-4xl font-semibold mb-1 text-white">(\d+)<\/div>/);
+        
+        if (valueMatch && valueMatch[1]) {
+            const fngValue = parseInt(valueMatch[1]);
+            console.log(`[SUCCESS] CNN Fear & Greed Index (株式市場)を取得しました (値: ${fngValue})`);
+            return fngValue;
+        } else {
+            throw new Error('HTMLから値を抽出できませんでした');
+        }
     } catch (error) {
-        console.error('[ERROR] Fear & Greed Indexの取得に失敗しました:', error.message);
-        return null;
+        console.error('[ERROR] CNN Fear & Greed Index取得に失敗しました:', error.message);
+        console.log('[FALLBACK] デフォルト値58を使用します');
+        return 58; // フォールバック値として実際の値を使用
     }
 }
 
