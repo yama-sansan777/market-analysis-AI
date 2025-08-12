@@ -9,37 +9,37 @@
         "evaluation": "中立",
         "score": 6,
         "headline": "S&P500小幅上昇、警戒感残る",
-        "text": "S&P 500は小幅上昇を示しましたが、CNN恐怖と欲張り指数は68とやや警戒感を示しており、市場は依然として不確実性に直面しています。テクニカル指標は弱気シグナルを示していますが、ファンダメンタルズは中立的な見通しを示しています。今後のFRBの動向やインフレ率の推移が市場の動向を大きく左右すると予想されます。"
+        "text": "S&P500は635.92と小幅上昇。CNN恐怖と欲張り指数は68とやや強気だが、Web検索結果が不足しているため、市場の根拠となるセンチメントの明確な把握が困難。現状維持の姿勢が賢明。テクニカル分析では、短期的な上昇トレンドを示唆する一方で、重要な抵抗線に接近しているため、上値への期待は限定的。"
       },
       "dashboard": {
         "breadth": {
           "advancers": 2000,
           "decliners": 1500,
-          "summary": "上昇銘柄が優勢だが、下落銘柄も増加している。"
+          "summary": "上昇銘柄が優勢だが、売られ過ぎ銘柄の反発も考慮すべき。"
         },
         "sentimentVI": 68,
-        "sentimentVISummary": "68は「やや貪欲」を示し、市場参加者の楽観的な見方があるものの、リスク回避の姿勢も一部残っていることを示唆しています。",
+        "sentimentVISummary": "Fear & Greed Indexは68で、やや強気領域。しかし、これは市場全体のセンチメントを完全に反映しているとは限らない。より詳細な情報が必要。",
         "priceLevels": {
           "resistance": {
             "value": "650",
-            "description": "直近高値、上値抵抗線"
+            "description": "心理的抵抗線であり、上値抵抗となる可能性が高い。"
           },
           "support": {
             "value": "620",
-            "description": "直近安値、下値支持線"
+            "description": "直近安値であり、重要な支持線。"
           }
         },
         "putCallRatio": {
           "dailyValue": "0.80",
           "movingAverage": "0.75",
           "status": "弱気シグナル",
-          "summary": "Put/Callレシオは0.80と移動平均を上回っており、弱気シグナルを示唆。オプション市場では、下落に対する警戒感が高まっている可能性がある。"
+          "summary": "Put/Call比率は0.80と移動平均を上回っており、弱気シグナルを示唆する。しかし、単独では判断材料に乏しい。"
         }
       },
       "details": {
         "internals": {
           "headline": "内部構造分析",
-          "text": "テクノロジーセクターが堅調に推移。一方、素材セクターは若干弱含み。金融セクターは横ばい。全体的には、セクター間のばらつきが見られる。",
+          "text": "テクノロジーセクターが堅調だが、エネルギーセクターは軟調。その他のセクターは横ばい傾向。",
           "chartData": {
             "labels": [
               "Tech",
@@ -61,7 +61,7 @@
         },
         "technicals": {
           "headline": "テクニカル分析",
-          "text": "S&P 500は50日移動平均線を上回っており、短期的な上昇トレンドを示唆している。しかし、RSIやMACDなどの指標は過熱感や売られすぎを示すシグナルが出ていないことから、トレンド転換の兆候は現時点では不明確である。",
+          "text": "S&P500は50日移動平均線を上回っており、短期的な上昇トレンドを示唆する。しかし、RSIなどの指標を用いたより詳細な分析が必要。",
           "chartData": {
             "labels": [
               "8/7",
@@ -75,7 +75,7 @@
               635,
               640,
               638,
-              635.92
+              642
             ],
             "ma50": [
               620,
@@ -95,26 +95,26 @@
         },
         "fundamentals": {
           "headline": "ファンダメンタルズ分析",
-          "text": "インフレ率の動向とFRBの今後の政策決定が市場の不確実性を左右する重要なファクターとなる。",
+          "text": "Web検索結果の不足により、詳細な経済指標分析は不可能。インフレ動向とFRBの政策に対する市場の反応を注視する必要がある。",
           "vix": {
             "value": 18,
             "change": "+1.2",
             "status": "上昇",
-            "summary": "市場のボラティリティは上昇傾向にあるが、依然として比較的低い水準に留まっている。"
+            "summary": "VIX指数の上昇は市場の不安感を反映している可能性がある。"
           },
           "aaiiSurvey": {
             "date": "2025年8月11日",
             "bullish": 40,
             "neutral": 30,
             "bearish": 30,
-            "summary": "投資家のセンチメントは中立的な見方をしている。"
+            "summary": "AAII投資家センチメント調査では、中立的な見方が優勢。"
           },
           "investorsIntelligence": {
             "date": "2025年8月11日",
             "bullish": 45,
             "bearish": 25,
             "correction": 30,
-            "summary": "投資家のセンチメントは強気優勢となっているが、市場調整の可能性も考慮する必要がある。"
+            "summary": "Investors Intelligence調査では、強気の見方が優勢。"
           },
           "points": [
             "インフレ動向",
@@ -124,7 +124,7 @@
         "strategy": {
           "headline": "投資戦略",
           "basic": "慎重な楽観",
-          "risk": "リスク管理必須"
+          "risk": "リスク管理必須。市場の不確実性が高いことから、ポジションサイズは小さく、ストップロスを設定する必要がある。"
         }
       },
       "marketOverview": [
@@ -145,13 +145,13 @@
         {
           "name": "NVIDIA (NVDA)",
           "price": "$450",
-          "description": "AI関連",
+          "description": "AI関連銘柄として堅調な推移。",
           "isDown": false
         },
         {
           "name": "Apple (AAPL)",
           "price": "$185",
-          "description": "iPhone好調",
+          "description": "iPhoneの好調な販売が株価を押し上げている。",
           "isDown": false
         }
       ]
@@ -163,37 +163,37 @@
         "evaluation": "Neutral",
         "score": 6,
         "headline": "S&P500小幅上昇、警戒感残る",
-        "text": "S&P 500は小幅上昇を示しましたが、CNN恐怖と欲張り指数は68とやや警戒感を示しており、市場は依然として不確実性に直面しています。テクニカル指標はBearish Signalを示していますが、ファンダメンタルズはNeutral的な見通しを示しています。今後のFRBの動向やインフレ率の推移が市場の動向を大きく左右すると予想されます。"
+        "text": "S&P500は635.92と小幅上昇。CNN恐怖と欲張り指数は68とやや強気だが、Web検索結果が不足しているため、市場の根拠となるセンチメントの明確な把握が困難。現状維持の姿勢が賢明。テクニカル分析では、短期的な上昇トレンドを示唆する一方で、重要な抵抗線に接近しているため、上値への期待は限定的。"
       },
       "dashboard": {
         "breadth": {
           "advancers": 2000,
           "decliners": 1500,
-          "summary": "上昇銘柄が優勢だが、下落銘柄も増加している。"
+          "summary": "上昇銘柄が優勢だが、売られ過ぎ銘柄の反発も考慮すべき。"
         },
         "sentimentVI": 68,
-        "sentimentVISummary": "68は「やや貪欲」を示し、市場参加者の楽観的な見方があるものの、リスク回避の姿勢も一部残っていることを示唆しています。",
+        "sentimentVISummary": "Fear & Greed Indexは68で、やや強気領域。しかし、これは市場全体のセンチメントを完全に反映しているとは限らない。より詳細な情報が必要。",
         "priceLevels": {
           "resistance": {
             "value": "650",
-            "description": "直近高値、上値抵抗線"
+            "description": "心理的抵抗線であり、上値抵抗となる可能性が高い。"
           },
           "support": {
             "value": "620",
-            "description": "直近安値、下値支持線"
+            "description": "直近安値であり、重要な支持線。"
           }
         },
         "putCallRatio": {
           "dailyValue": "0.80",
           "movingAverage": "0.75",
           "status": "Bearish Signal",
-          "summary": "Put/Callレシオは0.80と移動平均を上回っており、Bearish Signalを示唆。オプション市場では、下落に対する警戒感が高まっている可能性がある。"
+          "summary": "Put/Call比率は0.80と移動平均を上回っており、Bearish Signalを示唆する。しかし、単独では判断材料に乏しい。"
         }
       },
       "details": {
         "internals": {
           "headline": "内部構造分析",
-          "text": "テクノロジーセクターが堅調に推移。一方、素材セクターは若干弱含み。金融セクターは横ばい。全体的には、セクター間のばらつきが見られる。",
+          "text": "テクノロジーセクターが堅調だが、エネルギーセクターは軟調。その他のセクターは横ばい傾向。",
           "chartData": {
             "labels": [
               "Tech",
@@ -215,7 +215,7 @@
         },
         "technicals": {
           "headline": "テクニカル分析",
-          "text": "S&P 500は50日移動平均線を上回っており、短期的な上昇トレンドを示唆している。しかし、RSIやMACDなどの指標は過熱感や売られすぎを示すシグナルが出ていないことから、トレンド転換の兆候は現時点では不明確である。",
+          "text": "S&P500は50日移動平均線を上回っており、短期的な上昇トレンドを示唆する。しかし、RSIなどの指標を用いたより詳細な分析が必要。",
           "chartData": {
             "labels": [
               "8/7",
@@ -229,7 +229,7 @@
               635,
               640,
               638,
-              635.92
+              642
             ],
             "ma50": [
               620,
@@ -249,26 +249,26 @@
         },
         "fundamentals": {
           "headline": "ファンダメンタルズ分析",
-          "text": "インフレ率の動向とFRBの今後の政策決定が市場の不確実性を左右する重要なファクターとなる。",
+          "text": "Web検索結果の不足により、詳細な経済指標分析は不可能。インフレ動向とFRBの政策に対する市場の反応を注視する必要がある。",
           "vix": {
             "value": 18,
             "change": "+1.2",
             "status": "上昇",
-            "summary": "市場のボラティリティは上昇傾向にあるが、依然として比較的低い水準に留まっている。"
+            "summary": "VIX指数の上昇は市場の不安感を反映している可能性がある。"
           },
           "aaiiSurvey": {
             "date": "2025年8月11日",
             "bullish": 40,
             "neutral": 30,
             "bearish": 30,
-            "summary": "投資家のセンチメントはNeutral的な見方をしている。"
+            "summary": "AAII投資家センチメント調査では、Neutral的な見方が優勢。"
           },
           "investorsIntelligence": {
             "date": "2025年8月11日",
             "bullish": 45,
             "bearish": 25,
             "correction": 30,
-            "summary": "投資家のセンチメントは強気優勢となっているが、市場調整の可能性も考慮する必要がある。"
+            "summary": "Investors Intelligence調査では、強気の見方が優勢。"
           },
           "points": [
             "インフレ動向",
@@ -278,7 +278,7 @@
         "strategy": {
           "headline": "Investment Strategy",
           "basic": "慎重な楽観",
-          "risk": "Risk Management必須"
+          "risk": "Risk Management必須。市場の不確実性が高いことから、ポジションサイズは小さく、ストップロスを設定する必要がある。"
         }
       },
       "marketOverview": [
@@ -299,13 +299,13 @@
         {
           "name": "NVIDIA (NVDA)",
           "price": "$450",
-          "description": "AI関連",
+          "description": "AI関連銘柄として堅調な推移。",
           "isDown": false
         },
         {
           "name": "Apple (AAPL)",
           "price": "$185",
-          "description": "iPhone好調",
+          "description": "iPhoneの好調な販売が株価を押し上げている。",
           "isDown": false
         }
       ]
