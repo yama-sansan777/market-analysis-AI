@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
   apps: [
     {
@@ -5,20 +7,27 @@ module.exports = {
       script: 'scheduler.js',
       cwd: 'C:\\Users\\TS2\\Desktop\\market-analysis-AI',
       
-      // 実行設定
+      // 実行設定（Cronジョブ用に最適化）
       instances: 1,
+      exec_mode: 'fork',  // クラスターモードではなくforkモード
       autorestart: true,
       watch: false,
-      max_memory_restart: '500M',
+      max_memory_restart: '200M',  // メモリ制限を下げる
       
       // 環境設定
       env: {
         NODE_ENV: 'production',
-        LOG_LEVEL: 'info'
+        LOG_LEVEL: 'info',
+        GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+        GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+        ALPHA_VANTAGE_API_KEY: process.env.ALPHA_VANTAGE_API_KEY
       },
       env_development: {
         NODE_ENV: 'development',
-        LOG_LEVEL: 'debug'
+        LOG_LEVEL: 'debug',
+        GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+        GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+        ALPHA_VANTAGE_API_KEY: process.env.ALPHA_VANTAGE_API_KEY
       },
       
       // ログ設定
@@ -36,12 +45,14 @@ module.exports = {
       time: true,
       merge_logs: true,
       
-      // 自動再起動の設定
-      min_uptime: '10s',
-      max_restarts: 5,
+      // 自動再起動の設定（安定性向上）
+      min_uptime: '30s',  // 最小稼働時間を増加
+      max_restarts: 3,    // 最大再起動回数を制限
+      restart_delay: 10000, // 再起動間隔を延長
       
-      // cron機能を使用しているため、時間ベースの再起動は無効化
-      restart_delay: 4000,
+      // プロセス安定性の向上
+      kill_timeout: 5000,
+      listen_timeout: 3000,
       
       // 監視とヘルスチェック
       health_check_grace_period: 30000,

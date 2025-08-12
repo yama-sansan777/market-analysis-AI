@@ -20,7 +20,13 @@
       "Bash(touch:*)",
       "WebFetch(domain:yama-sansan777.github.io)",
       "Bash(pm2 restart:*)",
-      "Bash(pm2 list:*)"
+      "Bash(pm2 list:*)",
+      "Bash(dir:*)",
+      "Bash(powershell:*)",
+      "Bash(pm2 status:*)",
+      "Bash(npm run manual:*)",
+      "Bash(attrib:*)",
+      "Bash(pm2 info:*)"
     ],
     "deny": []
   }
