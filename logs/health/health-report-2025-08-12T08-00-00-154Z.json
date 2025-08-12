@@ -1,0 +1,124 @@
+{
+  "timestamp": "2025-08-12T08:00:00.148Z",
+  "overall": "WARNING",
+  "checks": {
+    "memory": {
+      "status": "HEALTHY",
+      "details": {
+        "rss": "49MB",
+        "heapUsed": "13MB",
+        "heapTotal": "13MB",
+        "external": "4MB"
+      },
+      "threshold": "500MB",
+      "message": "メモリ使用量は正常です"
+    },
+    "disk": {
+      "status": "HEALTHY",
+      "details": {
+        "totalLogSize": "0MB",
+        "logFileCount": 9
+      },
+      "threshold": "100MB",
+      "message": "ディスク使用量は正常です"
+    },
+    "logs": {
+      "status": "HEALTHY",
+      "details": {
+        "existingFiles": [
+          "error.log",
+          "success.log",
+          "combined.log"
+        ],
+        "missingFiles": [],
+        "totalFiles": 3
+      },
+      "message": "ログファイルは正常です"
+    },
+    "apiConnectivity": {
+      "status": "WARNING",
+      "details": {
+        "googleSearchAPI": "NOT_CONFIGURED",
+        "geminiAPI": "CONFIGURED",
+        "hasGoogleApiKey": true,
+        "hasSearchEngineId": false,
+        "hasGeminiApiKey": true
+      },
+      "message": "API設定が不完全です"
+    },
+    "circuitBreakers": {
+      "status": "HEALTHY",
+      "details": {
+        "circuitBreakers": [
+          {
+            "name": "GoogleSearchAPI",
+            "state": "CLOSED",
+            "failureCount": 0,
+            "successCount": 0,
+            "totalCalls": 0,
+            "failureRate": "0%"
+          }
+        ],
+        "openCircuits": 0,
+        "totalCircuits": 1
+      },
+      "message": "サーキットブレーカーは正常です"
+    },
+    "dataIntegrity": {
+      "status": "HEALTHY",
+      "details": {
+        "files": {
+          "live_data/latest.json": {
+            "exists": true,
+            "isValidJSON": true,
+            "hasRequiredStructure": "2025年8月12日",
+            "fileSize": 8509
+          },
+          "_data/reportData.json": {
+            "exists": true,
+            "isValidJSON": true,
+            "hasRequiredStructure": "2025年8月12日",
+            "fileSize": 3545
+          }
+        },
+        "healthyFiles": 2,
+        "totalFiles": 2
+      },
+      "message": "データファイルは正常です"
+    }
+  },
+  "metrics": {
+    "uptime": 4388,
+    "nodeVersion": "v22.17.0",
+    "platform": "win32",
+    "arch": "x64",
+    "processId": 78320,
+    "memoryUsage": {
+      "rss": 53239808,
+      "heapTotal": 14110720,
+      "heapUsed": 12518744,
+      "external": 3758866,
+      "arrayBuffers": 188203
+    },
+    "cpuUsage": {
+      "user": 3484000,
+      "system": 640000
+    },
+    "timestamp": "2025-08-12T08:00:00.153Z"
+  },
+  "alerts": [
+    {
+      "level": "WARNING",
+      "check": "apiConnectivity",
+      "message": "API設定が不完全です",
+      "details": {
+        "googleSearchAPI": "NOT_CONFIGURED",
+        "geminiAPI": "CONFIGURED",
+        "hasGoogleApiKey": true,
+        "hasSearchEngineId": false,
+        "hasGeminiApiKey": true
+      },
+      "timestamp": "2025-08-12T08:00:00.153Z"
+    }
+  ]
+}

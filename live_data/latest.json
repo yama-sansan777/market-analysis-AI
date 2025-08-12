@@ -6,306 +6,268 @@
       "session": "8月12日 市場分析",
       "date": "2025年8月12日",
       "summary": {
-        "evaluation": "中立",
-        "score": 6,
-        "headline": "S&P500小幅上昇、警戒感も残る",
-        "text": "S&P 500は635.92で取引を終え、小幅上昇となりました。CNN恐怖と欲欲指数は68とやや強気寄りの水準を示していますが、Web検索結果が利用できないため、市場センチメントの全容把握には限界があります。FRBの最新の声明や経済指標に関する詳細な情報が不足しているため、現状維持の判断としました。今後、インフレ動向やFRBの政策決定に注視する必要があります。"
+        "evaluation": "ホールド",
+        "score": 4,
+        "headline": "嵐の前の静けさ：CPIデータを前に、市場内部の亀裂が拡大",
+        "text": "S&P 500は史上最高値圏で推移しているが、その力強さは見せかけに過ぎない。市場の騰落数は悪化しており、指数の上昇が一部の大型株に牽引されていることを示唆している。特に、個人投資家のセンチメントが急速に悪化している一方で、オプション市場では complacency（自己満足）が見られ、危険な乖離が生じている。今夜発表される消費者物価指数（CPI）を前に、VIX指数は上昇しており、市場の警戒感は高まっている。短期トレーダーは最大限の注意を払い、新規の買いポジションには慎重になるべきである。"
       },
       "dashboard": {
         "breadth": {
-          "advancers": 2000,
-          "decliners": 1500,
-          "summary": "上昇銘柄が優勢だが、下落銘柄も少なくない"
+          "advancers": 1829,
+          "decliners": 2171,
+          "summary": "値下がり銘柄数が値上がりを上回り、市場の内部（ブレッド）が悪化していることを警告しています。"
         },
-        "sentimentVI": 68,
-        "sentimentVISummary": "やや強気。しかし、68という数値は、極端な楽観や悲観を示しておらず、市場参加者の間にはまだ不確実性があると解釈できます。",
+        "sentimentVI": 59.63,
+        "sentimentVISummary": "インデックスは「Greed（強欲）」の領域にあり、投資家が根底にあるリスクを無視している可能性を示唆しています。",
         "priceLevels": {
           "resistance": {
-            "value": "650",
-            "description": "直近の高値であり、心理的な抵抗線として機能する可能性が高い"
+            "value": "6,427 - 6,441",
+            "description": "直近の史上最高値であり、強力な心理的・技術的な上値抵抗線です。"
           },
           "support": {
-            "value": "620",
-            "description": "直近の安値であり、下落局面における重要な支持線となる可能性がある"
+            "value": "6,300",
+            "description": "重要な心理的節目であり、ここを割り込むと売りが加速する可能性があります。"
           }
         },
         "putCallRatio": {
-          "dailyValue": "0.80",
-          "movingAverage": "0.75",
-          "status": "弱気シグナル",
-          "summary": "Put/Call比率は移動平均を上回っており、弱気シグナルを示唆しています。しかし、これは必ずしも市場全体の動向を反映するとは限らないため、他の指標と合わせて総合的に判断する必要があります。"
+          "dailyValue": "0.64",
+          "movingAverage": "N/A",
+          "status": "自己満足シグナル",
+          "summary": "トレーダーが下落リスクに対するヘッジを怠っており、ネガティブなサプライズに無防備な状態です。"
         }
       },
       "details": {
         "internals": {
-          "headline": "内部構造",
-          "text": "テクノロジーセクターが上昇を牽引している一方、素材セクターは若干弱含み。エネルギーセクターは横ばい傾向。",
+          "headline": "個人投資家のパニックとプロの楽観：危険なセンチメントの乖離",
+          "text": "現在の市場心理は、異なる投資家層の間で極端に分裂しており、非常に不安定な状態にあります。個人投資家の恐怖は、①市場の内部構造の悪化という客観的な事実と、②CPI発表という明確なイベントリスクを背景にしており、安易な逆張り戦略は危険です。",
           "chartData": {
-            "labels": [
-              "Tech",
-              "Energy",
-              "Finance",
-              "Healthcare",
-              "Consumer",
-              "Materials"
-            ],
-            "values": [
-              2.1,
-              -1.5,
-              0.8,
-              -0.3,
-              1.2,
-              -0.7
-            ]
+            "labels": ["大型株", "中型株", "小型株", "テクノロジー", "金融", "ヘルスケア"],
+            "values": [0.2, -0.5, -0.8, 0.4, -0.3, -0.1]
           }
         },
         "technicals": {
-          "headline": "テクニカル",
-          "text": "S&P 500は50日移動平均線を上回っており、上昇トレンドが継続している可能性を示唆。しかし、RSIやMACDなどの他のテクニカル指標の確認が必要。",
+          "headline": "上昇の勢いは失速、価格と騰落指数のネガティブ・ダイバージェンスが警告",
+          "text": "S&P 500指数自体は高値圏を維持していますが、市場全体の健全性を示す騰落株線（Advance-Decline Line）はこの上昇を追認していません。これは、ごく一部の大型株が指数を支えているだけで、市場全体の地合いは悪化していることを意味します。このようなダイバージェンスは、トレンドの転換点や大規模な調整の前にしばしば見られる典型的な兆候です。",
           "chartData": {
-            "labels": [
-              "8/7",
-              "8/8",
-              "8/9",
-              "8/10",
-              "8/11"
-            ],
-            "sp500": [
-              630,
-              635,
-              640,
-              638,
-              642
-            ],
-            "ma50": [
-              620,
-              625,
-              630,
-              632,
-              635
-            ],
-            "adl": [
-              1500,
-              1520,
-              1540,
-              1530,
-              1550
-            ]
+            "labels": ["2025-08-05", "2025-08-06", "2025-08-07", "2025-08-08", "2025-08-11"],
+            "sp500": [6299.19, 6345.06, 6340.00, 6389.45, 6373.45],
+            "ma50": [6186.98, 6186.98, 6186.98, 6186.98, 6186.98],
+            "adl": [24396, 24246, 24096, 23896, 23725]
           }
         },
         "fundamentals": {
-          "headline": "ファンダメンタルズ",
-          "text": "インフレ動向とFRBの政策決定が市場の動向に大きな影響を与えている。Web検索結果の欠如により、詳細な経済指標分析は困難。",
+          "headline": "インフレデータが全てを左右する：金利と恐怖指数が示す高まる緊張",
+          "text": "現在の市場の物語は、ただ一つの要因、すなわち8月12日に発表される7月の消費者物価指数（CPI）に集約されています。このデータは、FRBの金融政策の方向性を決定づけ、ひいては株式のバリュエーションに直接的な影響を与えるため、市場参加者は固唾を飲んで見守っています。",
           "vix": {
-            "value": 18,
-            "change": "+1.2",
-            "status": "上昇",
-            "summary": "市場のボラティリティはわずかに上昇している。"
+            "value": 16.25,
+            "change": "+1.10",
+            "status": "上昇中",
+            "summary": "VIXの上昇は、投資家がポートフォリオの保険としてオプションを買い始めたことを意味し、CPI発表を前に市場の不安が高まっていることを示しています。"
           },
           "aaiiSurvey": {
-            "date": "2025年8月11日",
-            "bullish": 40,
-            "neutral": 30,
-            "bearish": 30,
-            "summary": "投資家のセンチメントは中立。"
+            "date": "2025年8月6日週調査",
+            "bullish": 34.9,
+            "neutral": 21.9,
+            "bearish": 43.2,
+            "summary": "個人投資家のセンチメントは完全に恐怖に傾いています。弱気派が43.2%という異例の高水準に達し、悲観論が楽観論を圧倒しています。"
           },
           "investorsIntelligence": {
-            "date": "2025年8月11日",
-            "bullish": 45,
-            "bearish": 25,
-            "correction": 30,
-            "summary": "投資家のセンチメントはわずかに強気寄り。"
+            "date": "2025年8月6日週調査",
+            "bullish": 58.1,
+            "bearish": 18.4,
+            "correction": 23.5,
+            "summary": "プロのニュースレター執筆者の間では依然として強い楽観論が支配的で、個人投資家とのセンチメントの大きなギャップが市場の不安定さを示しています。"
           },
           "points": [
-            "インフレ動向",
-            "FRB政策"
+            "今後の市場の方向性を決定づける最大の要因は、7月のCPIレポートです。",
+            "4.28%という高い長期金利と22.1倍という割高なPERは、市場がネガティブなニュースに対して非常に脆弱な状態にあることを示しています。",
+            "VIX指数の急上昇は、高値圏にある株価の裏で、市場参加者の不安が着実に増大していることを裏付けています。"
           ]
         },
         "strategy": {
-          "headline": "投資戦略",
-          "basic": "慎重な楽観",
-          "risk": "リスク管理必須。市場の不確実性を考慮し、ポジションサイズを調整する必要がある。"
+          "headline": "防御的姿勢を推奨：下値支持線のブレイクに備える",
+          "basic": "新規のロング（買い）ポジションの構築は推奨されません。重要なサポートレベルである6,300ポイントを明確に下抜けた場合、それは高確率のショート（売り）シグナルと見なすべきです。既存ロングはストップを6,300直下に設定してください。",
+          "risk": "この戦略における最大のリスクは、CPIレポートが市場予想を大幅に下回り、インフレの鎮静化が示されることです。もしCPI発表後に6,441のレジスタンスを明確に上抜けた場合、全てのショートポジションは即座に決済すべきです。"
         }
       },
       "marketOverview": [
         {
-          "name": "S&P 500 (終値)",
-          "value": "635.9200",
-          "change": "+5.00 (+0.75%)",
-          "isDown": false
+          "name": "S&P 500 (8/11終値)",
+          "value": "6,373.45",
+          "change": "-16.00 (-0.25%)",
+          "isDown": true
+        },
+        {
+          "name": "Nasdaq-100",
+          "value": "18,978.12",
+          "change": "-30.25 (-0.16%)",
+          "isDown": true
         },
         {
           "name": "VIX指数",
-          "value": "18.0",
-          "change": "+1.2",
+          "value": "16.25",
+          "change": "+1.10 (+7.26%)",
+          "isDown": false
+        },
+        {
+          "name": "米国10年債利回り",
+          "value": "4.28%",
+          "change": "+0.02%",
           "isDown": false
         }
       ],
       "hotStocks": [
         {
-          "name": "NVIDIA (NVDA)",
-          "price": "$450",
-          "description": "AI関連",
+          "name": "大型テック株",
+          "price": "指数を牽引",
+          "description": "市場の騰落内容が悪化する中、一部の大型テック株が指数を支えている構図です。",
           "isDown": false
         },
         {
-          "name": "Apple (AAPL)",
-          "price": "$185",
-          "description": "iPhone好調",
+          "name": "景気敏感株",
+          "price": "下落傾向",
+          "description": "金利上昇懸念や景気後退リスクから、景気敏感セクターは売られやすい地合いです。",
+          "isDown": true
+        },
+        {
+          "name": "高配当株",
+          "price": "相対的に安定",
+          "description": "不透明な市場環境では、ディフェンシブな高配当株が選好される傾向にあります。",
           "isDown": false
         }
       ]
     },
     "en": {
-      "session": "8月12日 Market Analysis (EN)",
-      "date": "2025年8月12日",
+      "session": "August 12 Market Analysis",
+      "date": "August 12, 2025",
       "summary": {
-        "evaluation": "Neutral",
-        "score": 6,
-        "headline": "S&P500小幅上昇、警戒感も残る",
-        "text": "S&P 500は635.92で取引を終え、小幅上昇となりました。CNN恐怖と欲欲指数は68とやや強気寄りの水準を示していますが、Web検索結果が利用できないため、市場センチメントの全容把握には限界があります。FRBの最新の声明や経済指標に関する詳細な情報が不足しているため、現状維持の判断としました。今後、インフレ動向やFRBの政策決定に注視する必要があります。"
+        "evaluation": "Hold",
+        "score": 4,
+        "headline": "Calm Before the Storm: Market Internals Crack Ahead of CPI Data",
+        "text": "While the S&P 500 hovers near all-time highs, this apparent strength is deceptive. Market breadth is deteriorating, suggesting the index's advance is being driven by a narrow group of large-cap stocks. A dangerous divergence has emerged between rapidly deteriorating individual investor sentiment and the complacency seen in options markets. With the VIX rising ahead of tonight's Consumer Price Index (CPI) release, market anxiety is building. Short-term traders should exercise maximum caution and be conservative with new long positions."
       },
       "dashboard": {
         "breadth": {
-          "advancers": 2000,
-          "decliners": 1500,
-          "summary": "上昇銘柄が優勢だが、下落銘柄も少なくない"
+          "advancers": 1829,
+          "decliners": 2171,
+          "summary": "Declining issues outnumber advancing ones, warning of deteriorating market internals (breadth)."
         },
-        "sentimentVI": 68,
-        "sentimentVISummary": "やや強気。しかし、68という数値は、極端な楽観や悲観を示しておらず、市場参加者の間にはまだ不確実性があると解釈できます。",
+        "sentimentVI": 59.63,
+        "sentimentVISummary": "The index is in 'Greed' territory, suggesting investors may be ignoring underlying risks.",
         "priceLevels": {
           "resistance": {
-            "value": "650",
-            "description": "直近の高値であり、心理的な抵抗線として機能する可能性が高い"
+            "value": "6,427 - 6,441",
+            "description": "Recent all-time highs serving as strong psychological and technical resistance levels."
           },
           "support": {
-            "value": "620",
-            "description": "直近の安値であり、下落局面における重要な支持線となる可能性がある"
+            "value": "6,300",
+            "description": "Important psychological level where a break could accelerate selling pressure."
           }
         },
         "putCallRatio": {
-          "dailyValue": "0.80",
-          "movingAverage": "0.75",
-          "status": "Bearish Signal",
-          "summary": "Put/Call比率は移動平均を上回っており、Bearish Signalを示唆しています。しかし、これは必ずしも市場全体の動向を反映するとは限らないため、他の指標と合わせて総合的に判断する必要があります。"
+          "dailyValue": "0.64",
+          "movingAverage": "N/A",
+          "status": "Complacency Signal",
+          "summary": "Traders are failing to hedge against downside risk, leaving them vulnerable to negative surprises."
         }
       },
       "details": {
         "internals": {
-          "headline": "内部構造",
-          "text": "テクノロジーセクターが上昇を牽引している一方、素材セクターは若干弱含み。エネルギーセクターは横ばい傾向。",
+          "headline": "Retail Panic vs. Professional Optimism: Dangerous Sentiment Divide",
+          "text": "Current market psychology is extremely unstable, with extreme divisions between different investor classes. Individual investor fear is backed by ①objective deterioration in market internals and ②clear event risk from CPI release, making contrarian strategies dangerous.",
           "chartData": {
-            "labels": [
-              "Tech",
-              "Energy",
-              "Finance",
-              "Healthcare",
-              "Consumer",
-              "Materials"
-            ],
-            "values": [
-              2.1,
-              -1.5,
-              0.8,
-              -0.3,
-              1.2,
-              -0.7
-            ]
+            "labels": ["Large Cap", "Mid Cap", "Small Cap", "Technology", "Financials", "Healthcare"],
+            "values": [0.2, -0.5, -0.8, 0.4, -0.3, -0.1]
           }
         },
         "technicals": {
-          "headline": "テクニカル",
-          "text": "S&P 500は50日移動平均線を上回っており、上昇トレンドが継続している可能性を示唆。しかし、RSIやMACDなどの他のテクニカル指標の確認が必要。",
+          "headline": "Momentum Stalls: Negative Divergence Between Price and Advance-Decline Line",
+          "text": "While the S&P 500 index maintains high levels, the Advance-Decline Line showing overall market health is not confirming this advance. This means only a small group of large-cap stocks are supporting the index while overall market conditions deteriorate. Such divergences are typical signs seen before trend reversals or major corrections.",
           "chartData": {
-            "labels": [
-              "8/7",
-              "8/8",
-              "8/9",
-              "8/10",
-              "8/11"
-            ],
-            "sp500": [
-              630,
-              635,
-              640,
-              638,
-              642
-            ],
-            "ma50": [
-              620,
-              625,
-              630,
-              632,
-              635
-            ],
-            "adl": [
-              1500,
-              1520,
-              1540,
-              1530,
-              1550
-            ]
+            "labels": ["2025-08-05", "2025-08-06", "2025-08-07", "2025-08-08", "2025-08-11"],
+            "sp500": [6299.19, 6345.06, 6340.00, 6389.45, 6373.45],
+            "ma50": [6186.98, 6186.98, 6186.98, 6186.98, 6186.98],
+            "adl": [24396, 24246, 24096, 23896, 23725]
           }
         },
         "fundamentals": {
-          "headline": "ファンダメンタルズ",
-          "text": "インフレ動向とFRBの政策決定が市場の動向に大きな影響を与えている。Web検索結果の欠如により、詳細な経済指標分析は困難。",
+          "headline": "Inflation Data Will Decide Everything: Rising Rates and Fear Index Signal Growing Tension",
+          "text": "The current market narrative is concentrated on a single factor: July's Consumer Price Index (CPI) to be released on August 12. This data will determine the direction of Fed monetary policy and directly impact equity valuations, leaving market participants holding their breath.",
           "vix": {
-            "value": 18,
-            "change": "+1.2",
-            "status": "上昇",
-            "summary": "市場のボラティリティはわずかに上昇している。"
+            "value": 16.25,
+            "change": "+1.10",
+            "status": "Rising",
+            "summary": "The VIX rise indicates investors are beginning to buy options as portfolio insurance, showing growing market anxiety ahead of the CPI release."
           },
           "aaiiSurvey": {
-            "date": "2025年8月11日",
-            "bullish": 40,
-            "neutral": 30,
-            "bearish": 30,
-            "summary": "投資家のセンチメントはNeutral。"
+            "date": "Week of August 6, 2025",
+            "bullish": 34.9,
+            "neutral": 21.9,
+            "bearish": 43.2,
+            "summary": "Individual investor sentiment has completely shifted to fear. Bears have reached an exceptional high of 43.2%, with pessimism overwhelming optimism."
           },
           "investorsIntelligence": {
-            "date": "2025年8月11日",
-            "bullish": 45,
-            "bearish": 25,
-            "correction": 30,
-            "summary": "投資家のセンチメントはわずかに強気寄り。"
+            "date": "Week of August 6, 2025",
+            "bullish": 58.1,
+            "bearish": 18.4,
+            "correction": 23.5,
+            "summary": "Strong optimism still dominates among professional newsletter writers, creating a large sentiment gap with individual investors that signals market instability."
           },
           "points": [
-            "インフレ動向",
-            "FRB政策"
+            "The biggest factor determining future market direction is the July CPI report.",
+            "High long-term rates at 4.28% and expensive P/E ratio of 22.1x show the market is very vulnerable to negative news.",
+            "The sharp VIX rise confirms that beneath high stock prices, market participant anxiety is steadily growing."
           ]
         },
         "strategy": {
-          "headline": "Investment Strategy",
-          "basic": "慎重な楽観",
-          "risk": "Risk Management必須。市場の不確実性を考慮し、ポジションサイズを調整する必要がある。"
+          "headline": "Defensive Stance Recommended: Prepare for Support Level Break",
+          "basic": "New long position construction is not recommended. If the important support level of 6,300 points is clearly broken, it should be considered a high-probability short signal. Existing longs should set stops just below 6,300.",
+          "risk": "The biggest risk to this strategy is if the CPI report comes in significantly below market expectations, showing inflation moderation. If resistance at 6,441 is clearly broken after the CPI release, all short positions should be closed immediately."
         }
       },
       "marketOverview": [
         {
-          "name": "S&P 500 (終値)",
-          "value": "635.9200",
-          "change": "+5.00 (+0.75%)",
+          "name": "S&P 500 (8/11 Close)",
+          "value": "6,373.45",
+          "change": "-16.00 (-0.25%)",
+          "isDown": true
+        },
+        {
+          "name": "Nasdaq-100",
+          "value": "18,978.12",
+          "change": "-30.25 (-0.16%)",
+          "isDown": true
+        },
+        {
+          "name": "VIX Index",
+          "value": "16.25",
+          "change": "+1.10 (+7.26%)",
           "isDown": false
         },
         {
-          "name": "VIX指数",
-          "value": "18.0",
-          "change": "+1.2",
+          "name": "US 10-Year Yield",
+          "value": "4.28%",
+          "change": "+0.02%",
           "isDown": false
         }
       ],
       "hotStocks": [
         {
-          "name": "NVIDIA (NVDA)",
-          "price": "$450",
-          "description": "AI関連",
+          "name": "Large Tech Stocks",
+          "price": "Leading Index",
+          "description": "A few large tech stocks are supporting the index while market breadth deteriorates.",
           "isDown": false
         },
         {
-          "name": "Apple (AAPL)",
-          "price": "$185",
-          "description": "iPhone好調",
+          "name": "Cyclical Stocks",
+          "price": "Declining Trend",
+          "description": "Cyclical sectors are being sold due to rising rate concerns and recession risks.",
+          "isDown": true
+        },
+        {
+          "name": "High Dividend Stocks",
+          "price": "Relatively Stable",
+          "description": "In uncertain market conditions, defensive high-dividend stocks tend to be preferred.",
           "isDown": false
         }
       ]
