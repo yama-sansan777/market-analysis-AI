@@ -3,28 +3,57 @@ const axios = require('axios');
 
 const ALPHA_VANTAGE_API_KEY = process.env.ALPHA_VANTAGE_API_KEY;
 
-// S&P 500の最新の終値を取得する関数
+// S&P 500指数の最新の終値を取得する関数 (Yahoo Finance使用)
 async function getSP500Data() {
-    console.log('[INFO] S&P 500のデータを取得中...');
+    console.log('[INFO] S&P 500指数のデータを取得中...');
     try {
-        const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=SPY&apikey=${ALPHA_VANTAGE_API_KEY}&outputsize=compact`;
-        const response = await axios.get(url);
+        const url = 'https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC';
+        const response = await axios.get(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+        });
         
-        // 最新の日付のデータを取得
-        const timeSeries = response.data['Time Series (Daily)'];
-        if (!timeSeries) {
-            throw new Error('Alpha Vantageから有効な時系列データが取得できませんでした。APIキーやAPIの制限を確認してください。');
+        if (response.data && response.data.chart && response.data.chart.result[0]) {
+            const result = response.data.chart.result[0];
+            const currentPrice = result.meta.regularMarketPrice;
+            const marketTime = new Date(result.meta.regularMarketTime * 1000);
+            const dateString = marketTime.toISOString().slice(0, 10);
+            
+            console.log(`[SUCCESS] S&P 500指数を取得しました (値: ${currentPrice}, 日付: ${dateString})`);
+            return {
+                date: dateString,
+                close: currentPrice.toString(),
+            };
+        } else {
+            throw new Error('Yahoo Financeからの応答データが不正です');
         }
-        const latestDate = Object.keys(timeSeries)[0];
-        const latestData = timeSeries[latestDate];
-
-        console.log(`[SUCCESS] S&P 500のデータを取得しました (日付: ${latestDate})`);
-        return {
-            date: latestDate,
-            close: latestData['4. close'],
-        };
     } catch (error) {
-        console.error('[ERROR] S&P 500データの取得に失敗しました:', error.message);
+        console.error('[ERROR] S&P 500指数の取得に失敗しました:', error.message);
+        console.log('[FALLBACK] Alpha Vantage SPY ETFデータを使用します');
+        
+        // フォールバック: Alpha Vantage SPY ETF
+        try {
+            const fallbackUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=SPY&apikey=${ALPHA_VANTAGE_API_KEY}&outputsize=compact`;
+            const fallbackResponse = await axios.get(fallbackUrl);
+            
+            const timeSeries = fallbackResponse.data['Time Series (Daily)'];
+            if (timeSeries) {
+                const latestDate = Object.keys(timeSeries)[0];
+                const latestData = timeSeries[latestDate];
+                // SPY ETF価格を指数に変換 (概算: ETF価格 × 10)
+                const estimatedIndex = (parseFloat(latestData['4. close']) * 10).toFixed(2);
+                
+                console.log(`[FALLBACK] SPY ETF (${latestData['4. close']}) → S&P500推定値 (${estimatedIndex})`);
+                return {
+                    date: latestDate,
+                    close: estimatedIndex,
+                };
+            }
+        } catch (fallbackError) {
+            console.error('[ERROR] フォールバックも失敗しました:', fallbackError.message);
+        }
+        
         return null;
     }
 }
