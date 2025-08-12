@@ -49,6 +49,8 @@ function buildAnalysisPrompt(marketData, searchResultsText) {
         },
         "marketOverview": [
           {"name": "S&P 500 (終値)", "value": "${marketData.sp500_price}", "change": "+5.00 (+0.75%)", "isDown": false},
+          {"name": "NASDAQ (QQQ)", "value": "${marketData.nasdaq_price || 'N/A'}", "change": "+2.50 (+0.44%)", "isDown": false},
+          {"name": "10年債利回り", "value": "${marketData.treasury_yield || '4.2'}%", "change": "+0.05", "isDown": false},
           {"name": "VIX指数", "value": "18.0", "change": "+1.2", "isDown": false}
         ],
         "hotStocks": [
@@ -65,6 +67,8 @@ function buildAnalysisPrompt(marketData, searchResultsText) {
 
   # 市場データ:
   - S&P 500 最新終値: ${marketData.sp500_price} (データ日付: ${marketData.sp500_date})
+  - NASDAQ (QQQ) 最新終値: ${marketData.nasdaq_price || 'データ取得中'} (データ日付: ${marketData.nasdaq_date || '－'})
+  - 米10年債利回り: ${marketData.treasury_yield || '4.2'}% (データ日付: ${marketData.treasury_date || '概算値'})
   - CNN Fear & Greed Index: ${marketData.fear_and_greed_index}
   - 分析実行日: ${new Date().toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'})}
 
@@ -261,6 +265,46 @@ function generateEnglishVersion(jaData) {
     return translateObjectRecursively(jaData);
 }
 
+// manifest.jsonを更新する関数
+function updateManifest(fileName, data) {
+    try {
+        const manifestPath = './archive_data/manifest.json';
+        let manifest = [];
+        
+        if (require('fs').existsSync(manifestPath)) {
+            manifest = JSON.parse(require('fs').readFileSync(manifestPath, 'utf8'));
+        }
+
+        // 新しいエントリを作成
+        const newEntry = {
+            file: fileName,
+            date: data.date || data.languages?.ja?.date,
+            session: data.session || data.languages?.ja?.session,
+            evaluation: data.summary?.evaluation || data.languages?.ja?.summary?.evaluation,
+            headline: data.summary?.headline || data.languages?.ja?.summary?.headline,
+            summary: data.summary?.text || data.languages?.ja?.summary?.text
+        };
+
+        // 同じファイル名のエントリがあれば削除
+        manifest = manifest.filter(entry => entry.file !== fileName);
+        
+        // 新しいエントリを先頭に追加
+        manifest.unshift(newEntry);
+
+        // 最大50件に制限
+        if (manifest.length > 50) {
+            manifest = manifest.slice(0, 50);
+        }
+
+        // manifest.jsonを更新
+        require('fs').writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+        logger.success('📋 manifest.json更新完了', { fileName, entriesCount: manifest.length });
+
+    } catch (error) {
+        logger.error('⚠️ manifest.json更新中にエラー', { error: error.message, fileName });
+    }
+}
+
 // メインの実行関数を更新
 async function runFullAnalysis() {
     const processStartTime = Date.now();
@@ -318,39 +362,7 @@ async function runFullAnalysis() {
             logger.success('英語版データ生成完了');
         }
         
-        // STEP 4: 現在のlatest.jsonをアーカイブ（存在する場合）
-        const currentLatestPath = 'live_data/latest.json';
-        try {
-            const currentData = JSON.parse(await fs.readFile(currentLatestPath, 'utf8').catch(() => '{}'));
-            
-            // 日付から適切なファイル名を生成
-            const date = currentData.date || currentData.languages?.ja?.date;
-            if (date && currentData.date) {
-                logger.info('📁 現在の分析をアーカイブ中...', { date });
-                
-                let archiveFileName = date
-                    .replace(/年/g, '.')
-                    .replace(/月/g, '.')
-                    .replace(/日/g, '')
-                    .replace(/\s+/g, '') + '.json';
-                
-                await fs.mkdir('archive_data', { recursive: true });
-                const archivePath = `archive_data/${archiveFileName}`;
-                
-                // 同じファイルが存在しない場合のみアーカイブ
-                try {
-                    await fs.access(archivePath);
-                    logger.info(`📁 アーカイブファイル既存: ${archiveFileName}`);
-                } catch {
-                    await fs.writeFile(archivePath, JSON.stringify(currentData, null, 2));
-                    logger.info(`📁 アーカイブ完了: ${archiveFileName}`);
-                }
-            }
-        } catch (error) {
-            logger.warn('アーカイブ処理でエラーが発生しましたが、処理を続行します', { error: error.message });
-        }
-
-        // STEP 5: 結果をファイルに保存
+        // STEP 4: 結果をファイルに保存
         logger.processStart('分析結果ファイル保存');
         
         // 正しい出力先に保存（live_data/latest.json）
@@ -372,6 +384,38 @@ async function runFullAnalysis() {
         });
         
         logger.processEnd('分析結果ファイル保存', Date.now() - processStartTime, true);
+        
+        // STEP 5: 新しく生成したデータをアーカイブにもコピー
+        logger.processStart('新データアーカイブ処理');
+        try {
+            const newDate = analysisJson.date || analysisJson.languages?.ja?.date;
+            if (newDate) {
+                logger.info('📁 新しい分析データをアーカイブ中...', { date: newDate });
+                
+                let archiveFileName = newDate
+                    .replace(/年/g, '.')
+                    .replace(/月/g, '.')
+                    .replace(/日/g, '')
+                    .replace(/\s+/g, '') + '.json';
+                
+                await fs.mkdir('archive_data', { recursive: true });
+                const archivePath = `archive_data/${archiveFileName}`;
+                
+                // 新しいデータをアーカイブに保存
+                await fs.writeFile(archivePath, JSON.stringify(analysisJson, null, 2));
+                logger.info(`📁 アーカイブ完了: ${archiveFileName}`);
+                
+                // manifest.jsonを更新
+                updateManifest(archiveFileName, analysisJson);
+                logger.success('📋 manifest.json更新完了');
+            } else {
+                logger.warn('日付情報が見つからないため、アーカイブをスキップします');
+            }
+        } catch (error) {
+            logger.error('新データアーカイブ処理でエラーが発生しました', { error: error.message });
+            // アーカイブエラーでも処理は続行
+        }
+        logger.processEnd('新データアーカイブ処理', Date.now() - processStartTime, true);
         
         // データ構造の検証レポート
         const jaData = analysisJson.languages.ja;
