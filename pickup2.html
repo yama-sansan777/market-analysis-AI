@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注目の個別銘柄 | インタラクティブ米国株式市場見通し</title>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+    <script>
+        // index.htmlからTailwind CSSのカスタム設定を継承
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#DC2626',
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <script src="translations/load.js"></script>
+    <script src="lang.js"></script>
+    <style>
+        /* index.htmlのスタイルを継承しつつ、このページ専用のスタイルを追加 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #f7f8fa; /* 背景色を少し明るく調整 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* 12px */
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden; /* カード内の要素がはみ出ないように */
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -4px rgba(0,0,0,0.07);
+        }
+        .filter-button {
+            transition: all 0.2s ease-in-out;
+        }
+        .filter-button.active {
+            background-color: #2563EB; /* primary color */
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.25);
+        }
+        .stock-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem; /* 12px */
+            font-weight: 500;
+        }
+        .mini-chart-container {
+            height: 60px;
+        }
+    </style>
+</head>
+<body class="text-slate-700 min-h-screen">
+
+<!-- 統一されたヘッダーメニュー -->
+<header class="bg-white border-b border-gray-200">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-8">
+                <a href="index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                <nav class="hidden md:flex space-x-6 text-gray-600">
+                    <a href="index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                    <a href="pickup.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_pickup">注目の個別銘柄</a>
+                    <a href="ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                    <a href="indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                    <a href="terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                    <a href="about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                </nav>
+            </div>
+            <div class="flex items-center space-x-1 md:space-x-4">
+                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                    <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
+                    <span class="text-gray-400 text-xs">|</span>
+                    <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- モバイルメニュー -->
+<div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+    <div class="px-4 py-2 space-y-1">
+        <a href="index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+        <a href="pickup.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50" data-lang="nav_pickup">注目の個別銘柄</a>
+        <a href="ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+        <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+        <a href="terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+        <a href="about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+        <div class="border-t border-gray-200 pt-2 mt-2">
+            <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+            <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+        </div>
+    </div>
+</div>
+
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+    <!-- ページタイトルセクション -->
+    <section class="text-center mb-12">
+        <div class="inline-flex items-center justify-center bg-indigo-100 rounded-xl p-3 mb-4">
+            <i class="ri-star-line text-4xl text-primary"></i>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800" data-lang="pickup_title">注目の個別銘柄</h1>
+        <p class="text-slate-500 mt-4 max-w-2xl mx-auto" data-lang="pickup_subtitle">AIによる分析と市場トレンドに基づき、今注目すべき米国株をピックアップ。詳細なデータとインサイトで、あなたの銘柄選定をサポートします。</p>
+    </section>
+
+    <!-- フィルター＆ソート機能セクション -->
+    <section class="mb-8 p-4 bg-white rounded-xl shadow-sm border border-gray-200 sticky top-[73px] z-40">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <!-- セクターフィルター -->
+            <div class="flex-grow">
+                <label class="text-sm font-medium text-slate-600 mb-2 block" data-lang="filter_sector">セクターで絞り込み</label>
+                <div id="sector-filter" class="flex flex-wrap gap-2">
+                    <button class="filter-button active px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="all" data-lang="filter_all">すべて</button>
+                    <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Technology" data-lang="sector_technology">テクノロジー</button>
+                    <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Healthcare" data-lang="sector_healthcare">ヘルスケア</button>
+                    <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Financials" data-lang="sector_financials">金融</button>
+                    <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Energy" data-lang="sector_energy">エネルギー</button>
+                </div>
+            </div>
+            <!-- ソート機能 -->
+            <div class="flex-shrink-0">
+                <label for="sort-by" class="text-sm font-medium text-slate-600 mb-2 block" data-lang="sort_by">並び替え</label>
+                <select id="sort-by" class="w-full md:w-auto form-select appearance-none block px-3 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded-lg transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-primary focus:outline-none">
+                    <option value="marketCap_desc" data-lang="sort_marketcap_desc">時価総額 (大きい順)</option>
+                    <option value="marketCap_asc" data-lang="sort_marketcap_asc">時価総額 (小さい順)</option>
+                    <option value="performance_desc" data-lang="sort_performance_desc">パフォーマンス (良い順)</option>
+                    <option value="performance_asc" data-lang="sort_performance_asc">パフォーマンス (悪い順)</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- 個別銘柄カードグリッド -->
+    <section>
+        <div id="stock-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <!-- JavaScriptによってここに銘柄カードが挿入されます -->
+        </div>
+        <div id="loading-indicator" class="text-center py-12 hidden">
+             <p class="text-slate-500" data-lang="loading">データを読み込んでいます...</p>
+        </div>
+        <div id="no-results" class="text-center py-12 hidden">
+             <p class="text-slate-500" data-lang="no_results">該当する銘柄が見つかりませんでした。</p>
+        </div>
+    </section>
+
+</main>
+
+<!-- index.htmlからフッターを継承 -->
+<footer class="bg-slate-100 mt-12 border-t">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-xs text-slate-500">
+        <p>免責事項：本レポートは情報提供のみを目的としており、投資助言を構成するものではありません。投資に関する決定は、ご自身の判断と責任において行ってください。</p>
+    </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- 言語システム初期化 ---
+    if (typeof window.initLanguage === 'function') {
+        await window.initLanguage();
+    }
+
+    // --- モバイルメニュー機能 (index.htmlから継承) ---
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    // --- ダミーデータ: 本来はAPIなどから取得します ---
+    const allStockData = [
+        {
+            ticker: 'NVDA',
+            name: 'NVIDIA Corp.',
+            logo: 'https://placehold.co/40x40/76B900/FFFFFF?text=NVDA',
+            sector: 'Technology',
+            price: 120.78,
+            change: 2.5,
+            marketCap: 3.1, // Trillion
+            peRatio: 70.5,
+            performance: 150.2, // YTD
+            summary: 'AIチップ市場の絶対的リーダー。データセンター向けGPUの需要は依然として旺盛で、今後の成長期待も非常に高い。',
+            tags: ['AI', '半導体'],
+            priceHistory: [100, 105, 102, 110, 115, 118, 120]
+        },
+        {
+            ticker: 'MSFT',
+            name: 'Microsoft Corp.',
+            logo: 'https://placehold.co/40x40/F25022/FFFFFF?text=MSFT',
+            sector: 'Technology',
+            price: 445.12,
+            change: -0.8,
+            marketCap: 3.3, // Trillion
+            peRatio: 38.6,
+            performance: 18.5,
+            summary: 'クラウドサービスAzureとAIアシスタントCopilotの連携が強力。エンタープライズ向けソフトウェア市場での地位は盤石。',
+            tags: ['AI', 'クラウド', 'ソフトウェア'],
+            priceHistory: [430, 435, 432, 438, 440, 442, 445]
+        },
+        {
+            ticker: 'LLY',
+            name: 'Eli Lilly and Co.',
+            logo: 'https://placehold.co/40x40/FFBF3F/FFFFFF?text=LLY',
+            sector: 'Healthcare',
+            price: 890.10,
+            change: 1.2,
+            marketCap: 0.84, // Trillion
+            peRatio: 125.8,
+            performance: 52.1,
+            summary: '肥満症治療薬「ゼップバウンド」と糖尿病治療薬「マンジャロ」が驚異的な成長を牽引。医薬品業界のゲームチェンジャー。',
+            tags: ['医薬品', '肥満治療薬'],
+            priceHistory: [850, 860, 855, 870, 880, 885, 890]
+        },
+        {
+            ticker: 'JPM',
+            name: 'JPMorgan Chase & Co.',
+            logo: 'https://placehold.co/40x40/005EB8/FFFFFF?text=JPM',
+            sector: 'Financials',
+            price: 198.50,
+            change: 0.5,
+            marketCap: 0.57, // Trillion
+            peRatio: 11.9,
+            performance: 16.8,
+            summary: '米国最大の銀行。金利高環境の恩恵を受け、安定した収益を誇る。経済の不確実性に対する耐性も高い。',
+            tags: ['銀行', '高配当'],
+            priceHistory: [190, 192, 195, 193, 196, 197, 198]
+        },
+        {
+            ticker: 'XOM',
+            name: 'Exxon Mobil Corp.',
+            logo: 'https://placehold.co/40x40/FC0D1B/FFFFFF?text=XOM',
+            sector: 'Energy',
+            price: 114.20,
+            change: -1.1,
+            marketCap: 0.45, // Trillion
+            peRatio: 13.2,
+            performance: 14.1,
+            summary: '世界最大級の総合エネルギー企業。原油価格の安定と株主還元の強化が魅力。インフレヘッジとしても機能。',
+            tags: ['石油', '高配当'],
+            priceHistory: [118, 117, 116, 115, 112, 113, 114]
+        },
+        {
+            ticker: 'AVGO',
+            name: 'Broadcom Inc.',
+            logo: 'https://placehold.co/40x40/E31837/FFFFFF?text=AVGO',
+            sector: 'Technology',
+            price: 1650.45,
+            change: 3.1,
+            marketCap: 0.77, // Trillion
+            peRatio: 55.3,
+            performance: 48.9,
+            summary: 'AIインフラに不可欠なカスタムチップとネットワーク機器で高いシェア。VMware買収によるソフトウェア事業の強化も進む。',
+            tags: ['半導体', 'AI', '5G'],
+            priceHistory: [1550, 1580, 1570, 1600, 1620, 1640, 1650]
+        }
+    ];
+
+    const stockGrid = document.getElementById('stock-grid');
+    const sectorFilter = document.getElementById('sector-filter');
+    const sortBySelect = document.getElementById('sort-by');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const noResults = document.getElementById('no-results');
+
+    let currentFilter = 'all';
+    let currentSort = 'marketCap_desc';
+    let activeCharts = [];
+
+    // --- 銘柄カードをレンダリングする関数 ---
+    const renderStockCards = (stocks) => {
+        // 既存のチャートを破棄
+        activeCharts.forEach(chart => chart.destroy());
+        activeCharts = [];
+        stockGrid.innerHTML = '';
+
+        if (stocks.length === 0) {
+            noResults.classList.remove('hidden');
+            return;
+        }
+        noResults.classList.add('hidden');
+
+        stocks.forEach((stock, index) => {
+            const changeColor = stock.change >= 0 ? 'text-bullish' : 'text-bearish';
+            const changeIcon = stock.change >= 0 ? 'ri-arrow-up-s-fill' : 'ri-arrow-down-s-fill';
+            const card = document.createElement('div');
+            card.className = 'card flex flex-col';
+            card.innerHTML = `
+                <div class="p-5 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <img src="${stock.logo}" alt="${stock.name} logo" class="w-10 h-10 rounded-full">
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-800">${stock.name}</h3>
+                                <p class="text-sm text-slate-500">${stock.ticker}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-semibold text-xl text-slate-900">$${stock.price.toFixed(2)}</p>
+                            <p class="flex items-center justify-end text-sm font-medium ${changeColor}">
+                                <i class="${changeIcon}"></i>
+                                <span>${stock.change.toFixed(2)}%</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-5 flex-grow">
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">${stock.summary}</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        ${stock.tags.map(tag => `<span class="stock-tag bg-indigo-100 text-indigo-800">${tag}</span>`).join('')}
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 text-center text-sm">
+                        <div>
+                            <p class="text-slate-500" data-lang="marketcap_label">時価総額</p>
+                            <p class="font-semibold text-slate-800">${stock.marketCap.toFixed(2)}兆ドル</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500" data-lang="per_label">PER</p>
+                            <p class="font-semibold text-slate-800">${stock.peRatio}倍</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500" data-lang="ytd_performance_label">年初来</p>
+                            <p class="font-semibold text-slate-800 ${stock.performance >= 0 ? 'text-bullish' : 'text-bearish'}">${stock.performance.toFixed(1)}%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5 pb-5 mt-auto">
+                    <div class="mini-chart-container mb-4">
+                        <canvas id="chart-${stock.ticker}"></canvas>
+                    </div>
+                    <button class="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors" data-lang="view_details">
+                        詳細を見る
+                    </button>
+                </div>
+            `;
+            stockGrid.appendChild(card);
+
+            // --- ミニチャートの描画 ---
+            const ctx = document.getElementById(`chart-${stock.ticker}`).getContext('2d');
+            const chartColor = stock.priceHistory[stock.priceHistory.length - 1] >= stock.priceHistory[0] ? '#10b981' : '#ef4444';
+            const gradient = ctx.createLinearGradient(0, 0, 0, 60);
+            gradient.addColorStop(0, `${chartColor}33`); // 透明度20%
+            gradient.addColorStop(1, `${chartColor}00`); // 透明度0%
+
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array(stock.priceHistory.length).fill(''),
+                    datasets: [{
+                        data: stock.priceHistory,
+                        borderColor: chartColor,
+                        borderWidth: 2,
+                        fill: true,
+                        backgroundColor: gradient,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+            activeCharts.push(chart);
+        });
+
+        // --- 言語システム再初期化（動的コンテンツ用） ---
+        if (typeof window.updateLanguage === 'function') {
+            window.updateLanguage();
+        }
+    };
+
+    // --- フィルターとソートを適用して再描画する関数 ---
+    const applyFiltersAndSort = () => {
+        loadingIndicator.classList.remove('hidden');
+        stockGrid.innerHTML = '';
+        noResults.classList.add('hidden');
+
+        // 擬似的な遅延を加えてローディング感を演出
+        setTimeout(() => {
+            loadingIndicator.classList.add('hidden');
+            let filteredStocks = allStockData;
+
+            // フィルター適用
+            if (currentFilter !== 'all') {
+                filteredStocks = allStockData.filter(stock => stock.sector === currentFilter);
+            }
+
+            // ソート適用
+            switch (currentSort) {
+                case 'marketCap_desc':
+                    filteredStocks.sort((a, b) => b.marketCap - a.marketCap);
+                    break;
+                case 'marketCap_asc':
+                    filteredStocks.sort((a, b) => a.marketCap - b.marketCap);
+                    break;
+                case 'performance_desc':
+                    filteredStocks.sort((a, b) => b.performance - a.performance);
+                    break;
+                case 'performance_asc':
+                    filteredStocks.sort((a, b) => a.performance - b.performance);
+                    break;
+            }
+
+            renderStockCards(filteredStocks);
+        }, 500);
+    };
+
+    // --- イベントリスナーの設定 ---
+    sectorFilter.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            currentFilter = e.target.dataset.sector;
+            // アクティブなボタンのスタイルを更新
+            sectorFilter.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            applyFiltersAndSort();
+        }
+    });
+
+    sortBySelect.addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        applyFiltersAndSort();
+    });
+
+    // --- 初期表示 ---
+    applyFiltersAndSort();
+});
+</script>
+
+</body>
+</html>

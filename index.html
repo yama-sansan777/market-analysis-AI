@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOHOU US Stock AI</title>
+    <title>インタラクティブ米国株式市場見通し</title>
     <script src="https://cdn.tailwindcss.com/3.4.1"></script>
     <script>
         tailwind.config = {
@@ -32,68 +32,197 @@
             }
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <script src="translations/load.js"></script>
-    <script src="lang.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <script src="translations/load.js"></script>
+    <script src="lang.js"></script>
+    <!-- Chosen Palette: Modern Slate -->
+    <!-- Application Structure Plan: A multi-page application simulated with top-level tabs within a single HTML file. The primary view ("Weekly Outlook") is the detailed dashboard. A second view ("Monthly Outlook") is added as a separate, distinct page, managed by JS. This structure directly addresses the user's request to treat the entire weekly report as one "tab" and create a new, large page for the monthly report as another "tab". -->
+    <!-- Visualization & Content Choices: The core of the application is the visualization of the sentiment divergence between AAII (retail) and Investors Intelligence (pro), for which a grouped bar chart (Chart.js) is the most effective choice to highlight the stark contrast. Custom HTML/CSS gauges are used for the Fear & Greed Index and the overall market score to provide a more engaging, dashboard-like feel. Simple bar and line charts (Chart.js) are used to compare inflation (CPI vs. PPI) and show trends in employment and yield curves. This approach translates complex data into easily digestible visuals. All textual content is condensed into cards and bullet points for scannability. This supports the designed dashboard structure by making data glanceable and interactive. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        body { font-family: 'Noto Sans JP', sans-serif; color: #1F2937; background-color: #f4f5f7; }
-        .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
-        .tab-button { padding: 0.8rem 1.2rem; font-size: 1.05rem; font-weight: 500; text-align: center; color: #6b7280; border-bottom: 3px solid transparent; transition: all 0.2s ease-in-out; cursor: pointer; }
-        @media (min-width: 768px) { .tab-button { font-size: 1.2rem; } }
-        .tab-button:not(.active):hover { background-color: #f9fafb; border-color: #d1d5db; color: #374151; transform: translateY(-2px); }
-        .tab-button.active { border-color: #4338ca; color: #4338ca; background-color: #eef2ff; font-weight: 700; }
-        .font-pacifico { font-family: 'Pacifico', cursive; }
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #f7f8fa;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -4px rgba(0,0,0,0.07);
+        }
+        
+        .tab-button {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .tab-button.active-tab {
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        .tab-indicator {
+            position: absolute;
+            bottom: -1px;
+            height: 2px;
+            background-color: #4f46e5;
+            transition: left 0.3s, width 0.3s;
+        }
+
+        .gauge-container {
+            position: relative;
+            width: 180px;
+            height: 90px;
+            overflow: hidden;
+        }
+        .gauge-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(#f43f5e, #f97316, #eab308, #84cc16, #16a34a);
+        }
+        .gauge-mask {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fff;
+        }
+        .gauge-needle {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            height: 80px;
+            background: #374151;
+            transform-origin: bottom center;
+            transition: transform 1.5s ease-in-out;
+        }
+        .gauge-center {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #374151;
+        }
+
+        /* Styles from Monthly Report */
+        .monthly-section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #374151; /* slate-700 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .monthly-section-intro {
+            max-width: 800px;
+            margin: 0 auto 2.5rem auto;
+            text-align: center;
+            color: #4b5563; /* slate-600 */
+            line-height: 1.8;
+        }
+        .monthly-card {
+             background-color: white;
+            border-radius: 0.75rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            transition: all 0.3s ease-in-out;
+        }
+        .impact-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+        }
+        .impact-strong { background-color: #DC2626; } /* red-600 */
+        .impact-medium { background-color: #F59E0B; } /* amber-500 */
+        .impact-weak { background-color: #16A34A; } /* green-600 */
+        .monthly-nav-button {
+             padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-color: #E5E7EB; /* slate-200 */
+            color: #374151; /* slate-700 */
+        }
+        .monthly-nav-button.active {
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+        }
+        header img { height: 40px; }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="text-slate-700 min-h-screen">
 
 <header class="bg-white border-b border-gray-200">
-<div class="container mx-auto px-4 py-4">
-<div class="flex items-center justify-between">
-<div class="flex items-center space-x-8">
-<a href="index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
-                <nav class="hidden md:flex space-x-6">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-8">
+                <a href="index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                <nav class="hidden md:flex space-x-6 text-gray-600">
                     <a href="index.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_today">本日の市況分析</a>
-                    <a href="archive.html" class="text-gray-600 hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
+                    <a href="pickup.html" class="hover:text-primary" data-lang="nav_pickup">注目の個別銘柄</a>
                     <a href="ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
                     <a href="indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
                     <a href="terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
                     <a href="about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
                 </nav>
-</div>
-<div class="flex items-center space-x-1 md:space-x-4">
-<button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50">
-<i class="ri-user-line"></i>
-<span data-lang="login">ログイン</span>
-</button>
-<button id="register-btn" class="hidden md:block bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">
-無料登録
-</button>
-<!-- 言語切り替えボタンをヘッダー内に配置 -->
-<div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
-<button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
-<span class="text-gray-400 text-xs">|</span>
-<button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
-</div>
-<button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
-<i class="ri-menu-line ri-lg"></i>
-</button>
-</div>
-</div>
-</div>
+            </div>
+            <div class="flex items-center space-x-1 md:space-x-4">
+                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                <!-- 言語切り替えボタンをヘッダー内に配置 -->
+                <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                    <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
+                    <span class="text-gray-400 text-xs">|</span>
+                    <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 </header>
 
 <!-- モバイルメニュー -->
 <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
     <div class="px-4 py-2 space-y-1">
         <a href="index.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50" data-lang="nav_today">本日の市況分析</a>
-        <a href="archive.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_archive">分析アーカイブ</a>
+        <a href="pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">注目の個別銘柄</a>
         <a href="ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
         <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
         <a href="terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
@@ -105,1119 +234,535 @@
     </div>
 </div>
 
-<div class="w-full px-6 py-10 md:px-12 lg:px-20">
-    <header class="mb-14 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight" data-lang="main_title">S&P 500 インタラクティブ市場分析</h1>
-        <p class="mt-4 text-lg max-w-3xl mx-auto text-gray-600" data-lang="main_subtitle">短期トレーダーのためのデータ駆動型インサイト</p>
-         <div class="mt-8 inline-flex items-center gap-6 rounded-xl bg-white border border-gray-200 px-8 py-4 shadow-sm">
-            <p id="session" class="font-semibold text-indigo-700 text-2xl"></p>
-            <span class="text-gray-300 text-2xl">|</span>
-            <p id="date" class="text-2xl font-medium flex items-center gap-3 text-gray-700"></p>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <div class="flex items-center justify-center space-x-3 mb-6">
+            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <span class="text-xl font-bold text-indigo-600">📈</span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-800">米国株式市場見通し</h1>
         </div>
-    </header>
+        
+        <!-- Main Application Tabs -->
+        <div class="w-full max-w-md mx-auto mb-10">
+            <div class="flex p-1 bg-slate-200/60 rounded-lg">
+                <button data-tab="weekly" class="main-tab-button w-1/2 p-2 rounded-md text-center font-semibold transition-all duration-300">週間見通し</button>
+                <button data-tab="monthly" class="main-tab-button w-1/2 p-2 rounded-md text-center font-semibold transition-all duration-300">月間見通し</button>
+            </div>
+        </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-14">
-        <main class="lg:col-span-8">
-            <section id="summary" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-12 text-center ring-1 ring-gray-200">
-                <h2 class="text-3xl font-semibold text-gray-500 mb-5" data-lang="summary_title">総合評価</h2>
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-6">
-                    <span id="summary-evaluation" class="text-7xl md:text-9xl font-bold"></span>
-                    <div class="text-left">
-                        <p id="summary-score" class="text-6xl md:text-7xl font-bold text-gray-800 text-center sm:text-left"></p>
-                        <div id="summary-stars" class="text-4xl text-yellow-400 mt-2 text-center sm:text-left"></div>
+        <!-- Tab Content -->
+        <div id="main-tab-content">
+            <!-- Weekly Outlook Page -->
+            <div id="weekly-content">
+                <section id="outlook" class="mb-16 text-center">
+                    <p class="text-slate-500 mb-8 max-w-2xl mx-auto">AIテーマの熱狂とスタグフレーション懸念が交錯する、不安定な市場環境を分析します。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場の方向性</h3><p class="text-2xl font-bold text-amber-600 mt-2">中立からやや弱気</p></div>
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">総合スコア</h3><p class="text-5xl font-bold text-slate-800 mt-1">4<span class="text-2xl text-slate-400">/10</span></p></div>
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場心理</h3><p class="text-lg font-semibold text-slate-700 mt-2 leading-tight">陶酔感と恐怖の綱引き：<br>市場は岐路に立つ</p></div>
                     </div>
-                </div>
-                <p id="summary-headline" class="text-2xl md:text-3xl font-semibold text-gray-800 mt-5"></p>
-                <p id="summary-text" class="max-w-4xl mx-auto text-gray-600 mt-4 leading-relaxed text-lg text-left"></p>
-            </section>
+                </section>
 
-            <section id="dashboard" class="mb-12">
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
-                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="market_health_title">市場の健全性 (前日終値)</h3>
-                        <div class="h-64" id="breadthChart"></div>
-                        <p id="breadth-summary" class="text-left text-lg text-gray-600 mt-5"></p>
+                <section id="dashboard" class="mb-16">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">マーケットダッシュボード</h2>
+                    <p class="text-slate-500 mb-8">センチメントとマクロ経済の重要指標を可視化。特にプロと個人のセンチメントの極端な乖離は、市場の不安定さを示す警告シグナルです。</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                        <div class="lg:col-span-3 card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">センチメントの巨大な乖離</h3><p class="text-sm text-slate-500 mb-4">プロ投資家は極端に楽観的（逆張りでは売りシグナル）、個人投資家は極端に悲観的（逆張りでは買いシグナル）という稀な状況が発生しています。</p><div class="chart-container h-64 md:h-80"><canvas id="sentimentDivergenceChart"></canvas></div></div>
+                        <div class="lg:col-span-2 space-y-6">
+                            <div class="card p-6"><div class="flex items-center justify-between space-x-4"><div><h3 class="font-bold text-lg text-slate-800">Fear & Greed Index</h3><p class="text-4xl font-bold text-teal-600" id="fearGreedValue">63</p><p class="text-sm text-slate-500">市場は「強欲」状態にあります。</p></div><div class="flex-shrink-0 flex flex-col items-center"><div class="gauge-container"><div class="gauge-background"></div><div class="gauge-mask"></div><div id="fearGreedNeedle" class="gauge-needle"></div><div class="gauge-center"></div></div><div class="w-full flex justify-between text-xs px-2 mt-1 text-slate-500"><span>恐怖</span><span>強欲</span></div></div></div></div>
+                            <div class="grid grid-cols-2 gap-6"><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">VIX (恐怖指数)</h3><p class="text-3xl font-bold text-indigo-600 mt-1">14.83</p></div><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">Put/Call Ratio</h3><p class="text-3xl font-bold text-rose-600 mt-1">0.48</p></div></div>
+                        </div>
                     </div>
-                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col items-center justify-center">
-                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="market_sentiment_title">市場心理 (CNN Fear & Greed)</h3>
-                        <div class="h-64 w-full" id="sentimentGauge"></div>
-                        <p id="sentiment-summary" class="text-center text-lg text-gray-600 mt-5"></p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">インフレ圧力</h3><p class="text-sm text-slate-500 mb-4">生産者物価(PPI)が急騰し、インフレ再燃リスクが浮上しています。</p><div class="chart-container h-56"><canvas id="inflationChart"></canvas></div></div>
+                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">雇用市場の減速</h3><p class="text-sm text-slate-500 mb-4">7月の雇用者数は予想を大幅に下回り、景気減速を示唆しています。</p><div class="chart-container h-56"><canvas id="employmentChart"></canvas></div></div>
+                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">イールドカーブ</h3><p class="text-sm text-slate-500 mb-4">逆イールドが解消。歴史的には景気後退の兆候です。</p><div class="chart-container h-56"><canvas id="yieldCurveChart"></canvas></div></div>
                     </div>
-                    <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col justify-center">
-                        <h3 class="font-bold text-2xl mb-6 text-center" data-lang="price_levels_title">主要な価格帯</h3>
-                        <div class="space-y-6">
-                            <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
-                                <p class="text-lg font-semibold text-red-700" data-lang="resistance_level">上値抵抗線 (レジスタンス)</p>
-                                <p id="resistance-value" class="text-4xl font-bold text-red-900"></p>
-                                <p id="resistance-desc" class="text-base text-red-600"></p>
-                            </div>
-                            <div class="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg">
-                                <p class="text-lg font-semibold text-blue-700" data-lang="support_level">下値支持線 (サポート)</p>
-                                <p id="support-value" class="text-4xl font-bold text-blue-900"></p>
-                                <p id="support-desc" class="text-base text-blue-600"></p>
+                    <div class="mt-8"><div class="card p-6 max-w-3xl mx-auto"><h3 class="font-bold text-lg mb-2 text-slate-800 text-center">週間パフォーマンス予測 (S&P 500)</h3><p class="text-sm text-slate-500 mb-4 text-center">分析に基づき、週初に一時的な下押しがあるものの、後半にかけて持ち直す展開を予測します。</p><div class="chart-container h-48"><canvas id="weeklyForecastChart"></canvas></div></div></div>
+                </section>
+
+                <section id="sectors" class="mb-16">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">セクター・銘柄スポットライト</h2>
+                    <p class="text-slate-500 mb-8">市場全体が緊張状態にある中、セクターごとの動向には違いが見られます。</p>
+                    <div class="relative border-b border-gray-200 mb-6"><div class="flex space-x-8" id="sector-tabs-container"><button data-tab="tech" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700 active-tab">テクノロジー</button><button data-tab="health" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700">ヘルスケア</button><button data-tab="consumer" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700">一般消費財</button></div><div class="tab-indicator" id="sector-indicator"></div></div>
+                    <div id="sector-content"></div>
+                </section>
+
+                <section id="events" class="mb-16">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">今週の重要経済イベント</h2>
+                    <p class="text-slate-500 mb-8">以下のイベントは市場のボラティリティを大きく左右する可能性があります。</p>
+                    <div class="card overflow-x-auto"><table class="w-full text-sm text-left text-slate-500"><thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th scope="col" class="px-6 py-3">日付</th><th scope="col" class="px-6 py-3">イベント</th><th scope="col" class="px-6 py-3 text-center">市場インパクト</th></tr></thead><tbody id="events-table-body" class="divide-y divide-slate-200"></tbody></table></div>
+                </section>
+
+                <section id="strategy">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">投資戦略の提案</h2>
+                    <p class="text-slate-500 mb-8">現在の市場分析に基づき、短期トレーダーと中長期投資家それぞれに向けた戦略を提案します。</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">短期トレーダー向け戦略</h3><p class="text-sm text-slate-500 mb-4">ボラティリティ上昇に備え、様子見が賢明。主要な価格帯をブレイクするまではレンジ相場を想定します。</p><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th class="px-4 py-2">指数</th><th class="px-4 py-2 text-rose-600">サポート</th><th class="px-4 py-2 font-bold">ピボット</th><th class="px-4 py-2 text-teal-600">レジスタンス</th></tr></thead><tbody id="tech-levels-table-body" class="divide-y divide-slate-200"></tbody></table></div><div class="mt-6"><h4 class="font-semibold text-slate-700 mb-2">リスク管理</h4><ul class="space-y-2 text-sm text-slate-600 list-disc list-inside"><li><span class="font-semibold">損切り水準:</span> タイトなストップロス注文が不可欠。</li><li><span class="font-semibold">ボラティリティ対策:</span> 重要イベント前にポジションを縮小。</li></ul></div></div>
+                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">中長期投資家が注意すべきポイント</h3><ul class="space-y-4 text-sm text-slate-600"><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">⚠️</span><div><h4 class="font-semibold text-slate-800">スタグフレーションの脅威</h4><p>インフレと景気減速の同時進行は、株式バリュエーションにマイナス。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🏦</span><div><h4 class="font-semibold text-slate-800">FRBの政策転換リスク</h4><p>インフレ再燃に対しFRBがタカ派に転じれば最大の逆風。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🔄</span><div><h4 class="font-semibold text-slate-800">セクターローテーション</h4><p>AIテーマへの一点集中から、バランスの取れたポートフォリオへ。</p></div></li></ul></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Monthly Outlook Page (Content will be injected here) -->
+            <div id="monthly-content" class="hidden">
+                <section id="monthly-outlook-summary" class="mb-16 text-center">
+                    <p class="text-slate-500 mb-8 max-w-2xl mx-auto">AIという強力なテーマとマクロ経済の不確実性が交錯する、今後1か月の市場環境を分析します。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場の方向性</h3><p class="text-2xl font-bold text-indigo-600 mt-2">中立～やや強気</p></div>
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">総合スコア</h3><p class="text-5xl font-bold text-slate-800 mt-1">6<span class="text-2xl text-slate-400">/10</span></p></div>
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場心理</h3><p class="text-lg font-semibold text-slate-700 mt-2 leading-tight">経済的な暗雲が漂う中、<br>市場は楽観の頂点を試す</p></div>
+                    </div>
+                </section>
+
+                <section id="monthly-detailed-outlook" class="mb-16">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2 text-center">総合見通し 詳細分析</h2>
+                    <div class="max-w-4xl mx-auto">
+                        <div class="card p-6 md:p-8">
+                            <div class="space-y-4 text-gray-600 leading-relaxed">
+                                <p>
+                                    米国株式市場は、人工知能（AI）という長期的な成長ストーリーに牽引され、今後1か月を迎える。このテーマは特にテクノロジーセクターのバリュエーションと収益期待を支え続けている。しかし、この力強いモメンタムは、労働市場の冷却、GDP成長の鈍化、そして根強く残るコアインフレといった経済の現実との乖離を広げている。
+                                </p>
+                                <p>
+                                    FRBは政策転換を示唆しているものの、内部の意見対立とデータ依存の姿勢が利下げのタイミングに不確実性をもたらしている。トランプ政権の関税政策を巡る地政学的リスクも市場の重しとなり、特に11月の休戦期限が近づくにつれて警戒感が高まるだろう。今後1か月はボラティリティの上昇とレンジ相場を予想し、セクターと個別銘柄の選別が極めて重要となる。
+                                </p>
                             </div>
                         </div>
                     </div>
-                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
-                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="put_call_ratio_title">エクイティ Put Call Ratio</h3>
-                        <div id="put-call-ratio-container" class="text-center py-12"></div>
-                         <p id="put-call-ratio-summary" class="text-left text-lg text-gray-600 mt-2"></p>
-                    </div>
-                </div>
-            </section>
-            
-            <section id="details" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 ring-1 ring-gray-200">
-                <div class="text-center mb-10">
-                    <h3 class="text-4xl font-bold text-gray-800" data-lang="detailed_analysis_title">詳細分析</h3>
-                    <p class="text-gray-500 mt-3 text-xl" data-lang="tab_instructions">下のタブをクリックして、分析内容を切り替えられます</p>
-                </div>
-                <div class="border-b border-gray-300">
-                    <nav class="flex flex-wrap -mb-px justify-center" id="tab-buttons">
-                        <button data-tab="internals" class="tab-button active" data-lang="tab_internals">市場の内部構造</button>
-                        <button data-tab="technicals" class="tab-button" data-lang="tab_technicals">テクニカル分析</button>
-                        <button data-tab="fundamentals" class="tab-button" data-lang="tab_fundamentals">ファンダメンタルズ & 心理</button>
-                        <button data-tab="strategy" class="tab-button" data-lang="tab_strategy">投資戦略</button>
-                    </nav>
-                </div>
+                </section>
 
-                <div id="tab-panels" class="mt-10">
-                    <div id="internals" class="tab-panel active space-y-6">
-                        <h3 id="internals-headline" class="text-3xl font-bold"></h3>
-                        <p id="internals-text" class="text-lg text-gray-700 leading-relaxed"></p>
-                        <div class="h-96"><canvas id="contributionChart"></canvas></div>
-                    </div>
-                    <div id="technicals" class="tab-panel space-y-6">
-                        <h3 id="technicals-headline" class="text-3xl font-bold"></h3>
-                        <p id="technicals-text" class="text-lg text-gray-700 leading-relaxed"></p>
-                        <div class="h-96"><canvas id="technicalChart"></canvas></div>
-                    </div>
-                    <div id="fundamentals" class="tab-panel space-y-6">
-                        <h3 id="fundamentals-headline" class="text-3xl font-bold"></h3>
-                        <p id="fundamentals-text" class="text-lg text-gray-700 leading-relaxed"></p>
-                        
-                        <div id="sentiment-indicators-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
-                            <div id="aaii-container"></div>
-                            <div class="space-y-8">
-                                <div id="vix-container"></div>
-                                <div id="ii-container"></div>
-                            </div>
-                        </div>
-                        
-                        <ul id="fundamentals-list" class="space-y-6 text-lg text-gray-700 pt-4"></ul>
-                    </div>
-                     <div id="strategy" class="tab-panel space-y-6">
-                        <h3 id="strategy-headline" class="text-3xl font-bold"></h3>
+                <!-- Section 2: Market Pulse -->
+                <section id="monthly-pulse" class="mb-16">
+                    <h2 class="monthly-section-title">市場パルス：主要指標分析</h2>
+                    <p class="monthly-section-intro">
+                        市場の「心拍」を測るための重要な指標を可視化しています。投資家心理を示すセンチメント指標と、経済のファンダメンタルズを示すマクロ指標をインタラクティブなチャートで表示します。これらの指標がどのように絡み合い、市場の方向性に影響を与えるかを探ります。
+                    </p>
+                    <div class="monthly-card">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
-                                <h4 class="font-bold text-2xl text-gray-800 mb-3" data-lang="basic_strategy">基本戦略</h4>
-                                <p id="strategy-basic" class="text-gray-600 leading-relaxed text-lg"></p>
+                            <div>
+                                <h3 class="text-xl font-semibold text-center mb-4 text-gray-800">センチメント分析：乖離する心理</h3>
+                                <div class="chart-container">
+                                    <canvas id="monthlySentimentComparisonChart"></canvas>
+                                </div>
+                                <p class="text-center text-sm text-gray-500 mt-2">個人投資家（AAII）とプロ（Investors Intelligence）のセンチメント比較</p>
                             </div>
-                             <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
-                                <h4 class="font-bold text-2xl text-gray-800 mb-3" data-lang="risk_management">リスク管理</h4>
-                                <p id="strategy-risk" class="text-gray-600 leading-relaxed text-lg"></p>
+                            <div>
+                                <h3 class="text-xl font-semibold text-center mb-4 text-gray-800">恐怖と貪欲</h3>
+                                <div class="grid grid-cols-2 gap-4 mt-6 text-center">
+                                    <div>
+                                        <p class="font-semibold text-gray-700">Fear & Greed Index</p>
+                                        <p class="text-3xl font-bold text-emerald-600">63.31</p>
+                                        <p class="text-sm font-medium text-emerald-600">貪欲 (Greed)</p>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-700">VIX指数</p>
+                                        <p class="text-3xl font-bold text-sky-600">15.09</p>
+                                        <p class="text-sm font-medium text-gray-500">楽観 / 低ボラティリティ</p>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-center text-gray-500 mt-4 px-4">プロの投資家やオプション市場は楽観的ですが、個人投資家の間では悲観論が広がっており、センチメントの大きな乖離が見られます。これは潜在的なボラティリティの高まりを示唆します。</p>
+                            </div>
+                        </div>
+                        <hr class="my-8 border-slate-200">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h3 class="text-xl font-semibold text-center mb-4 text-gray-800">マクロ経済スナップショット</h3>
+                                <div class="grid grid-cols-2 gap-4 text-center">
+                                    <div class="p-3 bg-slate-50 rounded-lg">
+                                        <p class="font-semibold text-gray-700">実質GDP成長率 (前期比年率)</p>
+                                        <p class="text-3xl font-bold text-sky-600">3.0%</p>
+                                        <p class="text-sm text-gray-500">Q2 2025</p>
+                                    </div>
+                                    <div class="p-3 bg-slate-50 rounded-lg">
+                                        <p class="font-semibold text-gray-700">失業率</p>
+                                        <p class="text-3xl font-bold text-amber-600">4.2%</p>
+                                        <p class="text-sm text-gray-500">2025年7月</p>
+                                    </div>
+                                    <div class="p-3 bg-slate-50 rounded-lg">
+                                        <p class="font-semibold text-gray-700">コアCPI (前年比)</p>
+                                        <p class="text-3xl font-bold text-red-600">3.1%</p>
+                                        <p class="text-sm text-gray-500">2025年7月</p>
+                                    </div>
+                                    <div class="p-3 bg-slate-50 rounded-lg">
+                                        <p class="font-semibold text-gray-700">10年債利回り</p>
+                                        <p class="text-3xl font-bold text-indigo-600">4.29%</p>
+                                        <p class="text-sm text-gray-500">現在値</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-center mb-4 text-gray-800">FRB利下げ期待 (12月まで)</h3>
+                                <div class="chart-container h-64 max-h-64">
+                                    <canvas id="monthlyFedWatchChart"></canvas>
+                                </div>
+                                <p class="text-center text-xs text-gray-500 mt-2 px-4">市場は年内の利下げを高く織り込んでいますが、予想を上回る強い経済指標が出た場合、期待が剥落し株価の急落を引き起こす非対称なリスクが存在します。</p>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </main>
-        
-        <aside class="lg:col-span-4 space-y-10">
-            <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
-                <h3 class="text-2xl font-bold mb-5 border-b pb-4" data-lang="market_overview_title">市場概況</h3>
-                <div id="market-overview-container" class="space-y-5"></div>
+                </section>
+
+                <!-- Section 3: Sector & Theme Spotlight -->
+                <section id="monthly-spotlight" class="mb-16">
+                    <h2 class="monthly-section-title">セクター＆テーマ スポットライト</h2>
+                    <p class="monthly-section-intro">
+                        今後1か月の市場を動かす可能性のある主要なセクターとマクロテーマを掘り下げます。各カードをクリックすると、そのテーマやセクターに関する詳細な分析が表示されます。どの分野が追い風を受け、どの分野が逆風に直面しているかを確認しましょう。
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="monthly-card spotlight-card cursor-pointer hover:shadow-lg hover:-translate-y-1">
+                            <div class="flex items-center mb-3"><span class="text-3xl mr-3">💡</span><h3 class="text-lg font-bold text-gray-800">AI設備投資サイクル</h3></div>
+                            <p class="text-sm text-gray-600 mb-3">市場を牽引する最も強力な強気テーマ。ハイパースケーラーによる巨額投資が半導体・ハードウェア企業の成長を加速。</p>
+                            <div class="spotlight-details hidden text-sm text-gray-600 mt-4 pt-4 border-t border-slate-200"><p><strong>注目セクター：</strong>テクノロジー（特に半導体）。GPU (NVIDIA)、カスタムチップ (Broadcom)、高帯域幅メモリ (Micron) への需要は旺盛。バリュエーションは高いが、力強い収益成長が続く。</p></div>
+                        </div>
+                        <div class="monthly-card spotlight-card cursor-pointer hover:shadow-lg hover:-translate-y-1">
+                            <div class="flex items-center mb-3"><span class="text-3xl mr-3">⚡️</span><h3 class="text-lg font-bold text-gray-800">公益事業の再評価</h3></div>
+                            <p class="text-sm text-gray-600 mb-3">伝統的なディフェンシブセクターが、AIデータセンターの爆発的な電力需要という新たな成長ドライバーを獲得。</p>
+                            <div class="spotlight-details hidden text-sm text-gray-600 mt-4 pt-4 border-t border-slate-200"><p>景気後退への耐性と長期的な成長ストーリーを両立するユニークなセクターとして注目される。</p></div>
+                        </div>
+                        <div class="monthly-card spotlight-card cursor-pointer hover:shadow-lg hover:-translate-y-1">
+                            <div class="flex items-center mb-3"><span class="text-3xl mr-3">🏦</span><h3 class="text-lg font-bold text-gray-800">金融セクターの追い風</h3></div>
+                            <p class="text-sm text-gray-600 mb-3">利下げ期待と長期金利の高止まりによるイールドカーブのスティープ化から恩恵を受ける可能性。</p>
+                            <div class="spotlight-details hidden text-sm text-gray-600 mt-4 pt-4 border-t border-slate-200"><p>特に利ザヤ改善が見込まれる地方銀行（KREなど）は、融資活動やM&Aの活発化とともに見直される可能性がある。</p></div>
+                        </div>
+                        <div class="monthly-card spotlight-card cursor-pointer hover:shadow-lg hover:-translate-y-1">
+                            <div class="flex items-center mb-3"><span class="text-3xl mr-3">🇨🇳</span><h3 class="text-lg font-bold text-gray-800">米中貿易摩擦と関税</h3></div>
+                            <p class="text-sm text-gray-600 mb-3">トランプ政権の関税政策と11月の休戦協定の期限が市場の不確実性要因に。交渉の行方がヘッドラインリスクとなる。</p>
+                            <div class="spotlight-details hidden text-sm text-gray-600 mt-4 pt-4 border-t border-slate-200"><p><strong>逆風セクター：</strong>一般消費財、素材・資本財。中国のサプライチェーンに依存する企業や、世界的な製造業の動向に左右されるセクターは需要減退のリスクに直面。</p></div>
+                        </div>
+                        <div class="monthly-card spotlight-card cursor-pointer hover:shadow-lg hover:-translate-y-1">
+                            <div class="flex items-center mb-3"><span class="text-3xl mr-3">🛢️</span><h3 class="text-lg font-bold text-gray-800">エネルギーセクター</h3></div>
+                            <p class="text-sm text-gray-600 mb-3">世界経済が底堅く推移し、産油国が供給規律を維持する中、原油価格は安定。魅力的なバリュエーションを提供。</p>
+                            <div class="spotlight-details hidden text-sm text-gray-600 mt-4 pt-4 border-t border-slate-200"><p>予期せぬインフレ再燃に対するヘッジとしても機能する。</p></div>
+                        </div>
+                        <div class="monthly-card spotlight-card cursor-pointer hover:shadow-lg hover:-translate-y-1">
+                            <div class="flex items-center mb-3"><span class="text-3xl mr-3">🛍️</span><h3 class="text-lg font-bold text-gray-800">一般消費財への懸念</h3></div>
+                            <p class="text-sm text-gray-600 mb-3">労働市場の健全性に大きく依存するセクター。失業率の上昇や賃金の伸びの鈍化が裁量的な支出を圧迫する可能性。</p>
+                            <div class="spotlight-details hidden text-sm text-gray-600 mt-4 pt-4 border-t border-slate-200"><p>多くの製品が関税リスクに晒されている点も懸念材料である。</p></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: Event Horizon -->
+                <section id="monthly-horizon" class="mb-16">
+                    <h2 class="monthly-section-title">イベントホライゾン：重要イベントカレンダー</h2>
+                    <p class="monthly-section-intro">
+                        市場のボラティリティを高める可能性のある、今後1か月の主要な経済イベントと企業決算のスケジュールです。フィルター機能を使って、市場へのインパクトが特に大きいイベントに絞って確認することができます。
+                    </p>
+                    <div class="monthly-card">
+                        <div class="flex justify-center space-x-2 mb-6">
+                            <button class="event-filter-btn monthly-nav-button active" data-filter="all">すべて</button>
+                            <button class="event-filter-btn monthly-nav-button" data-filter="strong">インパクト：強</button>
+                            <button class="event-filter-btn monthly-nav-button" data-filter="medium">インパクト：中</button>
+                        </div>
+                        <div id="monthly-event-list" class="space-y-4"></div>
+                    </div>
+                </section>
+
+                <!-- Section 5: Strategic Playbook -->
+                <section id="monthly-playbook">
+                    <h2 class="monthly-section-title">投資戦略プレイブック</h2>
+                    <p class="monthly-section-intro">
+                        ここまでの分析に基づき、具体的な投資戦略を提案します。短期的な戦術から、想定されるリスクとそのヘッジ方法、そして長期的な視点まで、市場の不確実性を乗り切るためのアイデアを提供します。
+                    </p>
+                    <div class="space-y-4">
+                        <div class="monthly-card accordion-item">
+                            <button class="w-full text-left flex justify-between items-center accordion-header"><h3 class="text-lg font-semibold text-indigo-800">1か月スパンで有効な戦略</h3><span class="text-2xl font-light transform transition-transform duration-300">+</span></button>
+                            <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-200 text-gray-600 leading-relaxed"><p class="mb-2">市場が相反するシグナルを発しているため、バランスの取れた<strong>「バーベル戦略」</strong>または<strong>「コア・サテライト戦略」</strong>を推奨します。</p><ul class="list-disc list-inside space-y-2"><li><strong>コア部分：</strong> S&P 500連動ETF (SPY, IVV) で市場全体の動きを捉える。</li><li><strong>サテライト部分：</strong> 特定テーマのセクターETFでオーバーウェイトする。<ul class="list-disc list-inside ml-6 mt-1"><li><strong>テクノロジー/半導体 (SMH, SOXX):</strong> 強力なAIトレンド。</li><li><strong>公益事業 (XLU):</strong> AI電力需要とディフェンシブ特性。</li><li><strong>金融/地方銀行 (KRE):</strong> 金利差拡大による収益改善期待。</li></ul></li></ul></div>
+                        </div>
+                        <div class="monthly-card accordion-item">
+                            <button class="w-full text-left flex justify-between items-center accordion-header"><h3 class="text-lg font-semibold text-indigo-800">想定されるリスクとヘッジ方法</h3><span class="text-2xl font-light transform transition-transform duration-300">+</span></button>
+                            <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-200 text-gray-600 leading-relaxed space-y-4"><div><h4 class="font-semibold text-gray-800">リスク1：タカ派的なFRBのサプライズ</h4><p class="text-sm">予想以上に強い経済指標により、FRBが利下げを先送りするリスク。市場にとって最大のネガティブ・サプライズとなり得る。</p><p class="text-sm mt-1"><strong>ヘッジ方法：</strong> 短期国債ETF (SHY)、VIXコールオプションの購入。</p></div><div><h4 class="font-semibold text-gray-800">リスク2：米中貿易摩擦の激化</h4><p class="text-sm">11月の関税休戦期限を前に、交渉に関するネガティブなニュースが流れるリスク。</p><p class="text-sm mt-1"><strong>ヘッジ方法：</strong> 国内経済に焦点を当てたセクター（公益事業、地方銀行）の比重を高める。金（ゴールド）ETF (GLD) も有効。</p></div></div>
+                        </div>
+                        <div class="monthly-card accordion-item">
+                            <button class="w-full text-left flex justify-between items-center accordion-header"><h3 class="text-lg font-semibold text-indigo-800">中長期投資家向けの視点</h3><span class="text-2xl font-light transform transition-transform duration-300">+</span></button>
+                            <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-200 text-gray-600 leading-relaxed"><p>短期的なボラティリティは、長期的な構造的成長テーマを持つ優良企業への投資ポジションを積み増す絶好の機会となり得ます。</p><ul class="list-disc list-inside space-y-2 mt-2"><li><strong>押し目買いのポイント：</strong> AI、電力インフラ、リショアリングといった数年にわたる構造的な追い風を受けるテーマに焦点を当てる。</li><li><strong>分散投資の重要性：</strong> 一部の高バリュエーション銘柄への過度な集中は避ける。セクターや資産クラスをまたいだ分散投資の規律を維持することが最も堅牢な戦略。</li></ul></div>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
-                <h3 class="text-2xl font-bold mb-5 border-b pb-4" data-lang="hot_stocks_title">注目銘柄 (Top Movers)</h3>
-                <div id="hot-stocks-container" class="space-y-6"></div>
-            </div>
-        </aside>
-    </div>
-    
-    <footer class="text-center text-sm text-gray-500 mt-20 py-8">
-        <p data-lang="footer_disclaimer">この分析は提供された情報に基づく予測であり、投資成果を保証するものではありません。</p>
-        <p data-lang="footer_copyright_text">© 2025 株式会社BizRom東京. All rights reserved.</p>
+        </div>
+    </main>
+
+    <footer class="bg-slate-100 mt-12 border-t">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-xs text-slate-500">
+            <p>免責事項：本レポートは情報提供のみを目的としており、投資助言を構成するものではありません。投資に関する決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
     </footer>
-</div>
 
-<script>
-    // データの読み込みとページへの反映を行うメイン関数
-    async function loadReportData() {
-        try {
-            // datafileパラメータ取得
-            const urlParams = new URLSearchParams(window.location.search);
-            const dataFileName = urlParams.get('datafile');
-            // パラメータがあればarchive_dataから、なければlatest.json
-            const fileToFetch = dataFileName ? `archive_data/${dataFileName}` : 'live_data/latest.json';
-            
-            console.log('Fetching file:', fileToFetch);
-            
-            const response = await fetch(fileToFetch);
-            console.log('Response status:', response.status);
-            
-            if (!response.ok) {
-                throw new Error(`HTTPエラー! ステータス: ${response.status}, ファイル: ${fileToFetch}`);
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize language system first
+            if (typeof window.initLanguage === 'function') {
+                await window.initLanguage();
             }
-            
-            const rawData = await response.json();
-            console.log('Raw JSON data loaded successfully');
-
-            // 多言語対応データの処理
-            const data = getLocalizedData(rawData);
-
-            // --- ページの各要素にデータをセット ---
-            populateHtmlElements(data);
-
-            // --- チャート描画 ---
-            initializeAllCharts(data, currentLang);
-
-            // --- タブ切り替え機能の初期化 ---
-            initializeTabs();
-
-        } catch (error) {
-            console.error('データの読み込みまたは処理中にエラーが発生しました:', error);
-            // より詳細なエラー情報を表示
-            const errorDetails = `
-                エラー: ${error.message}
-                ファイル: ${dataFileName || 'live_data/latest.json'}
-                スタック: ${error.stack}
-            `;
-            document.body.innerHTML = `<div class="text-center p-10">
-                <h1 class="text-2xl font-bold text-red-600 mb-4">データの読み込みに失敗しました</h1>
-                <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-left max-w-2xl mx-auto">
-                    <h2 class="font-bold mb-2">エラー詳細:</h2>
-                    <pre class="text-sm text-red-700 whitespace-pre-wrap">${error.message}</pre>
-                    <h3 class="font-bold mt-4 mb-2">対処方法:</h3>
-                    <ul class="text-sm text-red-600 list-disc list-inside">
-                        <li>latest.jsonファイルが存在することを確認してください</li>
-                        <li>JSONファイルの形式が正しいことを確認してください</li>
-                        <li>ブラウザのデベロッパーツールで詳細なエラーを確認してください</li>
-                    </ul>
-                </div>
-            </div>`;
-        }
-    }
-
-    // 日本語テキストから英語を自動生成する辞書
-    const translationDict = {
-        // 評価関連
-        '買い': 'Buy',
-        '売り': 'Sell',
-        'ホールド': 'Hold',
-        '中立': 'Neutral',
-        
-        // 市場状況
-        '史上最高値圏': 'near all-time highs',
-        '史上最高値': 'all-time high',
-        '市場': 'market',
-        '投資家': 'investors',
-        'プロ投資家': 'professional investors',
-        '個人投資家': 'individual investors',
-        '短期トレーダー': 'short-term traders',
-        'リスク管理': 'risk management',
-        '最高値圏': 'near all-time highs',
-        '記録更新の裏に潜む疲弊の兆候': 'signs of exhaustion lurking behind record-breaking performance',
-        '市場は自らの成功の重みに耐えられるか': 'can the market withstand the weight of its own success',
-        '記録更新': 'record-breaking',
-        
-        // 重要な文章レベルの翻訳
-        'S&P 500は史上最高値圏にありますが、内部指標は深刻な悪化を示しています。プロ投資家の熱狂と個人投資家の慎重さの乖離は逆張りの売りシグナルです。短期トレーダーはリスク管理を最優先し、高値追いを控えるべき局面です。': 'S&P 500 is near all-time highs, but internal indicators show serious deterioration. The divergence between professional investor euphoria and individual investor caution is a contrarian sell signal. Short-term traders should prioritize risk management and avoid chasing highs in this phase.',
-        
-        // 詳細なフレーズ翻訳
-        'S&P 500は史上最高値圏にありますが、内部指標は深刻な悪化を示しています': 'S&P 500 is near all-time highs, but internal indicators show serious deterioration',
-        'プロ投資家の熱狂と個人投資家の慎重さの乖離は逆張りの売りシグナルです': 'the divergence between professional investor euphoria and individual investor caution is a contrarian sell signal',
-        '短期トレーダーはリスク管理を最優先し、高値追いを控えるべき局面です': 'short-term traders should prioritize risk management and avoid chasing highs in this phase',
-        '値上がり銘柄数が値下がり銘柄数を上回っていますが': 'advancing stocks outnumber declining stocks, but',
-        '一部主要銘柄の急落はラリーの脆弱性を示唆しています': 'sharp declines in some major stocks suggest rally fragility',
-        'インデックスは「Greed（強欲）」の領域にあり': 'the index is in "Greed" territory',
-        '広範な楽観論と自己満足を反映しています': 'reflecting widespread optimism and complacency',
-        '歴史的には調整の前兆です': 'historically a precursor to correction',
-        '心理的な節目。利益確定売りの壁': 'psychological level. Profit-taking wall',
-        '短期的な心理的支持線。割り込むと弱気転換': 'short-term psychological support. Break below signals bearish reversal',
-        '警戒感の萌芽': 'emergence of caution',
-        '日次レシオの急上昇は、一部投資家が下落ヘッジを始めている兆候です': 'sharp rise in daily ratio signals some investors are starting downside hedging',
-        
-        // ヘッドライン
-        'プロの熱狂と個人の冷静：危険なセンチメントの乖離': 'Professional euphoria vs individual caution: dangerous sentiment divergence',
-        '上昇トレンドは継続、しかし過熱感とダイバージェンスが転換を示唆': 'uptrend continues, but overheated conditions and divergence suggest reversal',
-        '好決算と金利期待が支える楽観論、VIXの低さは油断の証': 'optimism supported by strong earnings and rate expectations, low VIX shows complacency',
-        '守りを固め、利益を確保し、次の機会を待つ': 'consolidate defense, secure profits, wait for next opportunity',
-        
-        // 長文テキスト
-        'プロ投資家は極端に楽観的（歴史的には天井のサイン）である一方、個人は懐疑的です': 'professional investors are extremely optimistic (historically a top signal) while individuals remain skeptical',
-        'この「スマートマネーの熱狂」と「ダムマネーの躊躇」の組み合わせは、ラリーの基盤が極めて脆弱であることを示しています': 'this combination of "smart money euphoria" and "dumb money hesitation" shows the rally\'s foundation is extremely fragile',
-        '指数が上昇する一方で市場の幅（A/Dライン）が追随していない「質の悪い」上昇であることです': 'it\'s a "poor quality" rise where the index rises while market breadth (A/D line) fails to follow',
-        '市場の楽観論は好調な企業決算とFRBの利下げ期待に支えられています': 'market optimism is supported by strong corporate earnings and Fed rate cut expectations',
-        'VIXの低水準は危険な自己満足を反映しており、来週のFOMCや主要決算といったイベントリスクに対し脆弱な状態です': 'low VIX levels reflect dangerous complacency, making markets vulnerable to event risks like next week\'s FOMC and major earnings',
-        
-        // VIX関連
-        'VIXは52週間の安値圏にあり、市場の極端な自己満足を示しています': 'VIX is near 52-week lows, showing extreme market complacency',
-        '予期せぬニュースがボラティリティの急上昇を引き起こす可能性があります': 'unexpected news could trigger a sharp volatility spike',
-        
-        // センチメント調査
-        '個人投資家はラリーに懐疑的でセンチメントはほぼ中立': 'individual investors are skeptical of the rally with sentiment nearly neutral',
-        '広範な支持を欠いていることを示す警告サインです': 'a warning sign showing lack of broad support',
-        'プロ投資家の極端な強気は強力な逆張り指標であり': 'extreme bullishness among professional investors is a powerful contrarian indicator',
-        '「スマートマネー」が熱狂状態にあることを示唆します': 'suggesting "smart money" is in a euphoric state',
-        
-        // ファンダメンタルズ
-        '好調な第2四半期決算が、市場ラリーのファンダメンタルズ面での支えとなっている': 'strong Q2 earnings provide fundamental support for the market rally',
-        'FRBによる利下げ期待が、流動性とリスク選好を後押ししている': 'Fed rate cut expectations are boosting liquidity and risk appetite',
-        '低いVIX指数とプロ投資家の極端な強気の組み合わせは、ネガティブなサプライズに非常に脆弱な環境を生み出している': 'the combination of low VIX and extreme professional bullishness creates an environment highly vulnerable to negative surprises',
-        
-        // 戦略
-        '既存ロングは部分的な利益確定を検討し、ストップロスを6,350直下に設定': 'consider partial profit-taking on existing longs, set stop-loss just below 6,350',
-        '新規ポジションは高値追いを避け、6,250〜6,300への調整を待つのが賢明です': 'for new positions, avoid chasing highs and wait for pullback to 6,250-6,300',
-        '最大のリスクはFOMOによる「メルトアップ」相場です': 'the biggest risk is a FOMO-driven "melt-up" market',
-        '弱気見方は、S&P 500が6,450を力強く上抜け、かつ市場の幅が改善した場合に無効となります': 'bearish view becomes invalid if S&P 500 breaks strongly above 6,450 with improving market breadth',
-        
-        // 株式関連
-        '主な値下がり銘柄': 'major declining stock',
-        '主な値上がり銘柄': 'major advancing stock',
-        '決算失望で-8.5%の急落。市場内部の亀裂を象徴': 'earnings disappointment leads to -8.5% plunge, symbolizing internal market cracks',
-        '-18.5%の暴落。特定のセクターの弱さを示す': '-18.5% crash shows specific sector weakness',
-        '好決算を発表し、市場のセンチメントを一部下支え': 'announced strong earnings, partially supporting market sentiment',
-        
-        // 市場データ
-        'S&P 500 (7/25終値)': 'S&P 500 (7/25 close)',
-        'S&P 500 先物': 'S&P 500 futures',
-        'VIX指数': 'VIX index',
-        '米国10年債利回り': 'US 10-year yield',
-        
-        // 日付・調査
-        '2025年7月28日': 'July 28, 2025',
-        '7月28日 市場分析': 'July 28 Market Analysis',
-        '2025年7月24日調査': 'July 24, 2025 survey',
-        '2025年7月23日調査': 'July 23, 2025 survey',
-        
-        // Put/Call Ratio関連
-        '当日レシオ': 'Daily Ratio',
-        '21日移動平均': '21-day Moving Average',
-        
-        // 感情・センチメント
-        '楽観的': 'optimistic',
-        '悲観的': 'pessimistic',
-        '慎重': 'cautious',
-        '慎重さ': 'caution',
-        '熱狂': 'euphoria',
-        '懐疑的': 'skeptical',
-        '警戒': 'caution',
-        '警戒感': 'sense of caution',
-        '自己満足': 'complacency',
-        '楽観論': 'optimism',
-        '疲弊': 'exhaustion',
-        '兆候': 'signs',
-        '乖離': 'divergence',
-        '躊躇': 'hesitation',
-        '冷静': 'calm',
-        '極端に': 'extremely',
-        
-        // テクニカル用語
-        '上昇トレンド': 'uptrend',
-        '継続': 'continues',
-        'しかし': 'but',
-        '過熱感': 'overheated conditions',
-        'ダイバージェンス': 'divergence',
-        '転換': 'reversal',
-        '示唆': 'suggest',
-        '買われすぎ': 'overbought',
-        '勢いの鈍化': 'momentum deceleration',
-        '深刻': 'serious',
-        '指数': 'index',
-        '上昇する': 'rises',
-        '一方で': 'while',
-        '市場の幅': 'market breadth',
-        '追随していない': 'fails to follow',
-        '質の悪い': 'poor quality',
-        
-        // 基本用語
-        '内部指標': 'internal indicators',
-        '深刻な悪化': 'serious deterioration',
-        '悪化': 'deterioration',
-        '示しています': 'show',
-        '示している': 'showing',
-        '逆張り': 'contrarian',
-        'シグナル': 'signal',
-        '売りシグナル': 'sell signal',
-        '高値追い': 'chasing highs',
-        '控える': 'avoid',
-        'べき': 'should',
-        '局面': 'phase',
-        '最優先': 'prioritize',
-        '最優先し': 'should prioritize',
-        'ありますが': ', but',
-        'にあります': '',
-        'にあり': '',
-        '値上がり銘柄': 'advancing stocks',
-        '値下がり銘柄': 'declining stocks',
-        '上回る': 'exceed',
-        '主要銘柄': 'major stocks',
-        '急落': 'sharp decline',
-        'ラリー': 'rally',
-        '脆弱性': 'fragility',
-        '強欲': 'greed',
-        '領域': 'territory',
-        '広範': 'widespread',
-        '反映': 'reflect',
-        '歴史的': 'historically',
-        '前兆': 'precursor',
-        '利益確定': 'profit-taking',
-        '下落ヘッジ': 'downside hedge',
-        '心理的': 'psychological',
-        '節目': 'level',
-        '壁': 'wall',
-        '割り込む': 'break below',
-        '上抜け': 'break above',
-        '支持線': 'support line',
-        '抵抗線': 'resistance line',
-        '弱気転換': 'bearish reversal',
-        '急上昇': 'sharp rise',
-        '萌芽': 'emergence',
-        
-        // 一般的な助詞・語尾（空文字列に変換）
-        'について': '',
-        'による': '',
-        'によって': '',
-        'である': '',
-        'です': '',
-        'ます': '',
-        'した': '',
-        'する': '',
-        'しています': '',
-        'としている': '',
-        'と': ' and ',
-        'が': ' ',
-        'は': ' ',
-        'を': ' ',
-        'に': ' ',
-        'の': ' ',
-        'で': ' '
-    };
-
-    // 日本語テキストを英語に自動翻訳する関数
-    function autoTranslateText(japaneseText) {
-        if (!japaneseText) return '';
-        
-        let englishText = japaneseText;
-        
-        // 長いフレーズから短いものの順で置換（より正確な翻訳のため）
-        const sortedEntries = Object.entries(translationDict).sort((a, b) => b[0].length - a[0].length);
-        
-        sortedEntries.forEach(([japanese, english]) => {
-            if (english) { // 空文字列でない場合のみ置換
-                const regex = new RegExp(japanese.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-                englishText = englishText.replace(regex, english);
-            }
-        });
-        
-        // 特定の日本語パターンの変換
-        englishText = englishText
-            // 日付フォーマット
-            .replace(/(\d+)年(\d+)月(\d+)日/g, (match, year, month, day) => {
-                const months = ['January', 'February', 'March', 'April', 'May', 'June',
-                               'July', 'August', 'September', 'October', 'November', 'December'];
-                return `${months[parseInt(month)-1]} ${parseInt(day)}, ${year}`;
-            })
-            .replace(/(\d+)月(\d+)日/g, (match, month, day) => {
-                const months = ['January', 'February', 'March', 'April', 'May', 'June',
-                               'July', 'August', 'September', 'October', 'November', 'December'];
-                return `${months[parseInt(month)-1]} ${parseInt(day)}`;
-            })
-            // 数値と単位
-            .replace(/(\d+)日移動平均/g, '$1-day moving average')
-            .replace(/(\d+)日/g, '$1-day')
-            .replace(/移動平均/g, 'moving average')
-            // 句読点
-            .replace(/。/g, '. ')
-            .replace(/、/g, ', ')
-            .replace(/：/g, ': ')
-            .replace(/；/g, '; ')
-            .replace(/（/g, ' (')
-            .replace(/）/g, ') ')
-            .replace(/「/g, '"')
-            .replace(/」/g, '"')
-            // 不要な日本語助詞の削除
-            .replace(/\s+(に|の|を|が|は|で|と)\s+/g, ' ')
-            // 余分な空白を削除
-            .replace(/\s+/g, ' ')
-            // 英語の文法調整
-            .replace(/\s+and\s+and\s+/g, ' and ')
-            .replace(/\s+of\s+of\s+/g, ' of ')
-            // 文の始まりを大文字に
-            .replace(/^\s*([a-z])/g, (match, p1) => match.replace(p1, p1.toUpperCase()))
-            .replace(/\.\s+([a-z])/g, (match, p1) => match.replace(p1, p1.toUpperCase()))
-            .replace(/:\s+([a-z])/g, (match, p1) => match.replace(p1, p1.toUpperCase()));
-            
-        // 最終的なクリーンアップ
-        englishText = englishText
-            .replace(/\s+([.,:;!?])/g, '$1') // 句読点前の空白除去
-            .replace(/\(\s+/g, '(') // 括弧内の余分な空白
-            .replace(/\s+\)/g, ')') // 括弧内の余分な空白
-            .replace(/\s+$/g, '') // 文末の空白除去
-            .replace(/^\s+/g, '') // 文頭の空白除去
-            .trim();
-            
-        return englishText;
-    }
-
-    // オブジェクトを再帰的に翻訳する関数
-    function translateObjectRecursively(obj) {
-        if (typeof obj === 'string') {
-            return autoTranslateText(obj);
-        } else if (Array.isArray(obj)) {
-            return obj.map(item => translateObjectRecursively(item));
-        } else if (obj !== null && typeof obj === 'object') {
-            const translated = {};
-            for (const [key, value] of Object.entries(obj)) {
-                translated[key] = translateObjectRecursively(value);
-            }
-            return translated;
-        }
-        return obj;
-    }
-
-    // 日本語データから英語データを自動生成する関数
-    function generateEnglishData(japaneseData) {
-        return translateObjectRecursively(japaneseData);
-    }
-
-    // 多言語対応データから現在の言語のデータを取得
-    function getLocalizedData(rawData) {
-        console.log('Raw data received:', rawData);
-        
-        // 現在の言語設定を取得（lang.jsから）
-        const currentLang = window.currentLang || 'ja';
-        console.log('Current language:', currentLang);
-        
-        // 新しい多言語構造の場合
-        if (rawData.languages) {
-            console.log('Multilingual structure detected');
-            
-            // 英語データを常に日本語データから自動生成（既存の不完全な英語データを上書き）
-            if (currentLang === 'en' && rawData.languages.ja) {
-                console.log('Generating English data from Japanese...');
-                rawData.languages.en = generateEnglishData(rawData.languages.ja);
-                
-                // 基本情報も英語化
-                if (rawData.date) {
-                    rawData.languages.en.date = autoTranslateText(rawData.date);
-                }
-                if (rawData.session) {
-                    rawData.languages.en.session = autoTranslateText(rawData.session);
-                }
-                
-                console.log('Generated English data:', rawData.languages.en);
-            }
-            
-            const langData = rawData.languages[currentLang] || rawData.languages.ja;
-            console.log('Selected language data:', langData);
-            
-            const result = {
-                ...rawData,
-                ...langData
+            // --- WEEKLY DATA AND FUNCTIONS ---
+            const weeklyMarketData = {
+                sentiment: { fearGreed: 63.31, vix: 14.83, putCallRatio: 0.48, aaii: { bull: 29.9, bear: 46.2 }, investorsIntelligence: { bull: 60.8, bear: 21.7 } },
+                macro: { inflation: { cpi: 2.7, ppi: 3.3 }, employment: { consensus: 105, actual: 73 }, yieldCurve: [-0.15, -0.10, -0.05, 0.01, 0.03], weeklyForecast: [6456, 6435, 6470, 6485, 6500] },
+                sectors: {
+                    tech: { title: '🤖 テクノロジーセクター', summary: 'S&P 500の31.6%を占める市場の牽引役。強力なAIテーマが追い風ですが、一部のメガキャップ銘柄への過度な集中はリスクも内包しています。', stocks: [{ name: 'Microsoft (MSFT)', detail: 'AI戦略が奏功し、AzureとCopilotが力強く成長。' }, { name: 'Apple (AAPL)', detail: '「Apple Intelligence」発表でAI分野を追撃。' }] },
+                    health: { title: '💊 ヘルスケアセクター', summary: '年初来でパフォーマンスが最も悪く、バリュエーションは割安。しかし、政治・規制リスクが重しとなっており、「バリュー・トラップ」の可能性も。', stocks: [] },
+                    consumer: { title: '🛒 一般消費財セクター', summary: '景気動向に敏感なセクター。「ひび割れが見え始めている」との指摘もあり、個人消費の健全性を示す先行指標として注目されます。', stocks: [] }
+                },
+                events: [
+                    { date: '8/19 (火)', event: '住宅着工件数 (7月)', impact: '中', impactColor: 'bg-amber-100 text-amber-800' },
+                    { date: '8/20 (水)', event: 'FOMC議事要旨 (7月)', impact: '強', impactColor: 'bg-rose-100 text-rose-800' },
+                    { date: '8/21 (木)', event: 'ジャクソンホール会議開始', impact: '強', impactColor: 'bg-rose-100 text-rose-800' },
+                    { date: '8/21 (木)', event: '週間新規失業保険申請件数', impact: '中', impactColor: 'bg-amber-100 text-amber-800' },
+                    { date: '8/21 (木)', event: 'S&P Global 米国製造業・サービス業PMI (8月速報)', impact: '強', impactColor: 'bg-rose-100 text-rose-800' },
+                ],
+                techLevels: [
+                    { index: 'S&P 500', support: '6,435', pivot: '6,456', resistance: '6,471' },
+                    { index: 'Nasdaq 100', support: '23,670', pivot: '23,730', resistance: '23,875' },
+                    { index: 'Dow Jones', support: '44,751', pivot: '44,850', resistance: '45,010' },
+                ]
             };
-            console.log('Final localized data:', result);
-            return result;
-        }
-        
-        // 従来の構造の場合はそのまま返す
-        console.log('Legacy structure detected, returning as-is');
-        return rawData;
-    }
+            
+            Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+            Chart.defaults.color = '#64748b';
 
-    // HTML要素にテキストやリストを流し込む関数
-    function populateHtmlElements(data) {
-        // ヘッダー
-        document.getElementById('session').textContent = data.session;
-        document.getElementById('date').innerHTML = `<i class="ri-calendar-2-line text-gray-500"></i> ${data.date}`;
-        
-        // サマリー
-        const summaryEval = document.getElementById('summary-evaluation');
-        
-        // 評価ラベルの多言語対応
-        const evaluationTranslations = {
-            '売り': currentLang === 'en' ? 'Sell' : '売り',
-            '買い': currentLang === 'en' ? 'Buy' : '買い',
-            '中立': currentLang === 'en' ? 'Neutral' : '中立',
-            'ホールド': currentLang === 'en' ? 'Hold' : 'ホールド'
-        };
-        
-        const translatedEvaluation = evaluationTranslations[data.summary.evaluation] || data.summary.evaluation;
-        summaryEval.textContent = translatedEvaluation;
-        
-        // 色の決定（日本語の元データに基づく）
-        const getEvaluationColor = (evaluation) => {
-            switch(evaluation) {
-                case '売り': return 'text-red-600';
-                case '買い': return 'text-blue-600';
-                case '中立':
-                case 'ホールド': return 'text-gray-600';
-                default: return 'text-gray-600';
-            }
-        };
-        
-        summaryEval.className = `text-7xl md:text-9xl font-bold ${getEvaluationColor(data.summary.evaluation)}`;
-        
-        document.getElementById('summary-score').innerHTML = `${data.summary.score}<span class="text-4xl text-gray-500">/10</span>`;
-        document.getElementById('summary-stars').innerHTML = Array.from({ length: 10 }, (_, i) => i < data.summary.score ? '<span>★</span>' : '<span class="text-gray-300">★</span>').join('');
-        document.getElementById('summary-headline').textContent = data.summary.headline;
-        document.getElementById('summary-text').textContent = data.summary.text;
-
-        // ダッシュボード
-        document.getElementById('breadth-summary').textContent = data.dashboard.breadth.summary;
-        document.getElementById('sentiment-summary').textContent = data.dashboard.sentimentVISummary;
-        document.getElementById('resistance-value').textContent = data.dashboard.priceLevels.resistance.value;
-        document.getElementById('resistance-desc').textContent = data.dashboard.priceLevels.resistance.description;
-        document.getElementById('support-value').textContent = data.dashboard.priceLevels.support.value;
-        document.getElementById('support-desc').textContent = data.dashboard.priceLevels.support.description;
-        
-        const pcRatio = data.dashboard.putCallRatio;
-        const dailyRatioLabel = currentLang === 'en' ? 'Daily Ratio' : '当日レシオ';
-        const movingAverageLabel = currentLang === 'en' ? '(21-day Moving Average)' : '(21日移動平均)';
-        
-        document.getElementById('put-call-ratio-container').innerHTML = `
-            <div class="flex items-end justify-center gap-4">
-                <p class="text-8xl font-bold text-gray-800">${pcRatio.dailyValue}</p>
-                <div class="text-left mb-2">
-                     <p class="text-xl font-semibold text-gray-500">${dailyRatioLabel}</p>
-                     <p class="text-xl font-bold text-gray-700">${pcRatio.movingAverage} <span class="text-base font-medium text-gray-500">${movingAverageLabel}</span></p>
-                </div>
-            </div>
-            <p class="mt-5 px-6 py-2 inline-block bg-red-100 text-red-800 rounded-full text-lg font-semibold">${pcRatio.status}</p>`;
-        document.getElementById('put-call-ratio-summary').textContent = pcRatio.summary;
-        
-        // 詳細分析タブ
-        document.getElementById('internals-headline').textContent = data.details.internals.headline;
-        document.getElementById('internals-text').textContent = data.details.internals.text;
-        document.getElementById('technicals-headline').textContent = data.details.technicals.headline;
-        document.getElementById('technicals-text').textContent = data.details.technicals.text;
-        
-        // ファンダメンタルズ & 心理
-        const fundamentals = data.details.fundamentals;
-        document.getElementById('fundamentals-headline').textContent = fundamentals.headline;
-        document.getElementById('fundamentals-text').textContent = fundamentals.text;
-        document.getElementById('fundamentals-list').innerHTML = fundamentals.points.map(point => `<li class="flex items-start"><span class="text-blue-500 mr-4 mt-1"><i class="ri-checkbox-circle-fill ri-xl"></i></span><div>${point}</div></li>`).join('');
-
-        // VIX
-        const vix = fundamentals.vix;
-        const vixTitle = currentLang === 'en' ? 'VIX (Fear Index)' : 'VIX (恐怖指数)';
-        
-        document.getElementById('vix-container').innerHTML = `
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
-                <h4 class="text-2xl font-bold text-gray-800 mb-1">${vixTitle}</h4>
-                <div class="flex items-baseline gap-4 mb-2">
-                    <p class="text-5xl font-bold text-red-600">${vix.value}</p>
-                    <p class="text-xl font-semibold text-red-600">${vix.change}</p>
-                </div>
-                <p class="mt-2 text-gray-600 text-lg leading-relaxed">${vix.summary}</p>
-            </div>`;
-
-        // AAII Sentiment Survey
-        const aaii = fundamentals.aaiiSurvey;
-        const aaiiTitle = currentLang === 'en' ? 'AAII Individual Investor Sentiment' : 'AAII 個人投資家センチメント';
-        const bullishLabel = currentLang === 'en' ? 'Bullish' : '強気';
-        const neutralLabel = currentLang === 'en' ? 'Neutral' : '中立';
-        const bearishLabel = currentLang === 'en' ? 'Bearish' : '弱気';
-        
-        document.getElementById('aaii-container').innerHTML = `
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
-                <h4 class="text-2xl font-bold text-gray-800 mb-1">${aaiiTitle}</h4>
-                <p class="text-gray-500 mb-4">${aaii.date}</p>
-                <div class="space-y-3">
-                    <div class="flex items-center">
-                        <span class="w-24 font-semibold text-bullish">${bullishLabel}</span>
-                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bullish h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.bullish}%">${aaii.bullish}%</div></div>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="w-24 font-semibold text-neutral">${neutralLabel}</span>
-                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-neutral h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.neutral}%">${aaii.neutral}%</div></div>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="w-24 font-semibold text-bearish">${bearishLabel}</span>
-                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bearish h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.bearish}%">${aaii.bearish}%</div></div>
-                    </div>
-                </div>
-                <p class="mt-4 text-gray-600 text-lg leading-relaxed">${aaii.summary}</p>
-            </div>
-        `;
-        
-        // Investors Intelligence
-        const ii = fundamentals.investorsIntelligence;
-        const iiTitle = currentLang === 'en' ? 'Investors Intelligence Bull/Bear Index' : 'Investors Intelligence ブルベア指数';
-        const bullsLabel = currentLang === 'en' ? 'Bulls' : '強気 (Bulls)';
-        const bearsLabel = currentLang === 'en' ? 'Bears' : '弱気 (Bears)';
-        
-        document.getElementById('ii-container').innerHTML = `
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
-                <h4 class="text-2xl font-bold text-gray-800 mb-1">${iiTitle}</h4>
-                 <p class="text-gray-500 mb-4">${ii.date}</p>
-                <div class="space-y-3">
-                    <div class="flex items-center">
-                        <span class="w-28 font-semibold text-bullish">${bullsLabel}</span>
-                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bullish h-6 rounded-full text-center text-white font-bold" style="width: ${ii.bullish}%">${ii.bullish}%</div></div>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="w-28 font-semibold text-bearish">${bearsLabel}</span>
-                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bearish h-6 rounded-full text-center text-white font-bold" style="width: ${ii.bearish}%">${ii.bearish}%</div></div>
-                    </div>
-                </div>
-                 <p class="mt-4 text-gray-600 text-lg leading-relaxed">${ii.summary}</p>
-            </div>`;
-
-        // 投資戦略
-        document.getElementById('strategy-headline').textContent = data.details.strategy.headline;
-        document.getElementById('strategy-basic').innerHTML = data.details.strategy.basic;
-        document.getElementById('strategy-risk').innerHTML = data.details.strategy.risk;
-
-        // サイドバー
-        document.getElementById('market-overview-container').innerHTML = data.marketOverview.map(market => `
-            <div class="flex justify-between items-baseline">
-                <div><p class="font-semibold text-xl text-gray-800">${market.name}</p><p class="text-base ${market.isDown ? 'text-red-600' : 'text-green-600'}">${market.change}</p></div>
-                <p class="text-3xl font-bold text-gray-900">${market.value}</p>
-            </div>`).join('');
-
-        document.getElementById('hot-stocks-container').innerHTML = data.hotStocks.map(stock => `
-            <div>
-                <div class="flex justify-between items-center mb-1"><p class="text-lg font-bold text-gray-800">${stock.name}</p><p class="text-lg font-semibold ${stock.isDown ? 'text-red-600' : 'text-green-600'}">${stock.price}</p></div>
-                <p class="text-base text-gray-600">${stock.description}</p>
-            </div>`).join('');
-    }
-
-    // グローバル変数でチャートインスタンスを管理
-    let chartInstances = {
-        breadthChart: null,
-        sentimentGauge: null,
-        contributionChart: null,
-        technicalChart: null
-    };
-
-    // 既存のチャートを破棄する関数
-    function destroyExistingCharts() {
-        // ECharts インスタンスの破棄
-        if (chartInstances.breadthChart) {
-            chartInstances.breadthChart.dispose();
-            chartInstances.breadthChart = null;
-        }
-        if (chartInstances.sentimentGauge) {
-            chartInstances.sentimentGauge.dispose();
-            chartInstances.sentimentGauge = null;
-        }
-        
-        // Chart.js インスタンスの破棄
-        if (chartInstances.contributionChart) {
-            chartInstances.contributionChart.destroy();
-            chartInstances.contributionChart = null;
-        }
-        if (chartInstances.technicalChart) {
-            chartInstances.technicalChart.destroy();
-            chartInstances.technicalChart = null;
-        }
-    }
-
-    // 全てのチャートを初期化・描画する関数
-    function initializeAllCharts(data, currentLang) {
-        const FONT_SIZE_TITLE = 20, FONT_SIZE_LEGEND = 16, FONT_SIZE_AXIS = 14;
-
-        // 既存のチャートを破棄
-        destroyExistingCharts();
-
-        // 1. 市場の健全性 (ドーナツグラフ)
-        chartInstances.breadthChart = echarts.init(document.getElementById('breadthChart'));
-        const chartLabels = {
-            health: currentLang === 'en' ? 'Market Health' : '市場の健全性',
-            decliners: currentLang === 'en' ? 'Decliners' : '値下がり',
-            advancers: currentLang === 'en' ? 'Advancers' : '値上がり'
-        };
-        chartInstances.breadthChart.setOption({
-            tooltip: { trigger: 'item' },
-            legend: { bottom: '5%', left: 'center', textStyle: { fontSize: FONT_SIZE_LEGEND } },
-            series: [{
-                name: chartLabels.health, type: 'pie', radius: ['50%', '70%'], avoidLabelOverlap: false,
-                label: { show: false, position: 'center' },
-                emphasis: { label: { show: true, fontSize: '30', fontWeight: 'bold' } },
-                labelLine: { show: false },
-                data: [
-                    { value: data.dashboard.breadth.decliners, name: chartLabels.decliners, itemStyle: { color: '#ef4444' } },
-                    { value: data.dashboard.breadth.advancers, name: chartLabels.advancers, itemStyle: { color: '#3b82f6' } },
-                ]
-            }]
-        });
-
-        // 2. 市場心理 (ゲージ) - CNN Fear & Greed Index
-        chartInstances.sentimentGauge = echarts.init(document.getElementById('sentimentGauge'));
-        
-        // センチメントゲージの多言語ラベル定義
-        const sentimentLabels = {
-            title: currentLang === 'en' ? 'Market Sentiment' : '市場心理',
-            extreme_fear: currentLang === 'en' ? 'Extreme Fear' : '極度の恐怖',
-            fear: currentLang === 'en' ? 'Fear' : '恐怖',
-            neutral: currentLang === 'en' ? 'Neutral' : '中立',
-            greed: currentLang === 'en' ? 'Greed' : '強欲',
-            extreme_greed: currentLang === 'en' ? 'Extreme Greed' : '極度の強欲'
-        };
-        
-        // センチメント値に応じたラベル取得関数
-        const getSentimentLabel = (value) => {
-            if (value <= 25) return sentimentLabels.extreme_fear;
-            if (value <= 45) return sentimentLabels.fear;
-            if (value <= 55) return sentimentLabels.neutral;
-            if (value <= 75) return sentimentLabels.greed;
-            return sentimentLabels.extreme_greed;
-        };
-        
-        chartInstances.sentimentGauge.setOption({
-            series: [{
-                type: 'gauge',
-                center: ['50%', '60%'],
-                startAngle: 180,
-                endAngle: 0,
-                min: 0,
-                max: 100,
-                splitNumber: 10,
-                itemStyle: {
-                    color: {
-                        type: 'linear',
-                        x: 0, y: 0, x2: 1, y2: 0,
-                        colorStops: [
-                            { offset: 0, color: '#ef4444' },
-                            { offset: 0.5, color: '#f59e0b' },
-                            { offset: 1, color: '#10b981' }
-                        ]
-                    }
-                },
-                progress: { show: true, width: 18 },
-                pointer: { show: true, length: '60%', width: 6 },
-                axisLine: { lineStyle: { width: 18 } },
-                axisTick: { distance: -25, length: 7, lineStyle: { width: 1, color: '#999' } },
-                splitLine: { distance: -30, length: 12, lineStyle: { width: 2, color: '#999' } },
-                axisLabel: { 
-                    distance: -10, 
-                    color: '#999', 
-                    fontSize: 16,
-                    formatter: function(value) {
-                        // 特定の値でのみラベル表示（多言語対応）
-                        if (value === 0) return currentLang === 'en' ? 'Fear  ' : '恐怖  '; // 右に移動（スペース追加）
-                        if (value === 50) return currentLang === 'en' ? 'Neutral' : '中立';
-                        if (value === 100) return currentLang === 'en' ? '  Greed' : '  強欲'; // 左に移動（スペース追加）
-                        return '';
-                    }
-                },
-                detail: { 
-                    valueAnimation: true, 
-                    fontSize: 40, 
-                    fontWeight: 'bold', 
-                    offsetCenter: [0, '40%'],
-                    formatter: '{value}'
-                },
-                data: [{ 
-                    value: data.dashboard.sentimentVI,
-                    name: getSentimentLabel(data.dashboard.sentimentVI),
-                    title: {
-                        show: true,
-                        offsetCenter: [0, '70%'],
-                        fontSize: 18,
-                        fontWeight: 'bold',
-                        color: '#374151'
-                    }
-                }]
-            }]
-        });
-
-        // 3. 寄与度チャート (横棒グラフ)
-        const contributionLabel = currentLang === 'en' ? 'S&P 500 Impact' : 'S&P 500への影響';
-        const contributionChartLabels = {
-            title: currentLang === 'en' ? 'Market Sentiment Analysis' : 'セクター別センチメント分析',
-            xAxisLabel: currentLang === 'en' ? 'Bullish Sentiment (%)' : '強気センチメント (%)',
-            tooltipSuffix: currentLang === 'en' ? '% bullish' : '% 強気'
-        };
-        
-        chartInstances.contributionChart = new Chart(document.getElementById('contributionChart'), {
-            type: 'bar',
-            data: {
-                labels: data.details.internals.chartData.labels,
-                datasets: [{
-                    label: contributionLabel,
-                    data: data.details.internals.chartData.values,
-                    backgroundColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 0.7)' : 'rgba(59, 130, 246, 0.7)',
-                    borderColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(59, 130, 246, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                indexAxis: 'y', 
-                responsive: true, 
-                maintainAspectRatio: false,
-                scales: { 
-                    x: { 
-                        title: {
-                            display: true,
-                            text: contributionChartLabels.xAxisLabel,
-                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
-                            color: '#374151'
-                        },
-                        ticks: { 
-                            font: { size: FONT_SIZE_AXIS }, 
-                            callback: (v) => v + '%' 
-                        }
-                    }, 
-                    y: { 
-                        ticks: { 
-                            font: { size: FONT_SIZE_AXIS }
-                        }
-                    }
-                },
-                plugins: { 
-                    title: {
-                        display: true,
-                        text: contributionChartLabels.title,
-                        font: { size: FONT_SIZE_TITLE, weight: 'bold' },
-                        color: '#1F2937',
-                        padding: { bottom: 20 }
-                    },
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.parsed.x + contributionChartLabels.tooltipSuffix;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // 4. テクニカルチャート (折れ線) with アドバンス・デクライン・ライン
-        const ma50Label = currentLang === 'en' ? '50-day Moving Average' : '50日移動平均線';
-        const adlLabel = currentLang === 'en' ? 'Advance-Decline Line (ADL)' : 'アドバンス・デクライン・ライン (ADL)';
-        const technicalChartLabels = {
-            title: currentLang === 'en' ? 'Technical Analysis: Price & Market Breadth' : 'テクニカル分析：価格と市場の幅',
-            priceAxisLabel: currentLang === 'en' ? 'S&P 500 Price' : 'S&P 500価格',
-            adlAxisLabel: currentLang === 'en' ? 'ADL Index' : 'ADL指数',
-            dateLabel: currentLang === 'en' ? 'Date' : '日付'
-        };
-        
-        chartInstances.technicalChart = new Chart(document.getElementById('technicalChart'), {
-            type: 'line',
-            data: {
-                labels: data.details.technicals.chartData.labels,
-                datasets: [
-                    { 
-                        label: 'S&P 500', 
-                        data: data.details.technicals.chartData.sp500, 
-                        borderColor: '#1F2937', 
-                        backgroundColor: 'rgba(31, 41, 55, 0.1)', 
-                        fill: true, 
-                        tension: 0.2, 
-                        borderWidth: 2.5,
-                        yAxisID: 'y' // 主Y軸（価格）
-                    },
-                    { 
-                        label: ma50Label, 
-                        data: data.details.technicals.chartData.ma50, 
-                        borderColor: '#f59e0b', 
-                        borderDash: [5, 5], 
-                        fill: false, 
-                        pointRadius: 0, 
-                        borderWidth: 2,
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: adlLabel,
-                        data: data.details.technicals.chartData.adl,
-                        borderColor: '#8b5cf6', // 紫色
-                        fill: false,
-                        pointRadius: 2,
-                        borderWidth: 2,
-                        yAxisID: 'y1' // 第2Y軸（ADL）
-                    }
-                ]
-            },
-            options: {
-                responsive: true, 
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                scales: { 
-                    x: { 
-                        title: {
-                            display: true,
-                            text: technicalChartLabels.dateLabel,
-                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
-                            color: '#374151'
-                        },
-                        ticks: { font: { size: FONT_SIZE_AXIS }}
-                    },
-                    y: { // 主Y軸 (左) - 価格用
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        title: {
-                            display: true,
-                            text: technicalChartLabels.priceAxisLabel,
-                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
-                            color: '#374151'
-                        },
-                        ticks: { 
-                            font: { size: FONT_SIZE_AXIS },
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    },
-                    y1: { // 第2Y軸 (右) - ADL用
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        title: {
-                            display: true,
-                            text: technicalChartLabels.adlAxisLabel,
-                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
-                            color: '#8b5cf6'
-                        },
-                        ticks: { 
-                            font: { size: FONT_SIZE_AXIS },
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        },
-                        grid: { // 両方の軸のグリッド線でチャートが乱雑になるのを防ぐ
-                            drawOnChartArea: false, 
-                        },
-                    } 
-                },
-                plugins: { 
-                    title: {
-                        display: true,
-                        text: technicalChartLabels.title,
-                        font: { size: FONT_SIZE_TITLE, weight: 'bold' },
-                        color: '#1F2937',
-                        padding: { bottom: 20 }
-                    },
-                    legend: { 
-                        position: 'top', 
-                        labels: { font: {size: FONT_SIZE_LEGEND}, padding: 15 }
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                const value = context.parsed.y;
-                                if (context.dataset.yAxisID === 'y1') {
-                                    // ADL values
-                                    label += value.toLocaleString();
-                                } else {
-                                    // Price values
-                                    label += value.toLocaleString();
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        
-        window.addEventListener('resize', () => {
-            if (chartInstances.breadthChart) {
-                chartInstances.breadthChart.resize();
-            }
-            if (chartInstances.sentimentGauge) {
-                chartInstances.sentimentGauge.resize();
-            }
-        });
-    }
-
-    // タブ機能を初期化する関数
-    function initializeTabs() {
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabPanels = document.querySelectorAll('.tab-panel');
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                const tabId = button.dataset.tab;
-                tabPanels.forEach(panel => {
-                    panel.id === tabId ? panel.classList.add('active') : panel.classList.remove('active');
-                });
-            });
-        });
-    }
-
-    // loadReportData関数をグローバルに公開（lang.jsから呼び出すため）
-    window.loadReportData = loadReportData;
-
-    // Initialize language system
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize current language from localStorage or default to 'ja'
-        window.currentLang = localStorage.getItem('language') || 'ja';
-        
-        // Initialize lang.js language system
-        if (window.initLanguage) {
-            initLanguage();
-        }
-        
-        // Initialize mobile menu
-        initializeMobileMenu();
-        
-        // Load initial data
-        loadReportData();
-    });
-
-    // Mobile menu functionality
-    function initializeMobileMenu() {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const menuIcon = mobileMenuButton.querySelector('i');
-        
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                const isHidden = mobileMenu.classList.contains('hidden');
+            const initializeWeeklyView = () => {
+                const updateFearGreedGauge = () => {
+                    const value = weeklyMarketData.sentiment.fearGreed;
+                    const needle = document.getElementById('fearGreedNeedle');
+                    const valueEl = document.getElementById('fearGreedValue');
+                    if (!needle || !valueEl) return;
+                    const rotation = (value / 100) * 180 - 90;
+                    valueEl.textContent = value.toFixed(0);
+                    setTimeout(() => { needle.style.transform = `rotate(${rotation}deg)`; }, 100);
+                };
                 
-                if (isHidden) {
-                    // メニューを開く
-                    mobileMenu.classList.remove('hidden');
-                    menuIcon.className = 'ri-close-line ri-lg';
-                } else {
-                    // メニューを閉じる
-                    mobileMenu.classList.add('hidden');
-                    menuIcon.className = 'ri-menu-line ri-lg';
-                }
-            });
-            
-            // メニューリンクをクリックしたときにメニューを閉じる
-            const menuLinks = mobileMenu.querySelectorAll('a');
-            menuLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileMenu.classList.add('hidden');
-                    menuIcon.className = 'ri-menu-line ri-lg';
+                const createSentimentDivergenceChart = () => {
+                    const ctx = document.getElementById('sentimentDivergenceChart')?.getContext('2d');
+                    if (!ctx) return;
+                    new Chart(ctx, { type: 'bar', data: { labels: ['強気 (Bullish)', '弱気 (Bearish)'], datasets: [{ label: '個人投資家 (AAII)', data: [weeklyMarketData.sentiment.aaii.bull, weeklyMarketData.sentiment.aaii.bear], backgroundColor: 'rgba(79, 70, 229, 0.7)', borderColor: 'rgba(79, 70, 229, 1)', borderWidth: 1, borderRadius: 4, }, { label: 'プロの投資アドバイザー (II)', data: [weeklyMarketData.sentiment.investorsIntelligence.bull, weeklyMarketData.sentiment.investorsIntelligence.bear], backgroundColor: 'rgba(225, 29, 72, 0.7)', borderColor: 'rgba(225, 29, 72, 1)', borderWidth: 1, borderRadius: 4, }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: { color: '#e5e7eb' }, beginAtZero: true, title: { display: true, text: '割合 (%)' } }, x: { grid: { display: false } } }, plugins: { tooltip: { callbacks: { label: (context) => `${context.dataset.label}: ${context.raw}%` } } } } });
+                };
+
+                const createInflationChart = () => {
+                    const ctx = document.getElementById('inflationChart')?.getContext('2d');
+                    if (!ctx) return;
+                    new Chart(ctx, { type: 'bar', data: { labels: ['消費者物価 (CPI)', '生産者物価 (PPI)'], datasets: [{ label: '前年同月比 (%)', data: [weeklyMarketData.macro.inflation.cpi, weeklyMarketData.macro.inflation.ppi], backgroundColor: ['rgba(79, 70, 229, 0.7)', 'rgba(225, 29, 72, 0.7)'], borderWidth: 0, barPercentage: 0.5, }] }, options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }, plugins: { legend: { display: false } } } });
+                };
+
+                const createEmploymentChart = () => {
+                    const ctx = document.getElementById('employmentChart')?.getContext('2d');
+                    if (!ctx) return;
+                    new Chart(ctx, { type: 'bar', data: { labels: ['非農業部門雇用者数 (7月)'], datasets: [{ label: '市場コンセンサス', data: [weeklyMarketData.macro.employment.consensus], backgroundColor: 'rgba(107, 114, 128, 0.5)', borderRadius: 4 }, { label: '実績', data: [weeklyMarketData.macro.employment.actual], backgroundColor: 'rgba(79, 70, 229, 0.7)', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: '千人' } }, x: { grid: { display: false } } }, } });
+                };
+
+                const createYieldCurveChart = () => {
+                    const ctx = document.getElementById('yieldCurveChart')?.getContext('2d');
+                    if (!ctx) return;
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                    gradient.addColorStop(0, 'rgba(225, 29, 72, 0.3)');
+                    gradient.addColorStop(1, 'rgba(225, 29, 72, 0)');
+                    new Chart(ctx, { type: 'line', data: { labels: ['4月', '5月', '6月', '7月', '8月'], datasets: [{ label: '10年債 - 3ヶ月債 利回りスプレッド (%)', data: weeklyMarketData.macro.yieldCurve, borderColor: 'rgba(225, 29, 72, 1)', backgroundColor: gradient, fill: true, tension: 0.4, pointBackgroundColor: 'rgba(225, 29, 72, 1)', pointRadius: 4, }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { title: { display: true, text: '利回り差 (%)' } } } } });
+                };
+
+                const createWeeklyForecastChart = () => {
+                    const ctx = document.getElementById('weeklyForecastChart')?.getContext('2d');
+                    if (!ctx) return;
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+                    gradient.addColorStop(0, 'rgba(79, 70, 229, 0.3)');
+                    gradient.addColorStop(1, 'rgba(79, 70, 229, 0)');
+                    new Chart(ctx, { type: 'line', data: { labels: ['月', '火', '水', '木', '金'], datasets: [{ label: 'S&P 500 予測', data: weeklyMarketData.macro.weeklyForecast, borderColor: 'rgba(79, 70, 229, 1)', backgroundColor: gradient, fill: true, tension: 0.4, pointRadius: 0, borderWidth: 3, }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { enabled: true } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false }, ticks: { display: false } } } } });
+                };
+
+                const setupSectorTabs = () => {
+                    const tabs = document.querySelectorAll('#sector-tabs-container .tab-button');
+                    const contentEl = document.getElementById('sector-content');
+                    const indicator = document.getElementById('sector-indicator');
+                    if (!contentEl || !indicator || tabs.length === 0) return;
+                    const moveIndicator = (element) => { indicator.style.width = `${element.offsetWidth}px`; indicator.style.left = `${element.offsetLeft}px`; };
+                    tabs.forEach(tab => {
+                        tab.addEventListener('click', () => {
+                            tabs.forEach(t => t.classList.remove('active-tab'));
+                            tab.classList.add('active-tab');
+                            moveIndicator(tab);
+                            const sectorKey = tab.dataset.tab;
+                            const sector = weeklyMarketData.sectors[sectorKey];
+                            let stockHtml = '';
+                            if (sector.stocks.length > 0) {
+                                stockHtml = '<h4 class="font-semibold text-slate-700 mt-4 mb-2">注目銘柄</h4><ul class="space-y-3">';
+                                sector.stocks.forEach(stock => { stockHtml += `<li class="text-sm text-slate-600 pl-4 border-l-2 border-indigo-200"><span class="font-semibold text-slate-800">${stock.name}:</span> ${stock.detail}</li>`; });
+                                stockHtml += '</ul>';
+                            }
+                            contentEl.innerHTML = `<div class="card p-6"><h3 class="font-bold text-lg mb-2 text-slate-800">${sector.title}</h3><p class="text-slate-600">${sector.summary}</p>${stockHtml}</div>`;
+                        });
+                    });
+                    tabs[0].click();
+                };
+
+                const populateWeeklyTables = () => {
+                    const eventsBody = document.getElementById('events-table-body');
+                    if(eventsBody) {
+                        eventsBody.innerHTML = '';
+                        weeklyMarketData.events.forEach(item => { eventsBody.innerHTML += `<tr class="hover:bg-slate-50"><td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">${item.date}</td><td class="px-6 py-4">${item.event}</td><td class="px-6 py-4 text-center"><span class="px-2.5 py-1 text-xs font-semibold rounded-full ${item.impactColor}">${item.impact}</span></td></tr>`; });
+                    }
+                    const techLevelsBody = document.getElementById('tech-levels-table-body');
+                    if(techLevelsBody) {
+                        techLevelsBody.innerHTML = '';
+                        weeklyMarketData.techLevels.forEach(item => { techLevelsBody.innerHTML += `<tr class="hover:bg-slate-50"><td class="px-4 py-3 font-medium text-slate-900">${item.index}</td><td class="px-4 py-3 text-rose-600">${item.support}</td><td class="px-4 py-3 font-bold text-slate-800">${item.pivot}</td><td class="px-4 py-3 text-teal-600">${item.resistance}</td></tr>`; });
+                    }
+                };
+                
+                updateFearGreedGauge();
+                createSentimentDivergenceChart();
+                createInflationChart();
+                createEmploymentChart();
+                createYieldCurveChart();
+                createWeeklyForecastChart();
+                setupSectorTabs();
+                populateWeeklyTables();
+            }
+
+            // --- MONTHLY DATA AND FUNCTIONS ---
+            const monthlyReportData = {
+                overallScore: 6,
+                sentiment: { aaii: { bull: 29.9, bear: 46.2 }, investorsIntelligence: { bull: 60.8, bear: 21.7 } },
+                fedWatch: { cut: 80, noChange: 20 },
+                events: [
+                    { date: '8月20日', event: 'FOMC議事要旨', impact: 'strong', details: '利下げ開始時期を巡るFRB内部の議論の詳細が注目される。' },
+                    { date: '8月21-23日', event: 'ジャクソンホール経済シンポジウム', impact: 'strong', details: 'パウエルFRB議長の講演で金融政策の方向性に関するトーンの変化が最大の注目点。' },
+                    { date: '8月27日', event: 'NVIDIA (NVDA) 決算発表', impact: 'strong', details: '市場心理を左右する最重要決算。AI投資サイクル全体の先行指標となる。' },
+                    { date: '8月29日', event: '個人消費支出（PCE）物価指数', impact: 'strong', details: 'FRBが最も重視するインフレ指標。コアPCEの上振れは市場の売り圧力に。' },
+                    { date: '9月4日', event: 'Salesforce (CRM) 決算発表', impact: 'medium', details: '企業のソフトウェア支出動向と景況感を示す重要指標。' },
+                    { date: '9月5日', event: '雇用統計（8月）', impact: 'strong', details: '非農業部門雇用者数、失業率、平均時給が9月のFOMCの判断材料として極めて重要。' },
+                    { date: '9月12日', event: '消費者物価指数（CPI）（8月）', impact: 'strong', details: 'もう一つの重要なインフレ指標。特にコアサービス価格の動向に注目。' },
+                    { date: '9月16-17日', event: 'FOMC政策金利発表・記者会見', impact: 'strong', details: 'ドット・プロットとパウエル議長の会見が年後半の市場のトーンを決定づける。' },
+                ]
+            };
+
+            const initializeMonthlyView = () => {
+                const createMonthlyScoreChart = () => {
+                    const ctx = document.getElementById('monthlyOverallScoreChart')?.getContext('2d');
+                    if (!ctx) return;
+                    new Chart(ctx, { type: 'doughnut', data: { labels: ['スコア', ''], datasets: [{ data: [monthlyReportData.overallScore, 10 - monthlyReportData.overallScore], backgroundColor: ['#4f46e5', '#E5E7EB'], borderColor: ['#FFFFFF'], borderWidth: 2, circumference: 180, rotation: 270, }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { enabled: false }, }, cutout: '70%', }, plugins: [{ id: 'gaugeText', beforeDraw(chart) { const { width, height, ctx } = chart; ctx.restore(); const fontSize = (height / 100).toFixed(2); ctx.font = `bold ${fontSize}rem sans-serif`; ctx.textBaseline = 'middle'; const text = `${monthlyReportData.overallScore}/10`; const textX = Math.round((width - ctx.measureText(text).width) / 2); const textY = height / 1.5; ctx.fillStyle = '#4f46e5'; ctx.fillText(text, textX, textY); ctx.save(); } }] });
+                };
+
+                const createMonthlySentimentChart = () => {
+                    const ctx = document.getElementById('monthlySentimentComparisonChart')?.getContext('2d');
+                    if (!ctx) return;
+                    new Chart(ctx, { type: 'bar', data: { labels: ['個人投資家 (AAII)', '投資アドバイザー (II)'], datasets: [{ label: '強気 (Bull)', data: [monthlyReportData.sentiment.aaii.bull, monthlyReportData.sentiment.investorsIntelligence.bull], backgroundColor: '#10B981', borderRadius: 4, }, { label: '弱気 (Bear)', data: [monthlyReportData.sentiment.aaii.bear, monthlyReportData.sentiment.investorsIntelligence.bear], backgroundColor: '#EF4444', borderRadius: 4, }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 70, ticks: { callback: value => value + '%' } } }, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: context => `${context.dataset.label}: ${context.parsed.y}%` } } } } });
+                };
+                
+                const createMonthlyFedWatchChart = () => {
+                    const ctx = document.getElementById('monthlyFedWatchChart')?.getContext('2d');
+                    if (!ctx) return;
+                    new Chart(ctx, { type: 'doughnut', data: { labels: ['利下げ実施', '現状維持'], datasets: [{ data: [monthlyReportData.fedWatch.cut, monthlyReportData.fedWatch.noChange], backgroundColor: ['#3B82F6', '#D1D5DB'], borderColor: '#FFFFFF', borderWidth: 2, }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: context => `${context.label}: ${context.parsed}%` } } }, cutout: '60%' } });
+                };
+
+                const setupMonthlyCalendar = () => {
+                    const eventList = document.getElementById('monthly-event-list');
+                    const filterButtons = document.querySelectorAll('#monthly-horizon .event-filter-btn');
+                    if (!eventList || filterButtons.length === 0) return;
+
+                    const renderEvents = (filter = 'all') => {
+                        eventList.innerHTML = '';
+                        const filteredEvents = monthlyReportData.events.filter(event => {
+                            if (filter === 'all') return true;
+                            if (filter === 'medium' && event.impact === 'medium') return true;
+                            if (filter === 'strong' && event.impact === 'strong') return true;
+                            return false;
+                        });
+                        if (filteredEvents.length === 0) {
+                            eventList.innerHTML = `<p class="text-center text-gray-500">該当するイベントはありません。</p>`;
+                            return;
+                        }
+                        filteredEvents.forEach(event => {
+                            const impactClass = event.impact === 'strong' ? 'impact-strong' : 'impact-medium';
+                            const eventEl = document.createElement('div');
+                            eventEl.className = 'p-4 border border-slate-200 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center';
+                            eventEl.innerHTML = `<div class="flex-grow"><div class="flex items-center mb-2 sm:mb-0"><p class="font-bold text-indigo-700 w-24">${event.date}</p><p class="font-semibold text-gray-800">${event.event}</p></div><p class="text-sm text-gray-600 mt-1 sm:ml-24">${event.details}</p></div><div class="mt-2 sm:mt-0"><span class="impact-badge ${impactClass}">インパクト：${event.impact === 'strong' ? '強' : '中'}</span></div>`;
+                            eventList.appendChild(eventEl);
+                        });
+                    };
+
+                    filterButtons.forEach(button => {
+                        button.addEventListener('click', () => {
+                            filterButtons.forEach(btn => btn.classList.remove('active'));
+                            button.classList.add('active');
+                            renderEvents(button.dataset.filter);
+                        });
+                    });
+                    renderEvents();
+                };
+
+                const setupMonthlyInteractivity = () => {
+                    document.querySelectorAll('#monthly-playbook .accordion-item').forEach(item => {
+                        const header = item.querySelector('.accordion-header');
+                        const content = item.querySelector('.accordion-content');
+                        const icon = header.querySelector('span');
+                        header.addEventListener('click', () => {
+                            const isVisible = !content.classList.contains('hidden');
+                            content.classList.toggle('hidden');
+                            icon.textContent = isVisible ? '+' : '-';
+                            icon.classList.toggle('rotate-45', !isVisible);
+                        });
+                    });
+                    document.querySelectorAll('#monthly-spotlight .spotlight-card').forEach(card => {
+                        card.addEventListener('click', () => {
+                            const details = card.querySelector('.spotlight-details');
+                            details.classList.toggle('hidden');
+                        });
+                    });
+                };
+                
+                createMonthlyScoreChart();
+                createMonthlySentimentChart();
+                createMonthlyFedWatchChart();
+                setupMonthlyCalendar();
+                setupMonthlyInteractivity();
+            };
+
+            // --- MAIN INITIALIZATION ---
+            const setupMainTabs = () => {
+                const tabs = document.querySelectorAll('.main-tab-button');
+                const weeklyContent = document.getElementById('weekly-content');
+                const monthlyContent = document.getElementById('monthly-content');
+                let monthlyInitialized = false;
+
+                const setActiveTab = (activeTab) => {
+                    tabs.forEach(tab => {
+                        tab.classList.remove('bg-white', 'text-indigo-600', 'shadow');
+                        tab.classList.add('text-slate-600');
+                    });
+                    activeTab.classList.add('bg-white', 'text-indigo-600', 'shadow');
+                    activeTab.classList.remove('text-slate-600');
+
+                    if (activeTab.dataset.tab === 'weekly') {
+                        weeklyContent.classList.remove('hidden');
+                        monthlyContent.classList.add('hidden');
+                    } else {
+                        weeklyContent.classList.add('hidden');
+                        monthlyContent.classList.remove('hidden');
+                        if (!monthlyInitialized) {
+                            initializeMonthlyView();
+                            monthlyInitialized = true;
+                        }
+                    }
+                };
+
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => setActiveTab(tab));
                 });
-            });
+                
+                setActiveTab(tabs[0]);
+            };
             
-            // メニュー外をクリックしたときにメニューを閉じる
-            document.addEventListener('click', function(event) {
-                if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
-                    mobileMenu.classList.add('hidden');
-                    menuIcon.className = 'ri-menu-line ri-lg';
-                }
-            });
-        }
-    }
-</script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-90LPDJBXLY"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-90LPDJBXLY');
-</script>
+            initializeWeeklyView();
+            setupMainTabs();
+
+            // --- MOBILE MENU FUNCTIONALITY ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOHOU US Stock AI</title>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#DC2626',
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="translations/load.js"></script>
+    <script src="lang.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; color: #1F2937; background-color: #f4f5f7; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        .tab-button { padding: 0.8rem 1.2rem; font-size: 1.05rem; font-weight: 500; text-align: center; color: #6b7280; border-bottom: 3px solid transparent; transition: all 0.2s ease-in-out; cursor: pointer; }
+        @media (min-width: 768px) { .tab-button { font-size: 1.2rem; } }
+        .tab-button:not(.active):hover { background-color: #f9fafb; border-color: #d1d5db; color: #374151; transform: translateY(-2px); }
+        .tab-button.active { border-color: #4338ca; color: #4338ca; background-color: #eef2ff; font-weight: 700; }
+        .font-pacifico { font-family: 'Pacifico', cursive; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<header class="bg-white border-b border-gray-200">
+<div class="container mx-auto px-4 py-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-8">
+<a href="index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="index.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_today">本日の市況分析</a>
+                    <a href="archive.html" class="text-gray-600 hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
+                    <a href="ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                    <a href="indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                    <a href="terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                    <a href="about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                </nav>
+</div>
+<div class="flex items-center space-x-1 md:space-x-4">
+<button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50">
+<i class="ri-user-line"></i>
+<span data-lang="login">ログイン</span>
+</button>
+<button id="register-btn" class="hidden md:block bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">
+無料登録
+</button>
+<!-- 言語切り替えボタンをヘッダー内に配置 -->
+<div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+<button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
+<span class="text-gray-400 text-xs">|</span>
+<button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
+</div>
+<button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+<i class="ri-menu-line ri-lg"></i>
+</button>
+</div>
+</div>
+</div>
+</header>
+
+<!-- モバイルメニュー -->
+<div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+    <div class="px-4 py-2 space-y-1">
+        <a href="index.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50" data-lang="nav_today">本日の市況分析</a>
+        <a href="archive.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_archive">分析アーカイブ</a>
+        <a href="ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+        <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+        <a href="terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+        <a href="about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+        <div class="border-t border-gray-200 pt-2 mt-2">
+            <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+            <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+        </div>
+    </div>
+</div>
+
+<div class="w-full px-6 py-10 md:px-12 lg:px-20">
+    <header class="mb-14 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight" data-lang="main_title">S&P 500 インタラクティブ市場分析</h1>
+        <p class="mt-4 text-lg max-w-3xl mx-auto text-gray-600" data-lang="main_subtitle">短期トレーダーのためのデータ駆動型インサイト</p>
+         <div class="mt-8 inline-flex items-center gap-6 rounded-xl bg-white border border-gray-200 px-8 py-4 shadow-sm">
+            <p id="session" class="font-semibold text-indigo-700 text-2xl"></p>
+            <span class="text-gray-300 text-2xl">|</span>
+            <p id="date" class="text-2xl font-medium flex items-center gap-3 text-gray-700"></p>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-14">
+        <main class="lg:col-span-8">
+            <section id="summary" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-12 text-center ring-1 ring-gray-200">
+                <h2 class="text-3xl font-semibold text-gray-500 mb-5" data-lang="summary_title">総合評価</h2>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-6">
+                    <span id="summary-evaluation" class="text-7xl md:text-9xl font-bold"></span>
+                    <div class="text-left">
+                        <p id="summary-score" class="text-6xl md:text-7xl font-bold text-gray-800 text-center sm:text-left"></p>
+                        <div id="summary-stars" class="text-4xl text-yellow-400 mt-2 text-center sm:text-left"></div>
+                    </div>
+                </div>
+                <p id="summary-headline" class="text-2xl md:text-3xl font-semibold text-gray-800 mt-5"></p>
+                <p id="summary-text" class="max-w-4xl mx-auto text-gray-600 mt-4 leading-relaxed text-lg text-left"></p>
+            </section>
+
+            <section id="dashboard" class="mb-12">
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
+                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="market_health_title">市場の健全性 (前日終値)</h3>
+                        <div class="h-64" id="breadthChart"></div>
+                        <p id="breadth-summary" class="text-left text-lg text-gray-600 mt-5"></p>
+                    </div>
+                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col items-center justify-center">
+                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="market_sentiment_title">市場心理 (CNN Fear & Greed)</h3>
+                        <div class="h-64 w-full" id="sentimentGauge"></div>
+                        <p id="sentiment-summary" class="text-center text-lg text-gray-600 mt-5"></p>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200 flex flex-col justify-center">
+                        <h3 class="font-bold text-2xl mb-6 text-center" data-lang="price_levels_title">主要な価格帯</h3>
+                        <div class="space-y-6">
+                            <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
+                                <p class="text-lg font-semibold text-red-700" data-lang="resistance_level">上値抵抗線 (レジスタンス)</p>
+                                <p id="resistance-value" class="text-4xl font-bold text-red-900"></p>
+                                <p id="resistance-desc" class="text-base text-red-600"></p>
+                            </div>
+                            <div class="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg">
+                                <p class="text-lg font-semibold text-blue-700" data-lang="support_level">下値支持線 (サポート)</p>
+                                <p id="support-value" class="text-4xl font-bold text-blue-900"></p>
+                                <p id="support-desc" class="text-base text-blue-600"></p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="bg-white rounded-2xl shadow-lg p-8 ring-1 ring-gray-200">
+                        <h3 class="font-bold text-2xl mb-5 text-center" data-lang="put_call_ratio_title">エクイティ Put Call Ratio</h3>
+                        <div id="put-call-ratio-container" class="text-center py-12"></div>
+                         <p id="put-call-ratio-summary" class="text-left text-lg text-gray-600 mt-2"></p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="details" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 ring-1 ring-gray-200">
+                <div class="text-center mb-10">
+                    <h3 class="text-4xl font-bold text-gray-800" data-lang="detailed_analysis_title">詳細分析</h3>
+                    <p class="text-gray-500 mt-3 text-xl" data-lang="tab_instructions">下のタブをクリックして、分析内容を切り替えられます</p>
+                </div>
+                <div class="border-b border-gray-300">
+                    <nav class="flex flex-wrap -mb-px justify-center" id="tab-buttons">
+                        <button data-tab="internals" class="tab-button active" data-lang="tab_internals">市場の内部構造</button>
+                        <button data-tab="technicals" class="tab-button" data-lang="tab_technicals">テクニカル分析</button>
+                        <button data-tab="fundamentals" class="tab-button" data-lang="tab_fundamentals">ファンダメンタルズ & 心理</button>
+                        <button data-tab="strategy" class="tab-button" data-lang="tab_strategy">投資戦略</button>
+                    </nav>
+                </div>
+
+                <div id="tab-panels" class="mt-10">
+                    <div id="internals" class="tab-panel active space-y-6">
+                        <h3 id="internals-headline" class="text-3xl font-bold"></h3>
+                        <p id="internals-text" class="text-lg text-gray-700 leading-relaxed"></p>
+                        <div class="h-96"><canvas id="contributionChart"></canvas></div>
+                    </div>
+                    <div id="technicals" class="tab-panel space-y-6">
+                        <h3 id="technicals-headline" class="text-3xl font-bold"></h3>
+                        <p id="technicals-text" class="text-lg text-gray-700 leading-relaxed"></p>
+                        <div class="h-96"><canvas id="technicalChart"></canvas></div>
+                    </div>
+                    <div id="fundamentals" class="tab-panel space-y-6">
+                        <h3 id="fundamentals-headline" class="text-3xl font-bold"></h3>
+                        <p id="fundamentals-text" class="text-lg text-gray-700 leading-relaxed"></p>
+                        
+                        <div id="sentiment-indicators-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+                            <div id="aaii-container"></div>
+                            <div class="space-y-8">
+                                <div id="vix-container"></div>
+                                <div id="ii-container"></div>
+                            </div>
+                        </div>
+                        
+                        <ul id="fundamentals-list" class="space-y-6 text-lg text-gray-700 pt-4"></ul>
+                    </div>
+                     <div id="strategy" class="tab-panel space-y-6">
+                        <h3 id="strategy-headline" class="text-3xl font-bold"></h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
+                                <h4 class="font-bold text-2xl text-gray-800 mb-3" data-lang="basic_strategy">基本戦略</h4>
+                                <p id="strategy-basic" class="text-gray-600 leading-relaxed text-lg"></p>
+                            </div>
+                             <div class="bg-gray-50 rounded-lg p-7 border-l-4 border-gray-300">
+                                <h4 class="font-bold text-2xl text-gray-800 mb-3" data-lang="risk_management">リスク管理</h4>
+                                <p id="strategy-risk" class="text-gray-600 leading-relaxed text-lg"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <aside class="lg:col-span-4 space-y-10">
+            <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
+                <h3 class="text-2xl font-bold mb-5 border-b pb-4" data-lang="market_overview_title">市場概況</h3>
+                <div id="market-overview-container" class="space-y-5"></div>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-7 ring-1 ring-gray-200">
+                <h3 class="text-2xl font-bold mb-5 border-b pb-4" data-lang="hot_stocks_title">注目銘柄 (Top Movers)</h3>
+                <div id="hot-stocks-container" class="space-y-6"></div>
+            </div>
+        </aside>
+    </div>
+    
+    <footer class="text-center text-sm text-gray-500 mt-20 py-8">
+        <p data-lang="footer_disclaimer">この分析は提供された情報に基づく予測であり、投資成果を保証するものではありません。</p>
+        <p data-lang="footer_copyright_text">© 2025 株式会社BizRom東京. All rights reserved.</p>
+    </footer>
+</div>
+
+<script>
+    // データの読み込みとページへの反映を行うメイン関数
+    async function loadReportData() {
+        try {
+            // datafileパラメータ取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataFileName = urlParams.get('datafile');
+            // パラメータがあればarchive_dataから、なければlatest.json
+            const fileToFetch = dataFileName ? `archive_data/${dataFileName}` : 'live_data/latest.json';
+            
+            console.log('Fetching file:', fileToFetch);
+            
+            const response = await fetch(fileToFetch);
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTPエラー! ステータス: ${response.status}, ファイル: ${fileToFetch}`);
+            }
+            
+            const rawData = await response.json();
+            console.log('Raw JSON data loaded successfully');
+
+            // 多言語対応データの処理
+            const data = getLocalizedData(rawData);
+
+            // --- ページの各要素にデータをセット ---
+            populateHtmlElements(data);
+
+            // --- チャート描画 ---
+            initializeAllCharts(data, currentLang);
+
+            // --- タブ切り替え機能の初期化 ---
+            initializeTabs();
+
+        } catch (error) {
+            console.error('データの読み込みまたは処理中にエラーが発生しました:', error);
+            // より詳細なエラー情報を表示
+            const errorDetails = `
+                エラー: ${error.message}
+                ファイル: ${dataFileName || 'live_data/latest.json'}
+                スタック: ${error.stack}
+            `;
+            document.body.innerHTML = `<div class="text-center p-10">
+                <h1 class="text-2xl font-bold text-red-600 mb-4">データの読み込みに失敗しました</h1>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-left max-w-2xl mx-auto">
+                    <h2 class="font-bold mb-2">エラー詳細:</h2>
+                    <pre class="text-sm text-red-700 whitespace-pre-wrap">${error.message}</pre>
+                    <h3 class="font-bold mt-4 mb-2">対処方法:</h3>
+                    <ul class="text-sm text-red-600 list-disc list-inside">
+                        <li>latest.jsonファイルが存在することを確認してください</li>
+                        <li>JSONファイルの形式が正しいことを確認してください</li>
+                        <li>ブラウザのデベロッパーツールで詳細なエラーを確認してください</li>
+                    </ul>
+                </div>
+            </div>`;
+        }
+    }
+
+    // 日本語テキストから英語を自動生成する辞書
+    const translationDict = {
+        // 評価関連
+        '買い': 'Buy',
+        '売り': 'Sell',
+        'ホールド': 'Hold',
+        '中立': 'Neutral',
+        
+        // 市場状況
+        '史上最高値圏': 'near all-time highs',
+        '史上最高値': 'all-time high',
+        '市場': 'market',
+        '投資家': 'investors',
+        'プロ投資家': 'professional investors',
+        '個人投資家': 'individual investors',
+        '短期トレーダー': 'short-term traders',
+        'リスク管理': 'risk management',
+        '最高値圏': 'near all-time highs',
+        '記録更新の裏に潜む疲弊の兆候': 'signs of exhaustion lurking behind record-breaking performance',
+        '市場は自らの成功の重みに耐えられるか': 'can the market withstand the weight of its own success',
+        '記録更新': 'record-breaking',
+        
+        // 重要な文章レベルの翻訳
+        'S&P 500は史上最高値圏にありますが、内部指標は深刻な悪化を示しています。プロ投資家の熱狂と個人投資家の慎重さの乖離は逆張りの売りシグナルです。短期トレーダーはリスク管理を最優先し、高値追いを控えるべき局面です。': 'S&P 500 is near all-time highs, but internal indicators show serious deterioration. The divergence between professional investor euphoria and individual investor caution is a contrarian sell signal. Short-term traders should prioritize risk management and avoid chasing highs in this phase.',
+        
+        // 詳細なフレーズ翻訳
+        'S&P 500は史上最高値圏にありますが、内部指標は深刻な悪化を示しています': 'S&P 500 is near all-time highs, but internal indicators show serious deterioration',
+        'プロ投資家の熱狂と個人投資家の慎重さの乖離は逆張りの売りシグナルです': 'the divergence between professional investor euphoria and individual investor caution is a contrarian sell signal',
+        '短期トレーダーはリスク管理を最優先し、高値追いを控えるべき局面です': 'short-term traders should prioritize risk management and avoid chasing highs in this phase',
+        '値上がり銘柄数が値下がり銘柄数を上回っていますが': 'advancing stocks outnumber declining stocks, but',
+        '一部主要銘柄の急落はラリーの脆弱性を示唆しています': 'sharp declines in some major stocks suggest rally fragility',
+        'インデックスは「Greed（強欲）」の領域にあり': 'the index is in "Greed" territory',
+        '広範な楽観論と自己満足を反映しています': 'reflecting widespread optimism and complacency',
+        '歴史的には調整の前兆です': 'historically a precursor to correction',
+        '心理的な節目。利益確定売りの壁': 'psychological level. Profit-taking wall',
+        '短期的な心理的支持線。割り込むと弱気転換': 'short-term psychological support. Break below signals bearish reversal',
+        '警戒感の萌芽': 'emergence of caution',
+        '日次レシオの急上昇は、一部投資家が下落ヘッジを始めている兆候です': 'sharp rise in daily ratio signals some investors are starting downside hedging',
+        
+        // ヘッドライン
+        'プロの熱狂と個人の冷静：危険なセンチメントの乖離': 'Professional euphoria vs individual caution: dangerous sentiment divergence',
+        '上昇トレンドは継続、しかし過熱感とダイバージェンスが転換を示唆': 'uptrend continues, but overheated conditions and divergence suggest reversal',
+        '好決算と金利期待が支える楽観論、VIXの低さは油断の証': 'optimism supported by strong earnings and rate expectations, low VIX shows complacency',
+        '守りを固め、利益を確保し、次の機会を待つ': 'consolidate defense, secure profits, wait for next opportunity',
+        
+        // 長文テキスト
+        'プロ投資家は極端に楽観的（歴史的には天井のサイン）である一方、個人は懐疑的です': 'professional investors are extremely optimistic (historically a top signal) while individuals remain skeptical',
+        'この「スマートマネーの熱狂」と「ダムマネーの躊躇」の組み合わせは、ラリーの基盤が極めて脆弱であることを示しています': 'this combination of "smart money euphoria" and "dumb money hesitation" shows the rally\'s foundation is extremely fragile',
+        '指数が上昇する一方で市場の幅（A/Dライン）が追随していない「質の悪い」上昇であることです': 'it\'s a "poor quality" rise where the index rises while market breadth (A/D line) fails to follow',
+        '市場の楽観論は好調な企業決算とFRBの利下げ期待に支えられています': 'market optimism is supported by strong corporate earnings and Fed rate cut expectations',
+        'VIXの低水準は危険な自己満足を反映しており、来週のFOMCや主要決算といったイベントリスクに対し脆弱な状態です': 'low VIX levels reflect dangerous complacency, making markets vulnerable to event risks like next week\'s FOMC and major earnings',
+        
+        // VIX関連
+        'VIXは52週間の安値圏にあり、市場の極端な自己満足を示しています': 'VIX is near 52-week lows, showing extreme market complacency',
+        '予期せぬニュースがボラティリティの急上昇を引き起こす可能性があります': 'unexpected news could trigger a sharp volatility spike',
+        
+        // センチメント調査
+        '個人投資家はラリーに懐疑的でセンチメントはほぼ中立': 'individual investors are skeptical of the rally with sentiment nearly neutral',
+        '広範な支持を欠いていることを示す警告サインです': 'a warning sign showing lack of broad support',
+        'プロ投資家の極端な強気は強力な逆張り指標であり': 'extreme bullishness among professional investors is a powerful contrarian indicator',
+        '「スマートマネー」が熱狂状態にあることを示唆します': 'suggesting "smart money" is in a euphoric state',
+        
+        // ファンダメンタルズ
+        '好調な第2四半期決算が、市場ラリーのファンダメンタルズ面での支えとなっている': 'strong Q2 earnings provide fundamental support for the market rally',
+        'FRBによる利下げ期待が、流動性とリスク選好を後押ししている': 'Fed rate cut expectations are boosting liquidity and risk appetite',
+        '低いVIX指数とプロ投資家の極端な強気の組み合わせは、ネガティブなサプライズに非常に脆弱な環境を生み出している': 'the combination of low VIX and extreme professional bullishness creates an environment highly vulnerable to negative surprises',
+        
+        // 戦略
+        '既存ロングは部分的な利益確定を検討し、ストップロスを6,350直下に設定': 'consider partial profit-taking on existing longs, set stop-loss just below 6,350',
+        '新規ポジションは高値追いを避け、6,250〜6,300への調整を待つのが賢明です': 'for new positions, avoid chasing highs and wait for pullback to 6,250-6,300',
+        '最大のリスクはFOMOによる「メルトアップ」相場です': 'the biggest risk is a FOMO-driven "melt-up" market',
+        '弱気見方は、S&P 500が6,450を力強く上抜け、かつ市場の幅が改善した場合に無効となります': 'bearish view becomes invalid if S&P 500 breaks strongly above 6,450 with improving market breadth',
+        
+        // 株式関連
+        '主な値下がり銘柄': 'major declining stock',
+        '主な値上がり銘柄': 'major advancing stock',
+        '決算失望で-8.5%の急落。市場内部の亀裂を象徴': 'earnings disappointment leads to -8.5% plunge, symbolizing internal market cracks',
+        '-18.5%の暴落。特定のセクターの弱さを示す': '-18.5% crash shows specific sector weakness',
+        '好決算を発表し、市場のセンチメントを一部下支え': 'announced strong earnings, partially supporting market sentiment',
+        
+        // 市場データ
+        'S&P 500 (7/25終値)': 'S&P 500 (7/25 close)',
+        'S&P 500 先物': 'S&P 500 futures',
+        'VIX指数': 'VIX index',
+        '米国10年債利回り': 'US 10-year yield',
+        
+        // 日付・調査
+        '2025年7月28日': 'July 28, 2025',
+        '7月28日 市場分析': 'July 28 Market Analysis',
+        '2025年7月24日調査': 'July 24, 2025 survey',
+        '2025年7月23日調査': 'July 23, 2025 survey',
+        
+        // Put/Call Ratio関連
+        '当日レシオ': 'Daily Ratio',
+        '21日移動平均': '21-day Moving Average',
+        
+        // 感情・センチメント
+        '楽観的': 'optimistic',
+        '悲観的': 'pessimistic',
+        '慎重': 'cautious',
+        '慎重さ': 'caution',
+        '熱狂': 'euphoria',
+        '懐疑的': 'skeptical',
+        '警戒': 'caution',
+        '警戒感': 'sense of caution',
+        '自己満足': 'complacency',
+        '楽観論': 'optimism',
+        '疲弊': 'exhaustion',
+        '兆候': 'signs',
+        '乖離': 'divergence',
+        '躊躇': 'hesitation',
+        '冷静': 'calm',
+        '極端に': 'extremely',
+        
+        // テクニカル用語
+        '上昇トレンド': 'uptrend',
+        '継続': 'continues',
+        'しかし': 'but',
+        '過熱感': 'overheated conditions',
+        'ダイバージェンス': 'divergence',
+        '転換': 'reversal',
+        '示唆': 'suggest',
+        '買われすぎ': 'overbought',
+        '勢いの鈍化': 'momentum deceleration',
+        '深刻': 'serious',
+        '指数': 'index',
+        '上昇する': 'rises',
+        '一方で': 'while',
+        '市場の幅': 'market breadth',
+        '追随していない': 'fails to follow',
+        '質の悪い': 'poor quality',
+        
+        // 基本用語
+        '内部指標': 'internal indicators',
+        '深刻な悪化': 'serious deterioration',
+        '悪化': 'deterioration',
+        '示しています': 'show',
+        '示している': 'showing',
+        '逆張り': 'contrarian',
+        'シグナル': 'signal',
+        '売りシグナル': 'sell signal',
+        '高値追い': 'chasing highs',
+        '控える': 'avoid',
+        'べき': 'should',
+        '局面': 'phase',
+        '最優先': 'prioritize',
+        '最優先し': 'should prioritize',
+        'ありますが': ', but',
+        'にあります': '',
+        'にあり': '',
+        '値上がり銘柄': 'advancing stocks',
+        '値下がり銘柄': 'declining stocks',
+        '上回る': 'exceed',
+        '主要銘柄': 'major stocks',
+        '急落': 'sharp decline',
+        'ラリー': 'rally',
+        '脆弱性': 'fragility',
+        '強欲': 'greed',
+        '領域': 'territory',
+        '広範': 'widespread',
+        '反映': 'reflect',
+        '歴史的': 'historically',
+        '前兆': 'precursor',
+        '利益確定': 'profit-taking',
+        '下落ヘッジ': 'downside hedge',
+        '心理的': 'psychological',
+        '節目': 'level',
+        '壁': 'wall',
+        '割り込む': 'break below',
+        '上抜け': 'break above',
+        '支持線': 'support line',
+        '抵抗線': 'resistance line',
+        '弱気転換': 'bearish reversal',
+        '急上昇': 'sharp rise',
+        '萌芽': 'emergence',
+        
+        // 一般的な助詞・語尾（空文字列に変換）
+        'について': '',
+        'による': '',
+        'によって': '',
+        'である': '',
+        'です': '',
+        'ます': '',
+        'した': '',
+        'する': '',
+        'しています': '',
+        'としている': '',
+        'と': ' and ',
+        'が': ' ',
+        'は': ' ',
+        'を': ' ',
+        'に': ' ',
+        'の': ' ',
+        'で': ' '
+    };
+
+    // 日本語テキストを英語に自動翻訳する関数
+    function autoTranslateText(japaneseText) {
+        if (!japaneseText) return '';
+        
+        let englishText = japaneseText;
+        
+        // 長いフレーズから短いものの順で置換（より正確な翻訳のため）
+        const sortedEntries = Object.entries(translationDict).sort((a, b) => b[0].length - a[0].length);
+        
+        sortedEntries.forEach(([japanese, english]) => {
+            if (english) { // 空文字列でない場合のみ置換
+                const regex = new RegExp(japanese.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+                englishText = englishText.replace(regex, english);
+            }
+        });
+        
+        // 特定の日本語パターンの変換
+        englishText = englishText
+            // 日付フォーマット
+            .replace(/(\d+)年(\d+)月(\d+)日/g, (match, year, month, day) => {
+                const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+                return `${months[parseInt(month)-1]} ${parseInt(day)}, ${year}`;
+            })
+            .replace(/(\d+)月(\d+)日/g, (match, month, day) => {
+                const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+                return `${months[parseInt(month)-1]} ${parseInt(day)}`;
+            })
+            // 数値と単位
+            .replace(/(\d+)日移動平均/g, '$1-day moving average')
+            .replace(/(\d+)日/g, '$1-day')
+            .replace(/移動平均/g, 'moving average')
+            // 句読点
+            .replace(/。/g, '. ')
+            .replace(/、/g, ', ')
+            .replace(/：/g, ': ')
+            .replace(/；/g, '; ')
+            .replace(/（/g, ' (')
+            .replace(/）/g, ') ')
+            .replace(/「/g, '"')
+            .replace(/」/g, '"')
+            // 不要な日本語助詞の削除
+            .replace(/\s+(に|の|を|が|は|で|と)\s+/g, ' ')
+            // 余分な空白を削除
+            .replace(/\s+/g, ' ')
+            // 英語の文法調整
+            .replace(/\s+and\s+and\s+/g, ' and ')
+            .replace(/\s+of\s+of\s+/g, ' of ')
+            // 文の始まりを大文字に
+            .replace(/^\s*([a-z])/g, (match, p1) => match.replace(p1, p1.toUpperCase()))
+            .replace(/\.\s+([a-z])/g, (match, p1) => match.replace(p1, p1.toUpperCase()))
+            .replace(/:\s+([a-z])/g, (match, p1) => match.replace(p1, p1.toUpperCase()));
+            
+        // 最終的なクリーンアップ
+        englishText = englishText
+            .replace(/\s+([.,:;!?])/g, '$1') // 句読点前の空白除去
+            .replace(/\(\s+/g, '(') // 括弧内の余分な空白
+            .replace(/\s+\)/g, ')') // 括弧内の余分な空白
+            .replace(/\s+$/g, '') // 文末の空白除去
+            .replace(/^\s+/g, '') // 文頭の空白除去
+            .trim();
+            
+        return englishText;
+    }
+
+    // オブジェクトを再帰的に翻訳する関数
+    function translateObjectRecursively(obj) {
+        if (typeof obj === 'string') {
+            return autoTranslateText(obj);
+        } else if (Array.isArray(obj)) {
+            return obj.map(item => translateObjectRecursively(item));
+        } else if (obj !== null && typeof obj === 'object') {
+            const translated = {};
+            for (const [key, value] of Object.entries(obj)) {
+                translated[key] = translateObjectRecursively(value);
+            }
+            return translated;
+        }
+        return obj;
+    }
+
+    // 日本語データから英語データを自動生成する関数
+    function generateEnglishData(japaneseData) {
+        return translateObjectRecursively(japaneseData);
+    }
+
+    // 多言語対応データから現在の言語のデータを取得
+    function getLocalizedData(rawData) {
+        console.log('Raw data received:', rawData);
+        
+        // 現在の言語設定を取得（lang.jsから）
+        const currentLang = window.currentLang || 'ja';
+        console.log('Current language:', currentLang);
+        
+        // 新しい多言語構造の場合
+        if (rawData.languages) {
+            console.log('Multilingual structure detected');
+            
+            // 英語データを常に日本語データから自動生成（既存の不完全な英語データを上書き）
+            if (currentLang === 'en' && rawData.languages.ja) {
+                console.log('Generating English data from Japanese...');
+                rawData.languages.en = generateEnglishData(rawData.languages.ja);
+                
+                // 基本情報も英語化
+                if (rawData.date) {
+                    rawData.languages.en.date = autoTranslateText(rawData.date);
+                }
+                if (rawData.session) {
+                    rawData.languages.en.session = autoTranslateText(rawData.session);
+                }
+                
+                console.log('Generated English data:', rawData.languages.en);
+            }
+            
+            const langData = rawData.languages[currentLang] || rawData.languages.ja;
+            console.log('Selected language data:', langData);
+            
+            const result = {
+                ...rawData,
+                ...langData
+            };
+            console.log('Final localized data:', result);
+            return result;
+        }
+        
+        // 従来の構造の場合はそのまま返す
+        console.log('Legacy structure detected, returning as-is');
+        return rawData;
+    }
+
+    // HTML要素にテキストやリストを流し込む関数
+    function populateHtmlElements(data) {
+        // ヘッダー
+        document.getElementById('session').textContent = data.session;
+        document.getElementById('date').innerHTML = `<i class="ri-calendar-2-line text-gray-500"></i> ${data.date}`;
+        
+        // サマリー
+        const summaryEval = document.getElementById('summary-evaluation');
+        
+        // 評価ラベルの多言語対応
+        const evaluationTranslations = {
+            '売り': currentLang === 'en' ? 'Sell' : '売り',
+            '買い': currentLang === 'en' ? 'Buy' : '買い',
+            '中立': currentLang === 'en' ? 'Neutral' : '中立',
+            'ホールド': currentLang === 'en' ? 'Hold' : 'ホールド'
+        };
+        
+        const translatedEvaluation = evaluationTranslations[data.summary.evaluation] || data.summary.evaluation;
+        summaryEval.textContent = translatedEvaluation;
+        
+        // 色の決定（日本語の元データに基づく）
+        const getEvaluationColor = (evaluation) => {
+            switch(evaluation) {
+                case '売り': return 'text-red-600';
+                case '買い': return 'text-blue-600';
+                case '中立':
+                case 'ホールド': return 'text-gray-600';
+                default: return 'text-gray-600';
+            }
+        };
+        
+        summaryEval.className = `text-7xl md:text-9xl font-bold ${getEvaluationColor(data.summary.evaluation)}`;
+        
+        document.getElementById('summary-score').innerHTML = `${data.summary.score}<span class="text-4xl text-gray-500">/10</span>`;
+        document.getElementById('summary-stars').innerHTML = Array.from({ length: 10 }, (_, i) => i < data.summary.score ? '<span>★</span>' : '<span class="text-gray-300">★</span>').join('');
+        document.getElementById('summary-headline').textContent = data.summary.headline;
+        document.getElementById('summary-text').textContent = data.summary.text;
+
+        // ダッシュボード
+        document.getElementById('breadth-summary').textContent = data.dashboard.breadth.summary;
+        document.getElementById('sentiment-summary').textContent = data.dashboard.sentimentVISummary;
+        document.getElementById('resistance-value').textContent = data.dashboard.priceLevels.resistance.value;
+        document.getElementById('resistance-desc').textContent = data.dashboard.priceLevels.resistance.description;
+        document.getElementById('support-value').textContent = data.dashboard.priceLevels.support.value;
+        document.getElementById('support-desc').textContent = data.dashboard.priceLevels.support.description;
+        
+        const pcRatio = data.dashboard.putCallRatio;
+        const dailyRatioLabel = currentLang === 'en' ? 'Daily Ratio' : '当日レシオ';
+        const movingAverageLabel = currentLang === 'en' ? '(21-day Moving Average)' : '(21日移動平均)';
+        
+        document.getElementById('put-call-ratio-container').innerHTML = `
+            <div class="flex items-end justify-center gap-4">
+                <p class="text-8xl font-bold text-gray-800">${pcRatio.dailyValue}</p>
+                <div class="text-left mb-2">
+                     <p class="text-xl font-semibold text-gray-500">${dailyRatioLabel}</p>
+                     <p class="text-xl font-bold text-gray-700">${pcRatio.movingAverage} <span class="text-base font-medium text-gray-500">${movingAverageLabel}</span></p>
+                </div>
+            </div>
+            <p class="mt-5 px-6 py-2 inline-block bg-red-100 text-red-800 rounded-full text-lg font-semibold">${pcRatio.status}</p>`;
+        document.getElementById('put-call-ratio-summary').textContent = pcRatio.summary;
+        
+        // 詳細分析タブ
+        document.getElementById('internals-headline').textContent = data.details.internals.headline;
+        document.getElementById('internals-text').textContent = data.details.internals.text;
+        document.getElementById('technicals-headline').textContent = data.details.technicals.headline;
+        document.getElementById('technicals-text').textContent = data.details.technicals.text;
+        
+        // ファンダメンタルズ & 心理
+        const fundamentals = data.details.fundamentals;
+        document.getElementById('fundamentals-headline').textContent = fundamentals.headline;
+        document.getElementById('fundamentals-text').textContent = fundamentals.text;
+        document.getElementById('fundamentals-list').innerHTML = fundamentals.points.map(point => `<li class="flex items-start"><span class="text-blue-500 mr-4 mt-1"><i class="ri-checkbox-circle-fill ri-xl"></i></span><div>${point}</div></li>`).join('');
+
+        // VIX
+        const vix = fundamentals.vix;
+        const vixTitle = currentLang === 'en' ? 'VIX (Fear Index)' : 'VIX (恐怖指数)';
+        
+        document.getElementById('vix-container').innerHTML = `
+            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
+                <h4 class="text-2xl font-bold text-gray-800 mb-1">${vixTitle}</h4>
+                <div class="flex items-baseline gap-4 mb-2">
+                    <p class="text-5xl font-bold text-red-600">${vix.value}</p>
+                    <p class="text-xl font-semibold text-red-600">${vix.change}</p>
+                </div>
+                <p class="mt-2 text-gray-600 text-lg leading-relaxed">${vix.summary}</p>
+            </div>`;
+
+        // AAII Sentiment Survey
+        const aaii = fundamentals.aaiiSurvey;
+        const aaiiTitle = currentLang === 'en' ? 'AAII Individual Investor Sentiment' : 'AAII 個人投資家センチメント';
+        const bullishLabel = currentLang === 'en' ? 'Bullish' : '強気';
+        const neutralLabel = currentLang === 'en' ? 'Neutral' : '中立';
+        const bearishLabel = currentLang === 'en' ? 'Bearish' : '弱気';
+        
+        document.getElementById('aaii-container').innerHTML = `
+            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
+                <h4 class="text-2xl font-bold text-gray-800 mb-1">${aaiiTitle}</h4>
+                <p class="text-gray-500 mb-4">${aaii.date}</p>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <span class="w-24 font-semibold text-bullish">${bullishLabel}</span>
+                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bullish h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.bullish}%">${aaii.bullish}%</div></div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-24 font-semibold text-neutral">${neutralLabel}</span>
+                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-neutral h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.neutral}%">${aaii.neutral}%</div></div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-24 font-semibold text-bearish">${bearishLabel}</span>
+                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bearish h-6 rounded-full text-center text-white font-bold" style="width: ${aaii.bearish}%">${aaii.bearish}%</div></div>
+                    </div>
+                </div>
+                <p class="mt-4 text-gray-600 text-lg leading-relaxed">${aaii.summary}</p>
+            </div>
+        `;
+        
+        // Investors Intelligence
+        const ii = fundamentals.investorsIntelligence;
+        const iiTitle = currentLang === 'en' ? 'Investors Intelligence Bull/Bear Index' : 'Investors Intelligence ブルベア指数';
+        const bullsLabel = currentLang === 'en' ? 'Bulls' : '強気 (Bulls)';
+        const bearsLabel = currentLang === 'en' ? 'Bears' : '弱気 (Bears)';
+        
+        document.getElementById('ii-container').innerHTML = `
+            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 h-full">
+                <h4 class="text-2xl font-bold text-gray-800 mb-1">${iiTitle}</h4>
+                 <p class="text-gray-500 mb-4">${ii.date}</p>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <span class="w-28 font-semibold text-bullish">${bullsLabel}</span>
+                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bullish h-6 rounded-full text-center text-white font-bold" style="width: ${ii.bullish}%">${ii.bullish}%</div></div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-28 font-semibold text-bearish">${bearsLabel}</span>
+                        <div class="w-full bg-gray-200 rounded-full h-6"><div class="bg-bearish h-6 rounded-full text-center text-white font-bold" style="width: ${ii.bearish}%">${ii.bearish}%</div></div>
+                    </div>
+                </div>
+                 <p class="mt-4 text-gray-600 text-lg leading-relaxed">${ii.summary}</p>
+            </div>`;
+
+        // 投資戦略
+        document.getElementById('strategy-headline').textContent = data.details.strategy.headline;
+        document.getElementById('strategy-basic').innerHTML = data.details.strategy.basic;
+        document.getElementById('strategy-risk').innerHTML = data.details.strategy.risk;
+
+        // サイドバー
+        document.getElementById('market-overview-container').innerHTML = data.marketOverview.map(market => `
+            <div class="flex justify-between items-baseline">
+                <div><p class="font-semibold text-xl text-gray-800">${market.name}</p><p class="text-base ${market.isDown ? 'text-red-600' : 'text-green-600'}">${market.change}</p></div>
+                <p class="text-3xl font-bold text-gray-900">${market.value}</p>
+            </div>`).join('');
+
+        document.getElementById('hot-stocks-container').innerHTML = data.hotStocks.map(stock => `
+            <div>
+                <div class="flex justify-between items-center mb-1"><p class="text-lg font-bold text-gray-800">${stock.name}</p><p class="text-lg font-semibold ${stock.isDown ? 'text-red-600' : 'text-green-600'}">${stock.price}</p></div>
+                <p class="text-base text-gray-600">${stock.description}</p>
+            </div>`).join('');
+    }
+
+    // グローバル変数でチャートインスタンスを管理
+    let chartInstances = {
+        breadthChart: null,
+        sentimentGauge: null,
+        contributionChart: null,
+        technicalChart: null
+    };
+
+    // 既存のチャートを破棄する関数
+    function destroyExistingCharts() {
+        // ECharts インスタンスの破棄
+        if (chartInstances.breadthChart) {
+            chartInstances.breadthChart.dispose();
+            chartInstances.breadthChart = null;
+        }
+        if (chartInstances.sentimentGauge) {
+            chartInstances.sentimentGauge.dispose();
+            chartInstances.sentimentGauge = null;
+        }
+        
+        // Chart.js インスタンスの破棄
+        if (chartInstances.contributionChart) {
+            chartInstances.contributionChart.destroy();
+            chartInstances.contributionChart = null;
+        }
+        if (chartInstances.technicalChart) {
+            chartInstances.technicalChart.destroy();
+            chartInstances.technicalChart = null;
+        }
+    }
+
+    // 全てのチャートを初期化・描画する関数
+    function initializeAllCharts(data, currentLang) {
+        const FONT_SIZE_TITLE = 20, FONT_SIZE_LEGEND = 16, FONT_SIZE_AXIS = 14;
+
+        // 既存のチャートを破棄
+        destroyExistingCharts();
+
+        // 1. 市場の健全性 (ドーナツグラフ)
+        chartInstances.breadthChart = echarts.init(document.getElementById('breadthChart'));
+        const chartLabels = {
+            health: currentLang === 'en' ? 'Market Health' : '市場の健全性',
+            decliners: currentLang === 'en' ? 'Decliners' : '値下がり',
+            advancers: currentLang === 'en' ? 'Advancers' : '値上がり'
+        };
+        chartInstances.breadthChart.setOption({
+            tooltip: { trigger: 'item' },
+            legend: { bottom: '5%', left: 'center', textStyle: { fontSize: FONT_SIZE_LEGEND } },
+            series: [{
+                name: chartLabels.health, type: 'pie', radius: ['50%', '70%'], avoidLabelOverlap: false,
+                label: { show: false, position: 'center' },
+                emphasis: { label: { show: true, fontSize: '30', fontWeight: 'bold' } },
+                labelLine: { show: false },
+                data: [
+                    { value: data.dashboard.breadth.decliners, name: chartLabels.decliners, itemStyle: { color: '#ef4444' } },
+                    { value: data.dashboard.breadth.advancers, name: chartLabels.advancers, itemStyle: { color: '#3b82f6' } },
+                ]
+            }]
+        });
+
+        // 2. 市場心理 (ゲージ) - CNN Fear & Greed Index
+        chartInstances.sentimentGauge = echarts.init(document.getElementById('sentimentGauge'));
+        
+        // センチメントゲージの多言語ラベル定義
+        const sentimentLabels = {
+            title: currentLang === 'en' ? 'Market Sentiment' : '市場心理',
+            extreme_fear: currentLang === 'en' ? 'Extreme Fear' : '極度の恐怖',
+            fear: currentLang === 'en' ? 'Fear' : '恐怖',
+            neutral: currentLang === 'en' ? 'Neutral' : '中立',
+            greed: currentLang === 'en' ? 'Greed' : '強欲',
+            extreme_greed: currentLang === 'en' ? 'Extreme Greed' : '極度の強欲'
+        };
+        
+        // センチメント値に応じたラベル取得関数
+        const getSentimentLabel = (value) => {
+            if (value <= 25) return sentimentLabels.extreme_fear;
+            if (value <= 45) return sentimentLabels.fear;
+            if (value <= 55) return sentimentLabels.neutral;
+            if (value <= 75) return sentimentLabels.greed;
+            return sentimentLabels.extreme_greed;
+        };
+        
+        chartInstances.sentimentGauge.setOption({
+            series: [{
+                type: 'gauge',
+                center: ['50%', '60%'],
+                startAngle: 180,
+                endAngle: 0,
+                min: 0,
+                max: 100,
+                splitNumber: 10,
+                itemStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 0, y: 0, x2: 1, y2: 0,
+                        colorStops: [
+                            { offset: 0, color: '#ef4444' },
+                            { offset: 0.5, color: '#f59e0b' },
+                            { offset: 1, color: '#10b981' }
+                        ]
+                    }
+                },
+                progress: { show: true, width: 18 },
+                pointer: { show: true, length: '60%', width: 6 },
+                axisLine: { lineStyle: { width: 18 } },
+                axisTick: { distance: -25, length: 7, lineStyle: { width: 1, color: '#999' } },
+                splitLine: { distance: -30, length: 12, lineStyle: { width: 2, color: '#999' } },
+                axisLabel: { 
+                    distance: -10, 
+                    color: '#999', 
+                    fontSize: 16,
+                    formatter: function(value) {
+                        // 特定の値でのみラベル表示（多言語対応）
+                        if (value === 0) return currentLang === 'en' ? 'Fear  ' : '恐怖  '; // 右に移動（スペース追加）
+                        if (value === 50) return currentLang === 'en' ? 'Neutral' : '中立';
+                        if (value === 100) return currentLang === 'en' ? '  Greed' : '  強欲'; // 左に移動（スペース追加）
+                        return '';
+                    }
+                },
+                detail: { 
+                    valueAnimation: true, 
+                    fontSize: 40, 
+                    fontWeight: 'bold', 
+                    offsetCenter: [0, '40%'],
+                    formatter: '{value}'
+                },
+                data: [{ 
+                    value: data.dashboard.sentimentVI,
+                    name: getSentimentLabel(data.dashboard.sentimentVI),
+                    title: {
+                        show: true,
+                        offsetCenter: [0, '70%'],
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        color: '#374151'
+                    }
+                }]
+            }]
+        });
+
+        // 3. 寄与度チャート (横棒グラフ)
+        const contributionLabel = currentLang === 'en' ? 'S&P 500 Impact' : 'S&P 500への影響';
+        const contributionChartLabels = {
+            title: currentLang === 'en' ? 'Market Sentiment Analysis' : 'セクター別センチメント分析',
+            xAxisLabel: currentLang === 'en' ? 'Bullish Sentiment (%)' : '強気センチメント (%)',
+            tooltipSuffix: currentLang === 'en' ? '% bullish' : '% 強気'
+        };
+        
+        chartInstances.contributionChart = new Chart(document.getElementById('contributionChart'), {
+            type: 'bar',
+            data: {
+                labels: data.details.internals.chartData.labels,
+                datasets: [{
+                    label: contributionLabel,
+                    data: data.details.internals.chartData.values,
+                    backgroundColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 0.7)' : 'rgba(59, 130, 246, 0.7)',
+                    borderColor: d => d.raw < 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(59, 130, 246, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y', 
+                responsive: true, 
+                maintainAspectRatio: false,
+                scales: { 
+                    x: { 
+                        title: {
+                            display: true,
+                            text: contributionChartLabels.xAxisLabel,
+                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
+                            color: '#374151'
+                        },
+                        ticks: { 
+                            font: { size: FONT_SIZE_AXIS }, 
+                            callback: (v) => v + '%' 
+                        }
+                    }, 
+                    y: { 
+                        ticks: { 
+                            font: { size: FONT_SIZE_AXIS }
+                        }
+                    }
+                },
+                plugins: { 
+                    title: {
+                        display: true,
+                        text: contributionChartLabels.title,
+                        font: { size: FONT_SIZE_TITLE, weight: 'bold' },
+                        color: '#1F2937',
+                        padding: { bottom: 20 }
+                    },
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.x + contributionChartLabels.tooltipSuffix;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 4. テクニカルチャート (折れ線) with アドバンス・デクライン・ライン
+        const ma50Label = currentLang === 'en' ? '50-day Moving Average' : '50日移動平均線';
+        const adlLabel = currentLang === 'en' ? 'Advance-Decline Line (ADL)' : 'アドバンス・デクライン・ライン (ADL)';
+        const technicalChartLabels = {
+            title: currentLang === 'en' ? 'Technical Analysis: Price & Market Breadth' : 'テクニカル分析：価格と市場の幅',
+            priceAxisLabel: currentLang === 'en' ? 'S&P 500 Price' : 'S&P 500価格',
+            adlAxisLabel: currentLang === 'en' ? 'ADL Index' : 'ADL指数',
+            dateLabel: currentLang === 'en' ? 'Date' : '日付'
+        };
+        
+        chartInstances.technicalChart = new Chart(document.getElementById('technicalChart'), {
+            type: 'line',
+            data: {
+                labels: data.details.technicals.chartData.labels,
+                datasets: [
+                    { 
+                        label: 'S&P 500', 
+                        data: data.details.technicals.chartData.sp500, 
+                        borderColor: '#1F2937', 
+                        backgroundColor: 'rgba(31, 41, 55, 0.1)', 
+                        fill: true, 
+                        tension: 0.2, 
+                        borderWidth: 2.5,
+                        yAxisID: 'y' // 主Y軸（価格）
+                    },
+                    { 
+                        label: ma50Label, 
+                        data: data.details.technicals.chartData.ma50, 
+                        borderColor: '#f59e0b', 
+                        borderDash: [5, 5], 
+                        fill: false, 
+                        pointRadius: 0, 
+                        borderWidth: 2,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: adlLabel,
+                        data: data.details.technicals.chartData.adl,
+                        borderColor: '#8b5cf6', // 紫色
+                        fill: false,
+                        pointRadius: 2,
+                        borderWidth: 2,
+                        yAxisID: 'y1' // 第2Y軸（ADL）
+                    }
+                ]
+            },
+            options: {
+                responsive: true, 
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: { 
+                    x: { 
+                        title: {
+                            display: true,
+                            text: technicalChartLabels.dateLabel,
+                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
+                            color: '#374151'
+                        },
+                        ticks: { font: { size: FONT_SIZE_AXIS }}
+                    },
+                    y: { // 主Y軸 (左) - 価格用
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: technicalChartLabels.priceAxisLabel,
+                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
+                            color: '#374151'
+                        },
+                        ticks: { 
+                            font: { size: FONT_SIZE_AXIS },
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    },
+                    y1: { // 第2Y軸 (右) - ADL用
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: technicalChartLabels.adlAxisLabel,
+                            font: { size: FONT_SIZE_AXIS + 1, weight: 'bold' },
+                            color: '#8b5cf6'
+                        },
+                        ticks: { 
+                            font: { size: FONT_SIZE_AXIS },
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        },
+                        grid: { // 両方の軸のグリッド線でチャートが乱雑になるのを防ぐ
+                            drawOnChartArea: false, 
+                        },
+                    } 
+                },
+                plugins: { 
+                    title: {
+                        display: true,
+                        text: technicalChartLabels.title,
+                        font: { size: FONT_SIZE_TITLE, weight: 'bold' },
+                        color: '#1F2937',
+                        padding: { bottom: 20 }
+                    },
+                    legend: { 
+                        position: 'top', 
+                        labels: { font: {size: FONT_SIZE_LEGEND}, padding: 15 }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                const value = context.parsed.y;
+                                if (context.dataset.yAxisID === 'y1') {
+                                    // ADL values
+                                    label += value.toLocaleString();
+                                } else {
+                                    // Price values
+                                    label += value.toLocaleString();
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        window.addEventListener('resize', () => {
+            if (chartInstances.breadthChart) {
+                chartInstances.breadthChart.resize();
+            }
+            if (chartInstances.sentimentGauge) {
+                chartInstances.sentimentGauge.resize();
+            }
+        });
+    }
+
+    // タブ機能を初期化する関数
+    function initializeTabs() {
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                const tabId = button.dataset.tab;
+                tabPanels.forEach(panel => {
+                    panel.id === tabId ? panel.classList.add('active') : panel.classList.remove('active');
+                });
+            });
+        });
+    }
+
+    // loadReportData関数をグローバルに公開（lang.jsから呼び出すため）
+    window.loadReportData = loadReportData;
+
+    // Initialize language system
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize current language from localStorage or default to 'ja'
+        window.currentLang = localStorage.getItem('language') || 'ja';
+        
+        // Initialize lang.js language system
+        if (window.initLanguage) {
+            initLanguage();
+        }
+        
+        // Initialize mobile menu
+        initializeMobileMenu();
+        
+        // Load initial data
+        loadReportData();
+    });
+
+    // Mobile menu functionality
+    function initializeMobileMenu() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = mobileMenuButton.querySelector('i');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                const isHidden = mobileMenu.classList.contains('hidden');
+                
+                if (isHidden) {
+                    // メニューを開く
+                    mobileMenu.classList.remove('hidden');
+                    menuIcon.className = 'ri-close-line ri-lg';
+                } else {
+                    // メニューを閉じる
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.className = 'ri-menu-line ri-lg';
+                }
+            });
+            
+            // メニューリンクをクリックしたときにメニューを閉じる
+            const menuLinks = mobileMenu.querySelectorAll('a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.className = 'ri-menu-line ri-lg';
+                });
+            });
+            
+            // メニュー外をクリックしたときにメニューを閉じる
+            document.addEventListener('click', function(event) {
+                if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.className = 'ri-menu-line ri-lg';
+                }
+            });
+        }
+    }
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-90LPDJBXLY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-90LPDJBXLY');
+</script>
+</body>
+</html>

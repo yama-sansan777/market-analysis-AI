@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注目の個別銘柄 | YOHOU US Stock AI</title>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#DC2626',
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <script src="translations/load.js"></script>
+    <script src="lang.js"></script>
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1F2937; }
+        header img { height: 40px; }
+        .stock-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        .stock-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #2563EB;
+        }
+        .chart-container {
+            position: relative;
+            height: 120px;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<header class="bg-white border-b border-gray-200">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-8">
+                <a href="index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                <nav class="hidden md:flex space-x-6 text-gray-600">
+                    <a href="index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                    <a href="pickup.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_pickup">注目の個別銘柄</a>
+                    <a href="ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                    <a href="indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                    <a href="terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                    <a href="about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                </nav>
+            </div>
+            <div class="flex items-center space-x-1 md:space-x-4">
+                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                    <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
+                    <span class="text-gray-400 text-xs">|</span>
+                    <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+    <div class="px-4 py-2 space-y-1">
+        <a href="index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+        <a href="pickup.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50" data-lang="nav_pickup">注目の個別銘柄</a>
+        <a href="ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+        <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+        <a href="terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+        <a href="about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+        <div class="border-t border-gray-200 pt-2 mt-2">
+            <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+            <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+        </div>
+    </div>
+</div>
+
+<main class="container mx-auto px-4 py-6 max-w-7xl">
+    <div class="mb-8 text-center">
+        <h1 class="text-3xl font-bold mb-2" data-lang="pickup_title">注目の個別銘柄</h1>
+        <p class="text-gray-600" data-lang="pickup_subtitle">AIによる分析と市場トレンドに基づき、今注目すべき米国株をピックアップ</p>
+    </div>
+
+    <!-- フィルター -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-8">
+        <div class="flex flex-col md:flex-row gap-4 items-center">
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-2">セクター</label>
+                <select id="sector-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                    <option value="all">すべてのセクター</option>
+                    <option value="technology">テクノロジー</option>
+                    <option value="healthcare">ヘルスケア</option>
+                    <option value="financials">金融</option>
+                    <option value="energy">エネルギー</option>
+                    <option value="consumer">消費財</option>
+                </select>
+            </div>
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-2">並び替え</label>
+                <select id="sort-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                    <option value="performance-desc">パフォーマンス（高順）</option>
+                    <option value="performance-asc">パフォーマンス（低順）</option>
+                    <option value="marketcap-desc">時価総額（大順）</option>
+                    <option value="marketcap-asc">時価総額（小順）</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- 銘柄カードグリッド -->
+    <div id="stocks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 銘柄カードがJavaScriptで動的に生成されます -->
+    </div>
+
+    <!-- ローディング表示 -->
+    <div id="loading" class="text-center py-12">
+        <div class="animate-pulse">
+            <p class="text-gray-500">データを読み込み中...</p>
+        </div>
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    // 言語システム初期化
+    if (typeof window.initLanguage === 'function') {
+        await window.initLanguage();
+    }
+
+    // モバイルメニュー
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    // サンプル銘柄データ
+    const stocksData = [
+        {
+            symbol: 'NVDA',
+            name: 'NVIDIA Corporation',
+            sector: 'technology',
+            price: 875.50,
+            change: 12.45,
+            changePercent: 1.44,
+            marketCap: 2150,
+            pe: 65.4,
+            performance: 185.2,
+            description: 'AI革命を牽引するGPUメーカー。データセンター向けの需要が急拡大中。',
+            priceData: [820, 835, 850, 865, 875, 870, 875]
+        },
+        {
+            symbol: 'MSFT',
+            name: 'Microsoft Corporation',
+            sector: 'technology',
+            price: 420.75,
+            change: -2.15,
+            changePercent: -0.51,
+            marketCap: 3120,
+            pe: 32.1,
+            performance: 22.8,
+            description: 'クラウドとAIで成長を続ける技術の巨人。Azureが好調を維持。',
+            priceData: [405, 415, 420, 425, 422, 418, 421]
+        },
+        {
+            symbol: 'TSLA',
+            name: 'Tesla, Inc.',
+            sector: 'consumer',
+            price: 245.20,
+            change: 8.75,
+            changePercent: 3.70,
+            marketCap: 780,
+            pe: 58.3,
+            performance: -12.5,
+            description: 'EV市場のパイオニア。自動運転技術とエネルギー事業にも注力。',
+            priceData: [230, 235, 240, 245, 242, 238, 245]
+        },
+        {
+            symbol: 'GOOGL',
+            name: 'Alphabet Inc.',
+            sector: 'technology',
+            price: 142.80,
+            change: 1.25,
+            changePercent: 0.88,
+            marketCap: 1800,
+            pe: 26.5,
+            performance: 15.7,
+            description: '検索とクラウドの王者。AI技術への投資を加速している。',
+            priceData: [138, 140, 141, 143, 142, 141, 143]
+        },
+        {
+            symbol: 'AMZN',
+            name: 'Amazon.com, Inc.',
+            sector: 'consumer',
+            price: 155.30,
+            change: 2.80,
+            changePercent: 1.84,
+            marketCap: 1620,
+            pe: 45.2,
+            performance: 28.4,
+            description: 'Eコマースとクラウドの両輪で成長。AWS事業が特に好調。',
+            priceData: [150, 152, 154, 156, 155, 153, 155]
+        },
+        {
+            symbol: 'META',
+            name: 'Meta Platforms, Inc.',
+            sector: 'technology',
+            price: 485.60,
+            change: -5.20,
+            changePercent: -1.06,
+            marketCap: 1230,
+            pe: 22.8,
+            performance: 45.3,
+            description: 'ソーシャルメディアの巨人。メタバースとAI技術に投資中。',
+            priceData: [470, 480, 485, 490, 488, 482, 486]
+        }
+    ];
+
+    let filteredStocks = [...stocksData];
+    const stocksGrid = document.getElementById('stocks-grid');
+    const loading = document.getElementById('loading');
+    const sectorFilter = document.getElementById('sector-filter');
+    const sortFilter = document.getElementById('sort-filter');
+
+    // 銘柄カード作成関数
+    function createStockCard(stock) {
+        const changeClass = stock.change >= 0 ? 'text-bullish' : 'text-bearish';
+        const changeIcon = stock.change >= 0 ? 'ri-arrow-up-line' : 'ri-arrow-down-line';
+        const performanceClass = stock.performance >= 0 ? 'text-bullish' : 'text-bearish';
+
+        return `
+            <div class="stock-card bg-white rounded-lg p-6 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">${stock.name}</h3>
+                        <p class="text-sm text-gray-500">${stock.symbol}</p>
+                        <span class="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded mt-1">
+                            ${getSectorName(stock.sector)}
+                        </span>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xl font-bold text-gray-900">$${stock.price.toFixed(2)}</p>
+                        <p class="text-sm ${changeClass} flex items-center justify-end">
+                            <i class="${changeIcon}"></i>
+                            ${stock.change >= 0 ? '+' : ''}${stock.change.toFixed(2)} (${stock.changePercent.toFixed(2)}%)
+                        </p>
+                    </div>
+                </div>
+                
+                <p class="text-sm text-gray-600 mb-4">${stock.description}</p>
+                
+                <div class="grid grid-cols-3 gap-4 text-center text-sm mb-4">
+                    <div>
+                        <p class="text-gray-500">時価総額</p>
+                        <p class="font-semibold">${stock.marketCap}B</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">PER</p>
+                        <p class="font-semibold">${stock.pe}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">年初来</p>
+                        <p class="font-semibold ${performanceClass}">${stock.performance >= 0 ? '+' : ''}${stock.performance.toFixed(1)}%</p>
+                    </div>
+                </div>
+                
+                <div class="chart-container mb-4">
+                    <canvas id="chart-${stock.symbol}"></canvas>
+                </div>
+                
+                <button class="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                    詳細を見る
+                </button>
+            </div>
+        `;
+    }
+
+    // セクター名変換
+    function getSectorName(sector) {
+        const sectorNames = {
+            technology: 'テクノロジー',
+            healthcare: 'ヘルスケア',
+            financials: '金融',
+            energy: 'エネルギー',
+            consumer: '消費財'
+        };
+        return sectorNames[sector] || sector;
+    }
+
+    // チャート作成
+    function createChart(stock) {
+        const ctx = document.getElementById(`chart-${stock.symbol}`);
+        if (!ctx) return;
+
+        const isPositive = stock.priceData[stock.priceData.length - 1] >= stock.priceData[0];
+        const color = isPositive ? '#10b981' : '#ef4444';
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['', '', '', '', '', '', ''],
+                datasets: [{
+                    data: stock.priceData,
+                    borderColor: color,
+                    backgroundColor: color + '20',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                },
+                interaction: { intersect: false },
+                elements: { point: { radius: 0 } }
+            }
+        });
+    }
+
+    // 銘柄表示
+    function renderStocks(stocks) {
+        if (stocks.length === 0) {
+            stocksGrid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">該当する銘柄が見つかりませんでした。</div>';
+            return;
+        }
+
+        stocksGrid.innerHTML = stocks.map(createStockCard).join('');
+        
+        // チャートを描画
+        setTimeout(() => {
+            stocks.forEach(stock => createChart(stock));
+        }, 100);
+    }
+
+    // フィルタリングとソート
+    function filterAndSortStocks() {
+        const sector = sectorFilter.value;
+        const sort = sortFilter.value;
+
+        // フィルタリング
+        filteredStocks = stocksData.filter(stock => 
+            sector === 'all' || stock.sector === sector
+        );
+
+        // ソート
+        const [sortKey, sortOrder] = sort.split('-');
+        filteredStocks.sort((a, b) => {
+            let aVal = sortKey === 'performance' ? a.performance : a.marketCap;
+            let bVal = sortKey === 'performance' ? b.performance : b.marketCap;
+            
+            return sortOrder === 'desc' ? bVal - aVal : aVal - bVal;
+        });
+
+        renderStocks(filteredStocks);
+    }
+
+    // イベントリスナー
+    sectorFilter.addEventListener('change', filterAndSortStocks);
+    sortFilter.addEventListener('change', filterAndSortStocks);
+
+    // 初期表示
+    loading.style.display = 'none';
+    filterAndSortStocks();
+});
+</script>
+
+</body>
+</html>

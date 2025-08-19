@@ -6,11 +6,16 @@ const translations = {
     ja: {
         // Navigation
         nav_today: '本日の市況分析',
+        nav_pickup: '注目の個別銘柄',
         nav_archive: '分析アーカイブ',
         nav_ipo: 'IPOスケジュール',
         nav_indicators: 'テクニカル指標解説',
         nav_terms: '市場用語集',
         nav_about: 'サイトについて',
+        
+        // Pickup page
+        pickup_title: '注目の個別銘柄',
+        pickup_subtitle: 'AIによる分析と市場トレンドに基づき、今注目すべき米国株をピックアップ',
         
         // Buttons
         login: 'ログイン',
@@ -767,11 +772,16 @@ const translations = {
     en: {
         // Navigation
         nav_today: 'Today\'s Market Analysis',
+        nav_pickup: 'Featured Stocks',
         nav_archive: 'Analysis Archive',
         nav_ipo: 'IPO Schedule',
         nav_indicators: 'Technical Indicators',
         nav_terms: 'Market Terms',
         nav_about: 'About',
+        
+        // Pickup page
+        pickup_title: 'Featured Stocks',
+        pickup_subtitle: 'AI-driven analysis and market trends to highlight US stocks worth watching',
         
         // Buttons
         login: 'Login',
