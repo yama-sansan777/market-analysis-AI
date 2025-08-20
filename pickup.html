@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>注目の個別銘柄 | インタラクティブ米国株式市場見通し</title>
+    <title>クレイマー保有銘柄 | インタラクティブ米国株式市場見通し</title>
     <script src="https://cdn.tailwindcss.com/3.4.1"></script>
     <script>
         // index.htmlからTailwind CSSのカスタム設定を継承
@@ -88,7 +88,7 @@
                 <a href="index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
                 <nav class="hidden md:flex space-x-6 text-gray-600">
                     <a href="index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
-                    <a href="pickup.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_pickup">注目の個別銘柄</a>
+                    <a href="pickup.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_pickup">クレイマー保有銘柄</a>
                     <a href="ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
                     <a href="indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
                     <a href="terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
@@ -115,7 +115,7 @@
 <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
     <div class="px-4 py-2 space-y-1">
         <a href="index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
-        <a href="pickup.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50" data-lang="nav_pickup">注目の個別銘柄</a>
+        <a href="pickup.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50" data-lang="nav_pickup">クレイマー保有銘柄</a>
         <a href="ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
         <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
         <a href="terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
@@ -131,10 +131,10 @@
 
     <!-- ページタイトルセクション -->
     <section class="text-center mb-12">
-        <div class="inline-flex items-center justify-center bg-indigo-100 rounded-xl p-3 mb-4">
-            <i class="ri-star-line text-4xl text-primary"></i>
+        <div class="mb-4">
+            <img src="image/jim.png" alt="Jim Cramer" class="w-24 h-24 rounded-full object-cover mx-auto">
         </div>
-        <h1 class="text-3xl md:text-4xl font-bold text-slate-800" data-lang="pickup_title">注目の個別銘柄</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800" data-lang="pickup_title">クレイマー保有銘柄</h1>
         <p class="text-slate-500 mt-4 max-w-2xl mx-auto" data-lang="pickup_subtitle">AIによる分析と市場トレンドに基づき、今注目すべき米国株をピックアップ。詳細なデータとインサイトで、あなたの銘柄選定をサポートします。</p>
     </section>
 
@@ -301,6 +301,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     let currentSort = 'marketCap_desc';
     let activeCharts = [];
 
+    // --- 「詳細を見る」ボタンのクリック処理 ---
+    const handleStockDetailClick = (event) => {
+        const ticker = event.target.getAttribute('data-ticker');
+        
+        // 銘柄別の詳細ページへの遷移
+        switch (ticker) {
+            case 'NVDA':
+                window.location.href = 'nvidia.html';
+                break;
+            case 'MSFT':
+            case 'LLY':
+            case 'JPM':
+            case 'XOM':
+            case 'AVGO':
+            default:
+                // 詳細ページが未実装の銘柄の場合
+                alert('この銘柄の詳細ページは現在準備中です。');
+                break;
+        }
+    };
+
     // --- 銘柄カードをレンダリングする関数 ---
     const renderStockCards = (stocks) => {
         // 既存のチャートを破棄
@@ -362,7 +383,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="mini-chart-container mb-4">
                         <canvas id="chart-${stock.ticker}"></canvas>
                     </div>
-                    <button class="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors" data-lang="view_details">
+                    <button class="stock-detail-btn w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors" data-ticker="${stock.ticker}" data-lang="view_details">
                         詳細を見る
                     </button>
                 </div>
@@ -410,6 +431,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (typeof window.updateLanguage === 'function') {
             window.updateLanguage();
         }
+
+        // --- 「詳細を見る」ボタンのイベントハンドラーを設定 ---
+        document.querySelectorAll('.stock-detail-btn').forEach(btn => {
+            btn.addEventListener('click', handleStockDetailClick);
+        });
     };
 
     // --- フィルターとソートを適用して再描画する関数 ---

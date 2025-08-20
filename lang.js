@@ -6,7 +6,7 @@ const translations = {
     ja: {
         // Navigation
         nav_today: '本日の市況分析',
-        nav_pickup: '注目の個別銘柄',
+        nav_pickup: 'クレイマー保有銘柄',
         nav_archive: '分析アーカイブ',
         nav_ipo: 'IPOスケジュール',
         nav_indicators: 'テクニカル指標解説',
@@ -14,7 +14,7 @@ const translations = {
         nav_about: 'サイトについて',
         
         // Pickup page
-        pickup_title: '注目の個別銘柄',
+        pickup_title: 'クレイマー保有銘柄',
         pickup_subtitle: 'AIによる分析と市場トレンドに基づき、今注目すべき米国株をピックアップ',
         
         // Buttons
@@ -772,7 +772,7 @@ const translations = {
     en: {
         // Navigation
         nav_today: 'Today\'s Market Analysis',
-        nav_pickup: 'Featured Stocks',
+        nav_pickup: 'Cramer\'s Holdings',
         nav_archive: 'Analysis Archive',
         nav_ipo: 'IPO Schedule',
         nav_indicators: 'Technical Indicators',
@@ -780,7 +780,7 @@ const translations = {
         nav_about: 'About',
         
         // Pickup page
-        pickup_title: 'Featured Stocks',
+        pickup_title: 'Cramer\'s Holdings',
         pickup_subtitle: 'AI-driven analysis and market trends to highlight US stocks worth watching',
         
         // Buttons
