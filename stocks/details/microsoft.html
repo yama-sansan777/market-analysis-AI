@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="page_title">【Microsoft版】クラウドとAIの巨人！投資家向けダッシュボード</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind CSS custom configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0078D4', // Microsoft Blue
+                        secondary: '#DC2626',
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js and date adapter -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns-jalali/dist/date-fns-jalali.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns-jalali/dist/chartjs-adapter-date-fns-jalali.bundle.min.js"></script>
+    <!-- Fonts and Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #0078D4, #00A1F1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+            padding-bottom: 8px;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: #0078D4;
+            transition: width 0.3s ease;
+        }
+        .nav-link.active::after, .nav-link:hover::after {
+            width: 100%;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+            border: 1px solid #E2E8F0;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            border-bottom: 1px dotted #0078D4;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #262626;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #262626 transparent transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="#"><img src="https://placehold.co/160x40/FFFFFF/0078D4?text=YourLogo" alt="Logo" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="#" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                        <a href="#" class="hover:text-primary" data-lang="nav_pickup">注目銘柄</a>
+                        <a href="#" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="#" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang-btn="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang-btn="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Sub-header -->
+    <div class="bg-gradient-to-r from-sky-50 to-blue-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-md p-2">
+                        <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 1.5H10.5V10.5H1.5z" fill="#f25022"></path><path d="M11.5 1.5H20.5V10.5H11.5z" fill="#7fba00"></path><path d="M1.5 11.5H10.5V20.5H1.5z" fill="#00a4ef"></path><path d="M11.5 11.5H20.5V20.5H11.5z" fill="#ffb900"></path></svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Microsoft</span>
+                        <span class="text-sm font-semibold text-slate-500">NASDAQ: MSFT</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_business">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight">
+                    <span data-lang="main_headline_1">ソフトウェアの巨人からAIクラウドの覇者へ</span><br>
+                    <span class="gradient-text">Microsoft</span><span data-lang="main_headline_2">の再誕</span>
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="main_subtitle">
+                    世界中のビジネスと生活を支える巨人、Microsoft。その次なる一手と投資の核心に迫ります。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-sky-50 to-indigo-50 border-blue-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_title">「安定成長株を探している？」それならまず知りたい、巨人Microsoftの今</h2>
+                <div class="text-lg text-slate-700 space-y-4" data-lang="intro_body" data-is-html>
+                    <p>「高配当で安定した株が欲しいけど、成長性も捨てがたい…」そんな理想的な投資先を探すなら、まず注目すべきが「Microsoft（マイクロソフト）」です。WindowsやOfficeで誰もが知るこの巨人が今、AIとクラウドを武器に、再び急成長を遂げていることをご存知ですか？</p>
+                    <p>流行りの「ChatGPT」を開発したOpenAIとの強力なタッグにより、Microsoftのクラウドサービス「Azure」はAI開発のプラットフォームとして世界中から選ばれています。例えるなら、<strong class="text-blue-700">AI時代の新しいゴールドラッシュで、信頼性の高い「つるはし」と「土地」を独占的に提供しているような状態</strong>です。</p>
+                    <p>このページでは、「Microsoftの強みは？」「業績は安定してる？」「未来の成長性は？」といった疑問に、投資初心者にも分かりやすく答えていきます。安定と成長を両立する王者がどんな会社なのか、一緒に見ていきましょう！</p>
+                </div>
+            </div>
+
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="kpi_title">クラウドとAIが牽引する、揺るぎない成長</h2>
+                <p class="text-slate-600 mb-8" data-lang="kpi_subtitle">法人向けクラウド事業の圧倒的な強さと、AI技術の製品への統合が、Microsoftの安定した株価成長を支えています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="kpi_stock_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="450.00">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="kpi_ytd_return">年初来リターン</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="19.5">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="kpi_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="3.3">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="kpi_per">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="38">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">Microsoftって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_subtitle">WindowsとOfficeで築いた盤石な顧客基盤をテコに、クラウドサービス「Azure」で世界2位のシェアを誇る。近年はAI分野で市場をリードしています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="business_segments_title">世界を支える3つのコア事業</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-2.666-5.43a4.5 4.5 0 00-8.5 2.25c-2.356.636-4.001 2.906-4.001 5.43z" /></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="segment1_name">Intelligent Cloud</h4>
+                        <p class="text-slate-600" data-lang="segment1_desc">クラウドプラットフォーム「Azure」やサーバー製品群。OpenAIとの連携でAI開発のインフラとして急成長中。最大の収益源。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="segment2_name">Productivity & Business</h4>
+                        <p class="text-slate-600" data-lang="segment2_desc">法人・個人向け「Office 365」、ビジネスSNS「LinkedIn」、ERP/CRM「Dynamics 365」など。安定したサブスクリプション収益が強み。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" /></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="segment3_name">More Personal Computing</h4>
+                        <p class="text-slate-600" data-lang="segment3_desc">「Windows」OS、Surfaceデバイス、検索エンジン「Bing」、そして「Xbox」擁するゲーミング事業。生活のあらゆる場面に関わる。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_subtitle">Microsoftの強みは、エンタープライズ（法人）市場での圧倒的な信頼と販売網。既存の顧客基盤にクラウドとAIをセットで提供できる点が、他社にはない大きなアドバンテージです。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_subtitle">クラウド事業の力強い成長が全社を牽引し、売上・利益ともに安定した二桁成長を継続。高い収益性と健全な財務体質が魅力です。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="financials_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1" data-lang="financials_revenue_value">$2,365億</p>
+                        <p class="text-base font-semibold text-blue-600" data-lang="financials_revenue_yoy">前年比 +12%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="financials_margin">粗利率
+                            <span class="tooltiptext" data-lang="financials_margin_tooltip">売上から原価を引いた「粗利」が、売上に占める割合。高いほど儲けやすいビジネスモデルと言える。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">70.1%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="financials_margin_desc">高い収益性を維持</p>
+                    </div>
+                    <div class="bg-indigo-50 border-l-4 border-indigo-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="financials_cloud_growth">Intelligent Cloud部門成長率</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">+21%</p>
+                        <p class="text-base font-semibold text-indigo-600" data-lang="financials_cloud_growth_desc">成長の原動力</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_subtitle">AI時代における最重要企業の一角。しかし、巨大企業ならではの規制リスクや、激化する競争環境も無視できません。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-blue-500 text-blue-600" data-lang="thesis_bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="thesis_bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- JS injects content here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">Microsoftの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_subtitle">「地球上のすべての個人とすべての組織が、より多くのことを達成できるようにする」というミッションの下、AIを社会の隅々まで浸透させようとしています。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="outlook_roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-blue-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="outlook_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="outlook_near_desc">AIアシスタント「Copilot」をOffice、Windows、Dynamicsなど全製品に統合し、生産性の革命を起こす。Azure AIのサービス拡充で、企業のAI導入を加速させる。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="outlook_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="outlook_far_desc">Activision Blizzard買収を活かし、クラウドゲーミング市場での覇権を狙う。自社開発のAIチップでインフラコストを最適化し、量子コンピューティング分野でのリーダーシップを確立する。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_subtitle">Microsoftは安定性と成長性を兼ね備えた優良銘柄。あなたのリスク許容度に合わせて投資戦略を考えましょう。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_question">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="showStrategy('short')" class="w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-lang="strategy_btn_short">半年以内</button>
+                        <button onclick="showStrategy('medium')" class="w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button onclick="showStrategy('long')" class="w-full text-lg bg-blue-100 text-blue-800 font-bold py-3 px-6 rounded-lg hover:bg-blue-200 transition" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;">
+                    <!-- JS injects result here -->
+                </div>
+             </div>
+        </section>
+
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <p data-lang="footer_copyright">&copy; 2025 Microsoft Investor Dashboard. All rights reserved.</p>
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- TRANSLATION DATA ---
+    const translations = {
+        ja: {
+            page_title: "【Microsoft版】クラウドとAIの巨人！投資家向けダッシュボード",
+            nav_today: "本日の市況分析",
+            nav_pickup: "注目銘柄",
+            nav_ipo: "IPOスケジュール",
+            nav_about: "サイトについて",
+            subnav_intro: "はじめに",
+            subnav_business: "どんな会社？",
+            subnav_financials: "業績は？",
+            subnav_thesis: "買い？or 待ち？",
+            subnav_outlook: "未来は？",
+            main_headline_1: "ソフトウェアの巨人からAIクラウドの覇者へ",
+            main_headline_2: "の再誕",
+            main_subtitle: "世界中のビジネスと生活を支える巨人、Microsoft。その次なる一手と投資の核心に迫ります。",
+            intro_title: "「安定成長株を探している？」それならまず知りたい、巨人Microsoftの今",
+            intro_body: `<p>「高配当で安定した株が欲しいけど、成長性も捨てがたい…」そんな理想的な投資先を探すなら、まず注目すべきが「Microsoft（マイクロソフト）」です。WindowsやOfficeで誰もが知るこの巨人が今、AIとクラウドを武器に、再び急成長を遂げていることをご存知ですか？</p><p>流行りの「ChatGPT」を開発したOpenAIとの強力なタッグにより、Microsoftのクラウドサービス「Azure」はAI開発のプラットフォームとして世界中から選ばれています。例えるなら、<strong class="text-blue-700">AI時代の新しいゴールドラッシュで、信頼性の高い「つるはし」と「土地」を独占的に提供しているような状態</strong>です。</p><p>このページでは、「Microsoftの強みは？」「業績は安定してる？」「未来の成長性は？」といった疑問に、投資初心者にも分かりやすく答えていきます。安定と成長を両立する王者がどんな会社なのか、一緒に見ていきましょう！</p>`,
+            kpi_title: "クラウドとAIが牽引する、揺るぎない成長",
+            kpi_subtitle: "法人向けクラウド事業の圧倒的な強さと、AI技術の製品への統合が、Microsoftの安定した株価成長を支えています。",
+            kpi_stock_price: "現在の株価",
+            kpi_ytd_return: "年初来リターン",
+            kpi_market_cap: "時価総額",
+            kpi_per: "PER (株価収益率)",
+            business_title: "Microsoftって、どんな会社？",
+            business_subtitle: "WindowsとOfficeで築いた盤石な顧客基盤をテコに、クラウドサービス「Azure」で世界2位のシェアを誇る。近年はAI分野で市場をリードしています。",
+            business_segments_title: "世界を支える3つのコア事業",
+            segment1_name: "Intelligent Cloud",
+            segment1_desc: "クラウドプラットフォーム「Azure」やサーバー製品群。OpenAIとの連携でAI開発のインフラとして急成長中。最大の収益源。",
+            segment2_name: "Productivity & Business",
+            segment2_desc: "法人・個人向け「Office 365」、ビジネスSNS「LinkedIn」、ERP/CRM「Dynamics 365」など。安定したサブスクリプション収益が強み。",
+            segment3_name: "More Personal Computing",
+            segment3_desc: "「Windows」OS、Surfaceデバイス、検索エンジン「Bing」、そして「Xbox」擁するゲーミング事業。生活のあらゆる場面に関わる。",
+            competitor_title: "ライバルと比べて、何がすごいの？",
+            competitor_subtitle: "Microsoftの強みは、エンタープライズ（法人）市場での圧倒的な信頼と販売網。既存の顧客基盤にクラウドとAIをセットで提供できる点が、他社にはない大きなアドバンテージです。",
+            financials_title: "会社の業績は？",
+            financials_subtitle: "クラウド事業の力強い成長が全社を牽引し、売上・利益ともに安定した二桁成長を継続。高い収益性と健全な財務体質が魅力です。",
+            financials_revenue: "年間売上高",
+            financials_revenue_value: "$2,365億",
+            financials_revenue_yoy: "前年比 +12%",
+            financials_margin: "粗利率",
+            financials_margin_tooltip: "売上から原価を引いた「粗利」が、売上に占める割合。高いほど儲けやすいビジネスモデルと言える。",
+            financials_margin_desc: "高い収益性を維持",
+            financials_cloud_growth: "Intelligent Cloud部門成長率",
+            financials_cloud_growth_desc: "成長の原動力",
+            thesis_title: "で、この株「買い」なの？",
+            thesis_subtitle: "AI時代における最重要企業の一角。しかし、巨大企業ならではの規制リスクや、激化する競争環境も無視できません。",
+            thesis_bull_btn: "強気シナリオ (Bull)",
+            thesis_bear_btn: "弱気シナリオ (Bear)",
+            outlook_title: "Microsoftの未来は？",
+            outlook_subtitle: "「地球上のすべての個人とすべての組織が、より多くのことを達成できるようにする」というミッションの下、AIを社会の隅々まで浸透させようとしています。",
+            outlook_roadmap_title: "未来へのロードマップ",
+            outlook_near_title: "近い未来 (1-2年後)",
+            outlook_near_desc: "AIアシスタント「Copilot」をOffice、Windows、Dynamicsなど全製品に統合し、生産性の革命を起こす。Azure AIのサービス拡充で、企業のAI導入を加速させる。",
+            outlook_far_title: "遠い未来 (3-5年後)",
+            outlook_far_desc: "Activision Blizzard買収を活かし、クラウドゲーミング市場での覇権を狙う。自社開発のAIチップでインフラコストを最適化し、量子コンピューティング分野でのリーダーシップを確立する。",
+            conclusion_title: "【最終結論】あなたの投資戦略は？",
+            conclusion_subtitle: "Microsoftは安定性と成長性を兼ね備えた優良銘柄。あなたのリスク許容度に合わせて投資戦略を考えましょう。",
+            strategy_question: "Q. あなたはどれくらいの期間、投資の成果を待ちますか？",
+            strategy_btn_short: "半年以内",
+            strategy_btn_medium: "1〜2年",
+            strategy_btn_long: "3年以上",
+            footer_copyright: "&copy; 2025 Microsoft Investor Dashboard. All rights reserved.",
+            footer_disclaimer: "この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。",
+            // Dynamic Content
+            bull_title: "この株が「安定成長」を続ける理由",
+            bull_point1: "<strong>クラウド(Azure)の成長:</strong> AWSを猛追し、AI需要を背景に市場シェアを拡大し続けている。",
+            bull_point2: "<strong>AI(OpenAI)との蜜月:</strong> OpenAIとの独占的なパートナーシップにより、最先端のAI技術を自社製品にいち早く統合できる。",
+            bull_point3: "<strong>盤石な法人顧客基盤:</strong> Office 365やDynamicsで築いた顧客網に、Copilotなどの高付加価値サービスを追加販売できる。",
+            bull_point4: "<strong>強力な株主還元:</strong> 安定したキャッシュフローを背景に、増配と自社株買いを継続的に実施。",
+            bear_title: "知っておくべき「リスク」",
+            bear_point1: "<strong>規制当局からの圧力:</strong> 巨大IT企業として、欧米を中心に独占禁止法関連の調査や訴訟のリスクが常にある。",
+            bear_point2: "<strong>クラウド市場の競争激化:</strong> AWSとの競争に加え、Google Cloudも追い上げており、利益率が低下する可能性。",
+            bear_point3: "<strong>AIへの過度な期待:</strong> AI(Copilot等)の収益化が期待ほど進まなかった場合、株価が調整する可能性がある。",
+            bear_point4: "<strong>巨大組織の硬直化:</strong> 企業規模が大きくなりすぎたことによる、イノベーションの停滞や意思決定の遅れ。",
+            strategy_short_title: "短期派（〜6ヶ月）のあなたへ",
+            strategy_short_headline: "大きな値動きは期待薄",
+            strategy_short_desc: "時価総額が巨大なため、短期的な株価の急騰は考えにくい。決算発表を跨ぐ戦略もありますが、安定した大型株のため、短期売買には不向きかもしれません。",
+            strategy_medium_title: "中期派（1〜2年）のあなたへ",
+            strategy_medium_headline: "「押し目買い」が有効",
+            strategy_medium_desc: "クラウドとAIの成長は続きます。市場全体の下落などで株価が一時的に下がった時が絶好のチャンス。少しずつ買い集める戦略でリスクを分散させましょう。",
+            strategy_long_title: "長期派（3年以上）のあなたへ",
+            strategy_long_headline: "ポートフォリオの中核に",
+            strategy_long_desc: "短期的な株価は気にせず、AIが社会を変える未来を信じてじっくり保有。安定した成長と配当で、あなたの資産形成の中核を担う銘柄です。",
+            // Chart Labels
+            chart_stock_label: "株価 ($)",
+            chart_revenue_label: "売上高 (億ドル)",
+            chart_profit_label: "純利益 (億ドル)",
+            chart_revenue_axis_label: "億ドル",
+            chart_competitor_msft: "Microsoft",
+            chart_competitor_avg: "競合他社 (平均)",
+            chart_competitor_axis1: "クラウド(IaaS/PaaS)",
+            chart_competitor_axis2: "エンタープライズSW",
+            chart_competitor_axis3: "AI開発力",
+            chart_competitor_axis4: "OSシェア",
+            chart_competitor_axis5: "ゲーム事業",
+        },
+        en: {
+            page_title: "[Microsoft Edition] The Cloud and AI Giant! Investor Dashboard",
+            nav_today: "Today's Market",
+            nav_pickup: "Featured Stocks",
+            nav_ipo: "IPO Schedule",
+            nav_about: "About",
+            subnav_intro: "Introduction",
+            subnav_business: "The Company",
+            subnav_financials: "Financials",
+            subnav_thesis: "Buy or Wait?",
+            subnav_outlook: "The Future",
+            main_headline_1: "From Software Giant to AI Cloud Champion",
+            main_headline_2: "'s Rebirth",
+            main_subtitle: "Delving into the next moves and investment core of Microsoft, the giant supporting global business and life.",
+            intro_title: "'Looking for a stable growth stock?' Then you need to know about the giant, Microsoft, today.",
+            intro_body: `<p>"I want a stable, high-dividend stock, but I don't want to sacrifice growth potential..." If you're looking for such an ideal investment, the first place to look is Microsoft. Did you know that this giant, known to everyone for Windows and Office, is now experiencing rapid growth again, armed with AI and the cloud?</p><p>Thanks to a powerful partnership with OpenAI, the developer of the popular "ChatGPT," Microsoft's cloud service "Azure" is being chosen from all over the world as the platform for AI development. It's like having an exclusive supply of reliable "picks and shovels" and "land" in the new gold rush of the AI era.</p><p>This page will answer questions like "What are Microsoft's strengths?", "Are its earnings stable?", and "What is its future growth potential?" in a way that is easy for beginner investors to understand. Let's explore together what makes this king of stability and growth tick!</p>`,
+            kpi_title: "Unwavering Growth Driven by Cloud and AI",
+            kpi_subtitle: "The overwhelming strength of its enterprise cloud business and the integration of AI technology into its products support Microsoft's stable stock price growth.",
+            kpi_stock_price: "Current Price",
+            kpi_ytd_return: "YTD Return",
+            kpi_market_cap: "Market Cap",
+            kpi_per: "P/E Ratio",
+            business_title: "What kind of company is Microsoft?",
+            business_subtitle: "Leveraging its solid customer base built with Windows and Office, it boasts the world's second-largest share in the cloud service 'Azure'. In recent years, it has been leading the market in the AI field.",
+            business_segments_title: "Three Core Businesses Supporting the World",
+            segment1_name: "Intelligent Cloud",
+            segment1_desc: "The cloud platform 'Azure' and server product group. Rapidly growing as an infrastructure for AI development in collaboration with OpenAI. The largest source of revenue.",
+            segment2_name: "Productivity & Business",
+            segment2_desc: "'Office 365' for business and personal use, business SNS 'LinkedIn', ERP/CRM 'Dynamics 365', etc. Stable subscription revenue is a key strength.",
+            segment3_name: "More Personal Computing",
+            segment3_desc: "The 'Windows' OS, Surface devices, 'Bing' search engine, and the gaming business including 'Xbox'. Involved in all aspects of daily life.",
+            competitor_title: "What makes it stand out from rivals?",
+            competitor_subtitle: "Microsoft's strength lies in its overwhelming trust and sales network in the enterprise market. The ability to offer cloud and AI as a set to its existing customer base is a significant advantage that other companies do not have.",
+            financials_title: "How are the company's financials?",
+            financials_subtitle: "Strong growth in the cloud business is driving the entire company, with sales and profits continuing to show stable double-digit growth. High profitability and a healthy financial structure are attractive features.",
+            financials_revenue: "Annual Revenue",
+            financials_revenue_value: "$236.5B",
+            financials_revenue_yoy: "+12% YoY",
+            financials_margin: "Gross Margin",
+            financials_margin_tooltip: "The percentage of revenue left after subtracting the cost of goods sold. A higher margin indicates a more profitable business model.",
+            financials_margin_desc: "Maintaining high profitability",
+            financials_cloud_growth: "Intelligent Cloud Growth Rate",
+            financials_cloud_growth_desc: "The driving force of growth",
+            thesis_title: "So, is this stock a 'Buy'?",
+            thesis_subtitle: "One of the most important companies in the AI era. However, regulatory risks unique to giant corporations and intensifying competition cannot be ignored.",
+            thesis_bull_btn: "Bull Case",
+            thesis_bear_btn: "Bear Case",
+            outlook_title: "What is the future of Microsoft?",
+            outlook_subtitle: "Under its mission to 'empower every person and every organization on the planet to achieve more,' Microsoft is trying to permeate AI into every corner of society.",
+            outlook_roadmap_title: "Roadmap to the Future",
+            outlook_near_title: "Near Future (1-2 years)",
+            outlook_near_desc: "Revolutionize productivity by integrating the AI assistant 'Copilot' into all products like Office, Windows, and Dynamics. Accelerate corporate AI adoption by expanding Azure AI services.",
+            outlook_far_title: "Distant Future (3-5 years)",
+            outlook_far_desc: "Aim for dominance in the cloud gaming market by leveraging the Activision Blizzard acquisition. Optimize infrastructure costs with self-developed AI chips and establish leadership in the quantum computing field.",
+            conclusion_title: "【Final Verdict】What's Your Investment Strategy?",
+            conclusion_subtitle: "Microsoft is a blue-chip stock that combines stability and growth. Consider your investment strategy according to your risk tolerance.",
+            strategy_question: "Q. How long are you willing to wait for investment results?",
+            strategy_btn_short: "Within 6 months",
+            strategy_btn_medium: "1-2 years",
+            strategy_btn_long: "3+ years",
+            footer_copyright: "&copy; 2025 Microsoft Investor Dashboard. All rights reserved.",
+            footer_disclaimer: "This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions based on your own judgment and responsibility.",
+            // Dynamic Content
+            bull_title: "Why this stock will continue its 'Stable Growth'",
+            bull_point1: "<strong>Cloud (Azure) Growth:</strong> Hot on the heels of AWS, it continues to expand its market share on the back of AI demand.",
+            bull_point2: "<strong>Intimate ties with AI (OpenAI):</strong> An exclusive partnership with OpenAI allows for the rapid integration of cutting-edge AI technology into its own products.",
+            bull_point3: "<strong>Solid Enterprise Customer Base:</strong> Can upsell high-value services like Copilot to the customer network built through Office 365 and Dynamics.",
+            bull_point4: "<strong>Strong Shareholder Returns:</strong> Consistently implements dividend increases and share buybacks, backed by stable cash flow.",
+            bear_title: "Risks You Should Know",
+            bear_point1: "<strong>Regulatory Pressure:</strong> As a tech giant, there is a constant risk of antitrust investigations and lawsuits, mainly in Europe and the US.",
+            bear_point2: "<strong>Intensifying Cloud Competition:</strong> In addition to competition with AWS, Google Cloud is also catching up, potentially lowering profit margins.",
+            bear_point3: "<strong>Overblown AI Expectations:</strong> If the monetization of AI (like Copilot) does not proceed as expected, the stock price could see a correction.",
+            bear_point4: "<strong>Giant's Rigidity:</strong> The risk of innovation stagnation and slow decision-making due to the sheer size of the organization.",
+            strategy_short_title: "For the Short-Term Investor (up to 6 months)",
+            strategy_short_headline: "Large moves are unlikely",
+            strategy_short_desc: "Due to its massive market cap, a sharp short-term surge in stock price is unlikely. While a strategy around earnings announcements exists, it may not be suitable for short-term trading as a stable large-cap stock.",
+            strategy_medium_title: "For the Medium-Term Investor (1-2 years)",
+            strategy_medium_headline: "'Buying the dip' is effective",
+            strategy_medium_desc: "The growth of cloud and AI will continue. A temporary drop in stock price due to a broader market downturn is a golden opportunity. Mitigate risk by gradually accumulating shares.",
+            strategy_long_title: "For the Long-Term Investor (3+ years)",
+            strategy_long_headline: "A core portfolio holding",
+            strategy_long_desc: "Hold for the long term, believing in a future transformed by AI, without worrying about short-term price fluctuations. This stock can be the core of your asset formation with stable growth and dividends.",
+             // Chart Labels
+            chart_stock_label: "Stock Price ($)",
+            chart_revenue_label: "Revenue ($B)",
+            chart_profit_label: "Net Income ($B)",
+            chart_revenue_axis_label: "$ Billions",
+            chart_competitor_msft: "Microsoft",
+            chart_competitor_avg: "Competitors (Avg.)",
+            chart_competitor_axis1: "Cloud (IaaS/PaaS)",
+            chart_competitor_axis2: "Enterprise SW",
+            chart_competitor_axis3: "AI Development",
+            chart_competitor_axis4: "OS Share",
+            chart_competitor_axis5: "Gaming",
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        let currentLang = localStorage.getItem('msftDashboardLang') || 'ja';
+        let activeThesis = 'bull';
+        let charts = {}; // To hold chart instances
+
+        // --- LANGUAGE SWITCHER ---
+        const setLanguage = (lang) => {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (translations[lang][key]) {
+                    if (el.hasAttribute('data-is-html')) {
+                        el.innerHTML = translations[lang][key];
+                    } else {
+                        el.innerText = translations[lang][key];
+                    }
+                }
+            });
+
+            // Update button styles
+            document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+                if (btn.getAttribute('data-lang-btn') === lang) {
+                    btn.classList.add('bg-primary', 'text-white');
+                    btn.classList.remove('bg-gray-100', 'text-gray-700');
+                } else {
+                    btn.classList.remove('bg-primary', 'text-white');
+                    btn.classList.add('bg-gray-100', 'text-gray-700');
+                }
+            });
+            
+            localStorage.setItem('msftDashboardLang', lang);
+            updateThesisContent();
+            renderAllCharts(); // Re-render charts with new labels
+        };
+
+        document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                setLanguage(e.target.getAttribute('data-lang-btn'));
+            });
+        });
+
+        // --- MOBILE MENU ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+        
+        // --- SCROLL ANIMATIONS ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(counter => {
+                        animateCount(counter);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+        
+        // --- COUNTER ANIMATION ---
+        function animateCount(element) {
+            const target = +element.getAttribute('data-count');
+            const isPercentage = element.innerText.includes('%');
+            const isDollar = element.innerText.includes('$');
+            const isTrillion = currentLang === 'ja' ? element.innerText.includes('兆ドル') : element.innerText.includes('T');
+            const isTimes = currentLang === 'ja' ? element.innerText.includes('倍') : element.innerText.includes('x');
+            const duration = 2000;
+            let start = 0;
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = '+' + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(1) + (currentLang === 'ja' ? '兆ドル' : 'T');
+                else if (isTimes) element.innerText = current.toFixed(0) + (currentLang === 'ja' ? '倍' : 'x');
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = '+' + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(1) + (currentLang === 'ja' ? '兆ドル' : 'T');
+                    else if (isTimes) element.innerText = target.toFixed(0) + (currentLang === 'ja' ? '倍' : 'x');
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // --- CHART RENDERING ---
+        const defaultFont = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.family = defaultFont;
+        Chart.defaults.font.size = 14;
+
+        const renderAllCharts = () => {
+            // Destroy existing charts before re-rendering
+            Object.values(charts).forEach(chart => chart.destroy());
+
+            // Stock Price Chart
+            const stockLabels = Array.from({length: 12}, (_, i) => new Date(2024, 7, 1 + i*30));
+            charts.stockPrice = new Chart(document.getElementById('stockPriceChart'), {
+                type: 'line',
+                data: {
+                    labels: stockLabels,
+                    datasets: [{
+                        label: translations[currentLang].chart_stock_label,
+                        data: [380, 395, 405, 410, 420, 415, 430, 435, 440, 445, 448, 450],
+                        borderColor: '#0078D4',
+                        backgroundColor: 'rgba(0, 120, 212, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, 
+                        x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } 
+                    }
+                }
+            });
+
+            // Financials Chart
+            charts.financials = new Chart(document.getElementById('financialsChart'), {
+                data: {
+                    labels: ['2023', '2024', '2025 (Est)'],
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: translations[currentLang].chart_revenue_label,
+                            data: [211.9, 236.5, 255.0],
+                            backgroundColor: '#0078D4',
+                            yAxisID: 'y',
+                        },
+                        {
+                            type: 'line',
+                            label: translations[currentLang].chart_profit_label,
+                            data: [72.7, 86.0, 95.0],
+                            borderColor: '#38BDF8',
+                            backgroundColor: '#38BDF8',
+                            tension: 0.4,
+                            yAxisID: 'y',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } },
+                    scales: {
+                        y: { type: 'linear', display: true, position: 'left', title: { display: true, text: translations[currentLang].chart_revenue_axis_label }, grid: { color: '#E2E8F0' } },
+                    }
+                }
+            });
+
+            // Competitor Chart
+            charts.competitor = new Chart(document.getElementById('competitorChart'), {
+                type: 'radar',
+                data: {
+                    labels: [
+                        translations[currentLang].chart_competitor_axis1,
+                        translations[currentLang].chart_competitor_axis2,
+                        translations[currentLang].chart_competitor_axis3,
+                        translations[currentLang].chart_competitor_axis4,
+                        translations[currentLang].chart_competitor_axis5,
+                    ],
+                    datasets: [
+                        {
+                            label: translations[currentLang].chart_competitor_msft,
+                            data: [90, 98, 95, 92, 85],
+                            backgroundColor: 'rgba(0, 120, 212, 0.2)',
+                            borderColor: 'rgba(0, 120, 212, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(0, 120, 212, 1)',
+                        },
+                        {
+                            label: translations[currentLang].chart_competitor_avg,
+                            data: [95, 70, 90, 60, 80],
+                            backgroundColor: 'rgba(203, 213, 225, 0.2)',
+                            borderColor: 'rgba(100, 116, 139, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(100, 116, 139, 1)',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' } },
+                    scales: {
+                        r: {
+                            angleLines: { color: '#E2E8F0' },
+                            grid: { color: '#E2E8F0' },
+                            pointLabels: { font: { size: 16 } },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+        }
+        
+        // --- INVESTMENT THESIS ---
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        const thesisContent = document.getElementById('thesisContent');
+
+        const updateThesisContent = () => {
+            const lang = currentLang;
+            let content = '';
+            if (activeThesis === 'bull') {
+                content = `
+                    <h3 class="text-3xl font-bold text-blue-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations[lang].bull_title}</h3>
+                    <ul class="space-y-4 text-slate-700 text-lg">
+                        <li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations[lang].bull_point1}</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations[lang].bull_point2}</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations[lang].bull_point3}</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations[lang].bull_point4}</span></li>
+                    </ul>`;
+            } else { // bear
+                content = `
+                    <h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations[lang].bear_title}</h3>
+                    <ul class="space-y-4 text-slate-700 text-lg">
+                        <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations[lang].bear_point1}</span></li>
+                        <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations[lang].bear_point2}</span></li>
+                        <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations[lang].bear_point3}</span></li>
+                        <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations[lang].bear_point4}</span></li>
+                    </ul>`;
+            }
+            thesisContent.innerHTML = content;
+        };
+
+        bullBtn.addEventListener('click', () => {
+            activeThesis = 'bull';
+            bullBtn.classList.add('border-blue-500', 'text-blue-600');
+            bullBtn.classList.remove('border-transparent', 'text-slate-400');
+            bearBtn.classList.add('border-transparent', 'text-slate-400');
+            bearBtn.classList.remove('border-red-500', 'text-red-600');
+            updateThesisContent();
+        });
+
+        bearBtn.addEventListener('click', () => {
+            activeThesis = 'bear';
+            bearBtn.classList.add('border-red-500', 'text-red-600');
+            bearBtn.classList.remove('border-transparent', 'text-slate-400');
+            bullBtn.classList.add('border-transparent', 'text-slate-400');
+            bullBtn.classList.remove('border-blue-500', 'text-blue-600');
+            updateThesisContent();
+        });
+
+        // --- SCROLLSPY FOR NAV ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('main section');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // --- INITIALIZE PAGE ---
+        setLanguage(currentLang);
+    });
+
+    // --- INVESTMENT STRATEGY DIAGNOSIS ---
+    function showStrategy(type) {
+        const resultDiv = document.getElementById('strategy-result');
+        const lang = document.documentElement.lang || 'ja';
+        let content = '';
+        
+        if (type === 'short') {
+            content = `
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in">
+                    <h3 class="font-bold text-amber-700 text-xl">${translations[lang].strategy_short_title}</h3>
+                    <p class="text-3xl font-extrabold my-2">${translations[lang].strategy_short_headline}</p>
+                    <p class="text-lg text-slate-600">${translations[lang].strategy_short_desc}</p>
+                </div>`;
+        } else if (type === 'medium') {
+            content = `
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in">
+                    <h3 class="font-bold text-sky-700 text-xl">${translations[lang].strategy_medium_title}</h3>
+                    <p class="text-3xl font-extrabold my-2">${translations[lang].strategy_medium_headline}</p>
+                    <p class="text-lg text-slate-600">${translations[lang].strategy_medium_desc}</p>
+                </div>`;
+        } else {
+            content = `
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-blue-400 animate-pop-in">
+                    <h3 class="font-bold text-blue-700 text-xl">${translations[lang].strategy_long_title}</h3>
+                    <p class="text-3xl font-extrabold my-2">${translations[lang].strategy_long_headline}</p>
+                    <p class="text-lg text-slate-600">${translations[lang].strategy_long_desc}</p>
+                </div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    }
+
+    // Add animation CSS
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes pop-in {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-pop-in {
+            animation: pop-in 0.5s ease-out forwards;
+        }
+    `;
+    document.head.appendChild(style);
+    </script>
+</body>
+</html>

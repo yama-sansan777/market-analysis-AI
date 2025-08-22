@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 変更: ページタイトルをAppleに変更 -->
+    <title>Apple Inc. (AAPL) 企業分析 | Stock Insight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        /* TailwindCSS config for primary colors */
+        :root {
+            --primary: #2563EB;
+        }
+        .text-primary { color: var(--primary); }
+        .bg-primary { background-color: var(--primary); }
+        .hover\\:text-primary:hover { color: var(--primary); }
+        .hover\\:bg-primary\\/90:hover { background-color: rgba(37, 99, 235, 0.9); }
+        .border-primary { border-color: var(--primary); }
+        .rounded-button { border-radius: 8px; }
+        
+        /* 変更: 基本フォントと背景色をnvidia.htmlのスタイルに統一 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #F8FAFC; /* slate-50 */
+            color: #1E293B; /* slate-800 */
+        }
+        /* 変更: グラデーションテキストをAppleのカラー（グレー系）に変更 */
+        .gradient-text {
+            background: linear-gradient(to right, #475569, #1E293B); /* slate-600 to slate-800 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* 変更: ナビゲーションリンクのスタイルをnvidia.htmlに統一 */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+            padding-bottom: 8px;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: #64748B; /* slate-500 */
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        /* 変更: カードデザインをnvidia.htmlのスタイルに統一 */
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+            border: 1px solid #E2E8F0;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        /* 変更: アニメーションをnvidia.htmlのスタイルに統一 */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* 追加: 最終結論セクションのアニメーション */
+        @keyframes pop-in {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-pop-in {
+            animation: pop-in 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+    <!-- 変更: Apple専用のサブヘッダーをnvidia.htmlのスタイルで作成 -->
+    <div class="bg-gradient-to-r from-slate-50 to-gray-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <!-- 変更: ロゴをAppleに変更 -->
+                    <div class="w-12 h-12 bg-gradient-to-br from-slate-700 to-slate-900 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">
+                        <svg class="w-7 h-7" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M28.47,18.82a7,7,0,0,0-2.39,5.55,7.06,7.06,0,0,0,2.68,5.77,7.22,7.22,0,0,0,5.66,2.6,1.62,1.62,0,0,0,.15,0,11.38,11.38,0,0,1-3.3,2.44,10.73,10.73,0,0,1-4.19,1.25,7.8,7.8,0,0,1-6.1-2.8,7.5,7.5,0,0,1-2.82-5.89,8.39,8.39,0,0,1,2.54-6.1,7.5,7.5,0,0,1,6.1-2.89A7.1,7.1,0,0,1,28.47,18.82Zm-1.4-15.68a7.4,7.4,0,0,1,5,2.83,6.53,6.53,0,0,1-2.15,4.78,7.5,7.5,0,0,1-5.18,2.3,6.37,6.37,0,0,1-5-2.88,6.52,6.52,0,0,1,2.2-4.72A7.31,7.31,0,0,1,27.07,3.14Z"></path></svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800" data-lang="company_name">Apple Inc.</span>
+                        <span class="text-sm font-semibold text-slate-500">NASDAQ: AAPL</span>
+                    </div>
+                </div>
+                <!-- Apple-specific subnavigation -->
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#future" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- 変更: 全セクションの構成とデザインをnvidia.htmlに準拠 -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    デザインとテクノロジーの融合、<br>
+                    <span class="gradient-text">Apple</span>が創る未来
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    世界で最も愛されるブランド「Apple」。このページだけで、その強さの秘密と投資の核心がわかります。
+                </p>
+            </div>
+
+            <!-- 追加: 導入解説セクション -->
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-slate-50 to-gray-50 border-slate-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_article_title">「個別株投資、何から始める？」 世界を変えた巨人、Appleから学んでみよう！</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_article_p1">「投資信託には慣れてきたけど、そろそろ個別株にも挑戦してみたい…」 そう考えているあなたに、まず知ってほしいのが「Apple（アップル）」という会社です。iPhoneやMacでお馴染みですが、一体何がすごいの？ なぜ世界中の投資家が注目しているのでしょうか？</p>
+                    <p data-lang="intro_article_p2">実は、Appleの真の強みは製品そのものだけではありません。iPhone、Mac、Apple Watchといったハードウェアと、それらを動かすソフトウェア、さらに音楽や決済などのサービスが<strong class="text-slate-700">シームレスに連携する「エコシステム」</strong>こそが、他にはない圧倒的な競争力の源泉なのです。</p>
+                    <p data-lang="intro_article_p3">このページでは、「Appleってどんな会社？」「業績は？」「未来は？」といった疑問に、初心者の方でもわかるように、一つひとつお答えしていきます。まずは最初のステップとして、この巨大企業がどんな会社なのか、一緒に見ていきましょう！</p>
+                </div>
+            </div>
+            <!-- 追加ここまで -->
+
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="performance_highlight_title">圧倒的なブランド力と収益性</h2>
+                <p class="text-slate-600 mb-8" data-lang="performance_highlight_desc">強力なエコシステムとサービス事業の成長により、Appleは安定した高収益を実現。その価値は株価にも如実に反映されています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <!-- 変更: 数値をAppleのデータに更新 -->
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="metric_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-slate-600" data-count="205.00">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="metric_return">年初来リターン</p>
+                        <p class="text-4xl font-bold text-slate-600" data-count="8.5">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="metric_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-slate-600" data-count="3.15">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="metric_pe_ratio">PER</p>
+                        <p class="text-4xl font-bold text-slate-600" data-count="32.5">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="about_title">Appleって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="about_desc">iPhoneという革命的な製品で世界を変え、今やハードウェア、ソフトウェア、サービスが一体となった巨大なエコシステムを築き上げたテクノロジーの巨人です。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">世界を支える3つのコア事業</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <!-- 変更: 事業内容をAppleに更新 -->
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-slate-50"><svg class="w-10 h-10 text-slate-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="business1_title">ハードウェア</h4>
+                        <p class="text-slate-600" data-lang="business1_desc">iPhone, Mac, iPad, Apple Watchなど。卓越したデザインと性能で高い利益率を誇る最大の収益源。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-slate-50"><svg class="w-10 h-10 text-slate-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3.75v3.75m3.75-3.75v3.75m-7.5-12v3.75m3.75-3.75v3.75m7.5-3.75v3.75m3.75-3.75v3.75M12 21v-3.75m-3.75 0H12m-3.75 0h-3.75m3.75 0v-3.75m0 3.75v-3.75m0-3.75h3.75m-3.75 0h-3.75m3.75 0v-3.75m0 3.75h3.75m-3.75 0v-3.75m0 0v-3.75m3.75 0v3.75m-3.75 0h3.75" /></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="business2_title">サービス</h4>
+                        <p class="text-slate-600" data-lang="business2_desc">App Store, Apple Music, iCloud, Apple Payなど。高収益で安定成長を続ける第2の柱。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-slate-50"><svg class="w-10 h-10 text-slate-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l-2.25 2.25m-10.5-6 4.5 4.5-4.5 4.5m-6-11.25h16.5a2.25 2.25 0 0 1 2.25 2.25v16.5a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 20.25V3.75A2.25 2.25 0 0 1 3.75 1.5Z" /></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="business3_title">イノベーション</h4>
+                        <p class="text-slate-600" data-lang="business3_desc">独自開発の半導体(Mシリーズ)、Vision Proによる空間コンピューティングなど、未来への投資を続ける。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_analysis_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_analysis_desc">Appleの真の強みは個々の製品ではなく、それらが織りなす「エコシステム」。この強力な顧客ロックイン効果が、他社の追随を許さない「堀」となっています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_desc">巨大企業でありながら安定した成長を継続。特にサービス部門の伸びが全体の利益率を押し上げています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <!-- 変更: 数値をAppleのデータに更新 -->
+                    <div class="bg-slate-50 border-l-4 border-slate-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="metric_revenue_annual">年間売上高 (FY2023)</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$3832億</p>
+                        <p class="text-base font-semibold text-slate-600" data-lang="metric_revenue_growth">安定した巨大収益基盤</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="metric_profit_margin">純利益率</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">25.3%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="metric_profit_margin_desc">驚異的な収益性</p>
+                    </div>
+                    <div class="bg-emerald-50 border-l-4 border-emerald-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="metric_service_revenue">サービス部門売上</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$852億</p>
+                        <p class="text-base font-semibold text-emerald-600" data-lang="metric_service_revenue_desc">成長の原動力</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_desc">世界最強ブランドの一角。しかし、その巨大さゆえの課題と、知っておくべきリスクも存在します。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <!-- 変更: Bull/Bearの切り替えUIをnvidia.htmlに統一 -->
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-slate-500 text-slate-600" data-lang="bull_title">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_title">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="future_title">Appleの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="future_desc">Appleは単なるiPhoneメーカーに留まりません。AI、ヘルスケア、そして空間コンピューティングで、次の時代のプラットフォームを創造しようとしています。</p>
+            </div>
+            <!-- 変更: 未来のロードマップをnvidia.htmlのタイムライン形式に変更 -->
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="future_roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-slate-300 ml-6 pl-8">
+                    <div class="mb-16">
+                        <div class="absolute w-6 h-6 bg-slate-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap1_title">AIの深化と統合</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap1_desc">デバイス上での高速・高効率なAI処理を実現する独自チップを強化。Siriの進化やOSへのAI機能の統合を加速させ、よりパーソナルな体験を提供する。</p>
+                    </div>
+                    <div class="mb-16">
+                         <div class="absolute w-6 h-6 bg-slate-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap2_title">ヘルスケア分野への本格参入</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap2_desc">Apple Watchのセンサー機能を拡充し、血糖値測定など非侵襲的な健康モニタリング技術を開発。個人の健康管理プラットフォームとしての地位を確立する。</p>
+                    </div>
+                    <div>
+                         <div class="absolute w-6 h-6 bg-slate-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap3_title">空間コンピューティングの普及</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap3_desc">Vision Proを起点に、現実世界とデジタル情報を融合させる新たなコンピューティング市場を創造。アプリやサービスの新たなエコシステムを構築する。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 追加: 最終結論セクション -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_desc">Appleは長期的な成長が期待される一方、巨大企業ならではの課題も抱える銘柄。あなたのスタイルに合わせた戦略を決めましょう！</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_question">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="showStrategy('short')" class="w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-lang="strategy_btn_short">半年以内</button>
+                        <button onclick="showStrategy('medium')" class="w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button onclick="showStrategy('long')" class="w-full text-lg bg-emerald-100 text-emerald-800 font-bold py-3 px-6 rounded-lg hover:bg-emerald-200 transition" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;">
+                    <!-- Result will be shown here -->
+                </div>
+             </div>
+        </section>
+
+    </main>
+    
+    <!-- 変更: フッターをnvidia.htmlのスタイルに統一 -->
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <p>&copy; 2024 Stock Insight. All Rights Reserved.</p>
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">本ページは情報提供を目的としており、投資勧誘を目的としたものではありません。投資に関する決定はご自身の判断でお願いします。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- グローバル変数 ---
+    let currentLang = 'ja';
+    const translations = {
+        en: {
+            nav_today: "Today's Market Analysis",
+            nav_pickup: "Cramer's Holdings", 
+            nav_ipo: "IPO Schedule",
+            nav_indicators: "Technical Indicators",
+            nav_terms: "Market Glossary",
+            nav_about: "About Site",
+            login: "Login",
+            register: "Free Registration",
+            subnav_intro: "Intro",
+            subnav_company: "About",
+            subnav_financials: "Performance",
+            subnav_thesis: "Buy or Wait?",
+            subnav_outlook: "Future",
+            header_title: "Stock Insight",
+            nav_intro: "Intro",
+            nav_about: "About Site",
+            nav_performance: "Performance",
+            nav_outlook: "Outlook",
+            nav_future: "Future",
+            company_name: "Apple Inc.",
+            hero_title: "Where Design Meets Technology,<br><span class='gradient-text'>Apple</span> Shapes the Future",
+            hero_subtitle: "The world's most beloved brand, 'Apple'. This page reveals the secrets of its strength and the core of its investment thesis.",
+            intro_article_title: "'Where to start with individual stocks?' Let's learn from the giant that changed the world, Apple!",
+            intro_article_p1: "Thinking of trying individual stocks after getting used to mutual funds? The first company you should know is Apple. You know it from the iPhone and Mac, but what makes it so special? Why do investors worldwide pay attention?",
+            intro_article_p2: "Apple's true strength isn't just its products. It's the 'ecosystem' where hardware like the iPhone, Mac, and Apple Watch, the software that runs them, and services like music and payments work together seamlessly. This is the source of its unparalleled competitive advantage.",
+            intro_article_p3: "This page will answer questions like 'What is Apple?', 'How's its performance?', and 'What's its future?' in a beginner-friendly way. As a first step, let's explore what this giant company is all about together!",
+            performance_highlight_title: "Unmatched Brand Power and Profitability",
+            performance_highlight_desc: "Through a powerful ecosystem and growing services business, Apple achieves stable, high profitability. This value is clearly reflected in its stock price.",
+            metric_price: "Current Price",
+            metric_return: "YTD Return",
+            metric_market_cap: "Market Cap",
+            metric_pe_ratio: "P/E Ratio",
+            about_title: "What kind of company is Apple?",
+            about_desc: "A technology giant that changed the world with the revolutionary iPhone, now building a massive ecosystem integrating hardware, software, and services.",
+            core_business_title: "Three Core Businesses Supporting the World",
+            business1_title: "Hardware",
+            business1_desc: "iPhone, Mac, iPad, Apple Watch, etc. The largest revenue source, boasting high profit margins with excellent design and performance.",
+            business2_title: "Services",
+            business2_desc: "App Store, Apple Music, iCloud, Apple Pay, etc. The second pillar, showing stable growth with high profitability.",
+            business3_title: "Innovation",
+            business3_desc: "Continuing to invest in the future with proprietary semiconductors (M-series) and spatial computing via Vision Pro.",
+            competitor_analysis_title: "What makes it superior to rivals?",
+            competitor_analysis_desc: "Apple's true strength lies not in individual products, but in the 'ecosystem' they create. This powerful customer lock-in effect forms a 'moat' that competitors cannot easily cross.",
+            financials_title: "How is the company's performance?",
+            financials_desc: "Continuing stable growth despite its massive size. The growth of the services division, in particular, is boosting overall profit margins.",
+            metric_revenue_annual: "Annual Revenue (FY2023)",
+            metric_revenue_growth: "A stable, huge revenue base",
+            metric_profit_margin: "Net Profit Margin",
+            metric_profit_margin_desc: "Incredible profitability",
+            metric_service_revenue: "Services Revenue",
+            metric_service_revenue_desc: "The engine of growth",
+            outlook_title: "So, is this stock a 'buy'?",
+            outlook_desc: "One of the world's strongest brands. However, its very size presents challenges and risks that investors should know.",
+            bull_title: "Bull Case",
+            bear_title: "Bear Case",
+            future_title: "What is Apple's future?",
+            future_desc: "Apple is not just an iPhone maker. It aims to create the next era's platform through AI, healthcare, and spatial computing.",
+            future_roadmap_title: "Roadmap to the Future",
+            roadmap1_title: "Deepening AI Integration",
+            roadmap1_desc: "Enhancing proprietary chips for fast, on-device AI processing. Accelerating Siri's evolution and integrating AI features into the OS to offer a more personalized experience.",
+            roadmap2_title: "Full-Scale Entry into Healthcare",
+            roadmap2_desc: "Expanding Apple Watch sensor capabilities to develop non-invasive health monitoring, establishing its position as a personal health management platform.",
+            roadmap3_title: "Popularizing Spatial Computing",
+            roadmap3_desc: "Starting with Vision Pro, creating a new computing market that merges the real world with digital information, building a new ecosystem of apps and services.",
+            conclusion_title: "【Final Conclusion】What's Your Investment Strategy?",
+            conclusion_desc: "While Apple is expected to see long-term growth, it also faces challenges unique to a giant corporation. Decide on a strategy that fits your style!",
+            strategy_question: "Q. How long are you willing to wait for investment results?",
+            strategy_btn_short: "Within 6 months",
+            strategy_btn_medium: "1-2 years",
+            strategy_btn_long: "3+ years",
+            strategy_short_title: "For the Short-Term Trader (~6 months)",
+            strategy_short_subtitle: "Event-Driven Trading",
+            strategy_short_desc: "The stock price is relatively calm, but tends to become more volatile around events like new product announcements or earnings reports. Short-term strategies can target these moments, but be cautious of surprises.",
+            strategy_medium_title: "For the Mid-Term Investor (1-2 years)",
+            strategy_medium_subtitle: "'Buying the Dip' is Effective",
+            strategy_medium_desc: "The ecosystem's strength is solid. A temporary price drop due to a market-wide downturn is a perfect chance. Mitigate risk by accumulating shares gradually.",
+            strategy_long_title: "For the Long-Term Holder (3+ years)",
+            strategy_long_subtitle: "An Opportune Time to 'Buy'",
+            strategy_long_desc: "Ignore short-term ups and downs and hold with faith in the future platforms Apple is creating. This is a classic strategy for aiming for significant long-term returns.",
+            footer_disclaimer: "This page is for informational purposes only and is not intended as investment advice. Please make your own investment decisions."
+        },
+        ja: {
+            nav_today: "本日の市況分析",
+            nav_pickup: "クレイマー保有銘柄",
+            nav_ipo: "IPOスケジュール", 
+            nav_indicators: "テクニカル指標解説",
+            nav_terms: "市場用語集",
+            nav_about: "サイトについて",
+            login: "ログイン",
+            register: "無料登録",
+            subnav_intro: "はじめに",
+            subnav_company: "どんな会社？",
+            subnav_financials: "業績は？",
+            subnav_thesis: "買い？or 待ち？",
+            subnav_outlook: "未来は？",
+            header_title: "ストックインサイト",
+            nav_intro: "はじめに",
+            nav_about: "サイトについて",
+            nav_performance: "業績は？",
+            nav_outlook: "買い？or 待ち？",
+            nav_future: "未来は？",
+            company_name: "Apple Inc.",
+            hero_title: "デザインとテクノロジーの融合、<br><span class='gradient-text'>Apple</span>が創る未来",
+            hero_subtitle: "世界で最も愛されるブランド「Apple」。このページだけで、その強さの秘密と投資の核心がわかります。",
+            intro_article_title: "「個別株投資、何から始める？」 世界を変えた巨人、Appleから学んでみよう！",
+            intro_article_p1: "「投資信託には慣れてきたけど、そろそろ個別株にも挑戦してみたい…」 そう考えているあなたに、まず知ってほしいのが「Apple（アップル）」という会社です。iPhoneやMacでお馴染みですが、一体何がすごいの？ なぜ世界中の投資家が注目しているのでしょうか？",
+            intro_article_p2: "実は、Appleの真の強みは製品そのものだけではありません。iPhone、Mac、Apple Watchといったハードウェアと、それらを動かすソフトウェア、さらに音楽や決済などのサービスが<strong class='text-slate-700'>シームレスに連携する「エコシステム」</strong>こそが、他にはない圧倒的な競争力の源泉なのです。",
+            intro_article_p3: "このページでは、「Appleってどんな会社？」「業績は？」「未来は？」といった疑問に、初心者の方でもわかるように、一つひとつお答えしていきます。まずは最初のステップとして、この巨大企業がどんな会社なのか、一緒に見ていきましょう！",
+            performance_highlight_title: "圧倒的なブランド力と収益性",
+            performance_highlight_desc: "強力なエコシステムとサービス事業の成長により、Appleは安定した高収益を実現。その価値は株価にも如実に反映されています。",
+            metric_price: "現在の株価",
+            metric_return: "年初来リターン",
+            metric_market_cap: "時価総額",
+            metric_pe_ratio: "PER",
+            about_title: "Appleって、どんな会社？",
+            about_desc: "iPhoneという革命的な製品で世界を変え、今やハードウェア、ソフトウェア、サービスが一体となった巨大なエコシステムを築き上げたテクノロジーの巨人です。",
+            core_business_title: "世界を支える3つのコア事業",
+            business1_title: "ハードウェア",
+            business1_desc: "iPhone, Mac, iPad, Apple Watchなど。卓越したデザインと性能で高い利益率を誇る最大の収益源。",
+            business2_title: "サービス",
+            business2_desc: "App Store, Apple Music, iCloud, Apple Payなど。高収益で安定成長を続ける第2の柱。",
+            business3_title: "イノベーション",
+            business3_desc: "独自開発の半導体(Mシリーズ)、Vision Proによる空間コンピューティングなど、未来への投資を続ける。",
+            competitor_analysis_title: "ライバルと比べて、何がすごいの？",
+            competitor_analysis_desc: "Appleの真の強みは個々の製品ではなく、それらが織りなす「エコシステム」。この強力な顧客ロックイン効果が、他社の追随を許さない「堀」となっています。",
+            financials_title: "会社の業績は？",
+            financials_desc: "巨大企業でありながら安定した成長を継続。特にサービス部門の伸びが全体の利益率を押し上げています。",
+            metric_revenue_annual: "年間売上高 (2023年度)",
+            metric_revenue_growth: "安定した巨大収益基盤",
+            metric_profit_margin: "純利益率",
+            metric_profit_margin_desc: "驚異的な収益性",
+            metric_service_revenue: "サービス部門売上",
+            metric_service_revenue_desc: "成長の原動力",
+            outlook_title: "で、この株「買い」なの？",
+            outlook_desc: "世界最強ブランドの一角。しかし、その巨大さゆえの課題と、知っておくべきリスクも存在します。",
+            bull_title: "強気シナリオ (Bull)",
+            bear_title: "弱気シナリオ (Bear)",
+            future_title: "Appleの未来は？",
+            future_desc: "Appleは単なるiPhoneメーカーに留まりません。AI、ヘルスケア、そして空間コンピューティングで、次の時代のプラットフォームを創造しようとしています。",
+            future_roadmap_title: "未来へのロードマップ",
+            roadmap1_title: "AIの深化と統合",
+            roadmap1_desc: "デバイス上での高速・高効率なAI処理を実現する独自チップを強化。Siriの進化やOSへのAI機能の統合を加速させ、よりパーソナルな体験を提供する。",
+            roadmap2_title: "ヘルスケア分野への本格参入",
+            roadmap2_desc: "Apple Watchのセンサー機能を拡充し、血糖値測定など非侵襲的な健康モニタリング技術を開発。個人の健康管理プラットフォームとしての地位を確立する。",
+            roadmap3_title: "空間コンピューティングの普及",
+            roadmap3_desc: "Vision Proを起点に、現実世界とデジタル情報を融合させる新たなコンピューティング市場を創造。アプリやサービスの新たなエコシステムを構築する。",
+            conclusion_title: "【最終結論】あなたの投資戦略は？",
+            conclusion_desc: "Appleは長期的な成長が期待される一方、巨大企業ならではの課題も抱える銘柄。あなたのスタイルに合わせた戦略を決めましょう！",
+            strategy_question: "Q. あなたはどれくらいの期間、投資の成果を待ちますか？",
+            strategy_btn_short: "半年以内",
+            strategy_btn_medium: "1〜2年",
+            strategy_btn_long: "3年以上",
+            strategy_short_title: "短期派（〜6ヶ月）のあなたへ",
+            strategy_short_subtitle: "イベントドリブンな取引",
+            strategy_short_desc: "株価の変動は比較的穏やかですが、新製品発表や決算などのイベント前後で値動きが大きくなる傾向があります。短期的な取引はそのタイミングを狙う戦略もありますが、サプライズには注意が必要です。",
+            strategy_medium_title: "中期派（1〜2年）のあなたへ",
+            strategy_medium_subtitle: "「押し目買い」が有効",
+            strategy_medium_desc: "エコシステムの強さは揺るぎません。市場全体の下落などで株価が一時的に下がった時が絶好のチャンス。少しずつ買い集める戦略でリスクを分散させましょう。",
+            strategy_long_title: "長期派（3年以上）のあなたへ",
+            strategy_long_subtitle: "今が「買い」の好機",
+            strategy_long_desc: "短期的な株価の上下は気にせず、Appleが創り出す未来のプラットフォームを信じてじっくり保有。将来の大きなリターンを狙う王道の戦略です。",
+            footer_disclaimer: "本ページは情報提供を目的としており、投資勧誘を目的としたものではありません。投資に関する決定はご自身の判断でお願いします。"
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            const translation = translations[lang];
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (translation[key]) {
+                    el.innerHTML = translation[key];
+                }
+            });
+            
+            // Update language buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white', 'bg-gray-100', 'text-gray-700');
+                if (btn.dataset.lang === lang) {
+                    btn.classList.add('bg-primary', 'text-white');
+                } else {
+                    btn.classList.add('bg-gray-100', 'text-gray-700');
+                }
+            });
+            
+            // 投資戦略が表示されていたら、言語を再適用
+            const strategyResult = document.getElementById('strategy-result');
+            if (strategyResult.style.display === 'block' && strategyResult.dataset.strategyType) {
+                showStrategy(strategyResult.dataset.strategyType);
+            }
+        }
+        
+        // --- アニメーション & カウンター ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(counter => animateCount(counter));
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+        
+        function animateCount(element) {
+            const target = +element.getAttribute('data-count');
+            const isPercentage = element.innerText.includes('%');
+            const isDollar = element.innerText.includes('$');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const duration = 2000;
+            let start = 0;
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = '+' + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(1) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = '+' + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(1) + '倍';
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // --- チャート設定 ---
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        // --- 株価チャート ---
+        const stockLabels = Array.from({length: 12}, (_, i) => new Date(new Date().setMonth(new Date().getMonth() - 11 + i, 1)));
+        new Chart(document.getElementById('stockPriceChart'), {
+            type: 'line',
+            data: {
+                labels: stockLabels,
+                datasets: [{
+                    label: '株価 ($)',
+                    data: [175, 170, 168, 190, 195, 185, 180, 172, 170, 192, 210, 205],
+                    borderColor: '#64748B',
+                    backgroundColor: 'rgba(100, 116, 139, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, 
+                    x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } 
+                }
+            }
+        });
+
+        // --- 業績チャート ---
+        new Chart(document.getElementById('financialsChart'), {
+            data: {
+                labels: ['2021年', '2022年', '2023年'],
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: '売上高 (億ドル)',
+                        data: [3658, 3943, 3832],
+                        backgroundColor: '#64748B',
+                        yAxisID: 'y',
+                    },
+                    {
+                        type: 'line',
+                        label: '純利益 (億ドル)',
+                        data: [946, 998, 970],
+                        borderColor: '#38BDF8',
+                        backgroundColor: '#38BDF8',
+                        tension: 0.4,
+                        yAxisID: 'y',
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } },
+                scales: {
+                    y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } },
+                }
+            }
+        });
+
+        // --- 競合比較チャート (レーダー) ---
+        new Chart(document.getElementById('competitorChart'), {
+            type: 'radar',
+            data: {
+                labels: ['エコシステム', 'ブランド力', 'ハードウェア', 'ソフトウェア', 'イノベーション'],
+                datasets: [
+                    {
+                        label: 'Apple',
+                        data: [98, 99, 95, 96, 90],
+                        backgroundColor: 'rgba(51, 65, 85, 0.2)',
+                        borderColor: 'rgba(30, 41, 59, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(30, 41, 59, 1)',
+                    },
+                    {
+                        label: '競合他社 (平均)',
+                        data: [75, 80, 88, 85, 88],
+                        backgroundColor: 'rgba(203, 213, 225, 0.2)',
+                        borderColor: 'rgba(100, 116, 139, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(100, 116, 139, 1)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    r: {
+                        angleLines: { color: '#E2E8F0' },
+                        grid: { color: '#E2E8F0' },
+                        pointLabels: { font: { size: 16 } },
+                        suggestedMin: 50,
+                        suggestedMax: 100
+                    }
+                }
+            }
+        });
+        
+        // --- Bull/Bear シナリオ切り替え ---
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        const thesisContent = document.getElementById('thesisContent');
+
+        function updateThesisContent() {
+            const lang = localStorage.getItem('language') || 'ja';
+            const isBullActive = bullBtn.classList.contains('border-slate-500');
+            
+            if (isBullActive) {
+                if (lang === 'ja') {
+                    thesisContent.innerHTML = `
+                        <h3 class="text-3xl font-bold text-emerald-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>この株が「最強」であり続ける理由</h3>
+                        <ul class="space-y-4 text-slate-700 text-lg">
+                            <li class="flex items-start"><span class="text-emerald-500 font-bold mr-3 mt-1">✓</span><span><strong>サービス部門の持続的成長:</strong> 高い利益率を誇るサービス事業が全社の収益を牽引し、株価を押し上げる。</span></li>
+                            <li class="flex items-start"><span class="text-emerald-500 font-bold mr-3 mt-1">✓</span><span><strong>新製品への期待:</strong> Vision Proが新たな市場を創出し、AR/VR分野でのリーダーシップを確立する。</span></li>
+                            <li class="flex items-start"><span class="text-emerald-500 font-bold mr-3 mt-1">✓</span><span><strong>盤石な財務と株主還元:</strong> 巨額のキャッシュフローと積極的な自社株買いが株価の下支えとなる。</span></li>
+                        </ul>`;
+                } else {
+                    thesisContent.innerHTML = `
+                        <h3 class="text-3xl font-bold text-emerald-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>Why This Stock Remains "Strongest"</h3>
+                        <ul class="space-y-4 text-slate-700 text-lg">
+                            <li class="flex items-start"><span class="text-emerald-500 font-bold mr-3 mt-1">✓</span><span><strong>Sustainable Services Growth:</strong> High-margin services business drives company revenue and stock price higher.</span></li>
+                            <li class="flex items-start"><span class="text-emerald-500 font-bold mr-3 mt-1">✓</span><span><strong>New Product Expectations:</strong> Vision Pro creates new markets and establishes leadership in AR/VR fields.</span></li>
+                            <li class="flex items-start"><span class="text-emerald-500 font-bold mr-3 mt-1">✓</span><span><strong>Strong Financials & Shareholder Returns:</strong> Massive cash flows and aggressive share buybacks support stock price.</span></li>
+                        </ul>`;
+                }
+            } else {
+                if (lang === 'ja') {
+                    thesisContent.innerHTML = `
+                        <h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>知っておくべき「リスク」</h3>
+                        <ul class="space-y-4 text-slate-700 text-lg">
+                            <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span><strong>規制強化のリスク:</strong> 各国での独占禁止法関連の調査が厳格化し、App Storeビジネスに大きな影響が及ぶ可能性。</span></li>
+                            <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span><strong>中国市場の不確実性:</strong> 米中対立の激化や現地競合の台頭により、重要市場である中国での売上が減少する。</span></li>
+                            <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span><strong>イノベーションの鈍化懸念:</strong> iPhoneに代わる革新的なヒット製品を生み出せず、成長が頭打ちになる。</span></li>
+                        </ul>`;
+                } else {
+                    thesisContent.innerHTML = `
+                        <h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>Risks You Should Know</h3>
+                        <ul class="space-y-4 text-slate-700 text-lg">
+                            <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span><strong>Regulatory Risks:</strong> Increasing antitrust investigations may significantly impact App Store business.</span></li>
+                            <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span><strong>China Market Uncertainty:</strong> US-China tensions and local competition may reduce sales in this important market.</span></li>
+                            <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span><strong>Innovation Slowdown Concerns:</strong> Failure to create revolutionary hit products beyond iPhone may limit growth.</span></li>
+                        </ul>`;
+                }
+            }
+        }
+        
+        // Initialize with bull content
+        updateThesisContent();
+
+        bullBtn.addEventListener('click', () => {
+            bullBtn.classList.add('border-slate-500', 'text-slate-600');
+            bullBtn.classList.remove('border-transparent', 'text-slate-400');
+            bearBtn.classList.add('border-transparent', 'text-slate-400');
+            bearBtn.classList.remove('border-red-500', 'text-red-600');
+            updateThesisContent();
+        });
+
+        bearBtn.addEventListener('click', () => {
+            bearBtn.classList.add('border-red-500', 'text-red-600');
+            bearBtn.classList.remove('border-transparent', 'text-slate-400');
+            bullBtn.classList.add('border-transparent', 'text-slate-400');
+            bullBtn.classList.remove('border-slate-500', 'text-slate-600');
+            updateThesisContent();
+        });
+        
+        // --- スクロールに応じたナビゲーションのアクティブ化 ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('main section');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // --- Initialize Language ---
+        document.getElementById('header-lang-switcher').addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    document.getElementById('strategy-result').style.display = 'none';
+                }
+            }
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    // --- 修正: 投資戦略表示機能 ---
+    function showStrategy(type) {
+        const resultDiv = document.getElementById('strategy-result');
+        const trans = translations[currentLang];
+        
+        let title, subtitle, desc, borderColor, textColor;
+
+        if (type === 'short') {
+            title = trans.strategy_short_title;
+            subtitle = trans.strategy_short_subtitle;
+            desc = trans.strategy_short_desc;
+            borderColor = 'border-amber-400';
+            textColor = 'text-amber-700';
+        } else if (type === 'medium') {
+            title = trans.strategy_medium_title;
+            subtitle = trans.strategy_medium_subtitle;
+            desc = trans.strategy_medium_desc;
+            borderColor = 'border-sky-400';
+            textColor = 'text-sky-700';
+        } else {
+            title = trans.strategy_long_title;
+            subtitle = trans.strategy_long_subtitle;
+            desc = trans.strategy_long_desc;
+            borderColor = 'border-emerald-400';
+            textColor = 'text-emerald-700';
+        }
+
+        resultDiv.innerHTML = `
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-8 ${borderColor} animate-pop-in">
+                <h3 class="font-bold ${textColor} text-xl">${title}</h3>
+                <p class="text-3xl font-extrabold my-2">${subtitle}</p>
+                <p class="text-lg text-slate-600">${desc}</p>
+            </div>`;
+        
+        resultDiv.style.display = 'block';
+        resultDiv.dataset.strategyType = type; // 結果のタイプを保存
+    }
+    </script>
+</body>
+</html>

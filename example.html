@@ -149,6 +149,7 @@
                     <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Energy" data-lang="sector_energy">エネルギー</button>
                     <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Consumer Discretionary">一般消費財</button>
                     <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Industrials">資本財</button>
+
                 </div>
             </div>
             <!-- ソート機能 -->
@@ -659,12 +660,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.location.href = 'stocks/details/nvidia.html';
                 break;
             case 'MSFT':
-                window.location.href = 'stocks/details/microsoft.html';
-                break;
-            case 'AAPL':
-                window.location.href = 'stocks/details/apple.html';
-                break;
             case 'LLY':
+            case 'JPM':
+            case 'XOM':
             case 'AVGO':
             default:
                 // 詳細ページが未実装の銘柄の場合
