@@ -41,7 +41,7 @@
         .nav-link::after { background-color: #5B21B6; }
         /* END: DHR Content Changes - Accent Color */
         .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
-        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .nav-link:hover::after { width: 100%; }
         .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
         .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
         .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
@@ -75,9 +75,9 @@
                     <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
                     <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
                     <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
-                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
                         <span class="text-gray-400 text-xs">|</span>
-                        <button class="lang-btn" data-lang="en">EN</button>
+                        <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
                     </div>
                     <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
                         <i class="ri-menu-line ri-lg"></i>

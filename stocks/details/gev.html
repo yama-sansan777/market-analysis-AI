@@ -157,19 +157,19 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
-                        <p class="text-4xl font-bold text-green-600" data-count="175.50">$0.00</p>
+                        <p class="text-4xl font-bold text-green-600" data-count="607.07">$0.00</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_ytd">上場来リターン</p>
-                        <p class="text-4xl font-bold text-green-600" data-count="25.0">+0.0%</p>
+                        <p class="text-4xl font-bold text-green-600" data-count="68.0">+0.0%</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
-                        <p class="text-4xl font-bold text-green-600" data-count="0.047">0.0兆ドル</p>
+                        <p class="text-4xl font-bold text-green-600" data-count="0.165">0.0兆ドル</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
-                        <p class="text-4xl font-bold text-green-600" data-count="38">0倍</p>
+                        <p class="text-4xl font-bold text-green-600" data-count="135.36">0倍</p>
                     </div>
                 </div>
                 <div class="h-[300px] w-full">
@@ -501,7 +501,7 @@
             if(stockCtx) {
                 stockChart = new Chart(stockCtx, {
                     type: 'line',
-                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [140, 145, 150, 155, 160, 165, 170, 175, 180, 178, 176, 175], borderColor: '#00884A', backgroundColor: 'rgba(0, 136, 74, 0.1)', fill: true, tension: 0.4 }] },
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [485.66, 503, 520.35, 537.69, 555.04, 572.38, 589.73, 607.07, 624.41, 617.48, 610.54, 607.07], borderColor: '#00884A', backgroundColor: 'rgba(0, 136, 74, 0.1)', fill: true, tension: 0.4 }] },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
                 });
             }

@@ -41,7 +41,7 @@
         .nav-link::after { background-color: #00704A; }
         /* END: SBUX Content Changes - Accent Color */
         .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
-        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .nav-link:hover::after { width: 100%; }
         .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
         .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
         .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
@@ -157,7 +157,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
-                        <p class="text-4xl font-bold text-green-600" data-count="88.38">$0.00</p>
+                        <p class="text-4xl font-bold text-green-600" data-count="88.56">$0.00</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
@@ -165,11 +165,11 @@
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
-                        <p class="text-4xl font-bold text-green-600" data-count="0.10">0.0兆ドル</p>
+                        <p class="text-4xl font-bold text-green-600" data-count="0.101">0.0兆ドル</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
-                        <p class="text-4xl font-bold text-green-600" data-count="25">0倍</p>
+                        <p class="text-4xl font-bold text-green-600" data-count="38.01">0倍</p>
                     </div>
                 </div>
                 <div class="h-[300px] w-full">
@@ -501,7 +501,7 @@
             if(stockCtx) {
                 stockChart = new Chart(stockCtx, {
                     type: 'line',
-                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [100, 98, 95, 92, 105, 108, 95, 90, 85, 80, 82, 80], borderColor: '#00704A', backgroundColor: 'rgba(0, 112, 74, 0.1)', fill: true, tension: 0.4 }] },
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [110.66, 108.45, 105.13, 101.8, 116.18, 119.5, 105.13, 99.6, 94.07, 88.56, 90.77, 88.56], borderColor: '#00704A', backgroundColor: 'rgba(0, 112, 74, 0.1)', fill: true, tension: 0.4 }] },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
                 });
             }

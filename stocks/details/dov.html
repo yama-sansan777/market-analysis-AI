@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- START: GS Content Changes - Title -->
-    <title data-lang="page_title">【ゴールドマン・サックス版】世界最強の投資銀行！投資家向けダッシュボード</title>
-    <!-- END: GS Content Changes - Title -->
+    <!-- START: DOV Content Changes - Title -->
+    <title data-lang="page_title">【ドーバー版】多角化産業の優等生！投資家向けダッシュボード</title>
+    <!-- END: DOV Content Changes - Title -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        // Primary color changed to Goldman Sachs' blue
-                        primary: '#005B94', // Goldman Sachs Blue
-                        secondary: '#A8996E', // Goldman Sachs Gold
+                        // Primary color changed to a professional blue for Dover
+                        primary: '#00529B', // Dover Blue
+                        secondary: '#007AC1', // Lighter accent blue
                         bullish: '#10b981',
                         bearish: '#ef4444',
                         neutral: '#6b7280',
@@ -36,17 +36,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
     <style>
         body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
-        /* START: GS Content Changes - Accent Color */
-        .gradient-text { background: linear-gradient(to right, #A8996E, #005B94); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-link::after { background-color: #005B94; }
-        /* END: GS Content Changes - Accent Color */
+        /* START: DOV Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #007AC1, #00529B); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #00529B; content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; transition: width 0.3s ease; }
+        /* END: DOV Content Changes - Accent Color */
         .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        /* START: FORMAT CORRECTION - Underline now appears ONLY on hover */
         .nav-link:hover::after { width: 100%; }
+        /* END: FORMAT CORRECTION */
         .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
         .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
         .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
         .fade-in-up.visible { opacity: 1; transform: translateY(0); }
-        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #005B94; }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #00529B; }
         .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
         .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
         .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
@@ -56,18 +58,17 @@
 </head>
 <body class="antialiased">
 
-    <!-- Unified Header Menu -->
     <header class="bg-white border-b border-gray-200">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-8">
-                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <a href="../../index.html"><img src="https://placehold.co/160x40/FFFFFF/333333?text=YourLogo" alt="YOHOU US Stocks AI" class="h-10"></a>
                     <nav class="hidden md:flex space-x-6 text-gray-600">
                         <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
                         <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
                         <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
                         <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
-                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../glossary.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
                         <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
                     </nav>
                 </div>
@@ -93,24 +94,24 @@
             <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
             <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
             <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
-            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../glossary.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
             <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
             <div class="border-t border-gray-200 pt-2 mt-2">
-                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
-                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
             </div>
         </div>
     </div>
 
-    <!-- START: GS Content Changes - Subheader -->
+    <!-- START: DOV Content Changes - Subheader -->
     <div class="bg-gradient-to-r from-blue-50 to-gray-50 py-4 border-b border-gray-200">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-800 to-gray-700 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">G</div>
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-700 to-gray-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">D</div>
                     <div class="flex flex-col">
-                        <span class="text-2xl font-extrabold text-slate-800">The Goldman Sachs Group</span>
-                        <span class="text-sm font-semibold text-slate-500">NYSE: GS</span>
+                        <span class="text-2xl font-extrabold text-slate-800">Dover Corporation</span>
+                        <span class="text-sm font-semibold text-slate-500">NYSE: DOV</span>
                     </div>
                 </div>
                 <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
@@ -123,119 +124,129 @@
             </div>
         </div>
     </div>
-    <!-- END: GS Content Changes - Subheader -->
+    <!-- END: DOV Content Changes - Subheader -->
 
     <main class="container mx-auto p-4 md:p-8 mt-8">
         
-        <!-- START: GS Content Changes - Hero Section -->
+        <!-- START: DOV Content Changes - Hero Section -->
         <section id="dashboard" class="py-16 text-center">
             <div class="fade-in-up">
                 <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
-                    世界経済を動かす金融の頂点、<br>
-                    <span class="gradient-text">ゴールドマン・サックス</span>の真価
+                    産業界の隠れたチャンピオン、<br>
+                    <span class="gradient-text">ドーバー</span>の多角化経営
                 </h1>
                 <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
-                    世界No.1の投資銀行「ゴールドマン・サックス」。M&Aアドバイザリーやトレーディングで世界をリードする金融エリート集団の強さと、今後の戦略を解き明かします。
+                    ポンプから冷蔵設備、マーキング技術まで。ニッチな市場で高いシェアを誇る企業群を傘下に持つ複合企業「ドーバー」。配当王としても知られる、その安定性の秘密に迫ります。
                 </p>
             </div>
 
             <div class="card mt-12 p-8 text-left bg-gradient-to-br from-gray-50 to-blue-50 border-gray-200 fade-in-up" style="transition-delay: 50ms;">
-                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「金融株の王様」なぜゴールドマンは世界最強の投資銀行なのか？</h2>
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「60年以上増配」の安定感。なぜドーバーは景気変動に強いのか？</h2>
                 <div class="text-lg text-slate-700 space-y-4">
-                    <p data-lang="intro_card_p1">「ゴールドマン・サックス」は、150年以上の歴史を誇る、世界で最も権威のある投資銀行の一つです。一般の預金や貸付を行う商業銀行とは異なり、大企業や政府、富裕層を顧客とし、M&Aのアドバイスや株式・債券のトレーディングなどを専門としています。</p>
-                    <p data-lang="intro_card_p2">ゴールドマンの強みは、世界中から最高の人材を集めた「知的資本」と、そこから生まれる圧倒的なディール遂行能力にあります。世界の大型M&Aの多くに関与し、市場の変動を利益に変えるトレーディング部門は、まさに同社の心臓部です。例えるなら、<strong class="text-blue-700">世界経済という複雑なゲームのルールを熟知し、常に勝利を収める戦略家集団</strong>と言えるでしょう。</p>
-                    <p data-lang="intro_card_p3">このページでは、「投資銀行はどうやって儲けているのか？」「なぜ株価は景気に左右されるのか？」「今後の成長戦略は？」といった、投資家が知るべき本質に迫ります。金融界の頂点に立つ企業のビジネスモデルを、一緒に見ていきましょう。</p>
+                    <p data-lang="intro_card_p1">「ドーバー」は、一見すると事業内容が掴みづらいかもしれません。同社は、特定のニッチ市場でトップクラスの技術力とシェアを持つ、独立した中小企業のような事業体を多数傘下に収める、ユニークな産業機械メーカーです。</p>
+                    <p data-lang="intro_card_p2">ドーバーの強みは、この「分権的な多角化経営」にあります。各事業はそれぞれの市場で機動的に動きつつ、会社全体としては特定の市場の景気変動リスクを分散しています。例えるなら、<strong class="text-blue-800">それぞれが独立して高い収益を上げる専門店が集まった、巨大で安定した商店街</strong>のようなものです。</p>
+                    <p data-lang="intro_card_p3">このページでは、「ドーバーの5つの事業セグメントとは？」「なぜ60年以上も増配を続けられるのか？」「今後の成長戦略は？」といった、投資家が知るべき本質に迫ります。地味ながらも、着実に株主価値を創造し続ける優良企業の秘密を解き明かしましょう。</p>
                 </div>
             </div>
-            <!-- END: GS Content Changes - Hero Section -->
+            <!-- END: DOV Content Changes - Hero Section -->
 
-            <!-- START: GS Content Changes - Stats & Chart -->
+            <!-- START: DOV Content Changes - Stats & Chart -->
             <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
-                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">市場の回復と事業再編が追い風。株価は史上最高値圏へ</h2>
-                <p class="text-slate-600 mb-8" data-lang="growth_p">M&A市場の回復や株式市場の活況を受け、主力の投資銀行・トレーディング部門が復調。個人向け事業から撤退し、得意分野に集中する戦略も評価されています。</p>
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">安定したキャッシュフローと、驚異的な連続増配記録</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">多角化された事業ポートフォリオが、景気変動の中でも安定したキャッシュフローを生み出します。その結果、68年連続という驚異的な増配記録を達成しており、株価も長期的に安定した上昇を続けています。</p>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
-                        <p class="text-4xl font-bold text-blue-600" data-count="460.25">$0.00</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="176.54">$0.00</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
-                        <p class="text-4xl font-bold text-blue-600" data-count="20.5">+0.0%</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="1.66">+0.0%</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
-                        <p class="text-4xl font-bold text-blue-600" data-count="0.14">0.0兆ドル</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="0.0242">0.0兆ドル</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
-                        <p class="text-4xl font-bold text-blue-600" data-count="17">0倍</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="24.41">0倍</p>
                     </div>
                 </div>
                 <div class="h-[300px] w-full">
                     <canvas id="stockPriceChart"></canvas>
                 </div>
             </div>
-            <!-- END: GS Content Changes - Stats & Chart -->
+            <!-- END: DOV Content Changes - Stats & Chart -->
         </section>
 
-        <!-- START: GS Content Changes - Business Section -->
+        <!-- START: DOV Content Changes - Business Section -->
         <section id="business" class="py-24">
             <div class="text-center mb-16 fade-in-up">
-                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">ゴールドマン・サックスって、どんな会社？</h2>
-                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">「グローバル・バンキング＆マーケッツ」と「アセット＆ウェルス・マネジメント」の2大部門を軸に、法人・機関投資家・政府・富裕層に高度な金融サービスを提供しています。</p>
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">ドーバーって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">「エンジニアード・プロダクツ」「クリーンエネルギー＆フューエリング」「イメージング＆ID」「ポンプ＆プロセスソリューション」「クライメート＆サステナビリティ」の5つのセグメントで、ニッチな産業市場に特化した製品を提供しています。</p>
             </div>
             
             <div class="card p-8 md:p-10 mb-12 fade-in-up">
-                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える2大部門</h3>
-                <div class="grid md:grid-cols-2 gap-8 text-center">
-                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
-                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM11 7H13V13H11V7ZM11 15H13V17H11V15Z"></path></svg></div>
-                        <h4 class="font-bold text-xl mb-2" data-lang="core_gbm_title">グローバル・バンキング＆マーケッツ</h4>
-                        <p class="text-slate-600" data-lang="core_gbm_p">M&Aアドバイザリーや資金調達を行う投資銀行業務と、株式・債券などを売買するトレーディング業務。会社の収益の約7割を占める。</p>
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える5つのセグメント</h3>
+                <div class="grid md:grid-cols-5 gap-6 text-center">
+                    <div class="border border-slate-200 p-4 rounded-2xl hover:bg-slate-50 transition">
+                        <h4 class="font-bold text-lg mb-2" data-lang="core_ep_title">エンジニアード・プロダクツ</h4>
+                        <p class="text-slate-600 text-sm" data-lang="core_ep_p">航空宇宙、防衛、産業機械向けの精密部品。高い技術力が求められる。</p>
                     </div>
-                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
-                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C15.3137 2 18 4.68629 18 8C18 11.3137 15.3137 14 12 14C8.68629 14 6 11.3137 6 8C6 4.68629 8.68629 2 12 2ZM12 16C17.5228 16 22 18.2386 22 21V22H2V21C2 18.2386 6.47715 16 12 16Z"></path></svg></div>
-                        <h4 class="font-bold text-xl mb-2" data-lang="core_awm_title">アセット＆ウェルス・マネジメント</h4>
-                        <p class="text-slate-600" data-lang="core_awm_p">機関投資家や富裕層の資産を預かり運用する事業。より安定的で継続的な手数料収入が期待される成長分野。</p>
+                    <div class="border border-slate-200 p-4 rounded-2xl hover:bg-slate-50 transition">
+                        <h4 class="font-bold text-lg mb-2" data-lang="core_cef_title">クリーンエネルギー＆フューエリング</h4>
+                        <p class="text-slate-600 text-sm" data-lang="core_cef_p">ガソリンスタンドのノズルや、クリーンエネルギー関連の部品を製造。</p>
+                    </div>
+                    <div class="border border-slate-200 p-4 rounded-2xl hover:bg-slate-50 transition">
+                        <h4 class="font-bold text-lg mb-2" data-lang="core_iid_title">イメージング＆ID</h4>
+                        <p class="text-slate-600 text-sm" data-lang="core_iid_p">製品の包装にコードやラベルを印字するマーキング・コーディング機器。</p>
+                    </div>
+                     <div class="border border-slate-200 p-4 rounded-2xl hover:bg-slate-50 transition">
+                        <h4 class="font-bold text-lg mb-2" data-lang="core_pps_title">ポンプ＆プロセス</h4>
+                        <p class="text-slate-600 text-sm" data-lang="core_pps_p">化学、食品、医薬品工場などで使われる特殊ポンプやコネクタ。</p>
+                    </div>
+                    <div class="border border-slate-200 p-4 rounded-2xl hover:bg-slate-50 transition">
+                        <h4 class="font-bold text-lg mb-2" data-lang="core_cst_title">クライメート＆サステナビリティ</h4>
+                        <p class="text-slate-600 text-sm" data-lang="core_cst_p">スーパーマーケット向けのCO2冷凍システムなど、環境配慮型製品。</p>
                     </div>
                 </div>
             </div>
 
             <div class="card p-8 md:p-10 fade-in-up">
                 <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
-                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">ゴールドマン・サックスの強みは、世界トップクラスのM&Aアドバイザリー業務と、市場の変動を利益に変える卓越したトレーディング能力です。競合のモルガン・スタンレーがウェルス・マネジメントを強化する一方、ゴールドマンは伝統的な投資銀行業務で圧倒的なブランド力を誇ります。</p>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">ドーバーの強みは、多くのニッチ市場でNo.1またはNo.2の地位を確立している点です。これにより、価格競争に巻き込まれにくく、高い利益率を維持できます。また、売上の約40%が消耗品やサービスといった経常的な収入であることも、ビジネスの安定性に貢献しています。</p>
                 <div class="h-[450px] w-full">
                     <canvas id="competitorChart"></canvas>
                 </div>
             </div>
         </section>
-        <!-- END: GS Content Changes - Business Section -->
+        <!-- END: DOV Content Changes - Business Section -->
 
-        <!-- START: GS Content Changes - Financials Section -->
+        <!-- START: DOV Content Changes - Financials Section -->
         <section id="financials" class="py-24">
              <div class="text-center mb-16 fade-in-up">
                 <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
-                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">M&AやIPO市場の活況を背景に、投資銀行部門の収益が回復。トレーディング部門も堅調で、業績は回復基調にあります。</p>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">一部の事業で需要の軟化が見られるものの、多角化されたポートフォリオが業績を下支え。規律ある経営により、安定した利益とキャッシュフローを創出し続けています。</p>
             </div>
             
             <div class="card p-8 md:p-10 mb-12 fade-in-up">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
                     <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
                         <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
-                        <p class="text-4xl font-extrabold text-slate-800 my-1">$462億</p>
-                        <p class="text-base font-semibold text-blue-600" data-lang="stat_revenue_growth">前年比 -2%</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$85億</p>
+                        <p class="text-base font-semibold text-blue-600" data-lang="stat_revenue_growth">前年比 +1%</p>
                     </div>
                     <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
-                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">自己資本利益率 (ROE)
-                            <span class="tooltiptext" data-lang="stat_margin_tooltip">株主の資本を使ってどれだけ効率的に利益を上げたかを示す指標。銀行の収益性を測る上で重要。</span>
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">営業利益率
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">本業の儲けを示す指標。ドーバーは効率的な経営で、産業機械メーカーとして高い利益率を誇る。</span>
                         </span></p>
-                        <p class="text-4xl font-extrabold text-slate-800 my-1">7.5%</p>
-                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">回復傾向</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">18%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">高い収益性</p>
                     </div>
                     <div class="bg-gray-50 border-l-4 border-gray-400 p-6 rounded-lg">
-                        <p class="text-base text-slate-600" data-lang="stat_book_value">一株当たり純資産 (BPS)</p>
-                        <p class="text-4xl font-extrabold text-slate-800 my-1">$320</p>
-                        <p class="text-base font-semibold text-gray-600" data-lang="stat_book_value_desc">着実に増加</p>
+                        <p class="text-base text-slate-600" data-lang="stat_dividend_king">連続増配年数</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">68年</p>
+                        <p class="text-base font-semibold text-gray-600" data-lang="stat_dividend_king_desc">配当王</p>
                     </div>
                 </div>
                 <div class="h-[400px] w-full">
@@ -243,13 +254,13 @@
                 </div>
             </div>
         </section>
-        <!-- END: GS Content Changes - Financials Section -->
+        <!-- END: DOV Content Changes - Financials Section -->
         
-        <!-- START: GS Content Changes - Thesis Section -->
+        <!-- START: DOV Content Changes - Thesis Section -->
         <section id="thesis" class="py-24">
             <div class="text-center mb-16 fade-in-up">
                 <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
-                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">世界経済の動向に業績が大きく左右されるゴールドマン・サックス株。市場の活況が続くと信じる強気派と、景気後退を懸念する弱気派で見方が分かれています。</p>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">驚異的な連続増配記録が示す通り、極めて安定したビジネスモデルを持つドーバー。しかし、その安定性ゆえに急成長は期待しにくく、景気後退局面での影響も考慮する必要があります。</p>
             </div>
 
             <div class="card p-8 md:p-10 fade-in-up">
@@ -262,13 +273,13 @@
                 </div>
             </div>
         </section>
-        <!-- END: GS Content Changes - Thesis Section -->
+        <!-- END: DOV Content Changes - Thesis Section -->
 
-        <!-- START: GS Content Changes - Outlook Section -->
+        <!-- START: DOV Content Changes - Outlook Section -->
         <section id="outlook" class="py-24">
             <div class="text-center mb-16 fade-in-up">
-                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">ゴールドマン・サックスの未来は？</h2>
-                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">ゴールドマン・サックスの未来は、伝統的な投資銀行業務の強みを維持しつつ、いかにアセット＆ウェルス・マネジメント事業を拡大し、収益の安定性を高められるかにかかっています。</p>
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">ドーバーの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">ドーバーの未来は、既存のニッチ市場でのリーダーシップを維持しつつ、M&Aを通じてサステナビリティやデジタル化といった新たな成長分野へポートフォリオを拡大していくことにあります。</p>
             </div>
             <div class="card p-8 md:p-10 fade-in-up">
                 <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
@@ -276,23 +287,23 @@
                     <div class="mb-16 timeline-item">
                         <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
                         <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
-                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">M&A市場の回復を捉え、投資銀行部門の収益を最大化。個人向け事業から撤退し、経営資源を得意分野である法人・富裕層向けビジネスに集中させます。</p>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">クリーンエネルギーやサステナビリティ関連の事業への投資を強化。特にCO2冷凍システムや、EV充電関連のコンポーネント事業の成長を加速させます。</p>
                     </div>
                     <div class="timeline-item">
                          <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
                         <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
-                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">アセット＆ウェルス・マネジメント部門の運用資産残高を拡大し、安定的な手数料収入の割合を高める。プライベート・クレジットなど、新たな成長分野への投資を加速させます。</p>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">規律あるM&A戦略を継続し、成長性の高いニッチ市場のリーダー企業を買収。デジタルソリューションやソフトウェアの売上比率を高め、収益の安定性をさらに向上させます。</p>
                     </div>
                 </div>
             </div>
         </section>
-        <!-- END: GS Content Changes - Outlook Section -->
+        <!-- END: DOV Content Changes - Outlook Section -->
 
-        <!-- START: GS Content Changes - Conclusion Section -->
+        <!-- START: DOV Content Changes - Conclusion Section -->
         <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
              <div class="fade-in-up">
                 <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
-                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">ゴールドマン・サックスは、世界経済の成長と市場の活況に賭ける、典型的な景気敏感（シクリカル）株。市場のサイクルを読み、適切なタイミングで投資することが求められます。</p>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">ドーバーは、ポートフォリオに安定性をもたらす、典型的な配当成長株。景気サイクルを乗りこなし、長期的に安定したインカムゲインとキャピタルゲインの両方を狙う投資家に最適です。</p>
                 
                 <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
                     <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
@@ -306,15 +317,15 @@
                 <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
              </div>
         </section>
-        <!-- END: GS Content Changes - Conclusion Section -->
+        <!-- END: DOV Content Changes - Conclusion Section -->
 
     </main>
     
     <footer class="bg-slate-800 text-white mt-24">
         <div class="container mx-auto p-10 text-center text-slate-400">
-            <!-- START: GS Content Changes - Footer -->
-            <p data-lang="footer_copyright">&copy; 2025 The Goldman Sachs Group, Inc. Investor Dashboard. All rights reserved.</p>
-            <!-- END: GS Content Changes - Footer -->
+            <!-- START: DOV Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Dover Corporation Investor Dashboard. All rights reserved.</p>
+            <!-- END: DOV Content Changes - Footer -->
             <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
         </div>
     </footer>
@@ -323,7 +334,6 @@
     // --- START: REBUILT JAVASCRIPT ---
 
     const translations = {
-        page_title: { ja: '【ゴールドマン・サックス版】世界最強の投資銀行！投資家向けダッシュボード', en: '[Goldman Sachs Edition] World\'s Most Powerful Investment Bank! Investor Dashboard' },
         nav_today: { ja: '本日の市況分析', en: 'Today\'s Analysis' },
         nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
         nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
@@ -337,81 +347,88 @@
         subnav_financials: { ja: '業績は？', en: 'Financials' },
         subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
         subnav_outlook: { ja: '未来は？', en: 'Outlook' },
-        hero_title: { ja: '世界経済を動かす金融の頂点、<br><span class="gradient-text">ゴールドマン・サックス</span>の真価', en: 'The Apex of Finance that Moves the Global Economy,<br>The True Value of <span class="gradient-text">Goldman Sachs</span>' },
-        hero_subtitle: { ja: '世界No.1の投資銀行「ゴールドマン・サックス」。M&Aアドバイザリーやトレーディングで世界をリードする金融エリート集団の強さと、今後の戦略を解き明かします。', en: 'The world\'s #1 investment bank, "Goldman Sachs." We unravel the strengths and future strategies of this elite financial group that leads the world in M&A advisory and trading.' },
-        intro_card_title: { ja: '「金融株の王様」なぜゴールドマンは世界最強の投資銀行なのか？', en: '"The King of Financial Stocks": Why is Goldman Sachs the world\'s most powerful investment bank?' },
-        intro_card_p1: { ja: '「ゴールドマン・サックス」は、150年以上の歴史を誇る、世界で最も権威のある投資銀行の一つです。一般の預金や貸付を行う商業銀行とは異なり、大企業や政府、富裕層を顧客とし、M&Aのアドバイスや株式・債券のトレーディングなどを専門としています。', en: '"Goldman Sachs" is one of the world\'s most prestigious investment banks, with a history of over 150 years. Unlike commercial banks that handle general deposits and loans, it specializes in serving large corporations, governments, and high-net-worth individuals with services like M&A advice and stock and bond trading.' },
-        intro_card_p2: { ja: 'ゴールドマンの強みは、世界中から最高の人材を集めた「知的資本」と、そこから生まれる圧倒的なディール遂行能力にあります。世界の大型M&Aの多くに関与し、市場の変動を利益に変えるトレーディング部門は、まさに同社の心臓部です。例えるなら、<strong class="text-blue-700">世界経済という複雑なゲームのルールを熟知し、常に勝利を収める戦略家集団</strong>と言えるでしょう。', en: 'Goldman\'s strength lies in its "intellectual capital," comprised of the best talent from around the world, and the overwhelming deal-making capabilities that result. Involved in many of the world\'s largest M&A deals, its trading division, which turns market volatility into profit, is the very heart of the firm. It could be described as a <strong class="text-blue-700">group of strategists who know the rules of the complex game of the global economy and consistently achieve victory.</strong>' },
-        intro_card_p3: { ja: 'このページでは、「投資銀行はどうやって儲けているのか？」「なぜ株価は景気に左右されるのか？」「今後の成長戦略は？」といった、投資家が知るべき本質に迫ります。金融界の頂点に立つ企業のビジネスモデルを、一緒に見ていきましょう。', en: 'This page delves into the essentials for investors, such as "How do investment banks make money?", "Why is the stock price so sensitive to the economy?", and "What are its future growth strategies?". Let\'s explore the business model of the company at the pinnacle of the financial world together.' },
-        growth_title: { ja: '市場の回復と事業再編が追い風。株価は史上最高値圏へ', en: 'Market Recovery and Business Restructuring Provide Tailwinds. Stock Nears All-Time Highs' },
-        growth_p: { ja: 'M&A市場の回復や株式市場の活況を受け、主力の投資銀行・トレーディング部門が復調。個人向け事業から撤退し、得意分野に集中する戦略も評価されています。', en: 'With the recovery of the M&A market and buoyant stock markets, the core investment banking and trading divisions are reviving. The strategy of exiting the consumer business to focus on its areas of strength is also being well-received.' },
+        hero_title: { ja: '産業界の隠れたチャンピオン、<br><span class="gradient-text">ドーバー</span>の多角化経営', en: 'The Hidden Champion of the Industrial World,<br>The Diversified Management of <span class="gradient-text">Dover</span>' },
+        hero_subtitle: { ja: 'ポンプから冷蔵設備、マーキング技術まで。ニッチな市場で高いシェアを誇る企業群を傘下に持つ複合企業「ドーバー」。配当王としても知られる、その安定性の秘密に迫ります。', en: 'From pumps and refrigeration to marking technology. "Dover," a conglomerate with a portfolio of companies boasting high market share in niche markets. We delve into the secret of its stability, also known as a Dividend King.' },
+        intro_card_title: { ja: '「60年以上増配」の安定感。なぜドーバーは景気変動に強いのか？', en: '"Over 60 years of dividend growth." Why is Dover resilient to economic fluctuations?' },
+        intro_card_p1: { ja: '「ドーバー」は、一見すると事業内容が掴みづらいかもしれません。同社は、特定のニッチ市場でトップクラスの技術力とシェアを持つ、独立した中小企業のような事業体を多数傘下に収める、ユニークな産業機械メーカーです。', en: '"Dover" might seem hard to grasp at first glance. It is a unique industrial machinery manufacturer that owns a large number of independent, small to medium-sized business entities with top-class technology and market share in specific niche markets.' },
+        intro_card_p2: { ja: 'ドーバーの強みは、この「分権的な多角化経営」にあります。各事業はそれぞれの市場で機動的に動きつつ、会社全体としては特定の市場の景気変動リスクを分散しています。例えるなら、<strong class="text-blue-800">それぞれが独立して高い収益を上げる専門店が集まった、巨大で安定した商店街</strong>のようなものです。', en: 'Dover\'s strength lies in its "decentralized diversified management." Each business operates nimbly in its own market, while the company as a whole diversifies the risk of economic fluctuations in any single market. It\'s like a <strong class="text-blue-800">massive, stable shopping district composed of specialty stores that each independently generate high profits.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「ドーバーの5つの事業セグメントとは？」「なぜ60年以上も増配を続けられるのか？」「今後の成長戦略は？」といった、投資家が知るべき本質に迫ります。地味ながらも、着実に株主価値を創造し続ける優良企業の秘密を解き明かしましょう。', en: 'This page delves into the essentials for investors, such as "What are Dover\'s five business segments?", "Why has it been able to increase dividends for over 60 years?", and "What is its future growth strategy?". Let\'s uncover the secrets of this unassuming yet steadily value-creating blue-chip company.' },
+        growth_title: { ja: '安定したキャッシュフローと、驚異的な連続増配記録', en: 'Stable Cash Flow and an Incredible Record of Consecutive Dividend Increases' },
+        growth_p: { ja: '多角化された事業ポートフォリオが、景気変動の中でも安定したキャッシュフローを生み出します。その結果、68年連続という驚異的な増配記録を達成しており、株価も長期的に安定した上昇を続けています。', en: 'Its diversified business portfolio generates stable cash flow even amidst economic fluctuations. As a result, it has achieved an incredible record of 68 consecutive years of dividend increases, and its stock price has continued to rise steadily over the long term.' },
         stat_price: { ja: '現在の株価', en: 'Current Price' },
         stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
         stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
         stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
         chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
-        business_title: { ja: 'ゴールドマン・サックスって、どんな会社？', en: 'What Kind of Company is Goldman Sachs?' },
-        business_p: { ja: '「グローバル・バンキング＆マーケッツ」と「アセット＆ウェルス・マネジメント」の2大部門を軸に、法人・機関投資家・政府・富裕層に高度な金融サービスを提供しています。', en: 'Centered on two main divisions, "Global Banking & Markets" and "Asset & Wealth Management," it provides sophisticated financial services to corporations, institutional investors, governments, and high-net-worth individuals.' },
-        core_business_title: { ja: 'ビジネスを支える2大部門', en: 'Two Major Divisions Supporting the Business' },
-        core_gbm_title: { ja: 'グローバル・バンキング＆マーケッツ', en: 'Global Banking & Markets' },
-        core_gbm_p: { ja: 'M&Aアドバイザリーや資金調達を行う投資銀行業務と、株式・債券などを売買するトレーディング業務。会社の収益の約7割を占める。', en: 'Investment banking activities like M&A advisory and capital raising, and trading activities in stocks, bonds, etc. Accounts for about 70% of the firm\'s revenue.' },
-        core_awm_title: { ja: 'アセット＆ウェルス・マネジメント', en: 'Asset & Wealth Management' },
-        core_awm_p: { ja: '機関投資家や富裕層の資産を預かり運用する事業。より安定的で継続的な手数料収入が期待される成長分野。', en: 'Manages assets for institutional investors and high-net-worth individuals. A growth area expected to provide more stable and recurring fee-based income.' },
+        business_title: { ja: 'ドーバーって、どんな会社？', en: 'What Kind of Company is Dover?' },
+        business_p: { ja: '「エンジニアード・プロダクツ」「クリーンエネルギー＆フューエリング」「イメージング＆ID」「ポンプ＆プロセスソリューション」「クライメート＆サステナビリティ」の5つのセグメントで、ニッチな産業市場に特化した製品を提供しています。', en: 'It provides specialized products for niche industrial markets through five segments: Engineered Products, Clean Energy & Fueling, Imaging & Identification, Pumps & Process Solutions, and Climate & Sustainability Technologies.' },
+        core_business_title: { ja: 'ビジネスを支える5つのセグメント', en: 'Five Segments Supporting the Business' },
+        core_ep_title: { ja: 'エンジニアード・プロダクツ', en: 'Engineered Products' },
+        core_ep_p: { ja: '航空宇宙、防衛、産業機械向けの精密部品。高い技術力が求められる。', en: 'Precision components for aerospace, defense, and industrial machinery, requiring high technical expertise.' },
+        core_cef_title: { ja: 'クリーンエネルギー＆フューエリング', en: 'Clean Energy & Fueling' },
+        core_cef_p: { ja: 'ガソリンスタンドのノズルや、クリーンエネルギー関連の部品を製造。', en: 'Manufactures nozzles for gas stations and components related to clean energy.' },
+        core_iid_title: { ja: 'イメージング＆ID', en: 'Imaging & ID' },
+        core_iid_p: { ja: '製品の包装にコードやラベルを印字するマーキング・コーディング機器。', en: 'Marking and coding equipment for printing codes and labels on product packaging.' },
+        core_pps_title: { ja: 'ポンプ＆プロセス', en: 'Pumps & Process' },
+        core_pps_p: { ja: '化学、食品、医薬品工場などで使われる特殊ポンプやコネクタ。', en: 'Specialty pumps and connectors used in chemical, food, and pharmaceutical plants.' },
+        core_cst_title: { ja: 'クライメート＆サステナビリティ', en: 'Climate & Sustainability' },
+        core_cst_p: { ja: 'スーパーマーケット向けのCO2冷凍システムなど、環境配慮型製品。', en: 'Eco-friendly products such as CO2 refrigeration systems for supermarkets.' },
         competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
-        competitor_p: { ja: 'ゴールドマン・サックスの強みは、世界トップクラスのM&Aアドバイザリー業務と、市場の変動を利益に変える卓越したトレーディング能力です。競合のモルガン・スタンレーがウェルス・マネジメントを強化する一方、ゴールドマンは伝統的な投資銀行業務で圧倒的なブランド力を誇ります。', en: 'Goldman Sachs\'s strength lies in its world-class M&A advisory business and its outstanding trading ability to turn market volatility into profit. While competitor Morgan Stanley strengthens its wealth management, Goldman boasts overwhelming brand power in traditional investment banking.' },
-        chart_competitor_label_gs: { ja: 'ゴールドマン', en: 'Goldman Sachs' },
+        competitor_p: { ja: 'ドーバーの強みは、多くのニッチ市場でNo.1またはNo.2の地位を確立している点です。これにより、価格競争に巻き込まれにくく、高い利益率を維持できます。また、売上の約40%が消耗品やサービスといった経常的な収入であることも、ビジネスの安定性に貢献しています。', en: 'Dover\'s strength is its established #1 or #2 position in many niche markets. This allows it to avoid price wars and maintain high profit margins. Additionally, about 40% of its sales come from recurring revenue streams like consumables and services, contributing to business stability.' },
+        chart_competitor_label_dov: { ja: 'ドーバー', en: 'Dover' },
         chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
-        chart_competitor_axes: { ja: ['M&Aアドバイザリー', 'トレーディング収益', '資産運用規模', 'ブランド力', '収益性'], en: ['M&A Advisory', 'Trading Revenue', 'AUM Scale', 'Brand Power', 'Profitability'] },
+        chart_competitor_axes: { ja: ['ニッチ市場でのリーダーシップ', '収益性', '多角化', '株主還元', '安定性'], en: ['Niche Market Leadership', 'Profitability', 'Diversification', 'Shareholder Returns', 'Stability'] },
         financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
-        financials_p: { ja: 'M&AやIPO市場の活況を背景に、投資銀行部門の収益が回復。トレーディング部門も堅調で、業績は回復基調にあります。', en: 'Against the backdrop of a buoyant M&A and IPO market, revenues in the investment banking division are recovering. The trading division is also performing well, and overall results are on a recovery trend.' },
+        financials_p: { ja: '一部の事業で需要の軟化が見られるものの、多角化されたポートフォリオが業績を下支え。規律ある経営により、安定した利益とキャッシュフローを創出し続けています。', en: 'While demand has softened in some businesses, the diversified portfolio supports overall performance. Disciplined management continues to generate stable profits and cash flow.' },
         stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
-        stat_revenue_growth: { ja: '前年比 -2%', en: '-2% YoY' },
-        stat_margin: { ja: '自己資本利益率 (ROE)', en: 'Return on Equity (ROE)' },
-        stat_margin_tooltip: { ja: '株主の資本を使ってどれだけ効率的に利益を上げたかを示す指標。銀行の収益性を測る上で重要。', en: 'A measure of how efficiently a company generates profit from shareholders\' equity. Important for assessing a bank\'s profitability.' },
-        stat_margin_desc: { ja: '回復傾向', en: 'On a Recovery Trend' },
-        stat_book_value: { ja: '一株当たり純資産 (BPS)', en: 'Book Value Per Share (BVPS)' },
-        stat_book_value_desc: { ja: '着実に増加', en: 'Steadily Increasing' },
+        stat_revenue_growth: { ja: '前年比 +1%', en: '+1% YoY' },
+        stat_margin: { ja: '営業利益率', en: 'Operating Margin' },
+        stat_margin_tooltip: { ja: '本業の儲けを示す指標。ドーバーは効率的な経営で、産業機械メーカーとして高い利益率を誇る。', en: 'A measure of core profitability. Dover boasts a high profit margin for an industrial machinery manufacturer due to its efficient operations.' },
+        stat_margin_desc: { ja: '高い収益性', en: 'High Profitability' },
+        stat_dividend_king: { ja: '連続増配年数', en: 'Consecutive Dividend Growth' },
+        stat_dividend_king_desc: { ja: '配当王', en: 'Dividend King' },
         chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
         chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
         chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
         thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
-        thesis_p: { ja: '世界経済の動向に業績が大きく左右されるゴールドマン・サックス株。市場の活況が続くと信じる強気派と、景気後退を懸念する弱気派で見方が分かれています。', en: 'Goldman Sachs stock is heavily influenced by global economic trends. Views are divided between bulls who believe the market boom will continue and bears who are concerned about a recession.' },
+        thesis_p: { ja: '驚異的な連続増配記録が示す通り、極めて安定したビジネスモデルを持つドーバー。しかし、その安定性ゆえに急成長は期待しにくく、景気後退局面での影響も考慮する必要があります。', en: 'As its incredible record of consecutive dividend increases shows, Dover has an extremely stable business model. However, rapid growth is unlikely due to this stability, and the impact of a recession must also be considered.' },
         bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
         bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
-        bull_content_title: { ja: 'この株が「市場をアウトパフォーム」する理由', en: 'Why This Stock Could "Outperform the Market"' },
-        bull_content_li1: { ja: '<strong>M&A市場の回復:</strong> 経済のソフトランディング期待から、企業のM&A活動が活発化し、手数料収入が増加する。', en: '<strong>Recovery in M&A Market:</strong> Expectations of an economic soft landing will spur corporate M&A activity, increasing advisory fee income.' },
-        bull_content_li2: { ja: '<strong>卓越したトレーディング能力:</strong> 市場のボラティリティが高まる局面でも、優れたリスク管理とトレーディングで利益を上げる。', en: '<strong>Superior Trading Capabilities:</strong> Generates profits through excellent risk management and trading, even in times of high market volatility.' },
-        bull_content_li3: { ja: '<strong>アセットマネジメントの成長:</strong> より安定的なアセット＆ウェルス・マネジメント部門の収益割合が高まり、業績の安定性が増す。', en: '<strong>Growth in Asset Management:</strong> The increasing revenue contribution from the more stable Asset & Wealth Management division enhances earnings stability.' },
-        bull_content_li4: { ja: '<strong>割安な株価と株主還元:</strong> 株価は純資産価値（P/B）に対して割安であり、積極的な自社株買いが株価を押し上げる。', en: '<strong>Low Valuation and Shareholder Returns:</strong> The stock is undervalued relative to its book value (P/B), and aggressive share buybacks will boost the stock price.' },
+        bull_content_title: { ja: 'この株が「信頼できる」理由', en: 'Why This Stock is "Reliable"' },
+        bull_content_li1: { ja: '<strong>多角化されたポートフォリオ:</strong> 5つの異なるセグメントが、特定の市場の低迷リスクを分散させる。', en: '<strong>Diversified Portfolio:</strong> Five different segments diversify the risk of a downturn in any single market.' },
+        bull_content_li2: { ja: '<strong>ニッチ市場のリーダー:</strong> 多くの事業で高い市場シェアを誇り、価格決定力と高い利益率を維持している。', en: '<strong>Niche Market Leader:</strong> Holds high market share in many of its businesses, maintaining pricing power and high profit margins.' },
+        bull_content_li3: { ja: '<strong>驚異的な連続増配:</strong> 68年連続の増配は、世界でもトップクラス。安定したキャッシュフロー創出力の証。', en: '<strong>Incredible Dividend Streak:</strong> 68 consecutive years of dividend increases is among the best in the world, a testament to its stable cash flow generation.' },
+        bull_content_li4: { ja: '<strong>規律あるM&A:</strong> 成長が見込めるニッチ市場の企業を、適切な価格で買収し、企業価値を高めてきた実績。', en: '<strong>Disciplined M&A:</strong> A track record of enhancing corporate value by acquiring companies in high-growth niche markets at the right price.' },
         bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
-        bear_content_li1: { ja: '<strong>景気後退リスク:</strong> 景気が悪化すれば、企業の資金調達やM&Aが停滞し、投資銀行部門の収益が大幅に減少する。', en: '<strong>Recession Risk:</strong> An economic downturn would cause corporate financing and M&A to stagnate, significantly reducing investment banking revenues.' },
-        bear_content_li2: { ja: '<strong>市場のボラティリティ:</strong> トレーディング事業は市場の急変によって、大きな損失を出すリスクを常に抱えている。', en: '<strong>Market Volatility:</strong> The trading business always carries the risk of significant losses due to sudden market shifts.' },
-        bear_content_li3: { ja: '<strong>規制強化:</strong> 金融危機以降、自己資本規制などが強化されており、収益機会が制限される可能性がある。', en: '<strong>Increased Regulation:</strong> Since the financial crisis, regulations such as capital requirements have been tightened, potentially limiting profit opportunities.' },
-        bear_content_li4: { ja: '<strong>評判リスク:</strong> 常に高い倫理観が求められ、過去には不祥事が株価に大きな影響を与えたこともある。', en: '<strong>Reputational Risk:</strong> Always held to high ethical standards, and past scandals have at times significantly impacted the stock price.' },
-        outlook_title: { ja: 'ゴールドマン・サックスの未来は？', en: 'What is Goldman Sachs\'s Future?' },
-        outlook_p: { ja: 'ゴールドマン・サックスの未来は、伝統的な投資銀行業務の強みを維持しつつ、いかにアセット＆ウェルス・マネジメント事業を拡大し、収益の安定性を高められるかにかかっています。', en: 'Goldman Sachs\'s future depends on its ability to expand its Asset & Wealth Management business and enhance earnings stability while maintaining its strengths in traditional investment banking.' },
+        bear_content_li1: { ja: '<strong>景気循環リスク:</strong> 産業機械メーカーであるため、世界経済が後退すれば、設備投資の減少から直接的な影響を受ける。', en: '<strong>Cyclical Risk:</strong> As an industrial machinery manufacturer, it is directly affected by a decrease in capital spending during a global economic downturn.' },
+        bear_content_li2: { ja: '<strong>緩やかな成長:</strong> 多角化による安定性と引き換えに、急成長は期待しにくい。市場平均を大きく上回るリターンは難しい可能性。', en: '<strong>Modest Growth:</strong> In exchange for stability through diversification, rapid growth is unlikely. It may be difficult to achieve returns that significantly outperform the market average.' },
+        bear_content_li3: { ja: '<strong>M&Aへの依存:</strong> 成長の一部をM&Aに依存しているため、良い買収案件が見つからない、あるいは買収が失敗するリスク。', en: '<strong>Dependence on M&A:</strong> Since part of its growth relies on M&A, there is a risk of not finding good acquisition targets or of an acquisition failing.' },
+        bear_content_li4: { ja: '<strong>ポートフォリオの複雑性:</strong> 非常に多くの事業を抱えているため、経営の非効率化や、市場から正当に評価されないリスク。', en: '<strong>Portfolio Complexity:</strong> Managing a very large number of businesses carries the risk of operational inefficiency and of not being properly valued by the market.' },
+        outlook_title: { ja: 'ドーバーの未来は？', en: 'What is Dover\'s Future?' },
+        outlook_p: { ja: 'ドーバーの未来は、既存のニッチ市場でのリーダーシップを維持しつつ、M&Aを通じてサステナビリティやデジタル化といった新たな成長分野へポートフォリオを拡大していくことにあります。', en: 'Dover\'s future lies in maintaining its leadership in existing niche markets while expanding its portfolio into new growth areas like sustainability and digitalization through M&A.' },
         roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
         roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
-        roadmap_near_p: { ja: 'M&A市場の回復を捉え、投資銀行部門の収益を最大化。個人向け事業から撤退し、経営資源を得意分野である法人・富裕層向けビジネスに集中させます。', en: 'Capitalize on the recovering M&A market to maximize investment banking revenue. Exit the consumer business to concentrate resources on its core strengths: corporate and high-net-worth client businesses.' },
+        roadmap_near_p: { ja: 'クリーンエネルギーやサステナビリティ関連の事業への投資を強化。特にCO2冷凍システムや、EV充電関連のコンポーネント事業の成長を加速させます。', en: 'Strengthen investment in businesses related to clean energy and sustainability, particularly accelerating growth in CO2 refrigeration systems and EV charging components.' },
         roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
-        roadmap_far_p: { ja: 'アセット＆ウェルス・マネジメント部門の運用資産残高を拡大し、安定的な手数料収入の割合を高める。プライベート・クレジットなど、新たな成長分野への投資を加速させます。', en: 'Increase assets under management in the Asset & Wealth Management division to grow the share of stable, fee-based revenues. Accelerate investment in new growth areas like private credit.' },
+        roadmap_far_p: { ja: '規律あるM&A戦略を継続し、成長性の高いニッチ市場のリーダー企業を買収。デジタルソリューションやソフトウェアの売上比率を高め、収益の安定性をさらに向上させます。', en: 'Continue its disciplined M&A strategy to acquire leaders in high-growth niche markets. Increase the sales ratio of digital solutions and software to further enhance earnings stability.' },
         conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
-        conclusion_p: { ja: 'ゴールドマン・サックスは、世界経済の成長と市場の活況に賭ける、典型的な景気敏感（シクリカル）株。市場のサイクルを読み、適切なタイミングで投資することが求められます。', en: 'Goldman Sachs is a classic cyclical stock, a bet on global economic growth and buoyant markets. It requires investors to read market cycles and invest at the right time.' },
+        conclusion_p: { ja: 'ドーバーは、ポートフォリオに安定性をもたらす、典型的な配当成長株。景気サイクルを乗りこなし、長期的に安定したインカムゲインとキャピタルゲインの両方を狙う投資家に最適です。', en: 'Dover is a classic dividend growth stock that brings stability to a portfolio. It is ideal for investors who can navigate economic cycles and aim for both stable income and capital gains over the long term.' },
         strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
         strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
         strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
         strategy_btn_long: { ja: '3年以上', en: '3+ years' },
         strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
-        strategy_res_short_subtitle: { ja: '市場のセンチメントを読む', en: 'Read the Market Sentiment' },
-        strategy_res_short_p: { ja: '株価は金利、インフレ、景気動向などマクロ経済のニュースに敏感に反応します。四半期ごとのトレーディング収益が市場予想を上回るかが短期的な鍵です。', en: 'The stock price reacts sensitively to macroeconomic news such as interest rates, inflation, and economic trends. The key short-term factor is whether quarterly trading revenues beat market expectations.' },
+        strategy_res_short_subtitle: { ja: 'マクロ経済指標が鍵', en: 'Macroeconomic Indicators are Key' },
+        strategy_res_short_p: { ja: '株価は製造業PMIや設備投資の動向など、景気の先行指標に左右されやすい。短期的な売買は、これらの指標を読んで行うことになります。', en: 'The stock price is susceptible to leading economic indicators like the Manufacturing PMI and capital expenditure trends. Short-term trading will involve reading these indicators.' },
         strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
-        strategy_res_medium_subtitle: { ja: 'M&Aサイクルの波に乗る', en: 'Ride the M&A Cycle Wave' },
-        strategy_res_medium_p: { ja: '景気回復が確実となり、企業のM&A活動が本格化する局面が投資の好機。投資銀行部門の収益回復が確認できれば、株価は上昇トレンドを描く可能性があります。', en: 'The opportune time to invest is when economic recovery is certain and corporate M&A activity picks up in earnest. If a recovery in investment banking revenue is confirmed, the stock could trend upwards.' },
+        strategy_res_medium_subtitle: { ja: '景気回復の兆候を待つ', en: 'Wait for Signs of Economic Recovery' },
+        strategy_res_medium_p: { ja: '金利が低下し、企業の設備投資意欲が回復する局面が投資の好機。四半期ごとの受注残高の増加が、株価上昇のサインとなり得ます。', en: 'An opportune time to invest is when interest rates fall and corporate capital spending appetite recovers. An increase in the quarterly order backlog can be a sign of a stock price rally.' },
         strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
-        strategy_res_long_subtitle: { ja: '純資産価値の成長に賭ける', en: 'Bet on the Growth of Book Value' },
-        strategy_res_long_p: { ja: '短期的な市場の浮き沈みは気にせず、ゴールドマンが稼ぎ出す利益が純資産を着実に積み上げていくことに投資。株価が純資産価値（BPS）を下回る局面は、絶好の買い場となります。', en: 'An investment in the steady accumulation of book value from the profits Goldman generates, ignoring short-term market fluctuations. Periods when the stock price falls below its book value per share (BPS) are excellent buying opportunities.' },
-        footer_copyright: { ja: '&copy; 2025 The Goldman Sachs Group, Inc. Investor Dashboard. All rights reserved.', en: '&copy; 2025 The Goldman Sachs Group, Inc. Investor Dashboard. All rights reserved.' },
-        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+        strategy_res_long_subtitle: { ja: '配当王と複利の力を信じる', en: 'Trust in the Power of a Dividend King and Compounding' },
+        strategy_res_long_p: { ja: '短期的な景気サイクルは気にせず、60年以上にわたる増配の実績と、安定したビジネスモデルを信じて長期保有。配当再投資で、着実に資産を増やすのに最適な銘柄の一つです。', en: 'One of the best stocks for steadily growing assets through dividend reinvestment, holding for the long term and trusting in its 60+ year dividend growth track record and stable business model, regardless of short-term economic cycles.' },
+        footer_copyright: { ja: '&copy; 2025 Dover Corporation Investor Dashboard. All rights reserved.', en: '&copy; 2025 Dover Corporation Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' },
+        page_title: { ja: '【ドーバー版】多角化産業の優等生！投資家向けダッシュボード', en: '【Dover】Diversified Industrial Excellence! Investor Dashboard' }
     };
 
     // --- Global variables for charts ---
@@ -456,7 +473,7 @@
         }
         if (competitorChart) {
             competitorChart.data.labels = translations.chart_competitor_axes[lang];
-            competitorChart.data.datasets[0].label = translations.chart_competitor_label_gs[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_dov[lang];
             competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
             competitorChart.update();
         }
@@ -493,7 +510,7 @@
             if(stockCtx) {
                 stockChart = new Chart(stockCtx, {
                     type: 'line',
-                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [330, 325, 310, 340, 380, 385, 400, 410, 390, 420, 450, 460], borderColor: '#005B94', backgroundColor: 'rgba(0, 91, 148, 0.1)', fill: true, tension: 0.4 }] },
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [147.91, 143.14, 138.37, 152.68, 162.23, 167, 171.77, 173.68, 169.86, 171.77, 176.54, 176.54], borderColor: '#00529B', backgroundColor: 'rgba(0, 82, 155, 0.1)', fill: true, tension: 0.4 }] },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
                 });
             }
@@ -503,7 +520,7 @@
             const financialsCtx = document.getElementById('financialsChart');
             if(financialsCtx) {
                 financialsChart = new Chart(financialsCtx, {
-                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [473, 462, 510], backgroundColor: '#005B94', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [85, 80, 105], borderColor: '#A8996E', backgroundColor: '#A8996E', tension: 0.4, yAxisID: 'y' } ] },
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [84, 85, 88], backgroundColor: '#00529B', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [11, 12, 13], borderColor: '#007AC1', backgroundColor: '#007AC1', tension: 0.4, yAxisID: 'y' } ] },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
                 });
             }
@@ -514,7 +531,7 @@
             if(competitorCtx) {
                 competitorChart = new Chart(competitorCtx, {
                     type: 'radar',
-                    data: { labels: ['M&Aアドバイザリー', 'トレーディング収益', '資産運用規模', 'ブランド力', '収益性'], datasets: [ { label: 'ゴールドマン', data: [98, 92, 85, 96, 90], backgroundColor: 'rgba(0, 91, 148, 0.2)', borderColor: 'rgba(0, 91, 148, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(0, 91, 148, 1)' }, { label: '競合他社 (平均)', data: [90, 88, 92, 90, 85], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    data: { labels: ['ニッチ市場でのリーダーシップ', '収益性', '多角化', '株主還元', '安定性'], datasets: [ { label: 'ドーバー', data: [95, 92, 94, 98, 96], backgroundColor: 'rgba(0, 82, 155, 0.2)', borderColor: 'rgba(0, 82, 155, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(0, 82, 155, 1)' }, { label: '競合他社 (平均)', data: [85, 88, 86, 80, 90], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
                 });
             }
@@ -541,7 +558,7 @@
                 
                 if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + current.toFixed(1) + '%';
                 else if (isDollar) element.innerText = '$' + current.toFixed(2);
-                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTrillion) element.innerText = current.toFixed(3) + '兆ドル';
                 else if (isTimes) element.innerText = current.toFixed(0) + '倍';
                 else element.innerText = current.toFixed(0);
 
@@ -550,7 +567,7 @@
                 } else {
                     if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + target.toFixed(1) + '%';
                     else if (isDollar) element.innerText = '$' + target.toFixed(2);
-                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTrillion) element.innerText = target.toFixed(3) + '兆ドル';
                     else if (isTimes) element.innerText = target.toFixed(0) + '倍';
                     else element.innerText = target.toFixed(0);
                 }

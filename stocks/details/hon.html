@@ -41,7 +41,7 @@
         .nav-link::after { background-color: #D92D2D; }
         /* END: HON Content Changes - Accent Color */
         .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
-        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .nav-link:hover::after { width: 100%; }
         .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
         .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
         .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
@@ -507,7 +507,7 @@
             if(stockCtx) {
                 stockChart = new Chart(stockCtx, {
                     type: 'line',
-                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [205, 195, 190, 200, 210, 208, 215, 220, 210, 205, 212, 215], borderColor: '#D92D2D', backgroundColor: 'rgba(217, 45, 45, 0.1)', fill: true, tension: 0.4 }] },
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [206.66, 196.58, 191.54, 201.62, 211.7, 209.68, 216.74, 221.78, 211.7, 206.66, 213.72, 216.74], borderColor: '#D92D2D', backgroundColor: 'rgba(217, 45, 45, 0.1)', fill: true, tension: 0.4 }] },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
                 });
             }

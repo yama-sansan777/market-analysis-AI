@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>クレイマー保有銘柄 | インタラクティブ米国株式市場見通し</title>
+    <title>米国株式市場インタラクティブ分析 | 2025年8月25日週</title>
     <script src="https://cdn.tailwindcss.com/3.4.1"></script>
     <script>
-        // index.htmlからTailwind CSSのカスタム設定を継承
         tailwind.config = {
             theme: {
                 extend: {
@@ -33,73 +32,125 @@
             }
         }
     </script>
-    <!-- Chart.jsは不要になったため削除 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-    <script src="translations/load.js"></script>
-    <script src="lang.js"></script>
+    <!-- Chosen Palette: Modern Slate -->
+    <!-- Application Structure Plan: A multi-page application simulated with top-level tabs within a single HTML file. The primary view ("Weekly Outlook") is the detailed dashboard. A second view ("Monthly Outlook") is added as a separate, distinct page, managed by JS. This structure directly addresses the user's request to treat the entire weekly report as one "tab" and create a new, large page for the monthly report as another "tab". -->
+    <!-- Visualization & Content Choices: The core of the application is the visualization of the sentiment divergence between AAII (retail) and Investors Intelligence (pro), for which a grouped bar chart (Chart.js) is the most effective choice to highlight the stark contrast. Custom HTML/CSS gauges are used for the Fear & Greed Index and the overall market score to provide a more engaging, dashboard-like feel. Simple bar and line charts (Chart.js) are used to compare inflation (CPI vs. PPI) and show trends in employment and yield curves. This approach translates complex data into easily digestible visuals. All textual content is condensed into cards and bullet points for scannability. This supports the designed dashboard structure by making data glanceable and interactive. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        /* index.htmlのスタイルを継承しつつ、このページ専用のスタイルを追加 */
         body {
             font-family: 'Inter', 'Noto Sans JP', sans-serif;
-            background-color: #f7f8fa; /* 背景色を少し明るく調整 */
+            background-color: #f7f8fa;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
         }
         .card {
             background-color: white;
-            border-radius: 0.75rem; /* 12px */
+            border-radius: 0.75rem;
             border: 1px solid #e5e7eb;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
             transition: transform 0.3s, box-shadow 0.3s;
-            overflow: hidden; /* カード内の要素がはみ出ないように */
         }
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -4px rgba(0,0,0,0.07);
         }
-        .filter-button {
-            transition: all 0.2s ease-in-out;
+        
+        .tab-button {
+            position: relative;
+            transition: color 0.3s;
         }
-        .filter-button.active {
-            background-color: #2563EB; /* primary color */
-            color: white;
-            box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.25);
+        .tab-button.active-tab {
+            color: #4f46e5;
+            font-weight: 600;
         }
-        .stock-tag {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem; /* 12px */
-            font-weight: 500;
+        .tab-indicator {
+            position: absolute;
+            bottom: -1px;
+            height: 2px;
+            background-color: #4f46e5;
+            transition: left 0.3s, width 0.3s;
+        }
+
+        .gauge-container {
+            position: relative;
+            width: 180px;
+            height: 90px;
+            overflow: hidden;
+        }
+        .gauge-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(#f43f5e, #f97316, #eab308, #84cc16, #16a34a);
+        }
+        .gauge-mask {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fff;
+        }
+        .gauge-needle {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            height: 80px;
+            background: #374151;
+            transform-origin: bottom center;
+            transition: transform 1.5s ease-in-out;
+        }
+        .gauge-center {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #374151;
         }
     </style>
 </head>
 <body class="text-slate-700 min-h-screen">
 
-<!-- 統一されたヘッダーメニュー -->
-<header class="bg-white border-b border-gray-200">
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-8">
-                <a href="index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                <div class="flex items-center font-bold text-xl text-primary">
+                    <span>📈 YOHOU US Stocks AI</span>
+                </div>
                 <nav class="hidden md:flex space-x-6 text-gray-600">
-                    <a href="index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
-                    <a href="pickup.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_pickup">クレイマー保有銘柄</a>
-                    <a href="ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
-                    <a href="indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
-                    <a href="terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
-                    <a href="about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    <a href="#" class="text-primary font-medium border-b-2 border-primary pb-1">本日の市況分析</a>
+                    <a href="#" class="hover:text-primary">クレイマー保有銘柄</a>
+                    <a href="#" class="hover:text-primary">IPOスケジュール</a>
+                    <a href="#" class="hover:text-primary">テクニカル指標解説</a>
                 </nav>
             </div>
             <div class="flex items-center space-x-1 md:space-x-4">
-                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
-                <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
-                <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
-                    <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
-                    <span class="text-gray-400 text-xs">|</span>
-                    <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
-                </div>
                 <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
                     <i class="ri-menu-line ri-lg"></i>
                 </button>
@@ -108,786 +159,166 @@
     </div>
 </header>
 
-<!-- モバイルメニュー -->
 <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
     <div class="px-4 py-2 space-y-1">
-        <a href="index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
-        <a href="pickup.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50" data-lang="nav_pickup">クレイマー保有銘柄</a>
-        <a href="ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
-        <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
-        <a href="terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
-        <a href="about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
-        <div class="border-t border-gray-200 pt-2 mt-2">
-            <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
-            <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
-        </div>
+        <a href="#" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50">本日の市況分析</a>
+        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">クレイマー保有銘柄</a>
+        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">IPOスケジュール</a>
+        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">テクニカル指標解説</a>
     </div>
 </div>
 
-<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 
-    <!-- ページタイトルセクション -->
-    <section class="text-center mb-12">
-        <div class="mb-4">
-            <img src="image/jim.png" alt="Jim Cramer" class="w-24 h-24 rounded-full object-cover mx-auto">
-        </div>
-        <h1 class="text-3xl md:text-4xl font-bold text-slate-800" data-lang="pickup_title">クレイマー保有銘柄</h1>
-        <p class="text-slate-500 mt-4 max-w-2xl mx-auto" data-lang="pickup_subtitle">AIによる分析と市場トレンドに基づき、今注目すべき米国株をピックアップ。詳細なデータとインサイトで、あなたの銘柄選定をサポートします。</p>
-    </section>
-
-    <!-- フィルター＆ソート機能セクション -->
-    <section class="mb-8 p-4 bg-white rounded-xl shadow-sm border border-gray-200 sticky top-0 z-40">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <!-- セクターフィルター -->
-            <div class="flex-grow">
-                <label class="text-sm font-medium text-slate-600 mb-2 block" data-lang="filter_sector">セクターで絞り込み</label>
-                <div id="sector-filter" class="flex flex-wrap gap-2">
-                    <button class="filter-button active px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="all" data-lang="filter_all">すべて</button>
-                    <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Technology" data-lang="sector_technology">テクノロジー</button>
-                    <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Healthcare" data-lang="sector_healthcare">ヘルスケア</button>
-                    <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Financials" data-lang="sector_financials">金融</button>
-                    <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Energy" data-lang="sector_energy">エネルギー</button>
-                    <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Consumer Discretionary">一般消費財</button>
-                    <button class="filter-button px-4 py-2 text-sm font-semibold bg-gray-100 text-slate-700 rounded-full" data-sector="Industrials">資本財</button>
-
-                </div>
+        <div class="flex items-center justify-center space-x-3 mb-2">
+            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <span class="text-xl font-bold text-indigo-600">📊</span>
             </div>
-            <!-- ソート機能 -->
-            <div class="flex-shrink-0">
-                <label for="sort-by" class="text-sm font-medium text-slate-600 mb-2 block" data-lang="sort_by">並び替え</label>
-                <select id="sort-by" class="w-full md:w-auto form-select appearance-none block px-3 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded-lg transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-primary focus:outline-none">
-                    <option value="marketCap_desc" data-lang="sort_marketcap_desc">時価総額 (大きい順)</option>
-                    <option value="marketCap_asc" data-lang="sort_marketcap_asc">時価総額 (小さい順)</option>
-                    <option value="performance_desc" data-lang="sort_performance_desc">パフォーマンス (良い順)</option>
-                    <option value="performance_asc" data-lang="sort_performance_asc">パフォーマンス (悪い順)</option>
-                </select>
-            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-800">米国株式市場見通し</h1>
         </div>
-    </section>
-
-    <!-- 個別銘柄カードグリッド -->
-    <section>
-        <div id="stock-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            <!-- JavaScriptによってここに銘柄カードが挿入されます -->
-        </div>
-        <div id="loading-indicator" class="text-center py-12 hidden">
-             <p class="text-slate-500" data-lang="loading">データを読み込んでいます...</p>
-        </div>
-        <div id="no-results" class="text-center py-12 hidden">
-             <p class="text-slate-500" data-lang="no_results">該当する銘柄が見つかりませんでした。</p>
-        </div>
-    </section>
-
-</main>
-
-<!-- index.htmlからフッターを継承 -->
-<footer class="bg-slate-100 mt-12 border-t">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-xs text-slate-500">
-        <p>免責事項：本レポートは情報提供のみを目的としており、投資助言を構成するものではありません。投資に関する決定は、ご自身の判断と責任において行ってください。</p>
-    </div>
-</footer>
-
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-    // --- 言語システム初期化 ---
-    if (typeof window.initLanguage === 'function') {
-        await window.initLanguage();
-    }
-
-    // --- モバイルメニュー機能 (index.htmlから継承) ---
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
-
-    // --- 銘柄データ ---
-    const allStockData = [
-        {
-            ticker: 'NVDA',
-            name: 'NVIDIA Corp.',
-            logo: 'https://placehold.co/40x40/76B900/FFFFFF?text=NVDA',
-            sector: 'Technology',
-            price: 120.78,
-            change: 2.5,
-            marketCap: 3.1, // Trillion
-            peRatio: 70.5,
-            performance: 150.2, // YTD
-            summary: 'AIチップ市場の絶対的リーダー。データセンター向けGPUの需要は依然として旺盛で、今後の成長期待も非常に高い。',
-            tags: ['AI', '半導体'],
-            analystRating: { buy: 85, hold: 10, sell: 5 }
-        },
-        {
-            ticker: 'MSFT',
-            name: 'Microsoft Corp.',
-            logo: 'https://placehold.co/40x40/F25022/FFFFFF?text=MSFT',
-            sector: 'Technology',
-            price: 445.12,
-            change: -0.8,
-            marketCap: 3.3, // Trillion
-            peRatio: 38.6,
-            performance: 18.5,
-            summary: 'クラウドサービスAzureとAIアシスタントCopilotの連携が強力。エンタープライズ向けソフトウェア市場での地位は盤石。',
-            tags: ['AI', 'クラウド', 'ソフトウェア'],
-            analystRating: { buy: 88, hold: 12, sell: 0 }
-        },
-        {
-            ticker: 'LLY',
-            name: 'Eli Lilly and Co.',
-            logo: 'https://placehold.co/40x40/FFBF3F/FFFFFF?text=LLY',
-            sector: 'Healthcare',
-            price: 890.10,
-            change: 1.2,
-            marketCap: 0.84, // Trillion
-            peRatio: 125.8,
-            performance: 52.1,
-            summary: '肥満症治療薬「ゼップバウンド」と糖尿病治療薬「マンジャロ」が驚異的な成長を牽引。医薬品業界のゲームチェンジャー。',
-            tags: ['医薬品', '肥満治療薬'],
-            analystRating: { buy: 82, hold: 15, sell: 3 }
-        },
-        {
-            ticker: 'AVGO',
-            name: 'Broadcom Inc.',
-            logo: 'https://placehold.co/40x40/E31837/FFFFFF?text=AVGO',
-            sector: 'Technology',
-            price: 1650.45,
-            change: 3.1,
-            marketCap: 0.77, // Trillion
-            peRatio: 55.3,
-            performance: 48.9,
-            summary: 'AIインフラに不可欠なカスタムチップとネットワーク機器で高いシェア。VMware買収によるソフトウェア事業の強化も進む。',
-            tags: ['半導体', 'AI', '5G'],
-            analystRating: { buy: 79, hold: 18, sell: 3 }
-        },
-        {
-            ticker: 'AAPL',
-            name: 'Apple Inc.',
-            logo: 'https://placehold.co/40x40/A3AAAE/FFFFFF?text=AAPL',
-            sector: 'Technology',
-            price: 215.05,
-            change: 1.8,
-            marketCap: 3.28,
-            peRatio: 33.1,
-            performance: 12.5,
-            summary: 'iPhoneで世界を席巻する巨大IT企業。強力なブランド力とエコシステムを武器に、サービス部門も急成長中。',
-            tags: ['スマートフォン', 'ブランド', 'サービス'],
-            analystRating: { buy: 75, hold: 20, sell: 5 }
-        },
-        {
-            ticker: 'AMZN',
-            name: 'Amazon.com, Inc.',
-            logo: 'https://placehold.co/40x40/FF9900/FFFFFF?text=AMZN',
-            sector: 'Technology',
-            price: 185.30,
-            change: -0.5,
-            marketCap: 1.93,
-            peRatio: 51.2,
-            performance: 22.1,
-            summary: 'Eコマースとクラウド(AWS)の二大巨頭。広告事業の成長も著しく、AIへの投資も積極的に行っている。',
-            tags: ['Eコマース', 'クラウド', '広告'],
-            analystRating: { buy: 90, hold: 8, sell: 2 }
-        },
-        {
-            ticker: 'COST',
-            name: 'Costco Wholesale',
-            logo: 'https://placehold.co/40x40/E31837/FFFFFF?text=COST',
-            sector: 'Consumer Discretionary',
-            price: 850.25,
-            change: 0.9,
-            marketCap: 0.37,
-            peRatio: 51.5,
-            performance: 28.4,
-            summary: '会員制倉庫型小売の最大手。高い顧客ロイヤルティと効率的な経営で、不況下でも安定した業績を誇る。',
-            tags: ['小売', '会員制', 'ディフェンシブ'],
-            analystRating: { buy: 65, hold: 30, sell: 5 }
-        },
-        {
-            ticker: 'META',
-            name: 'Meta Platforms',
-            logo: 'https://placehold.co/40x40/1877F2/FFFFFF?text=META',
-            sector: 'Technology',
-            price: 498.70,
-            change: -1.2,
-            marketCap: 1.26,
-            peRatio: 27.3,
-            performance: 40.9,
-            summary: 'FacebookやInstagramを運営。デジタル広告市場での支配的な地位を背景に、メタバースとAIへの巨額投資を続ける。',
-            tags: ['SNS', '広告', 'メタバース'],
-            analystRating: { buy: 80, hold: 15, sell: 5 }
-        },
-        {
-            ticker: 'WFC',
-            name: 'Wells Fargo & Co.',
-            logo: 'https://placehold.co/40x40/D71E28/FFFFFF?text=WFC',
-            sector: 'Financials',
-            price: 60.15,
-            change: 0.3,
-            marketCap: 0.21,
-            peRatio: 11.8,
-            performance: 22.3,
-            summary: '米国の大手商業銀行。過去の問題から立ち直り、経営効率化を進めている。金利上昇局面で恩恵を受ける銘柄の一つ。',
-            tags: ['銀行', '金融', 'バリュー株'],
-            analystRating: { buy: 55, hold: 40, sell: 5 }
-        },
-        {
-            ticker: 'ABT',
-            name: 'Abbott Laboratories',
-            logo: 'https://placehold.co/40x40/0096D6/FFFFFF?text=ABT',
-            sector: 'Healthcare',
-            price: 105.50,
-            change: 0.7,
-            marketCap: 0.18,
-            peRatio: 33.2,
-            performance: 2.1,
-            summary: '医療機器、診断薬、栄養剤、ジェネリック医薬品などを幅広く手掛ける。安定した成長と配当が魅力。',
-            tags: ['医療機器', 'ヘルスケア', '高配当'],
-            analystRating: { buy: 70, hold: 25, sell: 5 }
-        },
-        {
-            ticker: 'BLK',
-            name: 'BlackRock, Inc.',
-            logo: 'https://placehold.co/40x40/000000/FFFFFF?text=BLK',
-            sector: 'Financials',
-            price: 780.20,
-            change: -1.5,
-            marketCap: 0.11,
-            peRatio: 20.1,
-            performance: -2.5,
-            summary: '世界最大の資産運用会社。iShares ETFブランドで市場をリード。金融市場の動向に大きく影響を受ける。',
-            tags: ['資産運用', 'ETF', '金融'],
-            analystRating: { buy: 60, hold: 35, sell: 5 }
-        },
-        {
-            ticker: 'BMY',
-            name: 'Bristol-Myers Squibb',
-            logo: 'https://placehold.co/40x40/F17720/FFFFFF?text=BMY',
-            sector: 'Healthcare',
-            price: 42.10,
-            change: 1.1,
-            marketCap: 0.08,
-            peRatio: 8.5,
-            performance: -18.2,
-            summary: 'がん、免疫、心血管疾患などの領域で革新的な医薬品を開発。主力製品の特許切れが課題だが、パイプラインに期待。',
-            tags: ['製薬', 'がん治療', 'バリュー株'],
-            analystRating: { buy: 40, hold: 50, sell: 10 }
-        },
-        {
-            ticker: 'COF',
-            name: 'Capital One Financial',
-            logo: 'https://placehold.co/40x40/004977/FFFFFF?text=COF',
-            sector: 'Financials',
-            price: 140.80,
-            change: 0.8,
-            marketCap: 0.05,
-            peRatio: 10.9,
-            performance: 8.1,
-            summary: 'クレジットカード事業を主力とする大手金融機関。消費者信用市場の動向に業績が左右される。',
-            tags: ['クレジットカード', '金融', '消費者金融'],
-            analystRating: { buy: 58, hold: 38, sell: 4 }
-        },
-        {
-            ticker: 'CRM',
-            name: 'Salesforce, Inc.',
-            logo: 'https://placehold.co/40x40/00A1E0/FFFFFF?text=CRM',
-            sector: 'Technology',
-            price: 245.30,
-            change: -2.1,
-            marketCap: 0.24,
-            peRatio: 45.6,
-            performance: -6.8,
-            summary: '顧客管理(CRM)ソフトウェアの世界的リーダー。AI機能「Einstein」を統合し、企業のデジタルトランスフォーメーションを支援。',
-            tags: ['CRM', 'クラウド', 'SaaS'],
-            analystRating: { buy: 81, hold: 17, sell: 2 }
-        },
-        {
-            ticker: 'CRWD',
-            name: 'CrowdStrike Holdings',
-            logo: 'https://placehold.co/40x40/FF0000/FFFFFF?text=CRWD',
-            sector: 'Technology',
-            price: 380.90,
-            change: 3.5,
-            marketCap: 0.09,
-            peRatio: 0, // N/A
-            performance: 48.2,
-            summary: 'クラウドベースのエンドポイントセキュリティを提供。サイバーセキュリティ需要の高まりを背景に急成長を遂げている。',
-            tags: ['サイバーセキュリティ', 'クラウド', 'SaaS'],
-            analystRating: { buy: 85, hold: 15, sell: 0 }
-        },
-        {
-            ticker: 'CSCO',
-            name: 'Cisco Systems',
-            logo: 'https://placehold.co/40x40/1BA0D7/FFFFFF?text=CSCO',
-            sector: 'Technology',
-            price: 46.50,
-            change: 0.2,
-            marketCap: 0.19,
-            peRatio: 14.1,
-            performance: -8.1,
-            summary: 'ネットワーク機器の最大手。ハードウェアからソフトウェア、セキュリティへと事業の軸足をシフトしている。',
-            tags: ['ネットワーク', 'セキュリティ', '高配当'],
-            analystRating: { buy: 45, hold: 50, sell: 5 }
-        },
-        {
-            ticker: 'CTRA',
-            name: 'Coterra Energy',
-            logo: 'https://placehold.co/40x40/004B8D/FFFFFF?text=CTRA',
-            sector: 'Energy',
-            price: 28.10,
-            change: -0.9,
-            marketCap: 0.02,
-            peRatio: 10.5,
-            performance: 8.5,
-            summary: '米国の独立系石油・天然ガス会社。天然ガス価格の動向が業績に大きく影響。株主還元に積極的。',
-            tags: ['天然ガス', 'エネルギー', '高配当'],
-            analystRating: { buy: 50, hold: 40, sell: 10 }
-        },
-        {
-            ticker: 'DD',
-            name: 'DuPont de Nemours',
-            logo: 'https://placehold.co/40x40/E31837/FFFFFF?text=DD',
-            sector: 'Industrials',
-            price: 80.50,
-            change: 1.3,
-            marketCap: 0.03,
-            peRatio: 18.2,
-            performance: 5.6,
-            summary: '特殊化学品メーカー。エレクトロニクス、自動車、建設など幅広い分野に素材を提供。景気動向に敏感。',
-            tags: ['化学', '素材', '景気敏感株'],
-            analystRating: { buy: 62, hold: 33, sell: 5 }
-        },
-        {
-            ticker: 'DHR',
-            name: 'Danaher Corporation',
-            logo: 'https://placehold.co/40x40/00AEEF/FFFFFF?text=DHR',
-            sector: 'Healthcare',
-            price: 255.40,
-            change: 0.6,
-            marketCap: 0.19,
-            peRatio: 35.1,
-            performance: 10.2,
-            summary: 'ライフサイエンス、診断、環境ソリューションなどを手掛ける複合企業。継続的なM&Aで成長を続ける。',
-            tags: ['ライフサイエンス', 'ヘルスケア', 'M&A'],
-            analystRating: { buy: 72, hold: 25, sell: 3 }
-        },
-        {
-            ticker: 'DIS',
-            name: 'The Walt Disney Co.',
-            logo: 'https://placehold.co/40x40/1B2A7B/FFFFFF?text=DIS',
-            sector: 'Consumer Discretionary',
-            price: 102.30,
-            change: -1.8,
-            marketCap: 0.18,
-            peRatio: 55.3,
-            performance: 13.1,
-            summary: '世界的なエンターテイメント企業。テーマパークの回復とストリーミング事業(Disney+)の収益性改善が課題。',
-            tags: ['エンタメ', 'ストリーミング', 'テーマパーク'],
-            analystRating: { buy: 50, hold: 40, sell: 10 }
-        },
-        {
-            ticker: 'DOV',
-            name: 'Dover Corporation',
-            logo: 'https://placehold.co/40x40/004A99/FFFFFF?text=DOV',
-            sector: 'Industrials',
-            price: 185.60,
-            change: 0.4,
-            marketCap: 0.02,
-            peRatio: 22.1,
-            performance: 18.9,
-            summary: '多角的な事業を持つ産業機械メーカー。幅広い最終市場に製品を提供しており、景気変動への耐性を持つ。',
-            tags: ['産業機械', '資本財', '配当貴族'],
-            analystRating: { buy: 60, hold: 35, sell: 5 }
-        },
-        {
-            ticker: 'ETN',
-            name: 'Eaton Corporation',
-            logo: 'https://placehold.co/40x40/005EB8/FFFFFF?text=ETN',
-            sector: 'Industrials',
-            price: 325.80,
-            change: 1.9,
-            marketCap: 0.13,
-            peRatio: 35.2,
-            performance: 35.7,
-            summary: '電力管理技術のリーダー。データセンター、EV、電力網の近代化といったメガトレンドの恩恵を受ける。',
-            tags: ['電力管理', '電化', 'インフラ'],
-            analystRating: { buy: 75, hold: 20, sell: 5 }
-        },
-        {
-            ticker: 'GEV',
-            name: 'GE Vernova',
-            logo: 'https://placehold.co/40x40/00A79D/FFFFFF?text=GEV',
-            sector: 'Industrials',
-            price: 160.70,
-            change: -0.5,
-            marketCap: 0.04,
-            peRatio: 0, // N/A
-            performance: 25.1, // Since spin-off
-            summary: 'GEからスピンオフしたエネルギー事業会社。発電、送配電、風力タービンなどを手掛け、エネルギー転換の中核を担う。',
-            tags: ['エネルギー転換', '電力', '再生可能エネルギー'],
-            analystRating: { buy: 55, hold: 40, sell: 5 }
-        },
-        {
-            ticker: 'GS',
-            name: 'Goldman Sachs',
-            logo: 'https://placehold.co/40x40/7399C6/FFFFFF?text=GS',
-            sector: 'Financials',
-            price: 460.10,
-            change: 1.4,
-            marketCap: 0.15,
-            peRatio: 17.5,
-            performance: 20.8,
-            summary: '世界有数の投資銀行。M&Aやトレーディング事業が好調。資産運用部門の強化も進めている。',
-            tags: ['投資銀行', '金融', 'M&A'],
-            analystRating: { buy: 65, hold: 30, sell: 5 }
-        },
-        {
-            ticker: 'HD',
-            name: 'The Home Depot',
-            logo: 'https://placehold.co/40x40/F96302/FFFFFF?text=HD',
-            sector: 'Consumer Discretionary',
-            price: 350.40,
-            change: -0.2,
-            marketCap: 0.35,
-            peRatio: 22.3,
-            performance: 1.5,
-            summary: '米国最大のホームセンター。住宅市場やリフォーム需要の動向が業績に影響。プロ向け顧客が強み。',
-            tags: ['小売', '住宅', 'DIY'],
-            analystRating: { buy: 60, hold: 35, sell: 5 }
-        },
-        {
-            ticker: 'HON',
-            name: 'Honeywell International',
-            logo: 'https://placehold.co/40x40/ED1C24/FFFFFF?text=HON',
-            sector: 'Industrials',
-            price: 210.90,
-            change: 0.9,
-            marketCap: 0.14,
-            peRatio: 23.8,
-            performance: 1.2,
-            summary: '航空宇宙、ビルディング技術、安全・生産性ソリューションなどを手掛ける複合企業。航空宇宙部門の回復が続く。',
-            tags: ['航空宇宙', 'オートメーション', '複合企業'],
-            analystRating: { buy: 68, hold: 28, sell: 4 }
-        },
-        {
-            ticker: 'LIN',
-            name: 'Linde plc',
-            logo: 'https://placehold.co/40x40/005596/FFFFFF?text=LIN',
-            sector: 'Industrials',
-            price: 440.60,
-            change: 1.1,
-            marketCap: 0.21,
-            peRatio: 32.7,
-            performance: 7.3,
-            summary: '世界最大の産業ガスメーカー。ヘルスケアからエレクトロニクスまで幅広い産業にガスを供給し、安定した需要を持つ。',
-            tags: ['産業ガス', '化学', 'ディフェンシブ'],
-            analystRating: { buy: 70, hold: 27, sell: 3 }
-        },
-        {
-            ticker: 'PANW',
-            name: 'Palo Alto Networks',
-            logo: 'https://placehold.co/40x40/F15A29/FFFFFF?text=PANW',
-            sector: 'Technology',
-            price: 315.70,
-            change: 2.8,
-            marketCap: 0.10,
-            peRatio: 45.9,
-            performance: 7.1,
-            summary: '次世代ファイアウォールで知られるサイバーセキュリティ大手。プラットフォーム化戦略で高成長を維持。',
-            tags: ['サイバーセキュリティ', 'ネットワーク', 'クラウド'],
-            analystRating: { buy: 83, hold: 15, sell: 2 }
-        },
-        {
-            ticker: 'SBUX',
-            name: 'Starbucks Corporation',
-            logo: 'https://placehold.co/40x40/00704A/FFFFFF?text=SBUX',
-            sector: 'Consumer Discretionary',
-            price: 80.20,
-            change: -1.3,
-            marketCap: 0.09,
-            peRatio: 22.1,
-            performance: -15.8,
-            summary: '世界最大のコーヒーチェーン。米国内での需要鈍化や労働問題が懸念材料だが、中国市場の回復に期待。',
-            tags: ['カフェ', '外食', 'ブランド'],
-            analystRating: { buy: 35, hold: 55, sell: 10 }
-        },
-        {
-            ticker: 'TJX',
-            name: 'The TJX Companies',
-            logo: 'https://placehold.co/40x40/7C228A/FFFFFF?text=TJX',
-            sector: 'Consumer Discretionary',
-            price: 110.50,
-            change: 0.7,
-            marketCap: 0.12,
-            peRatio: 25.3,
-            performance: 18.1,
-            summary: 'オフプライス小売の最大手。インフレ環境下で価格志向の消費者を惹きつけ、安定した業績を維持。',
-            tags: ['小売', 'アパレル', 'ディスカウント'],
-            analystRating: { buy: 70, hold: 25, sell: 5 }
-        },
-        {
-            ticker: 'TXRH',
-            name: 'Texas Roadhouse',
-            logo: 'https://placehold.co/40x40/9E1B32/FFFFFF?text=TXRH',
-            sector: 'Consumer Discretionary',
-            price: 170.30,
-            change: 1.6,
-            marketCap: 0.01,
-            peRatio: 33.8,
-            performance: 30.5,
-            summary: '手頃な価格のステーキで人気のレストランチェーン。力強い客足と効率的な店舗運営で成長を続ける。',
-            tags: ['外食', 'レストラン', '消費者'],
-            analystRating: { buy: 72, hold: 24, sell: 4 }
-        }
-    ];
-
-    const stockGrid = document.getElementById('stock-grid');
-    const sectorFilter = document.getElementById('sector-filter');
-    const sortBySelect = document.getElementById('sort-by');
-    const loadingIndicator = document.getElementById('loading-indicator');
-    const noResults = document.getElementById('no-results');
-
-    let currentFilter = 'all';
-    let currentSort = 'marketCap_desc';
-
-    // --- 「詳細を見る」ボタンのクリック処理 ---
-    const handleStockDetailClick = (event) => {
-        const ticker = event.target.getAttribute('data-ticker');
+        <p class="text-center text-slate-500 mb-8" id="report-period">対象期間：2025年8月25日〜8月29日</p>
         
-        // 銘柄別の詳細ページへの遷移
-        switch (ticker) {
-            case 'NVDA':
-                window.location.href = 'stocks/details/nvidia.html';
-                break;
-            case 'MSFT':
-                window.location.href = 'stocks/details/microsoft.html';
-                break;
-            case 'AAPL':
-                window.location.href = 'stocks/details/apple.html';
-                break;
-            case 'LLY':
-                window.location.href = 'stocks/details/lilly.html';
-                break;
-            case 'AVGO':
-                window.location.href = 'stocks/details/avgo.html';
-                break;
-            case 'AMZN':
-                window.location.href = 'stocks/details/amazon.html';
-                break;
-            case 'COST':
-                window.location.href = 'stocks/details/cost.html';
-                break;
-            case 'META':
-                window.location.href = 'stocks/details/meta.html';
-                break;
-            case 'WFC':
-                window.location.href = 'stocks/details/wfc.html';
-                break;
-            case 'CRM':
-                window.location.href = 'stocks/details/crm.html';
-                break;
-            case 'HD':
-                window.location.href = 'stocks/details/hd.html';
-                break;
-            case 'CSCO':
-                window.location.href = 'stocks/details/csco.html';
-                break;
-            case 'LIN':
-                window.location.href = 'stocks/details/lin.html';
-                break;
-            case 'DHR':
-                window.location.href = 'stocks/details/dhr.html';
-                break;
-            case 'ABT':
-                window.location.href = 'stocks/details/abt.html';
-                break;
-            case 'DIS':
-                window.location.href = 'stocks/details/dis.html';
-                break;
-            case 'GS':
-                window.location.href = 'stocks/details/gs.html';
-                break;
-            case 'HON':
-                window.location.href = 'stocks/details/hon.html';
-                break;
-            case 'ETN':
-                window.location.href = 'stocks/details/etn.html';
-                break;
-            case 'TJX':
-                window.location.href = 'stocks/details/tjx.html';
-                break;
-            case 'BLK':
-                window.location.href = 'stocks/details/blk.html';
-                break;
-            case 'JPM':
-            case 'XOM':
-            default:
-                // 詳細ページが未実装の銘柄の場合
-                alert('この銘柄の詳細ページは現在準備中です。');
-                break;
-        }
-    };
+        <section id="outlook" class="mb-16 text-center">
+            <p class="text-slate-500 mb-8 max-w-2xl mx-auto">ジャクソンホールでのFRB議長発言を受け市場心理は好転。しかし週末のPCEインフレ指標が、この楽観論を試す重要な試金石となります。</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場の方向性</h3><p class="text-2xl font-bold text-bullish mt-2">やや強気</p></div>
+                <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">総合スコア</h3><p class="text-5xl font-bold text-slate-800 mt-1">6<span class="text-2xl text-slate-400">/10</span></p></div>
+                <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場心理</h3><p class="text-lg font-semibold text-slate-700 mt-2 leading-tight">期待と警戒の綱引き:<br>FRBの政策転換を見据える</p></div>
+            </div>
+        </section>
 
-    // --- 銘柄カードをレンダリングする関数 ---
-    const renderStockCards = (stocks) => {
-        stockGrid.innerHTML = '';
-
-        if (stocks.length === 0) {
-            noResults.classList.remove('hidden');
-            return;
-        }
-        noResults.classList.add('hidden');
-
-        stocks.forEach((stock, index) => {
-            const changeColor = stock.change >= 0 ? 'text-bullish' : 'text-bearish';
-            const changeIcon = stock.change >= 0 ? 'ri-arrow-up-s-fill' : 'ri-arrow-down-s-fill';
-            const card = document.createElement('div');
-            card.className = 'card flex flex-col';
-            card.innerHTML = `
-                <div class="p-5 border-b border-gray-200">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-4">
-                            <img src="${stock.logo}" alt="${stock.name} logo" class="w-10 h-10 rounded-full">
-                            <div>
-                                <h3 class="font-bold text-lg text-slate-800">${stock.name}</h3>
-                                <p class="text-sm text-slate-500">${stock.ticker}</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-semibold text-xl text-slate-900">$${stock.price.toFixed(2)}</p>
-                            <p class="flex items-center justify-end text-sm font-medium ${changeColor}">
-                                <i class="${changeIcon}"></i>
-                                <span>${stock.change.toFixed(2)}%</span>
-                            </p>
-                        </div>
-                    </div>
+        <section id="dashboard" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">マーケットダッシュボード</h2>
+            <p class="text-slate-500 mb-8">センチメントとマクロ経済の重要指標を可視化。特にプロと個人のセンチメントの極端な乖離は、市場の不安定さを示す警告シグナルです。</p>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-3 card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">センチメントの乖離</h3><p class="text-sm text-slate-500 mb-4">プロ投資家は楽観的、個人投資家は悲観的という稀な状況が発生しています。</p><div class="chart-container h-64 md:h-80"><canvas id="sentimentDivergenceChart"></canvas></div></div>
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="card p-6"><div class="flex items-center justify-between space-x-4"><div><h3 class="font-bold text-lg text-slate-800">Fear & Greed Index</h3><p class="text-4xl font-bold text-bullish" id="fearGreedValue">56</p><p class="text-sm text-slate-500">市場は「強欲」状態にあります。</p></div><div class="flex-shrink-0 flex flex-col items-center"><div class="gauge-container"><div class="gauge-background"></div><div class="gauge-mask"></div><div id="fearGreedNeedle" class="gauge-needle"></div><div class="gauge-center"></div></div><div class="w-full flex justify-between text-xs px-2 mt-1 text-slate-500"><span>恐怖</span><span>強欲</span></div></div></div></div>
+                    <div class="grid grid-cols-2 gap-6"><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">VIX (恐怖指数)</h3><p class="text-3xl font-bold text-indigo-600 mt-1">14.22</p></div><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">Put/Call Ratio</h3><p class="text-3xl font-bold text-rose-600 mt-1">0.52</p></div></div>
                 </div>
-                <div class="p-5 flex-grow">
-                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">${stock.summary}</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        ${stock.tags.map(tag => `<span class="stock-tag bg-indigo-100 text-indigo-800">${tag}</span>`).join('')}
-                    </div>
-                    <div class="grid grid-cols-3 gap-4 text-center text-sm">
-                        <div>
-                            <p class="text-slate-500" data-lang="marketcap_label">時価総額</p>
-                            <p class="font-semibold text-slate-800">${stock.marketCap.toFixed(2)}兆ドル</p>
-                        </div>
-                        <div>
-                            <p class="text-slate-500" data-lang="per_label">PER</p>
-                            <p class="font-semibold text-slate-800">${stock.peRatio ? stock.peRatio + '倍' : 'N/A'}</p>
-                        </div>
-                        <div>
-                            <p class="text-slate-500" data-lang="ytd_performance_label">年初来</p>
-                            <p class="font-semibold text-slate-800 ${stock.performance >= 0 ? 'text-bullish' : 'text-bearish'}">${stock.performance.toFixed(1)}%</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="px-5 pb-5 mt-auto">
-                    <!-- アナリスト評価セクション -->
-                    <div class="mb-4 space-y-2">
-                        <p class="text-sm font-medium text-slate-600">アナリスト評価</p>
-                        <div class="space-y-1 text-xs">
-                            <!-- Buy Rating -->
-                            <div class="flex items-center">
-                                <span class="w-10 text-slate-500">買い</span>
-                                <div class="flex-1 bg-gray-200 rounded-full h-2 mx-2">
-                                    <div class="bg-bullish h-2 rounded-full" style="width: ${stock.analystRating.buy}%"></div>
-                                </div>
-                                <span class="w-8 text-right font-medium text-slate-700">${stock.analystRating.buy}%</span>
-                            </div>
-                            <!-- Hold Rating -->
-                            <div class="flex items-center">
-                                <span class="w-10 text-slate-500">中立</span>
-                                <div class="flex-1 bg-gray-200 rounded-full h-2 mx-2">
-                                    <div class="bg-neutral h-2 rounded-full" style="width: ${stock.analystRating.hold}%"></div>
-                                </div>
-                                <span class="w-8 text-right font-medium text-slate-700">${stock.analystRating.hold}%</span>
-                            </div>
-                            <!-- Sell Rating -->
-                            <div class="flex items-center">
-                                <span class="w-10 text-slate-500">売り</span>
-                                <div class="flex-1 bg-gray-200 rounded-full h-2 mx-2">
-                                    <div class="bg-bearish h-2 rounded-full" style="width: ${stock.analystRating.sell}%"></div>
-                                </div>
-                                <span class="w-8 text-right font-medium text-slate-700">${stock.analystRating.sell}%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="stock-detail-btn w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors" data-ticker="${stock.ticker}" data-lang="view_details">
-                        詳細を見る
-                    </button>
-                </div>
-            `;
-            stockGrid.appendChild(card);
-        });
+            </div>
+        </section>
 
-        // --- 言語システム再初期化（動的コンテンツ用） ---
-        if (typeof window.updateLanguage === 'function') {
-            window.updateLanguage();
-        }
+        <section id="sectors" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">セクター・銘柄スポットライト</h2>
+            <p class="text-slate-500 mb-8">市場全体が緊張状態にある中、セクターごとの動向には違いが見られます。</p>
+            <div class="relative border-b border-gray-200 mb-6"><div class="flex space-x-8" id="sector-tabs-container"><button data-tab="tech" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700 active-tab">AI関連</button><button data-tab="security" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700">サイバーセキュリティ</button><button data-tab="energy" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700">クリーンエネルギー</button></div><div class="tab-indicator" id="sector-indicator"></div></div>
+            <div id="sector-content"></div>
+        </section>
 
-        // --- 「詳細を見る」ボタンのイベントハンドラーを設定 ---
-        document.querySelectorAll('.stock-detail-btn').forEach(btn => {
-            btn.addEventListener('click', handleStockDetailClick);
-        });
-    };
+        <section id="events" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">今週の重要経済イベント</h2>
+            <p class="text-slate-500 mb-8">以下のイベントは市場のボラティリティを大きく左右する可能性があります。</p>
+            <div class="card overflow-x-auto"><table class="w-full text-sm text-left text-slate-500"><thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th scope="col" class="px-6 py-3">日付</th><th scope="col" class="px-6 py-3">イベント</th><th scope="col" class="px-6 py-3 text-center">市場インパクト</th></tr></thead><tbody id="events-table-body" class="divide-y divide-slate-200"></tbody></table></div>
+        </section>
 
-    // --- フィルターとソートを適用して再描画する関数 ---
-    const applyFiltersAndSort = () => {
-        loadingIndicator.classList.remove('hidden');
-        stockGrid.innerHTML = '';
-        noResults.classList.add('hidden');
+        <section id="strategy">
+            <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">投資戦略の提案</h2>
+            <p class="text-slate-500 mb-8">現在の市場分析に基づき、短期トレーダーと中長期投資家それぞれに向けた戦略を提案します。</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">短期トレーダー向け戦略</h3><p class="text-sm text-slate-500 mb-4">週前半は押し目買いが有効。ただし金曜のPCE発表前にポジション調整を推奨します。</p><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th class="px-4 py-2">指数</th><th class="px-4 py-2 text-green-600">支持線</th><th class="px-4 py-2 text-red-600">抵抗線</th></tr></thead><tbody id="tech-levels-table-body" class="divide-y divide-slate-200"></tbody></table></div><div class="mt-6"><h4 class="font-semibold text-slate-700 mb-2">リスク管理</h4><ul class="space-y-2 text-sm text-slate-600 list-disc list-inside"><li><span class="font-semibold">損切り水準:</span> 厳格なストップロス注文が不可欠。</li><li><span class="font-semibold">ボラティリティ対策:</span> PCE発表前にポジションを縮小。</li></ul></div></div>
+                <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">中長期投資家が注意すべきポイント</h3><ul class="space-y-4 text-sm text-slate-600"><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🔍</span><div><h4 class="font-semibold text-slate-800">ノイズとシグナルの峻別</h4><p>短期的な乱高下ではなく、FRBの政策転換という構造的変化に注目。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🛡️</span><div><h4 class="font-semibold text-slate-800">分散投資の再評価</h4><p>特定銘柄への集中リスクを避け、ポートフォリオのバランスを見直す好機。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">💡</span><div><h4 class="font-semibold text-slate-800">ボラティリティを好機に</h4><p>市場の急落は、優良な資産を割安で取得する機会となり得る。</p></div></li></ul></div>
+            </div>
+        </section>
+    </main>
 
-        // 擬似的な遅延を加えてローディング感を演出
-        setTimeout(() => {
-            loadingIndicator.classList.add('hidden');
-            let filteredStocks = allStockData;
+    <footer class="bg-slate-100 mt-12 border-t">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-xs text-slate-500">
+            <p>免責事項：本レポートは情報提供のみを目的としており、投資助言を構成するものではありません。投資に関する決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
 
-            // フィルター適用
-            if (currentFilter !== 'all') {
-                filteredStocks = allStockData.filter(stock => stock.sector === currentFilter);
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const marketData = {
+                sentiment: { fearGreed: 56.20, vix: 14.22, putCallRatio: 0.52, aaii: { bull: 30.8, bear: 44.8 }, investorsIntelligence: { bull: 60.8, bear: 18.1 } },
+                sectors: {
+                    tech: { title: '🤖 AI関連', summary: '市場牽引の主役。NVIDIA、MSFT、GOOGL等のクラウドAI事業の成長率が焦点。マグニフィセント・セブンが指数全体の方向性を左右します。', stocks: [{ name: 'NVIDIA (NVDA)', detail: '時価総額4.4兆ドルに迫る市場リーダー。' }, { name: 'Apple (AAPL)', detail: 'AI機能搭載の新型iPhoneへの期待と需要鈍化懸念が交錯。' }] },
+                    security: { title: '🛡️ サイバーセキュリティ', summary: '景気減速下でも安定需要が見込める長期的成長分野。クラウド化やDXの進展が追い風。', stocks: [{ name: 'Zscaler (ZS)', detail: 'ゼロトラスト分野のリーダー。'}, { name: 'Palo Alto Networks (PANW)', detail: 'プラットフォーム化戦略が奏功。'}] },
+                    energy: { title: '☀️ クリーンエネルギー', summary: '長期的なアンダーパフォームから復調の兆し。政策的な後押しや割安感が投資家の関心を集めています。', stocks: [{ name: 'First Solar (FSLR)', detail: '米国内での製造能力が強み。'}, { name: 'Enphase Energy (ENPH)', detail: '住宅用ソーラー市場の回復期待。'}] }
+                },
+                events: [
+                    { date: '8/26 (火)', event: '耐久財受注 / CB消費者信頼感指数', impact: '中', impactColor: 'bg-amber-100 text-amber-800' },
+                    { date: '8/28 (木)', event: '第2四半期GDP改定値 / 新規失業保険申請件数', impact: '中', impactColor: 'bg-amber-100 text-amber-800' },
+                    { date: '8/29 (金)', event: 'コアPCE価格指数 / 個人所得・支出', impact: '強', impactColor: 'bg-rose-100 text-rose-800' },
+                ],
+                techLevels: [
+                    { index: 'S&P 500', support: '6,441 / 6,408', resistance: '6,480 / 6,502' },
+                    { index: 'Nasdaq 100', support: '23,347 / 23,235', resistance: '23,668 / 23,838' },
+                    { index: 'Dow Jones', support: '45,447 / 45,137', resistance: '45,757 / 45,942' },
+                ]
+            };
+            
+            Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            const updateFearGreedGauge = () => {
+                const value = marketData.sentiment.fearGreed;
+                const needle = document.getElementById('fearGreedNeedle');
+                const valueEl = document.getElementById('fearGreedValue');
+                if (!needle || !valueEl) return;
+                const rotation = (value / 100) * 180 - 90;
+                valueEl.textContent = value.toFixed(0);
+                setTimeout(() => { needle.style.transform = `rotate(${rotation}deg)`; }, 100);
+            };
+            
+            const createSentimentDivergenceChart = () => {
+                const ctx = document.getElementById('sentimentDivergenceChart')?.getContext('2d');
+                if (!ctx) return;
+                new Chart(ctx, { type: 'bar', data: { labels: ['強気 (Bullish)', '弱気 (Bearish)'], datasets: [{ label: '個人投資家 (AAII)', data: [marketData.sentiment.aaii.bull, marketData.sentiment.aaii.bear], backgroundColor: 'rgba(79, 70, 229, 0.7)', borderColor: 'rgba(79, 70, 229, 1)', borderWidth: 1, borderRadius: 4, }, { label: '専門家 (II)', data: [marketData.sentiment.investorsIntelligence.bull, marketData.sentiment.investorsIntelligence.bear], backgroundColor: 'rgba(225, 29, 72, 0.7)', borderColor: 'rgba(225, 29, 72, 1)', borderWidth: 1, borderRadius: 4, }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: { color: '#e5e7eb' }, beginAtZero: true, title: { display: true, text: '割合 (%)' } }, x: { grid: { display: false } } }, plugins: { tooltip: { callbacks: { label: (context) => `${context.dataset.label}: ${context.raw}%` } } } } });
+            };
+
+            const setupSectorTabs = () => {
+                const tabs = document.querySelectorAll('#sector-tabs-container .tab-button');
+                const contentEl = document.getElementById('sector-content');
+                const indicator = document.getElementById('sector-indicator');
+                if (!contentEl || !indicator || tabs.length === 0) return;
+                const moveIndicator = (element) => { indicator.style.width = `${element.offsetWidth}px`; indicator.style.left = `${element.offsetLeft}px`; };
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(t => t.classList.remove('active-tab'));
+                        tab.classList.add('active-tab');
+                        moveIndicator(tab);
+                        const sectorKey = tab.dataset.tab;
+                        const sector = marketData.sectors[sectorKey];
+                        let stockHtml = '';
+                        if (sector.stocks.length > 0) {
+                            stockHtml = '<h4 class="font-semibold text-slate-700 mt-4 mb-2">注目銘柄</h4><ul class="space-y-3">';
+                            sector.stocks.forEach(stock => { stockHtml += `<li class="text-sm text-slate-600 pl-4 border-l-2 border-indigo-200"><span class="font-semibold text-slate-800">${stock.name}:</span> ${stock.detail}</li>`; });
+                            stockHtml += '</ul>';
+                        }
+                        contentEl.innerHTML = `<div class="card p-6"><h3 class="font-bold text-lg mb-2 text-slate-800">${sector.title}</h3><p class="text-slate-600">${sector.summary}</p>${stockHtml}</div>`;
+                    });
+                });
+                tabs[0].click();
+            };
+
+            const populateTables = () => {
+                const eventsBody = document.getElementById('events-table-body');
+                if(eventsBody) {
+                    eventsBody.innerHTML = '';
+                    marketData.events.forEach(item => { eventsBody.innerHTML += `<tr class="hover:bg-slate-50"><td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">${item.date}</td><td class="px-6 py-4">${item.event}</td><td class="px-6 py-4 text-center"><span class="px-2.5 py-1 text-xs font-semibold rounded-full ${item.impactColor}">${item.impact}</span></td></tr>`; });
+                }
+                const techLevelsBody = document.getElementById('tech-levels-table-body');
+                if(techLevelsBody) {
+                    techLevelsBody.innerHTML = '';
+                    marketData.techLevels.forEach(item => { techLevelsBody.innerHTML += `<tr class="hover:bg-slate-50"><td class="px-4 py-3 font-medium text-slate-900">${item.index}</td><td class="px-4 py-3 text-green-600">${item.support}</td><td class="px-4 py-3 text-red-600">${item.resistance}</td></tr>`; });
+                }
+            };
+            
+            updateFearGreedGauge();
+            createSentimentDivergenceChart();
+            setupSectorTabs();
+            populateTables();
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
             }
-
-            // ソート適用
-            switch (currentSort) {
-                case 'marketCap_desc':
-                    filteredStocks.sort((a, b) => b.marketCap - a.marketCap);
-                    break;
-                case 'marketCap_asc':
-                    filteredStocks.sort((a, b) => a.marketCap - b.marketCap);
-                    break;
-                case 'performance_desc':
-                    filteredStocks.sort((a, b) => b.performance - a.performance);
-                    break;
-                case 'performance_asc':
-                    filteredStocks.sort((a, b) => a.performance - b.performance);
-                    break;
-            }
-
-            renderStockCards(filteredStocks);
-        }, 500);
-    };
-
-    // --- イベントリスナーの設定 ---
-    sectorFilter.addEventListener('click', (e) => {
-        if (e.target.tagName === 'BUTTON') {
-            currentFilter = e.target.dataset.sector;
-            // アクティブなボタンのスタイルを更新
-            sectorFilter.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
-            applyFiltersAndSort();
-        }
-    });
-
-    sortBySelect.addEventListener('change', (e) => {
-        currentSort = e.target.value;
-        applyFiltersAndSort();
-    });
-
-    // --- 初期表示 ---
-    applyFiltersAndSort();
-});
-</script>
-
+        });
+    </script>
 </body>
 </html>

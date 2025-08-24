@@ -182,6 +182,29 @@
             background-color: #4f46e5; /* indigo-600 */
             color: white;
         }
+
+        /* 対象期間表示のアニメーション */
+        .period-display {
+            animation: periodFadeIn 0.8s ease-out;
+        }
+
+        @keyframes periodFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .period-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -5px rgba(59, 130, 246, 0.15);
+            transition: all 0.3s ease;
+        }
+
         header img { height: 40px; }
     </style>
 </head>
@@ -255,12 +278,35 @@
         <div id="main-tab-content">
             <!-- Weekly Outlook Page -->
             <div id="weekly-content">
+                <!-- 対象期間のモダンな表示 -->
+                <div class="flex justify-center mb-8">
+                    <div class="period-display inline-flex items-center bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl px-6 py-3 shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="ri-calendar-line text-blue-600 text-sm"></i>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs font-medium text-blue-600 uppercase tracking-wider mb-1">対象期間</p>
+                                <p class="text-lg font-bold text-slate-800" id="report-period">2025年8月25日〜8月29日</p>
+                            </div>
+                            <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <i class="ri-time-line text-indigo-600 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 装飾ライン -->
+                <div class="flex justify-center mb-6">
+                    <div class="w-24 h-0.5 bg-gradient-to-r from-transparent via-blue-300 to-transparent"></div>
+                </div>
+                
                 <section id="outlook" class="mb-16 text-center">
-                    <p class="text-slate-500 mb-8 max-w-2xl mx-auto">AIテーマの熱狂とスタグフレーション懸念が交錯する、不安定な市場環境を分析します。</p>
+                    <p class="text-slate-500 mb-8 max-w-2xl mx-auto">ジャクソンホールでのFRB議長発言を受け市場心理は好転。しかし週末のPCEインフレ指標が、この楽観論を試す重要な試金石となります。</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場の方向性</h3><p class="text-2xl font-bold text-amber-600 mt-2">中立からやや弱気</p></div>
-                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">総合スコア</h3><p class="text-5xl font-bold text-slate-800 mt-1">4<span class="text-2xl text-slate-400">/10</span></p></div>
-                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場心理</h3><p class="text-lg font-semibold text-slate-700 mt-2 leading-tight">陶酔感と恐怖の綱引き：<br>市場は岐路に立つ</p></div>
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場の方向性</h3><p class="text-2xl font-bold text-bullish mt-2">やや強気</p></div>
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">総合スコア</h3><p class="text-5xl font-bold text-slate-800 mt-1">6<span class="text-2xl text-slate-400">/10</span></p></div>
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場心理</h3><p class="text-lg font-semibold text-slate-700 mt-2 leading-tight">期待と警戒の綱引き:<br>FRBの政策転換を見据える</p></div>
                     </div>
                 </section>
 
@@ -270,8 +316,8 @@
                     <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
                         <div class="lg:col-span-3 card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">センチメントの巨大な乖離</h3><p class="text-sm text-slate-500 mb-4">プロ投資家は極端に楽観的（逆張りでは売りシグナル）、個人投資家は極端に悲観的（逆張りでは買いシグナル）という稀な状況が発生しています。</p><div class="chart-container h-64 md:h-80"><canvas id="sentimentDivergenceChart"></canvas></div></div>
                         <div class="lg:col-span-2 space-y-6">
-                            <div class="card p-6"><div class="flex items-center justify-between space-x-4"><div><h3 class="font-bold text-lg text-slate-800">Fear & Greed Index</h3><p class="text-4xl font-bold text-teal-600" id="fearGreedValue">63</p><p class="text-sm text-slate-500">市場は「強欲」状態にあります。</p></div><div class="flex-shrink-0 flex flex-col items-center"><div class="gauge-container"><div class="gauge-background"></div><div class="gauge-mask"></div><div id="fearGreedNeedle" class="gauge-needle"></div><div class="gauge-center"></div></div><div class="w-full flex justify-between text-xs px-2 mt-1 text-slate-500"><span>恐怖</span><span>強欲</span></div></div></div></div>
-                            <div class="grid grid-cols-2 gap-6"><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">VIX (恐怖指数)</h3><p class="text-3xl font-bold text-indigo-600 mt-1">14.83</p></div><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">Put/Call Ratio</h3><p class="text-3xl font-bold text-rose-600 mt-1">0.48</p></div></div>
+                            <div class="card p-6"><div class="flex items-center justify-between space-x-4"><div><h3 class="font-bold text-lg text-slate-800">Fear & Greed Index</h3><p class="text-4xl font-bold text-bullish" id="fearGreedValue">56</p><p class="text-sm text-slate-500">市場は「強欲」状態にあります。</p></div><div class="flex-shrink-0 flex flex-col items-center"><div class="gauge-container"><div class="gauge-background"></div><div class="gauge-mask"></div><div id="fearGreedNeedle" class="gauge-needle"></div><div class="gauge-center"></div></div><div class="w-full flex justify-between text-xs px-2 mt-1 text-slate-500"><span>恐怖</span><span>強欲</span></div></div></div></div>
+                            <div class="grid grid-cols-2 gap-6"><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">VIX (恐怖指数)</h3><p class="text-3xl font-bold text-indigo-600 mt-1">14.22</p></div><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">Put/Call Ratio</h3><p class="text-3xl font-bold text-rose-600 mt-1">0.52</p></div></div>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
@@ -285,7 +331,7 @@
                 <section id="sectors" class="mb-16">
                     <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">セクター・銘柄スポットライト</h2>
                     <p class="text-slate-500 mb-8">市場全体が緊張状態にある中、セクターごとの動向には違いが見られます。</p>
-                    <div class="relative border-b border-gray-200 mb-6"><div class="flex space-x-8" id="sector-tabs-container"><button data-tab="tech" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700 active-tab">テクノロジー</button><button data-tab="health" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700">ヘルスケア</button><button data-tab="consumer" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700">一般消費財</button></div><div class="tab-indicator" id="sector-indicator"></div></div>
+                    <div class="relative border-b border-gray-200 mb-6"><div class="flex space-x-8" id="sector-tabs-container"><button data-tab="tech" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700 active-tab">AI関連</button><button data-tab="security" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700">サイバーセキュリティ</button><button data-tab="energy" class="tab-button py-2 px-1 text-slate-500 hover:text-slate-700">クリーンエネルギー</button></div><div class="tab-indicator" id="sector-indicator"></div></div>
                     <div id="sector-content"></div>
                 </section>
 
@@ -299,14 +345,37 @@
                     <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">投資戦略の提案</h2>
                     <p class="text-slate-500 mb-8">現在の市場分析に基づき、短期トレーダーと中長期投資家それぞれに向けた戦略を提案します。</p>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">短期トレーダー向け戦略</h3><p class="text-sm text-slate-500 mb-4">ボラティリティ上昇に備え、様子見が賢明。主要な価格帯をブレイクするまではレンジ相場を想定します。</p><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th class="px-4 py-2">指数</th><th class="px-4 py-2 text-rose-600">サポート</th><th class="px-4 py-2 font-bold">ピボット</th><th class="px-4 py-2 text-teal-600">レジスタンス</th></tr></thead><tbody id="tech-levels-table-body" class="divide-y divide-slate-200"></tbody></table></div><div class="mt-6"><h4 class="font-semibold text-slate-700 mb-2">リスク管理</h4><ul class="space-y-2 text-sm text-slate-600 list-disc list-inside"><li><span class="font-semibold">損切り水準:</span> タイトなストップロス注文が不可欠。</li><li><span class="font-semibold">ボラティリティ対策:</span> 重要イベント前にポジションを縮小。</li></ul></div></div>
-                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">中長期投資家が注意すべきポイント</h3><ul class="space-y-4 text-sm text-slate-600"><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">⚠️</span><div><h4 class="font-semibold text-slate-800">スタグフレーションの脅威</h4><p>インフレと景気減速の同時進行は、株式バリュエーションにマイナス。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🏦</span><div><h4 class="font-semibold text-slate-800">FRBの政策転換リスク</h4><p>インフレ再燃に対しFRBがタカ派に転じれば最大の逆風。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🔄</span><div><h4 class="font-semibold text-slate-800">セクターローテーション</h4><p>AIテーマへの一点集中から、バランスの取れたポートフォリオへ。</p></div></li></ul></div>
+                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">短期トレーダー向け戦略</h3><p class="text-sm text-slate-500 mb-4">週前半は押し目買いが有効。ただし金曜のPCE発表前にポジション調整を推奨します。</p><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th class="px-4 py-2">指数</th><th class="px-4 py-2 text-green-600">支持線</th><th class="px-4 py-2 text-red-600">抵抗線</th></tr></thead><tbody id="tech-levels-table-body" class="divide-y divide-slate-200"></tbody></table></div><div class="mt-6"><h4 class="font-semibold text-slate-700 mb-2">リスク管理</h4><ul class="space-y-2 text-sm text-slate-600 list-disc list-inside"><li><span class="font-semibold">損切り水準:</span> 厳格なストップロス注文が不可欠。</li><li><span class="font-semibold">ボラティリティ対策:</span> PCE発表前にポジションを縮小。</li></ul></div></div>
+                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">中長期投資家が注意すべきポイント</h3><ul class="space-y-4 text-sm text-slate-600"><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🔍</span><div><h4 class="font-semibold text-slate-800">ノイズとシグナルの峻別</h4><p>短期的な乱高下ではなく、FRBの政策転換という構造的変化に注目。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🛡️</span><div><h4 class="font-semibold text-slate-800">分散投資の再評価</h4><p>特定銘柄への集中リスクを避け、ポートフォリオのバランスを見直す好機。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">💡</span><div><h4 class="font-semibold text-slate-800">ボラティリティを好機に</h4><p>市場の急落は、優良な資産を割安で取得する機会となり得る。</p></div></li></ul></div>
                     </div>
                 </section>
             </div>
 
             <!-- Monthly Outlook Page (Content will be injected here) -->
             <div id="monthly-content" class="hidden">
+                <!-- 月間見通しの対象期間表示 -->
+                <div class="flex justify-center mb-8">
+                    <div class="period-display inline-flex items-center bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-2xl px-6 py-3 shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <i class="ri-calendar-2-line text-indigo-600 text-sm"></i>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs font-medium text-indigo-600 uppercase tracking-wider mb-1">対象期間</p>
+                                <p class="text-lg font-bold text-slate-800">2025年8月</p>
+                            </div>
+                            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                                <i class="ri-time-line text-purple-600 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 装飾ライン -->
+                <div class="flex justify-center mb-6">
+                    <div class="w-24 h-0.5 bg-gradient-to-r from-transparent via-indigo-300 to-transparent"></div>
+                </div>
+                
                 <section id="monthly-outlook-summary" class="mb-16 text-center">
                     <p class="text-slate-500 mb-8 max-w-2xl mx-auto">AIという強力なテーマとマクロ経済の不確実性が交錯する、今後1か月の市場環境を分析します。</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -497,24 +566,22 @@
             }
             // --- WEEKLY DATA AND FUNCTIONS ---
             const weeklyMarketData = {
-                sentiment: { fearGreed: 63.31, vix: 14.83, putCallRatio: 0.48, aaii: { bull: 29.9, bear: 46.2 }, investorsIntelligence: { bull: 60.8, bear: 21.7 } },
+                sentiment: { fearGreed: 56.20, vix: 14.22, putCallRatio: 0.52, aaii: { bull: 30.8, bear: 44.8 }, investorsIntelligence: { bull: 60.8, bear: 18.1 } },
                 macro: { inflation: { cpi: 2.7, ppi: 3.3 }, employment: { consensus: 105, actual: 73 }, yieldCurve: [-0.15, -0.10, -0.05, 0.01, 0.03], weeklyForecast: [6456, 6435, 6470, 6485, 6500] },
                 sectors: {
-                    tech: { title: '🤖 テクノロジーセクター', summary: 'S&P 500の31.6%を占める市場の牽引役。強力なAIテーマが追い風ですが、一部のメガキャップ銘柄への過度な集中はリスクも内包しています。', stocks: [{ name: 'Microsoft (MSFT)', detail: 'AI戦略が奏功し、AzureとCopilotが力強く成長。' }, { name: 'Apple (AAPL)', detail: '「Apple Intelligence」発表でAI分野を追撃。' }] },
-                    health: { title: '💊 ヘルスケアセクター', summary: '年初来でパフォーマンスが最も悪く、バリュエーションは割安。しかし、政治・規制リスクが重しとなっており、「バリュー・トラップ」の可能性も。', stocks: [] },
-                    consumer: { title: '🛒 一般消費財セクター', summary: '景気動向に敏感なセクター。「ひび割れが見え始めている」との指摘もあり、個人消費の健全性を示す先行指標として注目されます。', stocks: [] }
+                    tech: { title: '🤖 AI関連', summary: '市場牽引の主役。NVIDIA、MSFT、GOOGL等のクラウドAI事業の成長率が焦点。マグニフィセント・セブンが指数全体の方向性を左右します。', stocks: [{ name: 'NVIDIA (NVDA)', detail: '時価総額4.4兆ドルに迫る市場リーダー。' }, { name: 'Apple (AAPL)', detail: 'AI機能搭載の新型iPhoneへの期待と需要鈍化懸念が交錯。' }] },
+                    security: { title: '🛡️ サイバーセキュリティ', summary: '景気減速下でも安定需要が見込める長期的成長分野。クラウド化やDXの進展が追い風。', stocks: [{ name: 'Zscaler (ZS)', detail: 'ゼロトラスト分野のリーダー。'}, { name: 'Palo Alto Networks (PANW)', detail: 'プラットフォーム化戦略が奏功。'}] },
+                    energy: { title: '☀️ クリーンエネルギー', summary: '長期的なアンダーパフォームから復調の兆し。政策的な後押しや割安感が投資家の関心を集めています。', stocks: [{ name: 'First Solar (FSLR)', detail: '米国内での製造能力が強み。'}, { name: 'Enphase Energy (ENPH)', detail: '住宅用ソーラー市場の回復期待。'}] }
                 },
                 events: [
-                    { date: '8/19 (火)', event: '住宅着工件数 (7月)', impact: '中', impactColor: 'bg-amber-100 text-amber-800' },
-                    { date: '8/20 (水)', event: 'FOMC議事要旨 (7月)', impact: '強', impactColor: 'bg-rose-100 text-rose-800' },
-                    { date: '8/21 (木)', event: 'ジャクソンホール会議開始', impact: '強', impactColor: 'bg-rose-100 text-rose-800' },
-                    { date: '8/21 (木)', event: '週間新規失業保険申請件数', impact: '中', impactColor: 'bg-amber-100 text-amber-800' },
-                    { date: '8/21 (木)', event: 'S&P Global 米国製造業・サービス業PMI (8月速報)', impact: '強', impactColor: 'bg-rose-100 text-rose-800' },
+                    { date: '8/26 (火)', event: '耐久財受注 / CB消費者信頼感指数', impact: '中', impactColor: 'bg-amber-100 text-amber-800' },
+                    { date: '8/28 (木)', event: '第2四半期GDP改定値 / 新規失業保険申請件数', impact: '中', impactColor: 'bg-amber-100 text-amber-800' },
+                    { date: '8/29 (金)', event: 'コアPCE価格指数 / 個人所得・支出', impact: '強', impactColor: 'bg-rose-100 text-rose-800' },
                 ],
                 techLevels: [
-                    { index: 'S&P 500', support: '6,435', pivot: '6,456', resistance: '6,471' },
-                    { index: 'Nasdaq 100', support: '23,670', pivot: '23,730', resistance: '23,875' },
-                    { index: 'Dow Jones', support: '44,751', pivot: '44,850', resistance: '45,010' },
+                    { index: 'S&P 500', support: '6,441 / 6,408', resistance: '6,480 / 6,502' },
+                    { index: 'Nasdaq 100', support: '23,347 / 23,235', resistance: '23,668 / 23,838' },
+                    { index: 'Dow Jones', support: '45,447 / 45,137', resistance: '45,757 / 45,942' },
                 ]
             };
             
@@ -602,7 +669,7 @@
                     const techLevelsBody = document.getElementById('tech-levels-table-body');
                     if(techLevelsBody) {
                         techLevelsBody.innerHTML = '';
-                        weeklyMarketData.techLevels.forEach(item => { techLevelsBody.innerHTML += `<tr class="hover:bg-slate-50"><td class="px-4 py-3 font-medium text-slate-900">${item.index}</td><td class="px-4 py-3 text-rose-600">${item.support}</td><td class="px-4 py-3 font-bold text-slate-800">${item.pivot}</td><td class="px-4 py-3 text-teal-600">${item.resistance}</td></tr>`; });
+                        weeklyMarketData.techLevels.forEach(item => { techLevelsBody.innerHTML += `<tr class="hover:bg-slate-50"><td class="px-4 py-3 font-medium text-slate-900">${item.index}</td><td class="px-4 py-3 text-green-600">${item.support}</td><td class="px-4 py-3 text-red-600">${item.resistance}</td></tr>`; });
                     }
                 };
                 
