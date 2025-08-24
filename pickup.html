@@ -40,6 +40,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
     <script src="translations/load.js"></script>
     <script src="lang.js"></script>
+    <script src="stock-data-sync.js"></script>
     <style>
         /* index.htmlのスタイルを継承しつつ、このページ専用のスタイルを追加 */
         body {
@@ -654,22 +655,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         const ticker = event.target.getAttribute('data-ticker');
         
         // 銘柄別の詳細ページへの遷移
-        switch (ticker) {
-            case 'NVDA':
-                window.location.href = 'stocks/details/nvidia.html';
-                break;
-            case 'MSFT':
-                window.location.href = 'stocks/details/microsoft.html';
-                break;
-            case 'AAPL':
-                window.location.href = 'stocks/details/apple.html';
-                break;
-            case 'LLY':
-            case 'AVGO':
-            default:
-                // 詳細ページが未実装の銘柄の場合
-                alert('この銘柄の詳細ページは現在準備中です。');
-                break;
+        const stockDetailPages = {
+            'NVDA': 'stocks/details/nvidia.html',
+            'MSFT': 'stocks/details/microsoft.html',
+            'AAPL': 'stocks/details/apple.html',
+            'LLY': 'stocks/details/lilly.html',
+            'AVGO': 'stocks/details/avgo.html',
+            'AMZN': 'stocks/details/amazon.html',
+            'COST': 'stocks/details/cost.html',
+            'META': 'stocks/details/meta.html',
+            'WFC': 'stocks/details/wfc.html',
+            'CRM': 'stocks/details/crm.html',
+            'HD': 'stocks/details/hd.html',
+            'CSCO': 'stocks/details/csco.html',
+            'LIN': 'stocks/details/lin.html',
+            'DHR': 'stocks/details/dhr.html',
+            'ABT': 'stocks/details/abt.html',
+            'DIS': 'stocks/details/dis.html',
+            'GS': 'stocks/details/gs.html',
+            'HON': 'stocks/details/hon.html',
+            'ETN': 'stocks/details/etn.html',
+            'TJX': 'stocks/details/tjx.html',
+            'BLK': 'stocks/details/blk.html'
+        };
+        
+        const detailPage = stockDetailPages[ticker];
+        if (detailPage) {
+            window.location.href = detailPage;
+        } else {
+            // 詳細ページが未実装の銘柄の場合
+            alert('この銘柄の詳細ページは現在準備中です。');
         }
     };
 
@@ -829,8 +844,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         applyFiltersAndSort();
     });
 
-    // --- 初期表示 ---
+    // --- 初期表示（同期処理より先に実行） ---
     applyFiltersAndSort();
+    
+    // --- バックグラウンドで株式データ同期実行 ---
+    setTimeout(async () => {
+        try {
+            const stockSynchronizer = new StockDataSynchronizer();
+            console.log('Starting background stock data synchronization...');
+            await stockSynchronizer.syncAllStocks(allStockData);
+            console.log('Background synchronization completed. Refreshing display...');
+            
+            // 同期後に表示を更新
+            applyFiltersAndSort();
+        } catch (error) {
+            console.error('Background synchronization failed:', error);
+        }
+    }, 100);
 });
 </script>
 

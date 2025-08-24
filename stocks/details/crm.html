@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="page_title">【セールスフォース版】クラウドCRMの王者！投資家向けダッシュボード</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to Salesforce's blue
+                        primary: '#009DFF', // A vibrant Salesforce blue
+                        secondary: '#0070D2', // A deeper Salesforce blue
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: CRM Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #38BDF8, #009DFF); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #009DFF; }
+        /* END: CRM Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #009DFF; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html">
+                        <img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10">
+                    </a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50">
+                        <i class="ri-user-line"></i>
+                        <span data-lang="login">ログイン</span>
+                    </button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: CRM Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-cyan-50 to-sky-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">S</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Salesforce, Inc.</span>
+                        <span class="text-sm font-semibold text-slate-500">NYSE: CRM</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: CRM Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: CRM Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    企業の成長を加速させるCRMの巨人、<br>
+                    <span class="gradient-text">セールスフォース</span>のAI革命
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    顧客関係管理（CRM）で世界No.1のシェアを誇る「セールスフォース」。企業のデジタルトランスフォーメーションを支えるSaaSの王者の実力とAI戦略に迫ります。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-sky-50 to-indigo-50 border-sky-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「SaaS株の筆頭」なぜセールスフォースは企業のDXに不可欠なのか？</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「セールスフォース」は、企業の営業、サービス、マーケティング活動を支援するクラウドベースのソフトウェア（SaaS）を提供する企業です。「顧客こそがすべてのビジネスの中心」という考えのもと、世界中の企業の成長を支えています。</p>
+                    <p data-lang="intro_card_p2">セールスフォースの強みは、単なる営業支援ツールに留まらない、圧倒的な製品ラインナップと、自由にアプリを追加できる「AppExchange」というエコシステムです。これにより、<strong class="text-sky-700">あらゆる業種・規模の企業が、自社に合わせてシステムを拡張できるプラットフォーム</strong>として、デジタルトランスフォーメーション（DX）に不可欠な存在となっています。</p>
+                    <p data-lang="intro_card_p3">このページでは、「セールスフォースの製品は何がすごいの？」「M&A戦略の成果は？」「AIはビジネスをどう変える？」といった、投資家が最も知りたいポイントを解説します。クラウドの巨人が描く、企業の未来像を一緒に見ていきましょう。</p>
+                </div>
+            </div>
+            <!-- END: CRM Content Changes - Hero Section -->
+
+            <!-- START: CRM Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">利益重視への転換とAIへの期待。新たな成長ステージへ</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">成長一辺倒から利益とキャッシュフローを重視する経営へと舵を切り、市場の評価が向上。AI機能「Einstein 1 Platform」への期待が、株価の新たな上昇ドライバーとなっています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-sky-600" data-count="248.29">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-sky-600" data-count="9.6">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-sky-600" data-count="0.24">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-sky-600" data-count="50">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: CRM Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: CRM Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">セールスフォースって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">「No Software」を掲げ、ソフトウェアをインターネット経由で提供するSaaSモデルを世に広めたパイオニア。M&Aを繰り返すことで、CRMを中心とした巨大な製品群を構築しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える4つのコア製品</h3>
+                <div class="grid md:grid-cols-4 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-sky-50"><svg class="w-10 h-10 text-sky-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13 10H21L11 22V12H3L13 2V10Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_sales_title">Sales Cloud</h4>
+                        <p class="text-slate-600" data-lang="core_sales_p">営業活動を効率化するSFA（営業支援システム）。創業以来の主力製品で、市場シェアNo.1。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-sky-50"><svg class="w-10 h-10 text-sky-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22ZM10.6221 15.2333L16.2792 9.57619L14.865 8.16198L10.6221 12.4048L9.13498 10.9177L7.72076 12.3319L10.6221 15.2333Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_service_title">Service Cloud</h4>
+                        <p class="text-slate-600" data-lang="core_service_p">顧客からの問い合わせを管理するカスタマーサービス基盤。コンタクトセンターなどで利用。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-sky-50"><svg class="w-10 h-10 text-sky-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C15.3137 4 18 6.68629 18 10C18 13.3137 15.3137 16 12 16C8.68629 16 6 13.3137 6 10C6 6.68629 8.68629 4 12 4ZM12 18C14.2091 18 16 19.7909 16 22H8C8 19.7909 9.79086 18 12 18Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_platform_title">Platform & Others</h4>
+                        <p class="text-slate-600" data-lang="core_platform_p">Slack, Tableau, MuleSoftなど。買収した事業と連携し、データ活用とシステム連携を支援。</p>
+                    </div>
+                     <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-sky-50"><svg class="w-10 h-10 text-sky-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 11C10.8954 11 10 10.1046 10 9C10 7.89543 10.8954 7 12 7C13.1046 7 14 7.89543 14 9C14 10.1046 13.1046 11 12 11ZM12 13C14.2091 13 16 14.7909 16 17H8C8 14.7909 9.79086 13 12 13Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_marketing_title">Marketing Cloud</h4>
+                        <p class="text-slate-600" data-lang="core_marketing_p">顧客一人ひとりに合わせたマーケティングを自動化するMAツール。企業の販促活動を支援。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">セールスフォースの強みは、CRM市場で築き上げた圧倒的なブランド力と、顧客をロックインする強力なエコシステム。MicrosoftやOracleなど巨大なライバルが存在するものの、顧客中心のプラットフォーム戦略で優位性を保っています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: CRM Content Changes - Business Section -->
+
+        <!-- START: CRM Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">売上成長は鈍化傾向にあるものの、コスト削減と価格改定により利益率が大幅に改善。安定的にキャッシュフローを生み出す「金のなる木」へと変貌を遂げています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$380億</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_revenue_growth">前年比 +9%</p>
+                    </div>
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">営業利益率 (非GAAP)
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">一時的な要因を除いた本業の儲けを示す利益率。セールスフォースは経営指標として重視。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">31.5%</p>
+                        <p class="text-base font-semibold text-blue-600" data-lang="stat_margin_desc">利益重視で大幅改善</p>
+                    </div>
+                    <div class="bg-indigo-50 border-l-4 border-indigo-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_rpo">残存履行義務 (RPO)</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$500億</p>
+                        <p class="text-base font-semibold text-indigo-600" data-lang="stat_rpo_desc">将来の売上の先行指標</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: CRM Content Changes - Financials Section -->
+        
+        <!-- START: CRM Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">成長鈍化の懸念と、AIによる再成長への期待が交錯するセールスフォース株。利益体質への転換を市場がどう評価し続けるかが、今後の株価の鍵となります。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-sky-500 text-sky-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: CRM Content Changes - Thesis Section -->
+
+        <!-- START: CRM Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">セールスフォースの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">セールスフォースの未来は、「AI」と「データ」をいかに自社のプラットフォームに統合し、顧客に新たな価値を提供できるかにかかっています。利益ある成長への転換が成功するかが試されます。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-sky-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-sky-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">AIプラットフォーム「Einstein 1」を全製品に組み込み、AIによる顧客データの分析や業務自動化を推進。AI機能の追加料金による新たな収益化を目指します。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-sky-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">MuleSoftとTableauを活用した「Data Cloud」事業を本格化。企業のあらゆるデータを統合・分析するプラットフォームとなり、CRMの枠を超えたデータカンパニーへの進化を目指します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: CRM Content Changes - Outlook Section -->
+
+        <!-- START: CRM Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">セールスフォースは、高成長株から安定成長・高収益株へと移行する過渡期にある銘柄。AIによる再成長の可能性と、現在のバリュエーションをどう評価するかがポイントです。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-blue-100 text-blue-800 font-bold py-3 px-6 rounded-lg hover:bg-blue-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: CRM Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: CRM Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Salesforce, Inc. Investor Dashboard. All rights reserved.</p>
+            <!-- END: CRM Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        // Navigation
+        nav_today: { ja: '本日の市況分析', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        // Page title
+        page_title: { ja: '【セールスフォース版】クラウドCRMの王者！投資家向けダッシュボード', en: '[Salesforce Edition] Cloud CRM King! Investor Dashboard' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: '企業の成長を加速させるCRMの巨人、<br><span class="gradient-text">セールスフォース</span>のAI革命', en: 'The CRM Giant Accelerating Business Growth,<br>The AI Revolution of <span class="gradient-text">Salesforce</span>' },
+        hero_subtitle: { ja: '顧客関係管理（CRM）で世界No.1のシェアを誇る「セールスフォース」。企業のデジタルトランスフォーメーションを支えるSaaSの王者の実力とAI戦略に迫ります。', en: 'Holding the #1 global market share in Customer Relationship Management (CRM), "Salesforce." We explore the power and AI strategy of this SaaS king that supports enterprise digital transformation.' },
+        intro_card_title: { ja: '「SaaS株の筆頭」なぜセールスフォースは企業のDXに不可欠なのか？', en: '"The quintessential SaaS stock." Why is Salesforce essential for enterprise DX?' },
+        intro_card_p1: { ja: '「セールスフォース」は、企業の営業、サービス、マーケティング活動を支援するクラウドベースのソフトウェア（SaaS）を提供する企業です。「顧客こそがすべてのビジネスの中心」という考えのもと、世界中の企業の成長を支えています。', en: '"Salesforce" is a company that provides cloud-based software (SaaS) to support enterprise sales, service, and marketing activities. Based on the philosophy that "the customer is the center of every business," it supports the growth of companies worldwide.' },
+        intro_card_p2: { ja: 'セールスフォースの強みは、単なる営業支援ツールに留まらない、圧倒的な製品ラインナップと、自由にアプリを追加できる「AppExchange」というエコシステムです。これにより、<strong class="text-sky-700">あらゆる業種・規模の企業が、自社に合わせてシステムを拡張できるプラットフォーム</strong>として、デジタルトランスフォーメーション（DX）に不可欠な存在となっています。', en: 'Salesforce\'s strength is not just its sales support tools, but its vast product lineup and the "AppExchange" ecosystem, which allows for freely adding apps. This has made it an indispensable <strong class="text-sky-700">platform for companies of all industries and sizes to customize and expand their systems</strong>, essential for digital transformation (DX).' },
+        intro_card_p3: { ja: 'このページでは、「セールスフォースの製品は何がすごいの？」「M&A戦略の成果は？」「AIはビジネスをどう変える？」といった、投資家が最も知りたいポイントを解説します。クラウドの巨人が描く、企業の未来像を一緒に見ていきましょう。', en: 'This page explains the key points investors want to know, such as "What\'s so great about Salesforce\'s products?", "What are the results of its M&A strategy?", and "How will AI change the business?". Let\'s explore the future vision of this cloud giant together.' },
+        growth_title: { ja: '利益重視への転換とAIへの期待。新たな成長ステージへ', en: 'A Shift to Profitability and AI Expectations. Entering a New Stage of Growth' },
+        growth_p: { ja: '経営の舵を成長一辺倒から利益とキャッシュフローを重視する方向へと切り、市場の評価が向上。AI機能「Einstein 1 Platform」への期待が、株価の新たな上昇ドライバーとなっています。', en: 'Shifting its management focus from growth-at-all-costs to profitability and cash flow has improved its market valuation. Expectations for its AI platform, "Einstein 1," are becoming a new driver for the stock price.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'セールスフォースって、どんな会社？', en: 'What Kind of Company is Salesforce?' },
+        business_p: { ja: '「No Software」を掲げ、ソフトウェアをインターネット経由で提供するSaaSモデルを世に広めたパイオニア。M&Aを繰り返すことで、CRMを中心とした巨大な製品群を構築しています。', en: 'A pioneer that popularized the SaaS model of delivering software over the internet under the slogan "No Software." It has built a massive product suite centered on CRM through repeated M&A.' },
+        core_business_title: { ja: 'ビジネスを支える4つのコア製品', en: 'Four Core Products Supporting the Business' },
+        core_sales_title: { ja: 'Sales Cloud', en: 'Sales Cloud' },
+        core_sales_p: { ja: '営業活動を効率化するSFA（営業支援システム）。創業以来の主力製品で、市場シェアNo.1。', en: 'An SFA (Sales Force Automation) system that streamlines sales activities. It has been the flagship product since the company\'s founding and holds the #1 market share.' },
+        core_service_title: { ja: 'Service Cloud', en: 'Service Cloud' },
+        core_service_p: { ja: '顧客からの問い合わせを管理するカスタマーサービス基盤。コンタクトセンターなどで利用。', en: 'A customer service platform for managing customer inquiries, used in contact centers and more.' },
+        core_platform_title: { ja: 'Platform & Others', en: 'Platform & Others' },
+        core_platform_p: { ja: 'Slack, Tableau, MuleSoftなど。買収した事業と連携し、データ活用とシステム連携を支援。', en: 'Includes Slack, Tableau, and MuleSoft. Supports data utilization and system integration in conjunction with acquired businesses.' },
+        core_marketing_title: { ja: 'Marketing Cloud', en: 'Marketing Cloud' },
+        core_marketing_p: { ja: '顧客一人ひとりに合わせたマーケティングを自動化するMAツール。企業の販促活動を支援。', en: 'An MA (Marketing Automation) tool that automates personalized marketing for each customer, supporting corporate promotional activities.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'セールスフォースの強みは、CRM市場で築き上げた圧倒的なブランド力と、顧客をロックインする強力なエコシステム。MicrosoftやOracleなど巨大なライバルが存在するものの、顧客中心のプラットフォーム戦略で優位性を保っています。', en: 'Salesforce\'s strength is its dominant brand in the CRM market and a powerful ecosystem that locks in customers. Despite huge rivals like Microsoft and Oracle, it maintains its edge with a customer-centric platform strategy.' },
+        chart_competitor_label_crm: { ja: 'セールスフォース', en: 'Salesforce' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['市場シェア(CRM)', 'エコシステム', 'AI/イノベーション', 'ブランド力', '顧客基盤'], en: ['Market Share (CRM)', 'Ecosystem', 'AI/Innovation', 'Brand Strength', 'Customer Base'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: '売上成長は鈍化傾向にあるものの、コスト削減と価格改定により利益率が大幅に改善。安定的にキャッシュフローを生み出す「金のなる木」へと変貌を遂げています。', en: 'While revenue growth is slowing, profit margins have significantly improved due to cost reductions and price adjustments, transforming the company into a stable cash cow.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +9%', en: '+9% YoY' },
+        stat_margin: { ja: '営業利益率 (非GAAP)', en: 'Operating Margin (Non-GAAP)' },
+        stat_margin_tooltip: { ja: '一時的な要因を除いた本業の儲けを示す利益率。セールスフォースは経営指標として重視。', en: 'A measure of core profitability excluding temporary factors. Salesforce emphasizes this as a key performance indicator.' },
+        stat_margin_desc: { ja: '利益重視で大幅改善', en: 'Major improvement with focus on profit' },
+        stat_rpo: { ja: '残存履行義務 (RPO)', en: 'Remaining Performance Obligation' },
+        stat_rpo_desc: { ja: '将来の売上の先行指標', en: 'A leading indicator of future revenue' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: '成長鈍化の懸念と、AIによる再成長への期待が交錯するセールスフォース株。利益体質への転換を市場がどう評価し続けるかが、今後の株価の鍵となります。', en: 'Salesforce stock is at a crossroads, with concerns about slowing growth and hopes for renewed growth through AI. How the market continues to value its shift to profitability will be key to its future price.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「再成長」する理由', en: 'Why This Stock Could "Re-accelerate"' },
+        bull_content_li1: { ja: '<strong>AIによる価格上昇力:</strong> AI機能「Einstein」を製品に組み込み、追加料金を課すことで、顧客単価の上昇が期待できる。', en: '<strong>AI-driven Pricing Power:</strong> By integrating AI features ("Einstein") into its products and charging extra, an increase in average revenue per customer is expected.' },
+        bull_content_li2: { ja: '<strong>強固な顧客基盤:</strong> 一度導入すると他社への乗り換えが難しい（スイッチングコストが高い）ビジネスモデル。', en: '<strong>Sticky Customer Base:</strong> A business model with high switching costs, making it difficult for customers to switch to competitors once adopted.' },
+        bull_content_li3: { ja: '<strong>Data Cloudの可能性:</strong> 企業のデータを統合する「Data Cloud」が新たな成長ドライバーになる可能性。', en: '<strong>Potential of Data Cloud:</strong> The "Data Cloud," which integrates enterprise data, has the potential to become a new growth driver.' },
+        bull_content_li4: { ja: '<strong>利益ある成長への転換:</strong> 利益とキャッシュフローを重視する姿勢は、投資家からの評価を高めている。', en: '<strong>Shift to Profitable Growth:</strong> The focus on profit and cash flow is increasing its valuation among investors.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>成長の鈍化:</strong> 主力市場が成熟し、かつての20%を超えるような高い成長率を維持することが難しくなっている。', en: '<strong>Slowing Growth:</strong> As its core markets mature, maintaining the high growth rates of over 20% seen in the past is becoming difficult.' },
+        bear_content_li2: { ja: '<strong>Microsoftとの競争:</strong> Microsoftが「Dynamics 365」と生成AIで猛追。巨大な顧客基盤を活かした競争が激化。', en: '<strong>Competition with Microsoft:</strong> Microsoft is closing in with "Dynamics 365" and generative AI, intensifying competition by leveraging its massive customer base.' },
+        bear_content_li3: { ja: '<strong>大型M&Aの失敗リスク:</strong> Slackなど、過去の大型買収が期待されたほどのシナジーを生み出せていないとの指摘もある。', en: '<strong>Risk of M&A Failure:</strong> Some point out that past large-scale acquisitions, like Slack, have not generated the expected synergies.' },
+        bear_content_li4: { ja: '<strong>景気への敏感さ:</strong> 企業のIT投資は景気動向に左右されやすく、景気後退局面では契約の先送りや解約が増えるリスク。', en: '<strong>Economic Sensitivity:</strong> Enterprise IT spending is susceptible to economic trends, with risks of contract delays or cancellations during a downturn.' },
+        outlook_title: { ja: 'セールスフォースの未来は？', en: 'What is Salesforce\'s Future?' },
+        outlook_p: { ja: 'セールスフォースの未来は、「AI」と「データ」をいかに自社のプラットフォームに統合し、顧客に新たな価値を提供できるかにかかっています。利益ある成長への転換が成功するかが試されます。', en: 'Salesforce\'s future depends on how well it can integrate "AI" and "data" into its platform to provide new value to customers. The success of its transition to profitable growth is being tested.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: 'AIプラットフォーム「Einstein 1」を全製品に組み込み、AIによる顧客データの分析や業務自動化を推進。AI機能の追加料金による新たな収益化を目指します。', en: 'Integrate the "Einstein 1" AI platform across all products to promote customer data analysis and business automation with AI. Aim for new revenue streams through additional fees for AI features.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'MuleSoftとTableauを活用した「Data Cloud」事業を本格化。企業のあらゆるデータを統合・分析するプラットフォームとなり、CRMの枠を超えたデータカンパニーへの進化を目指します。', en: 'Fully launch the "Data Cloud" business utilizing MuleSoft and Tableau. Aim to evolve beyond CRM into a data company by becoming a platform that integrates and analyzes all enterprise data.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'セールスフォースは、高成長株から安定成長・高収益株へと移行する過渡期にある銘柄。AIによる再成長の可能性と、現在のバリュエーションをどう評価するかがポイントです。', en: 'Salesforce is a stock in transition from a high-growth to a stable-growth, high-profitability company. The key is how to evaluate the potential for re-acceleration through AI against its current valuation.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: 'マクロ経済と決算に注目', en: 'Focus on Macroeconomics and Earnings' },
+        strategy_res_short_p: { ja: '株価は金利動向や企業のIT投資意欲を示す経済指標に敏感。四半期決算での成長率と利益率のガイダンスが短期的な株価を左右します。', en: 'The stock price is sensitive to interest rate trends and economic indicators of corporate IT spending. Guidance on growth and profit margins in quarterly earnings will drive short-term price action.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: 'AIの収益化を見極める', en: 'Assess the Monetization of AI' },
+        strategy_res_medium_p: { ja: 'AI関連製品が実際に売上と利益にどれだけ貢献し始めるかが焦点。Data Cloudの契約状況や、利益率の改善が継続するかに注目です。', en: 'The focus is on how much AI-related products actually start contributing to revenue and profit. Watch for the status of Data Cloud contracts and continued improvement in profit margins.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: 'プラットフォームの価値に投資', en: 'Invest in the Platform\'s Value' },
+        strategy_res_long_p: { ja: '短期的な成長鈍化は気にせず、企業のDXに不可欠なプラットフォームとしての価値と、強力なエコシステムを信じて長期保有。利益ある成長への転換は長期的にはプラスです。', en: 'A long-term hold, ignoring short-term growth slowdowns and believing in its value as an indispensable platform for enterprise DX and its powerful ecosystem. The shift to profitable growth is a long-term positive.' },
+        footer_copyright: { ja: '&copy; 2025 Salesforce, Inc. Investor Dashboard. All rights reserved.', en: '&copy; 2025 Salesforce, Inc. Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                if (el.tagName === 'TITLE') {
+                    el.textContent = translations[key][lang];
+                } else {
+                    el.innerHTML = translations[key][lang];
+                }
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_crm[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-blue-400 animate-pop-in"><h3 class="font-bold text-blue-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [220, 210, 200, 230, 250, 260, 280, 300, 290, 270, 250, 245], borderColor: '#009DFF', backgroundColor: 'rgba(0, 157, 255, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [313, 348, 380], backgroundColor: '#009DFF', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [2, 41, 55], borderColor: '#38BDF8', backgroundColor: '#38BDF8', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['市場シェア(CRM)', 'エコシステム', 'AI/イノベーション', 'ブランド力', '顧客基盤'], datasets: [ { label: 'セールスフォース', data: [98, 95, 90, 94, 96], backgroundColor: 'rgba(0, 157, 255, 0.2)', borderColor: 'rgba(0, 157, 255, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(0, 157, 255, 1)' }, { label: '競合他社 (平均)', data: [80, 75, 85, 82, 88], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target > 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target > 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-sky-500', 'text-sky-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-sky-500', 'text-sky-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-sky-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-sky-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-sky-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-sky-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-sky-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-sky-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

@@ -51,6 +51,7 @@
         }
         .gradient-text {
             background: linear-gradient(to right, #0078D4, #00A1F1);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -132,24 +133,28 @@
 </head>
 <body class="antialiased">
 
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-8">
-                    <a href="#"><img src="https://placehold.co/160x40/FFFFFF/0078D4?text=YourLogo" alt="Logo" class="h-10"></a>
+                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
                     <nav class="hidden md:flex space-x-6 text-gray-600">
-                        <a href="#" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
-                        <a href="#" class="hover:text-primary" data-lang="nav_pickup">注目銘柄</a>
-                        <a href="#" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
-                        <a href="#" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
                     </nav>
                 </div>
                 <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
                     <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
-                        <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang-btn="ja">日本語</button>
+                        <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
                         <span class="text-gray-400 text-xs">|</span>
-                        <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang-btn="en">EN</button>
+                        <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
                     </div>
                     <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
                         <i class="ri-menu-line ri-lg"></i>
@@ -158,8 +163,24 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
     
-    <!-- Sub-header -->
+    <!-- Microsoft-specific Subheader -->
     <div class="bg-gradient-to-r from-sky-50 to-blue-50 py-4 border-b border-gray-200">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between">
@@ -168,13 +189,13 @@
                         <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 1.5H10.5V10.5H1.5z" fill="#f25022"></path><path d="M11.5 1.5H20.5V10.5H11.5z" fill="#7fba00"></path><path d="M1.5 11.5H10.5V20.5H1.5z" fill="#00a4ef"></path><path d="M11.5 11.5H20.5V20.5H11.5z" fill="#ffb900"></path></svg>
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-2xl font-extrabold text-slate-800">Microsoft</span>
+                        <span class="text-2xl font-extrabold text-slate-800" data-lang="company_name">Microsoft</span>
                         <span class="text-sm font-semibold text-slate-500">NASDAQ: MSFT</span>
                     </div>
                 </div>
                 <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
                     <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
-                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_business">どんな会社？</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
                     <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
                     <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
                     <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
@@ -211,19 +232,19 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="kpi_stock_price">現在の株価</p>
-                        <p class="text-4xl font-bold text-blue-600" data-count="450.00">$0.00</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="504.24">$0.00</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="kpi_ytd_return">年初来リターン</p>
-                        <p class="text-4xl font-bold text-blue-600" data-count="19.5">+0.0%</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="22.0">+0.0%</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="kpi_market_cap">時価総額</p>
-                        <p class="text-4xl font-bold text-blue-600" data-count="3.3">0.0兆ドル</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="3.75">0.0兆ドル</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="kpi_per">PER (株価収益率)</p>
-                        <p class="text-4xl font-bold text-blue-600" data-count="38">0倍</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="35">0倍</p>
                     </div>
                 </div>
                 <div class="h-[300px] w-full">
@@ -375,11 +396,16 @@
         ja: {
             page_title: "【Microsoft版】クラウドとAIの巨人！投資家向けダッシュボード",
             nav_today: "本日の市況分析",
-            nav_pickup: "注目銘柄",
+            nav_pickup: "クレイマー保有銘柄",
             nav_ipo: "IPOスケジュール",
+            nav_indicators: "テクニカル指標解説",
+            nav_terms: "市場用語集",
             nav_about: "サイトについて",
+            login: "ログイン",
+            register: "無料登録",
+            company_name: "Microsoft",
             subnav_intro: "はじめに",
-            subnav_business: "どんな会社？",
+            subnav_company: "どんな会社？",
             subnav_financials: "業績は？",
             subnav_thesis: "買い？or 待ち？",
             subnav_outlook: "未来は？",
@@ -561,6 +587,44 @@
             chart_competitor_axis3: "AI Development",
             chart_competitor_axis4: "OS Share",
             chart_competitor_axis5: "Gaming",
+        },
+        en: {
+            page_title: "[Microsoft Edition] Cloud & AI Giant! Investor Dashboard",
+            nav_today: "Today's Market Analysis",
+            nav_pickup: "Cramer's Holdings",
+            nav_ipo: "IPO Schedule",
+            nav_indicators: "Technical Indicators",
+            nav_terms: "Market Glossary",
+            nav_about: "About Site",
+            login: "Login",
+            register: "Free Registration",
+            company_name: "Microsoft",
+            subnav_intro: "Intro",
+            subnav_company: "About",
+            subnav_financials: "Performance",
+            subnav_thesis: "Buy or Wait?",
+            subnav_outlook: "Future",
+            main_headline_1: "From Software Giant to AI Cloud Supremacy",
+            main_headline_2: "'s Renaissance",
+            main_subtitle: "Microsoft, the giant supporting businesses and lives worldwide. Dive deep into their next moves and investment insights.",
+            intro_title: "Looking for stable growth stocks? First, know about the giant Microsoft today",
+            intro_body: `<p>If you're looking for high dividends with stable growth but don't want to sacrifice growth potential, Microsoft should be your first consideration. Did you know that this giant, known for Windows and Office, is experiencing rapid growth again with AI and cloud as its weapons?</p><p>Through a powerful partnership with OpenAI, the company behind ChatGPT, Microsoft's cloud service Azure is chosen worldwide as an AI development platform. It's like <strong class="text-blue-700">having exclusive control over reliable "pickaxes" and "land" in the new AI gold rush</strong>.</p><p>This page will answer questions like "What are Microsoft's strengths?", "Is performance stable?", and "What's the future growth potential?" in a way that's easy for investment beginners to understand. Let's explore what kind of company this champion of stability and growth really is!</p>`,
+            kpi_title: "Unwavering Growth Driven by Cloud and AI",
+            kpi_subtitle: "The overwhelming strength of enterprise cloud services and AI integration into products support Microsoft's stable stock growth.",
+            kpi_stock_price: "Current Price",
+            kpi_ytd_return: "YTD Return",
+            kpi_market_cap: "Market Cap",
+            kpi_dividend_yield: "Dividend Yield",
+            chart_price_label: "Stock Price ($)",
+            chart_profit_label: "Net Income ($B)",
+            chart_revenue_axis_label: "$ Billions",
+            chart_competitor_msft: "Microsoft",
+            chart_competitor_avg: "Competitors (Avg.)",
+            chart_competitor_axis1: "Cloud (IaaS/PaaS)",
+            chart_competitor_axis2: "Enterprise SW",
+            chart_competitor_axis3: "AI Development",
+            chart_competitor_axis4: "OS Share",
+            chart_competitor_axis5: "Gaming",
         }
     };
 
@@ -573,6 +637,7 @@
         const setLanguage = (lang) => {
             if (!translations[lang]) return;
             currentLang = lang;
+            localStorage.setItem('language', lang);
             document.documentElement.lang = lang;
             
             document.querySelectorAll('[data-lang]').forEach(el => {
@@ -581,41 +646,41 @@
                     if (el.hasAttribute('data-is-html')) {
                         el.innerHTML = translations[lang][key];
                     } else {
-                        el.innerText = translations[lang][key];
+                        el.innerHTML = translations[lang][key];
                     }
                 }
             });
 
-            // Update button styles
-            document.querySelectorAll('[data-lang-btn]').forEach(btn => {
-                if (btn.getAttribute('data-lang-btn') === lang) {
+            // Update language buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white', 'bg-gray-100', 'text-gray-700');
+                if (btn.dataset.lang === lang) {
                     btn.classList.add('bg-primary', 'text-white');
-                    btn.classList.remove('bg-gray-100', 'text-gray-700');
                 } else {
-                    btn.classList.remove('bg-primary', 'text-white');
                     btn.classList.add('bg-gray-100', 'text-gray-700');
                 }
             });
             
-            localStorage.setItem('msftDashboardLang', lang);
             updateThesisContent();
             renderAllCharts(); // Re-render charts with new labels
         };
 
-        document.querySelectorAll('[data-lang-btn]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                setLanguage(e.target.getAttribute('data-lang-btn'));
-            });
+        // --- Initialize Language ---
+        document.getElementById('header-lang-switcher').addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                }
+            }
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
         });
 
-        // --- MOBILE MENU ---
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
         
         // --- SCROLL ANIMATIONS ---
         const observer = new IntersectionObserver((entries) => {
@@ -846,7 +911,8 @@
         });
 
         // --- INITIALIZE PAGE ---
-        setLanguage(currentLang);
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
     });
 
     // --- INVESTMENT STRATEGY DIAGNOSIS ---

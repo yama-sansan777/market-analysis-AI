@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- START: PANW Content Changes - Title -->
+    <title data-lang="page_title">【パロアルト】サイバーセキュリティの未来を創る！投資家向けダッシュボード</title>
+    <!-- END: PANW Content Changes - Title -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to Palo Alto Networks' orange/red
+                        primary: '#F26522', // Palo Alto Orange
+                        secondary: '#FF8200', // Lighter accent orange
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: PANW Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #FF8200, #F26522); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #F26522; }
+        /* END: PANW Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #F26522; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: PANW Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-orange-50 to-red-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">P</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Palo Alto Networks</span>
+                        <span class="text-sm font-semibold text-slate-500">NASDAQ: PANW</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: PANW Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: PANW Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    サイバーセキュリティの未来を定義する、<br>
+                    <span class="gradient-text">パロアルト</span>のプラットフォーム戦略
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    次世代ファイアウォールのパイオニアから、AIを駆使した統合セキュリティプラットフォームのリーダーへ。サイバーセキュリティ業界の変革者「パロアルトネットワークス」の全貌に迫ります。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-red-50 to-orange-50 border-red-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「ポイント製品からプラットフォームへ」なぜパロアルトは業界のゲームチェンジャーなのか？</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「パロアルトネットワークス」は、かつて次世代ファイアウォールという革新的な製品で市場を席巻した、サイバーセキュリティ業界のリーダーです。しかし、同社の真価は過去の成功に留まりません。</p>
+                    <p data-lang="intro_card_p2">現代の企業は、無数のセキュリティ製品をバラバラに導入し、複雑化した運用に苦しんでいます。パロアルトは、この課題を解決するため、ネットワーク、クラウド、セキュリティ運用を一つのプラットフォームに統合する戦略を推進しています。例えるなら、<strong class="text-red-700">バラバラだった警備システムを、AI搭載の統合司令室で一元管理し、より高度な防御を実現する未来の警備会社</strong>なのです。</p>
+                    <p data-lang="intro_card_p3">このページでは、「パロアルトの3つのプラットフォームとは？」「なぜ今、プラットフォーム化が重要なのか？」「今後の成長性は？」といった、投資家が知るべき核心を解説します。サイバーセキュリティの新たなパラダイムを創造する企業のビジョンを、一緒に見ていきましょう。</p>
+                </div>
+            </div>
+            <!-- END: PANW Content Changes - Hero Section -->
+
+            <!-- START: PANW Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">プラットフォーム化戦略が牽引する力強い成長</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">複数の製品を統合したプラットフォームへの移行が顧客に支持され、次世代セキュリティ（NGS）分野のARR（年間経常収益）は力強い成長を継続。市場のリーダーとしての地位を固めています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="185.34">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="28.5">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="0.12">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="220">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: PANW Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: PANW Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">パロアルトって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">ネットワークセキュリティ「Strata」、クラウドセキュリティ「Prisma」、セキュリティ運用（SOC）の自動化「Cortex」という3つのプラットフォームを軸に、包括的なサイバーセキュリティソリューションを提供しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える3つのプラットフォーム</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_strata_title">Strata (ネットワーク)</h4>
+                        <p class="text-slate-600" data-lang="core_strata_p">次世代ファイアウォールが中核。企業のネットワークを保護する、創業以来の主力事業。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 3H14V17H10V3Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_prisma_title">Prisma (クラウド)</h4>
+                        <p class="text-slate-600" data-lang="core_prisma_p">企業のクラウド利用を保護する包括的なセキュリティ。現在の最大の成長ドライバー。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_cortex_title">Cortex (SOC自動化)</h4>
+                        <p class="text-slate-600" data-lang="core_cortex_p">AIを活用してセキュリティ監視やインシデント対応を自動化。将来の成長を担う。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">パロアルトの強みは、業界で最も包括的な製品ポートフォリオを、一つの統合プラットフォームとして提供できる点です。競合のフォーティネットやクラウドストライクが特定の分野で強みを持つ一方、パロアルトは「すべてをカバーする」戦略で、企業のセキュリティ投資を集約しようとしています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: PANW Content Changes - Business Section -->
+
+        <!-- START: PANW Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">サブスクリプションとサポートの売上が全体の8割を超え、安定した収益基盤を確立。高い成長率と利益率を両立し、力強いキャッシュフローを生み出しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$82億</p>
+                        <p class="text-base font-semibold text-red-600" data-lang="stat_revenue_growth">前年比 +18%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">営業利益率 (非GAAP)
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">一時的な要因を除いた本業の儲けを示す利益率。高い成長を維持しつつ、収益性も向上。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">27%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">成長と利益を両立</p>
+                    </div>
+                    <div class="bg-orange-50 border-l-4 border-orange-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_ngs_arr">次世代セキュリティARR</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$45億</p>
+                        <p class="text-base font-semibold text-orange-600" data-lang="stat_ngs_arr_desc">前年比 +40%</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: PANW Content Changes - Financials Section -->
+        
+        <!-- START: PANW Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">サイバーセキュリティ業界のリーダーとして高い成長が期待されるパロアルト株。しかし、その高い評価（バリュエーション）と、戦略転換に伴う短期的な業績への影響が投資家の懸念材料です。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-red-500 text-red-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: PANW Content Changes - Thesis Section -->
+
+        <!-- START: PANW Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">パロアルトの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">パロアルトの未来は、企業のセキュリティ対策が「個別製品の寄せ集め」から「統合プラットフォーム」へと移行する大きな流れを捉えられるかにかかっています。AIを活用した自律的なセキュリティ運用の実現を目指します。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-red-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-red-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">プラットフォーム化戦略を加速させ、顧客に複数製品の導入を促進。これにより、一顧客あたりの売上（ARPU）を増加させ、長期的な収益基盤を固めます。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-red-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">AIを活用したSOC（セキュリティオペレーションセンター）自動化プラットフォーム「XSIAM」を業界標準へと押し上げる。これにより、単なるセキュリティ製品の提供者から、顧客のセキュリティ運用全体を担うパートナーへと進化します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: PANW Content Changes - Outlook Section -->
+
+        <!-- START: PANW Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">パロアルトは、サイバーセキュリティという長期的な成長市場をリードする、典型的なグロース株。高い成長性を追求する投資家に適していますが、高いバリュエーションと株価の変動リスクを許容する必要があります。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-red-100 text-red-800 font-bold py-3 px-6 rounded-lg hover:bg-red-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: PANW Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: PANW Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Palo Alto Networks, Inc. Investor Dashboard. All rights reserved.</p>
+            <!-- END: PANW Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        nav_today: { ja: '本日の市況分析', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        page_title: { ja: '【パロアルト】サイバーセキュリティの未来を創る！投資家向けダッシュボード', en: '【Palo Alto】Creating the Future of Cybersecurity! Investor Dashboard' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: 'サイバーセキュリティの未来を定義する、<br><span class="gradient-text">パロアルト</span>のプラットフォーム戦略', en: 'Defining the Future of Cybersecurity,<br>The Platform Strategy of <span class="gradient-text">Palo Alto</span>' },
+        hero_subtitle: { ja: '次世代ファイアウォールのパイオニアから、AIを駆使した統合セキュリティプラットフォームのリーダーへ。サイバーセキュリティ業界の変革者「パロアルトネットワークス」の全貌に迫ります。', en: 'From a pioneer in next-generation firewalls to a leader in AI-driven integrated security platforms. We delve into the full picture of "Palo Alto Networks," a game-changer in the cybersecurity industry.' },
+        intro_card_title: { ja: '「ポイント製品からプラットフォームへ」なぜパロアルトは業界のゲームチェンジャーなのか？', en: '"From Point Products to a Platform": Why is Palo Alto a game-changer in the industry?' },
+        intro_card_p1: { ja: '「パロアルトネットワークス」は、かつて次世代ファイアウォールという革新的な製品で市場を席巻した、サイバーセキュリティ業界のリーダーです。しかし、同社の真価は過去の成功に留まりません。', en: '"Palo Alto Networks" is a leader in the cybersecurity industry that once dominated the market with its innovative next-generation firewall. However, the company\'s true value does not rest on its past successes.' },
+        intro_card_p2: { ja: '現代の企業は、無数のセキュリティ製品をバラバラに導入し、複雑化した運用に苦しんでいます。パロアルトは、この課題を解決するため、ネットワーク、クラウド、セキュリティ運用を一つのプラットフォームに統合する戦略を推進しています。例えるなら、<strong class="text-red-700">バラバラだった警備システムを、AI搭載の統合司令室で一元管理し、より高度な防御を実現する未来の警備会社</strong>なのです。', en: 'Modern enterprises struggle with the complexity of managing countless disparate security products. To solve this, Palo Alto is pursuing a strategy of integrating network, cloud, and security operations into a single platform. It\'s like a <strong class="text-red-700">security company of the future that unifies scattered security systems into one AI-powered command center to achieve more advanced protection.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「パロアルトの3つのプラットフォームとは？」「なぜ今、プラットフォーム化が重要なのか？」「今後の成長性は？」といった、投資家が知るべき核心を解説します。サイバーセキュリティの新たなパラダイムを創造する企業のビジョンを、一緒に見ていきましょう。', en: 'This page explains the core aspects investors need to know, such as "What are Palo Alto\'s three platforms?", "Why is platformization so important now?", and "What are its future growth prospects?". Let\'s explore the vision of a company creating a new paradigm in cybersecurity.' },
+        growth_title: { ja: 'プラットフォーム化戦略が牽引する力強い成長', en: 'Strong Growth Driven by Platformization Strategy' },
+        growth_p: { ja: '複数の製品を統合したプラットフォームへの移行が顧客に支持され、次世代セキュリティ（NGS）分野のARR（年間経常収益）は力強い成長を継続。市場のリーダーとしての地位を固めています。', en: 'The shift to an integrated platform combining multiple products has been well-received by customers, and Annual Recurring Revenue (ARR) in the Next-Generation Security (NGS) segment continues to show strong growth, solidifying its position as a market leader.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'パロアルトって、どんな会社？', en: 'What Kind of Company is Palo Alto Networks?' },
+        business_p: { ja: 'ネットワークセキュリティ「Strata」、クラウドセキュリティ「Prisma」、セキュリティ運用（SOC）の自動化「Cortex」という3つのプラットフォームを軸に、包括的なサイバーセキュリティソリューションを提供しています。', en: 'It provides comprehensive cybersecurity solutions centered around three platforms: "Strata" for network security, "Prisma" for cloud security, and "Cortex" for security operations (SOC) automation.' },
+        core_business_title: { ja: 'ビジネスを支える3つのプラットフォーム', en: 'Three Platforms Supporting the Business' },
+        core_strata_title: { ja: 'Strata (ネットワーク)', en: 'Strata (Network)' },
+        core_strata_p: { ja: '次世代ファイアウォールが中核。企業のネットワークを保護する、創業以来の主力事業。', en: 'Centered on the next-generation firewall. The core business since its founding, protecting enterprise networks.' },
+        core_prisma_title: { ja: 'Prisma (クラウド)', en: 'Prisma (Cloud)' },
+        core_prisma_p: { ja: '企業のクラウド利用を保護する包括的なセキュリティ。現在の最大の成長ドライバー。', en: 'Comprehensive security for protecting enterprise cloud usage. The largest growth driver at present.' },
+        core_cortex_title: { ja: 'Cortex (SOC自動化)', en: 'Cortex (SOC Automation)' },
+        core_cortex_p: { ja: 'AIを活用してセキュリティ監視やインシデント対応を自動化。将来の成長を担う。', en: 'Utilizes AI to automate security monitoring and incident response. Positioned to drive future growth.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'パロアルトの強みは、業界で最も包括的な製品ポートフォリオを、一つの統合プラットフォームとして提供できる点です。競合のフォーティネットやクラウドストライクが特定の分野で強みを持つ一方、パロアルトは「すべてをカバーする」戦略で、企業のセキュリティ投資を集約しようとしています。', en: 'Palo Alto\'s strength is its ability to offer the industry\'s most comprehensive product portfolio as a single, integrated platform. While competitors like Fortinet and CrowdStrike have strengths in specific areas, Palo Alto aims to consolidate enterprise security spending with its "cover-all" strategy.' },
+        chart_competitor_label_panw: { ja: 'パロアルト', en: 'Palo Alto' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['プラットフォーム統合力', 'クラウドセキュリティ', 'AI活用', '市場シェア', '収益性'], en: ['Platform Integration', 'Cloud Security', 'AI Utilization', 'Market Share', 'Profitability'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: 'サブスクリプションとサポートの売上が全体の8割を超え、安定した収益基盤を確立。高い成長率と利益率を両立し、力強いキャッシュフローを生み出しています。', en: 'With subscription and support sales exceeding 80% of the total, the company has established a stable revenue base. It achieves both a high growth rate and profitability, generating strong cash flow.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +18%', en: '+18% YoY' },
+        stat_margin: { ja: '営業利益率 (非GAAP)', en: 'Operating Margin (Non-GAAP)' },
+        stat_margin_tooltip: { ja: '一時的な要因を除いた本業の儲けを示す利益率。高い成長を維持しつつ、収益性も向上。', en: 'A measure of core profitability excluding temporary factors. Profitability is improving while maintaining high growth.' },
+        stat_margin_desc: { ja: '成長と利益を両立', en: 'Balancing Growth and Profit' },
+        stat_ngs_arr: { ja: '次世代セキュリティARR', en: 'Next-Gen Security ARR' },
+        stat_ngs_arr_desc: { ja: '前年比 +40%', en: '+40% YoY' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: 'サイバーセキュリティ業界のリーダーとして高い成長が期待されるパロアルト株。しかし、その高い評価（バリュエーション）と、戦略転換に伴う短期的な業績への影響が投資家の懸念材料です。', en: 'Palo Alto stock is expected to see high growth as a cybersecurity industry leader. However, its high valuation and the short-term impact of its strategic shift on performance are concerns for investors.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「成長し続ける」理由', en: 'Why This Stock Could "Keep Growing"' },
+        bull_content_li1: { ja: '<strong>プラットフォーム化の成功:</strong> 顧客が複数の製品を導入することで、解約率が低下し、顧客単価が上昇する。', en: '<strong>Success of Platformization:</strong> As customers adopt multiple products, churn decreases and average revenue per customer increases.' },
+        bull_content_li2: { ja: '<strong>巨大な市場機会:</strong> サイバー攻撃の高度化に伴い、企業のセキュリティ投資は今後も拡大が続く。', en: '<strong>Massive Market Opportunity:</strong> As cyberattacks become more sophisticated, enterprise security spending will continue to grow.' },
+        bull_content_li3: { ja: '<strong>AIによる優位性:</strong> AIを活用した脅威検知や運用自動化で、競合に対する技術的な優位性を確立する。', en: '<strong>AI-driven Advantage:</strong> Establishes a technical edge over competitors with AI-powered threat detection and automated operations.' },
+        bull_content_li4: { ja: '<strong>高い収益性:</strong> ソフトウェア中心のビジネスモデルは利益率が高く、潤沢なキャッシュフローを生み出す。', en: '<strong>High Profitability:</strong> The software-centric business model has high profit margins and generates abundant cash flow.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>高いバリュエーション:</strong> 株価は将来の成長を大きく織り込んでおり、少しの成長鈍化でも大きく下落するリスク。', en: '<strong>High Valuation:</strong> The stock price has already priced in significant future growth, posing a risk of a major drop with even a slight slowdown.' },
+        bear_content_li2: { ja: '<strong>戦略転換の短期的な痛み:</strong> プラットフォーム化を促進するための販売戦略が、短期的に新規顧客の獲得ペースを鈍化させる可能性。', en: '<strong>Short-term Pain of Strategic Shift:</strong> Sales strategies to promote platformization may slow the pace of new customer acquisition in the short term.' },
+        bear_content_li3: { ja: '<strong>競争の激化:</strong> クラウドストライクなど、特定の分野で急成長する新興企業との競争が激しい。', en: '<strong>Intensifying Competition:</strong> Fierce competition with fast-growing emerging companies like CrowdStrike in specific areas.' },
+        bear_content_li4: { ja: '<strong>マクロ経済の不確実性:</strong> 景気後退局面では、企業がIT投資を抑制し、大型契約の締結が遅れる可能性がある。', en: '<strong>Macroeconomic Uncertainty:</strong> In a recession, companies may curb IT spending, potentially delaying the closing of large deals.' },
+        outlook_title: { ja: 'パロアルトの未来は？', en: 'What is Palo Alto\'s Future?' },
+        outlook_p: { ja: 'パロアルトの未来は、企業のセキュリティ対策が「個別製品の寄せ集め」から「統合プラットフォーム」へと移行する大きな流れを捉えられるかにかかっています。AIを活用した自律的なセキュリティ運用の実現を目指します。', en: 'Palo Alto\'s future depends on its ability to capitalize on the major shift from a collection of point products to an integrated platform for enterprise security. It aims to achieve autonomous security operations using AI.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: 'プラットフォーム化戦略を加速させ、顧客に複数製品の導入を促進。これにより、一顧客あたりの売上（ARPU）を増加させ、長期的な収益基盤を固めます。', en: 'Accelerate the platformization strategy to encourage customers to adopt multiple products, thereby increasing ARPU and solidifying the long-term revenue base.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'AIを活用したSOC（セキュリティオペレーションセンター）自動化プラットフォーム「XSIAM」を業界標準へと押し上げる。これにより、単なるセキュリティ製品の提供者から、顧客のセキュリティ運用全体を担うパートナーへと進化します。', en: 'Elevate the AI-powered SOC automation platform "XSIAM" to become the industry standard, evolving from a mere security product vendor to a partner responsible for the customer\'s entire security operations.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'パロアルトは、サイバーセキュリティという長期的な成長市場をリードする、典型的なグロース株。高い成長性を追求する投資家に適していますが、高いバリュエーションと株価の変動リスクを許容する必要があります。', en: 'Palo Alto is a classic growth stock leading the long-term growth market of cybersecurity. It is suitable for investors pursuing high growth, but they must be willing to accept high valuations and stock price volatility.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: '決算のビリング（請求額）に注目', en: 'Focus on Billings in Earnings' },
+        strategy_res_short_p: { ja: '株価は、将来の売上を示す先行指標である「ビリング（請求額）」の伸び率に非常に敏感です。四半期決算でのこの数字が、市場の期待を超えるかが短期的な鍵となります。', en: 'The stock price is highly sensitive to the growth rate of "billings," a leading indicator of future sales. Whether this figure in quarterly earnings exceeds market expectations is the short-term key.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: 'プラットフォーム化の成果を見極める', en: 'Assess the Results of Platformization' },
+        strategy_res_medium_p: { ja: 'プラットフォーム戦略への転換が、実際に顧客単価の上昇や、次世代セキュリティARRの力強い成長に繋がっているかどうかが重要。戦略の成果が数字に表れるのを待ちましょう。', en: 'It is crucial to see if the strategic shift to a platform is actually leading to higher average revenue per customer and strong growth in Next-Generation Security ARR. Wait for the results of the strategy to be reflected in the numbers.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: '業界の統合者に賭ける', en: 'Bet on the Industry Consolidator' },
+        strategy_res_long_p: { ja: '短期的な戦略転換の痛みは気にせず、サイバーセキュリティ市場がプラットフォームへと集約されていく未来を信じて長期保有。業界のリーダーとしての地位を固めることに投資する戦略です。', en: 'A strategy to hold for the long term, ignoring the short-term pains of the strategic shift and believing in a future where the cybersecurity market consolidates into platforms. This is an investment in the company solidifying its position as an industry leader.' },
+        footer_copyright: { ja: '&copy; 2025 Palo Alto Networks, Inc. Investor Dashboard. All rights reserved.', en: '&copy; 2025 Palo Alto Networks, Inc. Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                el.innerHTML = translations[key][lang];
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_panw[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-red-400 animate-pop-in"><h3 class="font-bold text-red-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [240, 250, 230, 280, 300, 290, 310, 350, 280, 300, 320, 318], borderColor: '#F26522', backgroundColor: 'rgba(242, 101, 34, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [69, 82, 98], backgroundColor: '#F26522', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [4, 18, 25], borderColor: '#FF8200', backgroundColor: '#FF8200', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['プラットフォーム統合力', 'クラウドセキュリティ', 'AI活用', '市場シェア', '収益性'], datasets: [ { label: 'パロアルト', data: [95, 92, 90, 93, 88], backgroundColor: 'rgba(242, 101, 34, 0.2)', borderColor: 'rgba(242, 101, 34, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(242, 101, 34, 1)' }, { label: '競合他社 (平均)', data: [80, 88, 85, 89, 86], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-red-500', 'text-red-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-red-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

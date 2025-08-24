@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="page_title">【ブロードコム版】半導体とソフトウェアの巨人！投資家向けダッシュボード</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to Broadcom's red
+                        primary: '#DC2626',
+                        secondary: '#F87171',
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: AVGO Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #F87171, #DC2626); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #DC2626; }
+        /* END: AVGO Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #DC2626; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html">
+                        <img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10">
+                    </a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50">
+                        <i class="ri-user-line"></i>
+                        <span data-lang="login">ログイン</span>
+                    </button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: AVGO Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-red-50 to-orange-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-orange-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">B</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Broadcom Inc.</span>
+                        <span class="text-sm font-semibold text-slate-500">NASDAQ: AVGO</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: AVGO Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: AVGO Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    AIインフラを支配する陰の巨人、<br>
+                    <span class="gradient-text">ブロードコム</span>の戦略
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    半導体からソフトウェアまで、AI時代に不可欠な技術を網羅する「ブロードコム」。その強さの秘密と、VMware買収後の未来像に迫ります。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-orange-50 to-red-50 border-orange-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「NVIDIAだけじゃないAI株」インフラを支えるブロードコムを知らずに投資はできない！</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">AIブームと聞くと、多くの人がNVIDIAを思い浮かべるでしょう。しかし、その裏でAIデータセンターの根幹を支え、莫大な利益を上げているもう一つの巨人が「ブロードコム」です。</p>
+                    <p data-lang="intro_card_p2">ブロードコムは、AIサーバー同士を繋ぐネットワーク半導体で圧倒的なシェアを誇ります。さらに、大型買収を繰り返すことで、企業のITインフラに不可欠なソフトウェア事業も手に入れました。例えるなら、<strong class="text-red-700">AIという巨大都市を繋ぐ高速道路と、その都市を動かす基本ソフトウェアの両方を独占的に供給するインフラの王様</strong>なのです。</p>
+                    <p data-lang="intro_card_p3">このページでは、「ブロードコムのビジネスモデルは？」「VMware買収の狙いは？」「今後の成長性は？」といった、一歩踏み込んだ投資家の疑問に答えます。AI時代のもう一人の主役の全貌を、ここで明らかにしましょう。</p>
+                </div>
+            </div>
+            <!-- END: AVGO Content Changes - Hero Section -->
+
+            <!-- START: AVGO Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">AI需要が株価を牽引！驚異的な成長と高い収益性</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">AIネットワーキング半導体の需要急増と、高収益なソフトウェア事業の貢献により、株価は力強い上昇トレンドを形成。株式分割も発表し、投資家の注目を集めています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="294.00">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="72.0">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="1.22">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="28">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: AVGO Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: AVGO Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">ブロードコムって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">卓越した技術力を持つ半導体企業を買収し、その市場で圧倒的なリーダーとなる戦略で成長。近年はソフトウェアにも領域を広げ、盤石な収益基盤を築いています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">技術インフラを支える2大事業</h3>
+                <div class="grid md:grid-cols-2 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2L9 4L5 4L5 6L3 6L3 8L2 8L2 16L3 16L3 18L5 18L5 20L9 20L9 22L15 22L15 20L19 20L19 18L21 18L21 16L22 16L22 8L21 8L21 6L19 6L19 4L15 4L15 2L9 2ZM11 6L13 6L13 8L15 8L15 10L17 10L17 14L15 14L15 16L13 16L13 18L11 18L11 16L9 16L9 14L7 14L7 10L9 10L9 8L11 8L11 6Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_semi_title">半導体ソリューション</h4>
+                        <p class="text-slate-600" data-lang="core_semi_p">AIデータセンター向けネットワーク機器や、スマートフォンの無線通信半導体で世界トップクラスのシェアを誇る。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 2.5C4 2.22386 4.22386 2 4.5 2H19.5C19.7761 2 20 2.22386 20 2.5V3.5C20 3.77614 19.7761 4 19.5 4H4.5C4.22386 4 4 3.77614 4 3.5V2.5ZM4 10.5C4 10.2239 4.22386 10 4.5 10H19.5C19.7761 10 20 10.2239 20 10.5V11.5C20 11.7761 19.7761 12 19.5 12H4.5C4.22386 12 4 11.7761 4 11.5V10.5ZM4.5 18C4.22386 18 4 18.2239 4 18.5V19.5C4 19.7761 4.22386 20 4.5 20H19.5C19.7761 20 20 19.7761 20 19.5V18.5C20 18.2239 19.7761 18 19.5 18H4.5Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_infra_title">インフラ・ソフトウェア</h4>
+                        <p class="text-slate-600" data-lang="core_infra_p">VMwareの買収により、企業のサーバー仮想化やプライベートクラウド構築を支援。安定的で高収益な事業。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">ブロードコムの強みは、各分野でトップクラスの製品だけを揃え、圧倒的な価格交渉力を持つこと。M&Aを繰り返すことで、ハードとソフトの両面から顧客を囲い込む強力なビジネスモデルを構築しています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: AVGO Content Changes - Business Section -->
+
+        <!-- START: AVGO Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">AI関連半導体の売上が急増し、全体の業績を力強く牽引。VMwareの買収効果も加わり、売上・利益ともに過去最高を更新し続けています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$580億</p>
+                        <p class="text-base font-semibold text-red-600" data-lang="stat_revenue_growth">前年比 +43%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">調整後EBITDAマージン
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">特殊な損益を除いた、本業の収益力を示す指標。ブロードコムが経営指標として重視している。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">61%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">驚異的な収益性</p>
+                    </div>
+                    <div class="bg-orange-50 border-l-4 border-orange-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_ai_revenue">AI関連売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$150億</p>
+                        <p class="text-base font-semibold text-orange-600" data-lang="stat_ai_revenue_desc">成長の最大エンジン</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: AVGO Content Changes - Financials Section -->
+        
+        <!-- START: AVGO Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">AIインフラのリーダーとして死角がないように見えるブロードコム。しかし、大型買収に伴うリスクや、半導体市場の景気循環など、考慮すべき点も存在します。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-red-500 text-red-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: AVGO Content Changes - Thesis Section -->
+
+        <!-- START: AVGO Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">ブロードコムの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">ブロードコムの未来は、AIの進化と企業のクラウド化という二大潮流にいかに乗り続けるかにかかっています。ハードとソフトの融合で、顧客を強力にロックインする戦略を加速させます。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-red-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-red-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">VMwareの事業再編と製品統合を完了させ、サブスクリプション収益を安定的に拡大。次世代のAI向けネットワーク半導体（イーサネットスイッチ）で市場シェアをさらに高めます。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-red-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">GoogleやMetaなど、巨大テック企業向けのカスタムAIアクセラレータ（ASIC）の開発を強化。企業のプライベートAI基盤をVMwareのソフトウェアとセットで提供するビジネスを本格化させます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: AVGO Content Changes - Outlook Section -->
+
+        <!-- START: AVGO Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">ブロードコムは、AIの成長と安定したソフトウェア収益を両立するユニークな銘柄。成長性と安定性のどちらを重視するかで、投資戦略が変わってきます。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-red-100 text-red-800 font-bold py-3 px-6 rounded-lg hover:bg-red-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: AVGO Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: AVGO Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Broadcom Inc. Investor Dashboard. All rights reserved.</p>
+            <!-- END: AVGO Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        // Navigation
+        nav_today: { ja: '本日の市況分析', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        // Page title
+        page_title: { ja: '【ブロードコム版】半導体とソフトウェアの巨人！投資家向けダッシュボード', en: '[Broadcom Edition] Semiconductor & Software Giant! Investor Dashboard' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: 'AIインフラを支配する陰の巨人、<br><span class="gradient-text">ブロードコム</span>の戦略', en: 'The Unseen Giant Dominating AI Infrastructure,<br>The Strategy of <span class="gradient-text">Broadcom</span>' },
+        hero_subtitle: { ja: '半導体からソフトウェアまで、AI時代に不可欠な技術を網羅する「ブロードコム」。その強さの秘密と、VMware買収後の未来像に迫ります。', en: 'From semiconductors to software, "Broadcom" covers essential technologies for the AI era. We delve into the secrets of its strength and its future vision after the VMware acquisition.' },
+        intro_card_title: { ja: '「NVIDIAだけじゃないAI株」インフラを支えるブロードコムを知らずに投資はできない！', en: '"AI stocks aren\'t just NVIDIA." You can\'t invest without knowing Broadcom, the backbone of the infrastructure!' },
+        intro_card_p1: { ja: 'AIブームと聞くと、多くの人がNVIDIAを思い浮かべるでしょう。しかし、その裏でAIデータセンターの根幹を支え、莫大な利益を上げているもう一つの巨人が「ブロードコム」です。', en: 'When you hear about the AI boom, many think of NVIDIA. However, behind the scenes, another giant, "Broadcom," supports the core of AI data centers and reaps enormous profits.' },
+        intro_card_p2: { ja: 'ブロードコムは、AIサーバー同士を繋ぐネットワーク半導体で圧倒的なシェアを誇ります。さらに、大型買収を繰り返すことで、企業のITインフラに不可欠なソフトウェア事業も手に入れました。例えるなら、<strong class="text-red-700">AIという巨大都市を繋ぐ高速道路と、その都市を動かす基本ソフトウェアの両方を独占的に供給するインフラの王様</strong>なのです。', en: 'Broadcom holds a dominant share in networking semiconductors that connect AI servers. Furthermore, through repeated large-scale acquisitions, it has also secured an essential infrastructure software business for enterprises. It\'s like <strong class="text-red-700">the king of infrastructure, exclusively supplying both the highways that connect the mega-city of AI and the essential software that runs it.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「ブロードコムのビジネスモデルは？」「VMware買収の狙いは？」「今後の成長性は？」といった、一歩踏み込んだ投資家の疑問に答えます。AI時代のもう一人の主役の全貌を、ここで明らかにしましょう。', en: 'This page answers in-depth investor questions like, "What is Broadcom\'s business model?", "What is the goal of the VMware acquisition?", and "What are its future growth prospects?". Let\'s reveal the full picture of the other protagonist of the AI era.' },
+        growth_title: { ja: 'AI需要が株価を牽引！驚異的な成長と高い収益性', en: 'AI Demand Drives Stock Price! Phenomenal Growth and High Profitability' },
+        growth_p: { ja: 'AIネットワーキング半導体の需要急増と、高収益なソフトウェア事業の貢献により、株価は力強い上昇トレンドを形成。株式分割も発表し、投資家の注目を集めています。', en: 'Soaring demand for AI networking semiconductors and contributions from the high-margin software business have created a strong upward trend for the stock. The announcement of a stock split has also garnered investor attention.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'ブロードコムって、どんな会社？', en: 'What Kind of Company is Broadcom?' },
+        business_p: { ja: '卓越した技術力を持つ半導体企業を買収し、その市場で圧倒的なリーダーとなる戦略で成長。近年はソフトウェアにも領域を広げ、盤石な収益基盤を築いています。', en: 'It has grown through a strategy of acquiring semiconductor companies with outstanding technology to become an overwhelming leader in their markets. In recent years, it has expanded into software, building a rock-solid revenue base.' },
+        core_business_title: { ja: '技術インフラを支える2大事業', en: 'Two Major Businesses Supporting Tech Infrastructure' },
+        core_semi_title: { ja: '半導体ソリューション', en: 'Semiconductor Solutions' },
+        core_semi_p: { ja: 'AIデータセンター向けネットワーク機器や、スマートフォンの無線通信半導体で世界トップクラスのシェアを誇る。', en: 'Boasts a world-leading market share in networking equipment for AI data centers and wireless communication semiconductors for smartphones.' },
+        core_infra_title: { ja: 'インフラ・ソフトウェア', en: 'Infrastructure Software' },
+        core_infra_p: { ja: 'VMwareの買収により、企業のサーバー仮想化やプライベートクラウド構築を支援。安定的で高収益な事業。', en: 'Through the acquisition of VMware, it supports enterprise server virtualization and private cloud construction. A stable and highly profitable business.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'ブロードコムの強みは、各分野でトップクラスの製品だけを揃え、圧倒的な価格交渉力を持つこと。M&Aを繰り返すことで、ハードとソフトの両面から顧客を囲い込む強力なビジネスモデルを構築しています。', en: 'Broadcom\'s strength lies in offering only top-class products in each field, giving it overwhelming pricing power. By repeating M&A, it has built a powerful business model that locks in customers from both hardware and software sides.' },
+        chart_competitor_label_avgo: { ja: 'ブロードコム', en: 'Broadcom' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['市場リーダーシップ', '収益性', '技術力(AI)', 'M&A戦略', '顧客基盤'], en: ['Market Leadership', 'Profitability', 'Technology (AI)', 'M&A Strategy', 'Customer Base'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: 'AI関連半導体の売上が急増し、全体の業績を力強く牽引。VMwareの買収効果も加わり、売上・利益ともに過去最高を更新し続けています。', en: 'Sales of AI-related semiconductors have surged, strongly driving overall performance. The effects of the VMware acquisition have also contributed, with both revenue and profits continuing to set new records.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +43%', en: '+43% YoY' },
+        stat_margin: { ja: '調整後EBITDAマージン', en: 'Adjusted EBITDA Margin' },
+        stat_margin_tooltip: { ja: '特殊な損益を除いた、本業の収益力を示す指標。ブロードコムが経営指標として重視している。', en: 'A measure of core operational profitability, excluding special items. Broadcom emphasizes this as a key performance indicator.' },
+        stat_margin_desc: { ja: '驚異的な収益性', en: 'Incredible Profitability' },
+        stat_ai_revenue: { ja: 'AI関連売上高', en: 'AI-related Revenue' },
+        stat_ai_revenue_desc: { ja: '成長の最大エンジン', en: 'Biggest Engine of Growth' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: 'AIインフラのリーダーとして死角がないように見えるブロードコム。しかし、大型買収に伴うリスクや、半導体市場の景気循環など、考慮すべき点も存在します。', en: 'As a leader in AI infrastructure, Broadcom seems to have no weaknesses. However, there are factors to consider, such as risks associated with large acquisitions and the cyclical nature of the semiconductor market.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「成長」し続ける理由', en: 'Why This Stock Could Keep Growing' },
+        bull_content_li1: { ja: '<strong>AIネットワーキングの独占:</strong> AIデータセンターのネットワーク市場で80%以上のシェア。NVIDIAの成長の恩恵を直接受ける。', en: '<strong>AI Networking Monopoly:</strong> Over 80% market share in AI data center networking. Directly benefits from NVIDIA\'s growth.' },
+        bull_content_li2: { ja: '<strong>VMwareとのシナジー:</strong> 企業のIT基盤を握るVMwareと半導体を組み合わせ、クロスセルを促進。顧客をロックインする。', en: '<strong>Synergy with VMware:</strong> Combines semiconductors with VMware, which controls enterprise IT infrastructure, to promote cross-selling and lock in customers.' },
+        bull_content_li3: { ja: '<strong>高い収益性と株主還元:</strong> 利益率が非常に高く、安定したキャッシュフローを生み出す。増配と自社株買いに積極的。', en: '<strong>High Profitability and Shareholder Returns:</strong> Extremely high profit margins generate stable cash flow. Aggressive in dividend increases and share buybacks.' },
+        bull_content_li4: { ja: '<strong>カスタムチップのリーダー:</strong> GoogleやMetaなど、巨大テック企業向けの専用AIチップ設計で高い技術力を持つ。', en: '<strong>Leader in Custom Chips:</strong> Possesses high technical expertise in designing custom AI chips for tech giants like Google and Meta.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>景気循環リスク:</strong> 半導体事業は景気の波に影響されやすい。AIブームが一段落すれば、需要が減少する可能性。', en: '<strong>Cyclical Risk:</strong> The semiconductor business is susceptible to economic cycles. Demand could decrease if the AI boom cools down.' },
+        bear_content_li2: { ja: '<strong>M&Aの統合リスク:</strong> 巨額買収したVMwareの統合が計画通りに進まない場合、財務に悪影響を及ぼす。', en: '<strong>M&A Integration Risk:</strong> If the integration of the massively acquired VMware does not proceed as planned, it could adversely affect financials.' },
+        bear_content_li3: { ja: '<strong>顧客への依存:</strong> Appleなど、特定の大口顧客への売上依存度が高い。顧客の戦略変更がリスクになりうる。', en: '<strong>Customer Dependency:</strong> High revenue dependency on certain large customers like Apple. A change in a customer\'s strategy could pose a risk.' },
+        bear_content_li4: { ja: '<strong>中国関連の地政学リスク:</strong> 売上の多くを中国市場に依存しており、米中対立の激化が事業の足かせになる可能性がある。', en: '<strong>China-related Geopolitical Risk:</strong> Relies heavily on the Chinese market for sales, and escalating US-China tensions could hinder business.' },
+        outlook_title: { ja: 'ブロードコムの未来は？', en: 'What is Broadcom\'s Future?' },
+        outlook_p: { ja: 'ブロードコムの未来は、AIの進化と企業のクラウド化という二大潮流にいかに乗り続けるかにかかっています。ハードとソフトの融合で、顧客を強力にロックインする戦略を加速させます。', en: 'Broadcom\'s future depends on how well it continues to ride the two major waves of AI evolution and enterprise cloud adoption. It will accelerate its strategy of strongly locking in customers by integrating hardware and software.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: 'VMwareの事業再編と製品統合を完了させ、サブスクリプション収益を安定的に拡大。次世代のAI向けネットワーク半導体（イーサネットスイッチ）で市場シェアをさらに高めます。', en: 'Complete the restructuring and product integration of VMware to stably expand subscription revenue. Further increase market share with next-generation AI networking semiconductors (Ethernet switches).' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'GoogleやMetaなど、巨大テック企業向けのカスタムAIアクセラレータ（ASIC）の開発を強化。企業のプライベートAI基盤をVMwareのソフトウェアとセットで提供するビジネスを本格化させます。', en: 'Strengthen the development of custom AI accelerators (ASICs) for tech giants like Google and Meta. Fully launch the business of providing enterprise private AI infrastructure as a package with VMware software.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'ブロードコムは、AIの成長と安定したソフトウェア収益を両立するユニークな銘柄。成長性と安定性のどちらを重視するかで、投資戦略が変わってきます。', en: 'Broadcom is a unique stock that combines AI growth with stable software revenue. Your investment strategy will depend on whether you prioritize growth or stability.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: 'AIの熱狂と金利に注意', en: 'Watch AI Hype and Interest Rates' },
+        strategy_res_short_p: { ja: '株価はAI市場の期待感とマクロ経済の動向に敏感。決算でのAI関連売上や、FRBの金利政策に関するニュースが短期的な変動要因になります。', en: 'The stock price is sensitive to AI market sentiment and macroeconomic trends. AI-related sales in earnings reports and news about the Fed\'s interest rate policy are short-term drivers.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: 'VMware統合の進捗を追う', en: 'Track VMware Integration Progress' },
+        strategy_res_medium_p: { ja: 'VMwareの収益が計画通りにブロードコムの業績に貢献してくるかが中期の焦点。ソフトウェア事業の利益率改善に注目です。', en: 'The mid-term focus is whether VMware\'s revenue contributes to Broadcom\'s performance as planned. Pay attention to profit margin improvements in the software business.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: 'インフラ支配の未来に賭ける', en: 'Bet on the Future of Infrastructure Dominance' },
+        strategy_res_long_p: { ja: '短期的な半導体サイクルの波は気にせず、ハードとソフトでAIインフラを支配する未来を信じて長期保有。安定した増配も魅力です。', en: 'A long-term hold, believing in a future where it dominates AI infrastructure with hardware and software, ignoring short-term semiconductor cycle waves. Stable dividend growth is also attractive.' },
+        footer_copyright: { ja: '&copy; 2025 Broadcom Inc. Investor Dashboard. All rights reserved.', en: '&copy; 2025 Broadcom Inc. Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                if (el.tagName === 'TITLE') {
+                    el.textContent = translations[key][lang];
+                } else {
+                    el.innerHTML = translations[key][lang];
+                }
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_avgo[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-red-400 animate-pop-in"><h3 class="font-bold text-red-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [850, 900, 950, 1100, 1200, 1300, 1400, 1500, 1650, 1700, 1800, 1735], borderColor: '#DC2626', backgroundColor: 'rgba(220, 38, 38, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [358, 500, 620], backgroundColor: '#DC2626', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [140, 160, 210], borderColor: '#F87171', backgroundColor: '#F87171', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['市場リーダーシップ', '収益性', '技術力(AI)', 'M&A戦略', '顧客基盤'], datasets: [ { label: 'ブロードコム', data: [95, 98, 90, 96, 92], backgroundColor: 'rgba(220, 38, 38, 0.2)', borderColor: 'rgba(220, 38, 38, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(220, 38, 38, 1)' }, { label: '競合他社 (平均)', data: [80, 75, 88, 70, 82], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = '+' + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = '+' + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-red-500', 'text-red-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-red-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

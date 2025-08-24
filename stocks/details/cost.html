@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="page_title">【コストコ版】会員制ビジネスの王様！投資家向けダッシュボード</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to Costco's blue/red theme
+                        primary: '#0284C7', // A strong blue
+                        secondary: '#DC2626', // Costco's red
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: COST Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #38BDF8, #0284C7); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #0284C7; }
+        /* END: COST Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #0284C7; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html">
+                        <img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10">
+                    </a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50">
+                        <i class="ri-user-line"></i>
+                        <span data-lang="login">ログイン</span>
+                    </button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: COST Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-sky-50 to-blue-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-sky-600 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">C</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Costco Wholesale</span>
+                        <span class="text-sm font-semibold text-slate-500">NASDAQ: COST</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: COST Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: COST Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    ロイヤリティが生む安定成長、<br>
+                    <span class="gradient-text">コストコ</span>のビジネスモデル
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    ただのスーパーではない。会員制というユニークなモデルで、世界中の消費者を魅了し続ける「コストコ」。その強固なビジネスの秘密を解き明かします。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「ディフェンシブ株の代表格」不況にも強いコストコのビジネスモデルとは？</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「景気が悪くなっても、安心して持てる株はないだろうか？」そんな投資家にまず知ってほしいのが「コストコ」です。高品質な商品を驚くほどの低価格で提供する、会員制の倉庫型小売店です。</p>
+                    <p data-lang="intro_card_p2">コストコのビジネスの核心は、「商品で儲けない」という点にあります。商品の利益（マージン）を極限まで抑える代わりに、収益の大部分を年会費で稼いでいます。これにより、<strong class="text-blue-700">顧客は「会費を払ってでも得したい」と感じ、コストコは安定した収益を確保できるという、Win-Winの関係</strong>を築いているのです。</p>
+                    <p data-lang="intro_card_p3">このページでは、「なぜコストコはこんなに安いのか？」「会員数は増え続けるのか？」「デジタル時代のリスクは？」といった、投資判断に不可欠な問いに答えていきます。驚異的な顧客ロイヤリティを誇る王者の強さを、一緒に分析しましょう。</p>
+                </div>
+            </div>
+            <!-- END: COST Content Changes - Hero Section -->
+
+            <!-- START: COST Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">安定した株価成長。盤石なビジネスがもたらす安心感</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">高い会員更新率に支えられた安定的な収益基盤が、景気変動の中でも着実な成長を実現。株価は長期的に右肩上がりのトレンドを維持しています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="870.50">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="31.2">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="0.38">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="53">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: COST Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: COST Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">コストコって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">「会員様に、高品質な商品を可能な限り低価格で提供する」というシンプルな使命のもと、厳選された商品を大量に仕入れて販売する会員制倉庫型小売業のパイオニアです。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える3つのエンジン</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4H20V6H4V4ZM4 8H20V10H4V8ZM4 12H20V14H4V12ZM4 16H14V18H4V16Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_membership_title">会費収入</h4>
+                        <p class="text-slate-600" data-lang="core_membership_p">会社の営業利益の約7割を生み出す最大の収益源。90%を超える高い更新率が安定性の源泉。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4H19V20H5V4ZM3 2.9918C3 2.44405 3.44405 2 3.9918 2H20.0082C20.556 2 21 2.44405 21 2.9918V21.0082C21 21.556 20.556 22 20.0082 22H3.9918C3.44405 22 3 21.556 3 21.0082V2.9918ZM12 11L15 15H9L12 11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_merch_title">商品販売</h4>
+                        <p class="text-slate-600" data-lang="core_merch_p">利益率を15%以下に抑え、他社を圧倒する価格を実現。PB「カークランド」は品質と価格で高い評価。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C15.3137 2 18 4.68629 18 8C18 12.4183 12 22 12 22C12 22 6 12.4183 6 8C6 4.68629 8.68629 2 12 2ZM12 11C13.6569 11 15 9.65685 15 8C15 6.34315 13.6569 5 12 5C10.3431 5 9 6.34315 9 8C9 9.65685 10.3431 11 12 11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_ancillary_title">その他事業</h4>
+                        <p class="text-slate-600" data-lang="core_ancillary_p">ガソリンスタンド、フードコート、薬局など。会員の来店頻度を高め、満足度を向上させる重要な役割。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">コストコの強みは、会員の利益を最優先する徹底した企業文化。それが高い顧客ロイヤリティと驚異的な仕入れ力（バイイングパワー）を生み出し、競合他社が真似できない好循環を創り出しています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: COST Content Changes - Business Section -->
+
+        <!-- START: COST Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">景気変動の影響を受けにくい安定したビジネスモデルにより、売上、利益、会員数ともに着実な成長を長期間にわたって続けています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$2,537億</p>
+                        <p class="text-base font-semibold text-blue-600" data-lang="stat_revenue_growth">前年比 +6.1%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">会員費収入
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">コストコの利益の源泉。この安定収入があるからこそ、商品の低価格が実現できる。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$48億</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">安定成長を継続</p>
+                    </div>
+                    <div class="bg-cyan-50 border-l-4 border-cyan-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_renewal_rate">会員更新率</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">92.7%</p>
+                        <p class="text-base font-semibold text-cyan-600" data-lang="stat_renewal_rate_desc">驚異的な顧客忠誠度</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: COST Content Changes - Financials Section -->
+        
+        <!-- START: COST Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">「最高のビジネスモデル」と称賛されるコストコ。しかし、その安定性ゆえに株価は常に割高な水準で評価されており、投資家は価格と価値のバランスを考える必要があります。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-blue-500 text-blue-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: COST Content Changes - Thesis Section -->
+
+        <!-- START: COST Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">コストコの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">コストコの未来は、実店舗での体験価値を維持しつつ、いかにデジタル化の波に対応していくかにかかっています。海外展開、特にアジア市場の開拓も重要な成長戦略です。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-blue-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">数年ぶりの会費値上げが期待されており、実現すれば利益が大幅に増加。中国など、成長著しいアジア市場への新規出店を加速させます。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">Eコマース事業とアプリを強化し、オンラインとオフラインを融合させたサービスを拡充。サプライチェーンの自動化・効率化をさらに推進し、コスト競争力を高めます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: COST Content Changes - Outlook Section -->
+
+        <!-- START: COST Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">コストコは、長期的に安定したリターンを狙う投資家にとって理想的な銘柄の一つ。ただし、高いバリュエーションを許容できるかが投資の分かれ目になります。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-blue-100 text-blue-800 font-bold py-3 px-6 rounded-lg hover:bg-blue-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: COST Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: COST Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Costco Wholesale Investor Dashboard. All rights reserved.</p>
+            <!-- END: COST Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        // Navigation
+        nav_today: { ja: '本日の市況分析', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        // Page title
+        page_title: { ja: '【コストコ版】会員制ビジネスの王様！投資家向けダッシュボード', en: '[Costco Edition] Membership Business King! Investor Dashboard' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: 'ロイヤリティが生む安定成長、<br><span class="gradient-text">コストコ</span>のビジネスモデル', en: 'Stable Growth Born from Loyalty,<br>The Business Model of <span class="gradient-text">Costco</span>' },
+        hero_subtitle: { ja: 'ただのスーパーではない。会員制というユニークなモデルで、世界中の消費者を魅了し続ける「コストコ」。その強固なビジネスの秘密を解き明かします。', en: 'Not just a supermarket. "Costco" continues to captivate consumers worldwide with its unique membership model. We unravel the secrets of its robust business.' },
+        intro_card_title: { ja: '「ディフェンシブ株の代表格」不況にも強いコストコのビジネスモデルとは？', en: '"A prime example of a defensive stock." What is Costco\'s recession-proof business model?' },
+        intro_card_p1: { ja: '「景気が悪くなっても、安心して持てる株はないだろうか？」そんな投資家にまず知ってほしいのが「コストコ」です。高品質な商品を驚くほどの低価格で提供する、会員制の倉庫型小売店です。', en: '"Is there a stock I can hold with confidence even in a downturn?" Investors with this question should first know about "Costco," a membership-based warehouse retailer that offers high-quality products at surprisingly low prices.' },
+        intro_card_p2: { ja: 'コストコのビジネスの核心は、「商品で儲けない」という点にあります。商品の利益（マージン）を極限まで抑える代わりに、収益の大部分を年会費で稼いでいます。これにより、<strong class="text-blue-700">顧客は「会費を払ってでも得したい」と感じ、コストコは安定した収益を確保できるという、Win-Winの関係</strong>を築いているのです。', en: 'The core of Costco\'s business is that it "doesn\'t make money on products." Instead of maximizing product margins, it earns the majority of its profits from annual membership fees. This creates a <strong class="text-blue-700">win-win relationship where customers feel they get value even after paying the fee, and Costco secures a stable income stream.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「なぜコストコはこんなに安いのか？」「会員数は増え続けるのか？」「デジタル時代のリスクは？」といった、投資判断に不可欠な問いに答えていきます。驚異的な顧客ロイヤリティを誇る王者の強さを、一緒に分析しましょう。', en: 'This page will answer essential investment questions like, "Why is Costco so cheap?", "Will membership continue to grow?", and "What are the risks in the digital age?". Let\'s analyze the strengths of this champion of incredible customer loyalty together.' },
+        growth_title: { ja: '安定した株価成長。盤石なビジネスがもたらす安心感', en: 'Stable Stock Growth. Confidence from a Rock-Solid Business' },
+        growth_p: { ja: '高い会員更新率に支えられた安定的な収益基盤が、景気変動の中でも着実な成長を実現。株価は長期的に右肩上がりのトレンドを維持しています。', en: 'A stable revenue base supported by high membership renewal rates enables steady growth even amidst economic fluctuations. The stock price has maintained a long-term upward trend.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'コストコって、どんな会社？', en: 'What Kind of Company is Costco?' },
+        business_p: { ja: '「会員様に、高品質な商品を可能な限り低価格で提供する」というシンプルな使命のもと、厳選された商品を大量に仕入れて販売する会員制倉庫型小売業のパイオニアです。', en: 'A pioneer of the membership warehouse club model, operating under the simple mission to "provide our members with quality goods and services at the lowest possible prices."' },
+        core_business_title: { ja: 'ビジネスを支える3つのエンジン', en: 'Three Engines Driving the Business' },
+        core_membership_title: { ja: '会費収入', en: 'Membership Fees' },
+        core_membership_p: { ja: '会社の営業利益の約7割を生み出す最大の収益源。90%を超える高い更新率が安定性の源泉。', en: 'The largest source of profit, generating about 70% of the company\'s operating income. A high renewal rate of over 90% is the source of its stability.' },
+        core_merch_title: { ja: '商品販売', en: 'Merchandising' },
+        core_merch_p: { ja: '利益率を15%以下に抑え、他社を圧倒する価格を実現。PB「カークランド」は品質と価格で高い評価。', en: 'Achieves prices that crush competitors by capping margins at 15%. Its private label, "Kirkland Signature," is highly regarded for quality and value.' },
+        core_ancillary_title: { ja: 'その他事業', en: 'Ancillary Businesses' },
+        core_ancillary_p: { ja: 'ガソリンスタンド、フードコート、薬局など。会員の来店頻度を高め、満足度を向上させる重要な役割。', en: 'Gas stations, food courts, pharmacies, etc. These play a crucial role in increasing member visit frequency and satisfaction.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'コストコの強みは、会員の利益を最優先する徹底した企業文化。それが高い顧客ロイヤリティと驚異的な仕入れ力（バイイングパワー）を生み出し、競合他社が真似できない好循環を創り出しています。', en: 'Costco\'s strength is its unwavering corporate culture of putting members\' interests first. This creates high customer loyalty and incredible buying power, resulting in a virtuous cycle that competitors cannot replicate.' },
+        chart_competitor_label_cost: { ja: 'コストコ', en: 'Costco' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['会員ロイヤリティ', '価格競争力', 'PB(カークランド)', '仕入れ力', '顧客体験'], en: ['Member Loyalty', 'Price Competitiveness', 'Private Label', 'Buying Power', 'Customer Experience'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: '景気変動の影響を受けにくい安定したビジネスモデルにより、売上、利益、会員数ともに着実な成長を長期間にわたって続けています。', en: 'Thanks to a stable business model that is less susceptible to economic fluctuations, the company has consistently achieved steady growth in sales, profits, and membership over the long term.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +6.1%', en: '+6.1% YoY' },
+        stat_margin: { ja: '会員費収入', en: 'Membership Fees' },
+        stat_margin_tooltip: { ja: 'コストコの利益の源泉。この安定収入があるからこそ、商品の低価格が実現できる。', en: 'The source of Costco\'s profits. This stable income allows for the low prices on its merchandise.' },
+        stat_margin_desc: { ja: '安定成長を継続', en: 'Continuing Stable Growth' },
+        stat_renewal_rate: { ja: '会員更新率', en: 'Membership Renewal Rate' },
+        stat_renewal_rate_desc: { ja: '驚異的な顧客忠誠度', en: 'Incredible Customer Loyalty' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: '「最高のビジネスモデル」と称賛されるコストコ。しかし、その安定性ゆえに株価は常に割高な水準で評価されており、投資家は価格と価値のバランスを考える必要があります。', en: 'Costco is praised for having "the best business model." However, due to its stability, the stock is consistently valued at a premium, requiring investors to consider the balance between price and value.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「安定成長」を続ける理由', en: 'Why This Stock Could Continue Its Stable Growth' },
+        bull_content_li1: { ja: '<strong>高い会員更新率:</strong> 90%を超える更新率は、不況時でも安定した収益を保証する「堀」となっている。', en: '<strong>High Renewal Rate:</strong> A renewal rate of over 90% acts as a "moat," guaranteeing stable revenue even in recessions.' },
+        bull_content_li2: { ja: '<strong>国際展開の余地:</strong> 米国外、特にアジアでの店舗数はまだ少なく、大きな成長の余地を残している。', en: '<strong>International Growth Potential:</strong> There is still significant room for growth outside the U.S., especially in Asia where store count is low.' },
+        bull_content_li3: { ja: '<strong>価格決定力:</strong> インフレ環境下でも、会費の値上げによって利益を確保できる強力なポジション。', en: '<strong>Pricing Power:</strong> In a strong position to protect profits by raising membership fees during inflationary periods.' },
+        bull_content_li4: { ja: '<strong>カークランドブランドの強み:</strong> 高品質・低価格のプライベートブランドは、顧客を引きつける強力な磁石。', en: '<strong>Strength of Kirkland Brand:</strong> The high-quality, low-price private label is a powerful magnet for attracting customers.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>高いバリュエーション:</strong> 株価は常に将来の成長を織り込んでおり、PERは小売業としては非常に高い水準。', en: '<strong>High Valuation:</strong> The stock price consistently trades at a premium, with a P/E ratio that is very high for the retail sector.' },
+        bear_content_li2: { ja: '<strong>Eコマースへの対応の遅れ:</strong> AmazonなどEコマースの巨人と比べ、デジタル化への投資や戦略で後れを取っている。', en: '<strong>Lagging in E-commerce:</strong> Falling behind e-commerce giants like Amazon in terms of digital investment and strategy.' },
+        bear_content_li3: { ja: '<strong>会員数の伸び悩み:</strong> 主要市場である米国での会員数が飽和状態に近づいており、将来の成長が鈍化する可能性。', en: '<strong>Slowing Membership Growth:</strong> The potential for slowing future growth as membership approaches saturation in its primary market, the U.S.' },
+        bear_content_li4: { ja: '<strong>実店舗への依存:</strong> ビジネスモデルが物理的な倉庫店舗に大きく依存しており、オンラインへのシフトが課題。', en: '<strong>Dependence on Physical Stores:</strong> The business model relies heavily on physical warehouse locations, making the shift to online a challenge.' },
+        outlook_title: { ja: 'コストコの未来は？', en: 'What is Costco\'s Future?' },
+        outlook_p: { ja: 'コストコの未来は、実店舗での体験価値を維持しつつ、いかにデジタル化の波に対応していくかにかかっています。海外展開、特にアジア市場の開拓も重要な成長戦略です。', en: 'Costco\'s future depends on how it adapts to the digital wave while maintaining the value of the in-store experience. International expansion, especially in Asian markets, is also a key growth strategy.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: '数年ぶりの会費値上げが期待されており、実現すれば利益が大幅に増加。中国など、成長著しいアジア市場への新規出店を加速させます。', en: 'A membership fee increase, the first in several years, is anticipated, which would significantly boost profits if implemented. Accelerating new store openings in high-growth Asian markets like China.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'Eコマース事業とアプリを強化し、オンラインとオフラインを融合させたサービスを拡充。サプライチェーンの自動化・効率化をさらに推進し、コスト競争力を高めます。', en: 'Enhance e-commerce operations and the mobile app to expand services that merge online and offline experiences. Further promote supply chain automation and efficiency to boost cost competitiveness.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'コストコは、長期的に安定したリターンを狙う投資家にとって理想的な銘柄の一つ。ただし、高いバリュエーションを許容できるかが投資の分かれ目になります。', en: 'Costco is one of the ideal stocks for investors seeking stable, long-term returns. However, the key decision point is whether you can accept its high valuation.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: '会費値上げのニュースを待つ', en: 'Wait for Fee Hike News' },
+        strategy_res_short_p: { ja: '短期的な株価のカタリストは、会費の値上げ発表。このニュースが出れば株価が動く可能性がありますが、それ以外での大きな変動は期待しにくいかもしれません。', en: 'The short-term catalyst for the stock is the announcement of a membership fee increase. This news could move the price, but significant fluctuations are otherwise unlikely.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '市場全体の調整が好機', en: 'A Market Correction is an Opportunity' },
+        strategy_res_medium_p: { ja: '株価は常に割高なため、市場全体が下落した時が絶好の買い場となり得ます。ビジネスの安定性は高いため、焦らずに「押し目買い」を狙う戦略が有効です。', en: 'Since the stock is always expensive, a broader market downturn could be the perfect buying opportunity. Given the business stability, a patient "buy the dip" strategy is effective.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: '「バイ・アンド・ホールド」の王道', en: 'The Classic "Buy and Hold"' },
+        strategy_res_long_p: { ja: '短期的な割高感は気にせず、強固なビジネスモデルと国際的な成長を信じてじっくり保有。複利の効果を最大限に享受できる、長期投資の王道銘柄です。', en: 'This is a classic long-term investment. Ignore short-term valuation concerns and hold on, believing in its strong business model and international growth to fully benefit from the power of compounding.' },
+        footer_copyright: { ja: '&copy; 2025 Costco Wholesale Investor Dashboard. All rights reserved.', en: '&copy; 2025 Costco Wholesale Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                if (el.tagName === 'TITLE') {
+                    el.textContent = translations[key][lang];
+                } else {
+                    el.innerHTML = translations[key][lang];
+                }
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_cost[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-blue-400 animate-pop-in"><h3 class="font-bold text-blue-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [560, 550, 600, 650, 700, 720, 780, 800, 810, 840, 860, 870], borderColor: '#0284C7', backgroundColor: 'rgba(2, 132, 199, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [2422, 2550, 2700], backgroundColor: '#0284C7', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [63, 68, 75], borderColor: '#38BDF8', backgroundColor: '#38BDF8', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['会員ロイヤリティ', '価格競争力', 'PB(カークランド)', '仕入れ力', '顧客体験'], datasets: [ { label: 'コストコ', data: [98, 95, 92, 96, 90], backgroundColor: 'rgba(2, 132, 199, 0.2)', borderColor: 'rgba(2, 132, 199, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(2, 132, 199, 1)' }, { label: '競合他社 (平均)', data: [70, 85, 80, 82, 75], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = '+' + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = '+' + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-blue-500', 'text-blue-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-blue-500', 'text-blue-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-blue-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-blue-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

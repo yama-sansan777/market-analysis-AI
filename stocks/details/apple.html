@@ -17,8 +17,8 @@
         }
         .text-primary { color: var(--primary); }
         .bg-primary { background-color: var(--primary); }
-        .hover\\:text-primary:hover { color: var(--primary); }
-        .hover\\:bg-primary\\/90:hover { background-color: rgba(37, 99, 235, 0.9); }
+        .hover\:text-primary:hover { color: var(--primary); }
+        .hover\:bg-primary\/90:hover { background-color: rgba(37, 99, 235, 0.9); }
         .border-primary { border-color: var(--primary); }
         .rounded-button { border-radius: 8px; }
         
@@ -31,6 +31,7 @@
         /* 変更: グラデーションテキストをAppleのカラー（グレー系）に変更 */
         .gradient-text {
             background: linear-gradient(to right, #475569, #1E293B); /* slate-600 to slate-800 */
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -191,19 +192,19 @@
                     <!-- 変更: 数値をAppleのデータに更新 -->
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="metric_price">現在の株価</p>
-                        <p class="text-4xl font-bold text-slate-600" data-count="205.00">$0.00</p>
+                        <p class="text-4xl font-bold text-slate-600" data-count="227.00">$0.00</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="metric_return">年初来リターン</p>
-                        <p class="text-4xl font-bold text-slate-600" data-count="8.5">+0.0%</p>
+                        <p class="text-4xl font-bold text-slate-600" data-count="12.5">+0.0%</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="metric_market_cap">時価総額</p>
-                        <p class="text-4xl font-bold text-slate-600" data-count="3.15">0.0兆ドル</p>
+                        <p class="text-4xl font-bold text-slate-600" data-count="3.35">0.0兆ドル</p>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-xl">
                         <p class="text-base text-slate-500" data-lang="metric_pe_ratio">PER</p>
-                        <p class="text-4xl font-bold text-slate-600" data-count="32.5">0倍</p>
+                        <p class="text-4xl font-bold text-slate-600" data-count="33.0">0倍</p>
                     </div>
                 </div>
                 <div class="h-[300px] w-full">
@@ -615,7 +616,7 @@
                 labels: stockLabels,
                 datasets: [{
                     label: '株価 ($)',
-                    data: [175, 170, 168, 190, 195, 185, 180, 172, 170, 192, 210, 205],
+                    data: [175, 170, 168, 190, 195, 185, 180, 172, 170, 192, 215, 227],
                     borderColor: '#64748B',
                     backgroundColor: 'rgba(100, 116, 139, 0.1)',
                     fill: true,

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="page_title">【ホームデポ版】DIYとプロの味方！投資家向けダッシュボード</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to Home Depot's orange
+                        primary: '#F97316', // A vibrant orange
+                        secondary: '#EA580C', // A deeper orange
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: HD Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #FB923C, #F97316); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #F97316; }
+        /* END: HD Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #F97316; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html">
+                        <img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10">
+                    </a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50">
+                        <i class="ri-user-line"></i>
+                        <span data-lang="login">ログイン</span>
+                    </button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: HD Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-orange-50 to-amber-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-amber-400 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">H</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">The Home Depot, Inc.</span>
+                        <span class="text-sm font-semibold text-slate-500">NYSE: HD</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: HD Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: HD Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    米国の住まいを支える王者、<br>
+                    <span class="gradient-text">ホームデポ</span>の揺るぎない基盤
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    世界最大のホームセンター「ホームデポ」。DIY愛好家からプロの業者まで、幅広い顧客層に支えられる強固なビジネスモデルを徹底解剖します。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「景気動向のバロメーター」米国の住宅市場を映すホームデポへの投資</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「ホームデポ」は、工具や建材、園芸用品など、住宅の建設やメンテナンスに関するあらゆる商品を扱う、世界最大のホームセンターチェーンです。その業績は、米国の住宅市場や個人消費の動向を色濃く反映します。</p>
+                    <p data-lang="intro_card_p2">ホームデポの最大の強みは、一般のDIY顧客だけでなく、「プロ」と呼ばれる建設業者やリフォーム業者を主要な顧客としている点です。プロ顧客は購入単価が高く、来店頻度も安定しているため、<strong class="text-orange-700">会社の売上の約半分を占める、極めて安定した収益基盤</strong>となっています。</p>
+                    <p data-lang="intro_card_p3">このページでは、「ホームデポのビジネスの強みは？」「金利の変動は業績にどう影響する？」「今後の成長戦略は？」といった、投資家が知るべき核心に迫ります。米国の暮らしと経済を支える巨人の実力を、一緒に見ていきましょう。</p>
+                </div>
+            </div>
+            <!-- END: HD Content Changes - Hero Section -->
+
+            <!-- START: HD Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">住宅市場の動向を反映しつつ、安定した株主還元を実現</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">金利動向などマクロ経済の影響を受けながらも、プロ顧客からの安定した需要と効率的な経営により、着実な成長と配当を実現。株価は景気サイクルを乗り越え、長期的に上昇しています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-orange-600" data-count="400.57">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-orange-600" data-count="5.5">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-orange-600" data-count="0.40">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-orange-600" data-count="24">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: HD Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: HD Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">ホームデポって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">「Do-It-Yourself（DIY）」文化を米国に根付かせた立役者。現在では、売上の約半分をプロの建設業者から得る、BtoCとBtoBの両面で強みを持つユニークな小売企業です。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える2大顧客層</h3>
+                <div class="grid md:grid-cols-2 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-orange-50"><svg class="w-10 h-10 text-orange-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 20H4V18H20V20ZM20 12H22V16H20V12ZM20 4H4V10H20V4ZM2 12H4V16H2V12ZM2 10V4C2 3.44772 2.44772 3 3 3H21C21.5523 3 22 3.44772 22 4V10H20V6H4V10H2Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_pro_title">プロ顧客 (Pro)</h4>
+                        <p class="text-slate-600" data-lang="core_pro_p">建設・リフォーム業者など、専門家向けのサービス。売上の約50%を占める安定収益源。専用のサービスや大量購入割引で強力な関係を構築。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-orange-50"><svg class="w-10 h-10 text-orange-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 20H3V18H21V20ZM12 2C12.5523 2 13 2.44772 13 3V15C13 15.5523 12.5523 16 12 16C11.4477 16 11 15.5523 11 15V3C11 2.44772 11.4477 2 12 2ZM12 16C14.7614 16 17 13.7614 17 11V3H15V11C15 12.6569 13.6569 14 12 14C10.3431 14 9 12.6569 9 11V3H7V11C7 13.7614 9.23858 16 12 16Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_diy_title">DIY顧客</h4>
+                        <p class="text-slate-600" data-lang="core_diy_p">一般の消費者向けビジネス。幅広い品揃えと専門知識を持つ従業員によるアドバイスが強み。住宅市場の動向に影響されやすい。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">ホームデポの強みは、プロ顧客との強固な関係です。競合のロウズもプロ顧客の取り込みを強化していますが、ホームデポは長年の信頼と、プロ向けの供給網やサービスで圧倒的な優位性を築いています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: HD Content Changes - Business Section -->
+
+        <!-- START: HD Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">コロナ禍の巣ごもり需要で大きく成長した後、現在は安定期に。高い金利が住宅市場の重しとなっていますが、強固な収益性と株主還元は維持されています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-orange-50 border-l-4 border-orange-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$1,518億</p>
+                        <p class="text-base font-semibold text-orange-600" data-lang="stat_revenue_growth">前年比 -3.4%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">営業利益率
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">売上から人件費や広告費なども引いた「本業の儲け」の割合。小売業では10%を超えると優秀とされる。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">14.1%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">高い収益性を維持</p>
+                    </div>
+                    <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_dividend">年間配当額</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$9.00</p>
+                        <p class="text-base font-semibold text-amber-600" data-lang="stat_dividend_desc">15年連続増配</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: HD Content Changes - Financials Section -->
+        
+        <!-- START: HD Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">米国の住宅市場と密接に連動するホームデポ株。景気動向に左右される側面と、生活に不可欠な需要に支えられる安定性の両面を理解することが重要です。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-orange-500 text-orange-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: HD Content Changes - Thesis Section -->
+
+        <!-- START: HD Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">ホームデポの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">ホームデポの未来は、プロ顧客との関係をさらに深化させ、デジタルと実店舗を融合させた「ワン・ホームデポ」戦略の成功にかかっています。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-orange-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-orange-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">プロ顧客向けのロイヤリティプログラムや配送サービスを強化。オンラインでの注文と店舗での受け取りをシームレスに連携させ、顧客体験を向上させます。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-orange-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">サプライチェーンの最適化と自動化に大規模投資を継続。複雑なリフォーム案件などを一括で請け負うサービス事業の拡大や、M&Aによる事業領域の拡大も視野に入れます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: HD Content Changes - Outlook Section -->
+
+        <!-- START: HD Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">ホームデポは、景気サイクル株とディフェンシブ株の両方の特性を持つ銘柄。安定した配当を重視しつつ、住宅市場の回復局面での株価上昇を狙う戦略が考えられます。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-orange-100 text-orange-800 font-bold py-3 px-6 rounded-lg hover:bg-orange-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: HD Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: HD Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 The Home Depot, Inc. Investor Dashboard. All rights reserved.</p>
+            <!-- END: HD Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        // Navigation
+        nav_today: { ja: '本日の市況分析', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        // Page title
+        page_title: { ja: '【ホームデポ版】DIYとプロの味方！投資家向けダッシュボード', en: '[Home Depot Edition] DIY & Pro Helper! Investor Dashboard' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: '米国の住まいを支える王者、<br><span class="gradient-text">ホームデポ</span>の揺るぎない基盤', en: 'The King Supporting American Homes,<br>The Unwavering Foundation of <span class="gradient-text">Home Depot</span>' },
+        hero_subtitle: { ja: '世界最大のホームセンター「ホームデポ」。DIY愛好家からプロの業者まで、幅広い顧客層に支えられる強固なビジネスモデルを徹底解剖します。', en: 'The world\'s largest home improvement retailer, "Home Depot." We thoroughly dissect its robust business model, supported by a wide range of customers from DIY enthusiasts to professional contractors.' },
+        intro_card_title: { ja: '「景気動向のバロメーター」米国の住宅市場を映すホームデポへの投資', en: '"A Barometer of the Economy": Investing in Home Depot, a Reflection of the U.S. Housing Market' },
+        intro_card_p1: { ja: '「ホームデポ」は、工具や建材、園芸用品など、住宅の建設やメンテナンスに関するあらゆる商品を扱う、世界最大のホームセンターチェーンです。その業績は、米国の住宅市場や個人消費の動向を色濃く反映します。', en: '"Home Depot" is the world\'s largest home improvement retail chain, handling everything related to home construction and maintenance, from tools and building materials to garden supplies. Its performance closely reflects trends in the U.S. housing market and consumer spending.' },
+        intro_card_p2: { ja: 'ホームデポの最大の強みは、一般のDIY顧客だけでなく、「プロ」と呼ばれる建設業者やリフォーム業者を主要な顧客としている点です。プロ顧客は購入単価が高く、来店頻度も安定しているため、<strong class="text-orange-700">会社の売上の約半分を占める、極めて安定した収益基盤</strong>となっています。', en: 'Home Depot\'s greatest strength is its focus not only on general DIY customers but also on professional contractors, known as "Pros." Pro customers have higher purchase values and more consistent visit frequencies, forming an <strong class="text-orange-700">extremely stable revenue base that accounts for about half of the company\'s sales.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「ホームデポのビジネスの強みは？」「金利の変動は業績にどう影響する？」「今後の成長戦略は？」といった、投資家が知るべき核心に迫ります。米国の暮らしと経済を支える巨人の実力を、一緒に見ていきましょう。', en: 'This page delves into the core questions investors should know, such as "What are Home Depot\'s business strengths?", "How do interest rate changes affect its performance?", and "What are its future growth strategies?". Let\'s explore the power of this giant that supports American life and the economy.' },
+        growth_title: { ja: '住宅市場の動向を反映しつつ、安定した株主還元を実現', en: 'Achieving Stable Shareholder Returns While Reflecting Housing Market Trends' },
+        growth_p: { ja: '金利動向などマクロ経済の影響を受けながらも、プロ顧客からの安定した需要と効率的な経営により、着実な成長と配当を実現。株価は景気サイクルを乗り越え、長期的に上昇しています。', en: 'While influenced by macroeconomic factors like interest rates, the company achieves steady growth and dividends through stable demand from Pro customers and efficient management. The stock has overcome economic cycles to rise over the long term.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'ホームデポって、どんな会社？', en: 'What Kind of Company is Home Depot?' },
+        business_p: { ja: '「Do-It-Yourself（DIY）」文化を米国に根付かせた立役者。現在では、売上の約半分をプロの建設業者から得る、BtoCとBtoBの両面で強みを持つユニークな小売企業です。', en: 'A key player that established the "Do-It-Yourself (DIY)" culture in the U.S. Today, it is a unique retailer with strengths in both B2C and B2B, with about half of its sales coming from professional contractors.' },
+        core_business_title: { ja: 'ビジネスを支える2大顧客層', en: 'Two Major Customer Segments Supporting the Business' },
+        core_pro_title: { ja: 'プロ顧客 (Pro)', en: 'Pro Customers' },
+        core_pro_p: { ja: '建設・リフォーム業者など、専門家向けのサービス。売上の約50%を占める安定収益源。専用のサービスや大量購入割引で強力な関係を構築。', en: 'Services for professionals like construction and renovation contractors. A stable revenue source accounting for ~50% of sales, building strong relationships through dedicated services and bulk discounts.' },
+        core_diy_title: { ja: 'DIY顧客', en: 'DIY Customers' },
+        core_diy_p: { ja: '一般の消費者向けビジネス。幅広い品揃えと専門知識を持つ従業員によるアドバイスが強み。住宅市場の動向に影響されやすい。', en: 'Business targeting general consumers. Strengths include a wide product selection and advice from knowledgeable employees. Susceptible to housing market trends.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'ホームデポの強みは、プロ顧客との強固な関係です。競合のロウズもプロ顧客の取り込みを強化していますが、ホームデポは長年の信頼と、プロ向けの供給網やサービスで圧倒的な優位性を築いています。', en: 'Home Depot\'s strength is its solid relationship with Pro customers. While competitor Lowe\'s is also strengthening its Pro business, Home Depot has built an overwhelming advantage through years of trust and a supply chain and services tailored to Pros.' },
+        chart_competitor_label_hd: { ja: 'ホームデポ', en: 'Home Depot' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['プロ顧客シェア', 'ブランド力', '供給網', '収益性', 'オンライン戦略'], en: ['Pro Customer Share', 'Brand Strength', 'Supply Chain', 'Profitability', 'Online Strategy'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: 'コロナ禍の巣ごもり需要で大きく成長した後、現在は安定期に。高い金利が住宅市場の重しとなっていますが、強固な収益性と株主還元は維持されています。', en: 'After significant growth during the pandemic\'s stay-at-home demand, the company is now in a stable phase. High interest rates are weighing on the housing market, but strong profitability and shareholder returns are being maintained.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 -3.4%', en: '-3.4% YoY' },
+        stat_margin: { ja: '営業利益率', en: 'Operating Margin' },
+        stat_margin_tooltip: { ja: '売上から人件費や広告費なども引いた「本業の儲け」の割合。小売業では10%を超えると優秀とされる。', en: 'The ratio of core profit after deducting costs like labor and advertising. A figure above 10% is considered excellent in the retail industry.' },
+        stat_margin_desc: { ja: '高い収益性を維持', en: 'Maintaining High Profitability' },
+        stat_dividend: { ja: '年間配当額', en: 'Annual Dividend' },
+        stat_dividend_desc: { ja: '15年連続増配', en: '15 Consecutive Years of Dividend Growth' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: '米国の住宅市場と密接に連動するホームデポ株。景気動向に左右される側面と、生活に不可欠な需要に支えられる安定性の両面を理解することが重要です。', en: 'Home Depot stock is closely tied to the U.S. housing market. It\'s important to understand both its cyclical nature and the stability provided by essential demand.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「安定的」に強い理由', en: 'Why This Stock is "Stably" Strong' },
+        bull_content_li1: { ja: '<strong>プロ顧客という岩盤:</strong> 売上の半分を占めるプロ顧客は、景気が悪化しても修理やメンテナンスで安定した需要が見込める。', en: '<strong>Rock-Solid Pro Customer Base:</strong> Pro customers, accounting for half of sales, provide stable demand for repairs and maintenance even in downturns.' },
+        bull_content_li2: { ja: '<strong>住宅の高齢化:</strong> 米国の住宅は古くなっており、継続的なリフォームや修繕の需要が見込まれる。', en: '<strong>Aging Housing Stock:</strong> The aging of U.S. homes ensures ongoing demand for renovations and repairs.' },
+        bull_content_li3: { ja: '<strong>優れた株主還元:</strong> 15年以上続く連続増配の実績があり、安定した配当収入が期待できる。', en: '<strong>Excellent Shareholder Returns:</strong> A track record of over 15 consecutive years of dividend increases offers dependable income.' },
+        bull_content_li4: { ja: '<strong>効率的な供給網:</strong> 巨大な物流網と在庫管理システムが、高い利益率と競争優位性を生み出している。', en: '<strong>Efficient Supply Chain:</strong> A massive logistics network and inventory management system create high profit margins and a competitive edge.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>金利への敏感さ:</strong> 高金利は住宅ローン金利を押し上げ、住宅販売やリフォーム需要の重しとなる。', en: '<strong>Interest Rate Sensitivity:</strong> High interest rates push up mortgage rates, weighing on home sales and remodeling demand.' },
+        bear_content_li2: { ja: '<strong>景気後退リスク:</strong> 景気が悪化し、失業率が上昇すると、DIY需要や大規模なリフォームが手控えられやすい。', en: '<strong>Recession Risk:</strong> An economic downturn and rising unemployment can lead consumers to postpone DIY projects and large-scale renovations.' },
+        bear_content_li3: { ja: '<strong>競争の激化:</strong> 専門業者向けのビジネスでロウズが猛追。オンライン専業の小売業者との競争も続く。', en: '<strong>Intensifying Competition:</strong> Lowe\'s is fiercely competing for Pro business, and competition with online-only retailers continues.' },
+        bear_content_li4: { ja: '<strong>労働コストの上昇:</strong> 従業員の賃金上昇や労働組合結成の動きは、利益率を圧迫する可能性がある。', en: '<strong>Rising Labor Costs:</strong> Wage increases for employees and unionization efforts could pressure profit margins.' },
+        outlook_title: { ja: 'ホームデポの未来は？', en: 'What is Home Depot\'s Future?' },
+        outlook_p: { ja: 'ホームデポの未来は、プロ顧客との関係をさらに深化させ、デジタルと実店舗を融合させた「ワン・ホームデポ」戦略の成功にかかっています。', en: 'Home Depot\'s future depends on deepening its relationship with Pro customers and the success of its "One Home Depot" strategy, which integrates digital and physical retail.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: 'プロ顧客向けのロイヤリティプログラムや配送サービスを強化。オンラインでの注文と店舗での受け取りをシームレスに連携させ、顧客体験を向上させます。', en: 'Enhance loyalty programs and delivery services for Pro customers. Improve the customer experience by seamlessly integrating online ordering with in-store pickup.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'サプライチェーンの最適化と自動化に大規模投資を継続。複雑なリフォーム案件などを一括で請け負うサービス事業の拡大や、M&Aによる事業領域の拡大も視野に入れます。', en: 'Continue large-scale investments in supply chain optimization and automation. Consider expanding service businesses to handle complex renovation projects and exploring M&A to broaden business scope.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'ホームデポは、景気サイクル株とディフェンシブ株の両方の特性を持つ銘柄。安定した配当を重視しつつ、住宅市場の回復局面での株価上昇を狙う戦略が考えられます。', en: 'Home Depot is a stock with both cyclical and defensive characteristics. A strategy could be to focus on its stable dividend while aiming for capital appreciation during a housing market recovery.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: '金利動向が鍵', en: 'Interest Rate Trends are Key' },
+        strategy_res_short_p: { ja: '短期的な株価は、FRBの金利政策や住宅関連の経済指標に大きく影響されます。これらのニュースに注目し、市場のセンチメントを読むことが重要です。', en: 'Short-term stock price is heavily influenced by the Fed\'s interest rate policy and housing-related economic indicators. It\'s crucial to watch this news and read market sentiment.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: 'プロ顧客の売上成長率を見る', en: 'Watch Pro Customer Sales Growth' },
+        strategy_res_medium_p: { ja: '金利が安定または低下し、住宅市場が回復に向かう局面が投資の好機。四半期決算でのプロ顧客向けの売上が回復しているかどうかが重要な判断材料になります。', en: 'An opportune time to invest is when interest rates stabilize or fall and the housing market begins to recover. A key indicator will be the recovery of sales to Pro customers in quarterly earnings reports.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: '配当再投資でじっくり育てる', en: 'Grow it Steadily with Dividend Reinvestment' },
+        strategy_res_long_p: { ja: '短期的な景気サイクルは気にせず、安定したビジネスと連続増配の実績を信じて長期保有。配当を再投資することで、資産を複利で着実に増やす戦略です。', en: 'A strategy to ignore short-term economic cycles and hold for the long term, trusting in its stable business and record of consecutive dividend increases. Reinvesting dividends allows for steady, compounding asset growth.' },
+        footer_copyright: { ja: '&copy; 2025 The Home Depot, Inc. Investor Dashboard. All rights reserved.', en: '&copy; 2025 The Home Depot, Inc. Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                if (el.tagName === 'TITLE') {
+                    el.textContent = translations[key][lang];
+                } else {
+                    el.innerHTML = translations[key][lang];
+                }
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_hd[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-orange-400 animate-pop-in"><h3 class="font-bold text-orange-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [330, 320, 310, 300, 340, 350, 380, 390, 360, 340, 350, 352], borderColor: '#F97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [1574, 1520, 1540], backgroundColor: '#F97316', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [171, 150, 155], borderColor: '#FB923C', backgroundColor: '#FB923C', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['プロ顧客シェア', 'ブランド力', '供給網', '収益性', 'オンライン戦略'], datasets: [ { label: 'ホームデポ', data: [95, 92, 94, 90, 85], backgroundColor: 'rgba(249, 115, 22, 0.2)', borderColor: 'rgba(249, 115, 22, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(249, 115, 22, 1)' }, { label: '競合他社 (平均)', data: [80, 85, 82, 88, 88], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = '+' + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = '+' + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-orange-500', 'text-orange-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-orange-500', 'text-orange-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-orange-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-orange-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-orange-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-orange-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-orange-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-orange-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

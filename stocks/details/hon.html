@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- START: HON Content Changes - Title -->
+    <title data-lang="page_title">【ハネウェル版】産業界の巨人！投資家向けダッシュボード</title>
+    <!-- END: HON Content Changes - Title -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to Honeywell's red
+                        primary: '#D92D2D', // Honeywell Red
+                        secondary: '#FF4D4D', // Lighter accent red
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: HON Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #FF4D4D, #D92D2D); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #D92D2D; }
+        /* END: HON Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #D92D2D; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: HON Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-red-50 to-orange-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-orange-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">H</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Honeywell International</span>
+                        <span class="text-sm font-semibold text-slate-500">NASDAQ: HON</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: HON Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: HON Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    未来を創る3つのメガトレンドを捉える、<br>
+                    <span class="gradient-text">ハネウェル</span>の多角化戦略
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    航空宇宙から建物の自動化、エネルギー転換まで。産業界の巨人「ハネウェル」が、いかにして未来の成長トレンドを捉えているのか、その核心に迫ります。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-orange-50 to-red-50 border-orange-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「地味な優等生」なぜハネウェルは長期投資家に愛されるのか？</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「ハネウェル」は、航空機のエンジンから家庭用サーモスタット、工場の制御システムまで、非常に幅広い製品とサービスを提供する巨大な複合企業です。その事業は、私たちの日常生活から最先端の産業まで、あらゆる場面で活躍しています。</p>
+                    <p data-lang="intro_card_p2">ハネウェルの強みは、「オートメーション（自動化）」「未来の航空業界」「エネルギー転換」という3つの長期的なメガトレンドに沿って事業を再編し、集中させている点です。例えるなら、<strong class="text-red-700">未来へと続く複数の高速道路のすべてに料金所を設置し、着実に利益を上げ続ける賢明な投資家</strong>のような企業です。</p>
+                    <p data-lang="intro_card_p3">このページでは、「ハネウェルの4つの事業は何が違うのか？」「ソフトウェア事業の成長性は？」「景気循環にどう対応するのか？」といった、投資家が知るべきポイントを解説します。産業界の未来を形作る企業の、堅実な成長戦略を見ていきましょう。</p>
+                </div>
+            </div>
+            <!-- END: HON Content Changes - Hero Section -->
+
+            <!-- START: HON Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">景気循環を乗り越える安定性と、株主還元の実績</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">航空宇宙部門の力強い回復と、高収益なソフトウェア事業の成長が業績を下支え。規律ある経営と安定したキャッシュフローにより、10年以上にわたり増配を続けています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="216.74">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="12.0">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="0.15">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="25">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: HON Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: HON Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">ハネウェルって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">航空宇宙、ビルディング、産業、パフォーマンスマテリアルという4つのセグメントで事業を展開。各分野で高い技術力と市場シェアを誇り、ソフトウェアプラットフォーム「Honeywell Forge」で各事業の連携を強化しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える4つのセグメント</h3>
+                <div class="grid md:grid-cols-4 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.9269 14.354L14.3411 15.7682L18.2635 11.8458L19.6777 13.26L14.3411 18.5966L11.5126 15.7682L12.9269 14.354ZM12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_aero_title">航空宇宙</h4>
+                        <p class="text-slate-600" data-lang="core_aero_p">航空機のエンジン、電子機器、ソフトウェアを提供。旅行需要の回復で力強く成長する最大部門。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 20H3V18H21V20ZM12 2C12.5523 2 13 2.44772 13 3V15C13 15.5523 12.5523 16 12 16C11.4477 16 11 15.5523 11 15V3C11 2.44772 11.4477 2 12 2ZM12 16C14.7614 16 17 13.7614 17 11V3H15V11C15 12.6569 13.6569 14 12 14C10.3431 14 9 12.6569 9 11V3H7V11C7 13.7614 9.23858 16 12 16Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_ia_title">産業オートメーション</h4>
+                        <p class="text-slate-600" data-lang="core_ia_p">工場の生産性を向上させる制御システムやセンサー、安全装置などを提供。景気動向に敏感。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 20H4V18H20V20ZM20 12H22V16H20V12ZM20 4H4V10H20V4ZM2 12H4V16H2V12ZM2 10V4C2 3.44772 2.44772 3 3 3H21C21.5523 3 22 3.44772 22 4V10H20V6H4V10H2Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_ba_title">ビルディング・オートメーション</h4>
+                        <p class="text-slate-600" data-lang="core_ba_p">商業ビルの空調、防火、セキュリティシステムを提供。建物のスマート化と省エネ化に貢献。</p>
+                    </div>
+                     <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_pmt_title">マテリアル＆テクノロジー</h4>
+                        <p class="text-slate-600" data-lang="core_pmt_p">持続可能な航空燃料（SAF）やリサイクル技術など、エネルギー転換を支える最先端技術を提供。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">ハネウェルの強みは、ハードウェアの深い専門知識と、それを補完するソフトウェアプラットフォーム「Honeywell Forge」の組み合わせです。これにより、単なる製品売り切りではなく、顧客の運用効率を継続的に改善するソリューションを提供できます。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: HON Content Changes - Business Section -->
+
+        <!-- START: HON Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">航空宇宙部門の力強い成長が、他の景気敏感な事業の軟調さを補っています。規律あるコスト管理により、安定した利益率とキャッシュフローを維持しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$381億</p>
+                        <p class="text-base font-semibold text-red-600" data-lang="stat_revenue_growth">前年比 +3%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">営業利益率
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">本業の収益力を示す指標。多角的な事業ポートフォリオと効率的な経営で高い水準を維持。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">21%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">高い収益性</p>
+                    </div>
+                    <div class="bg-orange-50 border-l-4 border-orange-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_dividend_yield">配当利回り</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">1.97%</p>
+                        <p class="text-base font-semibold text-orange-600" data-lang="stat_dividend_yield_desc">10年以上連続増配</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: HON Content Changes - Financials Section -->
+        
+        <!-- START: HON Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">産業界の優等生として知られるハネウェル株。長期的なメガトレンドに乗る成長性と、景気循環に左右されるリスクの両面を天秤にかける必要があります。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-red-500 text-red-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: HON Content Changes - Thesis Section -->
+
+        <!-- START: HON Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">ハネウェルの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">ハネウェルの未来は、3つのメガトレンド（自動化、航空、エネルギー転換）を軸としたポートフォリオの強化と、ソフトウェア事業の成長加速にかかっています。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-red-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-red-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">航空宇宙部門の力強い需要を取り込み、サプライチェーンを安定化。最近買収したセキュリティ事業（Carrier）の統合を進め、ビルディング・オートメーション事業を強化します。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-red-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">持続可能な航空燃料（SAF）やグリーン水素、バッテリー技術など、エネルギー転換分野でのリーダーシップを確立。量子コンピューティング技術の実用化も目指します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: HON Content Changes - Outlook Section -->
+
+        <!-- START: HON Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">ハネウェルは、景気循環の影響を受けつつも、長期的な成長トレンドに乗る質の高い産業株。ポートフォリオの中核として、じっくりと保有するのに適した銘柄です。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-red-100 text-red-800 font-bold py-3 px-6 rounded-lg hover:bg-red-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: HON Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: HON Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Honeywell International Inc. Investor Dashboard. All rights reserved.</p>
+            <!-- END: HON Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        page_title: { ja: '【ハネウェル版】産業界の巨人！投資家向けダッシュボード', en: '[Honeywell Edition] Industrial Giant! Investor Dashboard' },
+        nav_today: { ja: '本日の市況分析', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: '未来を創る3つのメガトレンドを捉える、<br><span class="gradient-text">ハネウェル</span>の多角化戦略', en: 'Capturing Three Megatrends Shaping the Future,<br>The Diversification Strategy of <span class="gradient-text">Honeywell</span>' },
+        hero_subtitle: { ja: '航空宇宙から建物の自動化、エネルギー転換まで。産業界の巨人「ハネウェル」が、いかにして未来の成長トレンドを捉えているのか、その核心に迫ります。', en: 'From aerospace and building automation to the energy transition. We delve into the core of how the industrial giant "Honeywell" is capturing future growth trends.' },
+        intro_card_title: { ja: '「地味な優等生」なぜハネウェルは長期投資家に愛されるのか？', en: '"The Unassuming High-Achiever": Why is Honeywell beloved by long-term investors?' },
+        intro_card_p1: { ja: '「ハネウェル」は、航空機のエンジンから家庭用サーモスタット、工場の制御システムまで、非常に幅広い製品とサービスを提供する巨大な複合企業です。その事業は、私たちの日常生活から最先端の産業まで、あらゆる場面で活躍しています。', en: '"Honeywell" is a massive conglomerate that provides an extremely wide range of products and services, from aircraft engines and home thermostats to factory control systems. Its businesses are active in every aspect of our lives, from daily routines to cutting-edge industries.' },
+        intro_card_p2: { ja: 'ハネウェルの強みは、「オートメーション（自動化）」「未来の航空業界」「エネルギー転換」という3つの長期的なメガトレンドに沿って事業を再編し、集中させている点です。例えるなら、<strong class="text-red-700">未来へと続く複数の高速道路のすべてに料金所を設置し、着実に利益を上げ続ける賢明な投資家</strong>のような企業です。', en: 'Honeywell\'s strength lies in its focus on three long-term megatrends: "automation," "the future of aerospace," and the "energy transition," having realigned its businesses accordingly. It\'s like a <strong class="text-red-700">savvy investor that has set up toll booths on all the major highways leading to the future, steadily collecting profits.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「ハネウェルの4つの事業は何が違うのか？」「ソフトウェア事業の成長性は？」「景気循環にどう対応するのか？」といった、投資家が知るべきポイントを解説します。産業界の未来を形作る企業の、堅実な成長戦略を見ていきましょう。', en: 'This page explains the key points for investors, such as "What are the differences between Honeywell\'s four businesses?", "What is the growth potential of its software business?", and "How does it navigate economic cycles?". Let\'s examine the solid growth strategy of a company shaping the future of industry.' },
+        growth_title: { ja: '景気循環を乗り越える安定性と、株主還元の実績', en: 'Stability to Weather Economic Cycles and a Track Record of Shareholder Returns' },
+        growth_p: { ja: '航空宇宙部門の力強い回復と、高収益なソフトウェア事業の成長が業績を下支え。規律ある経営と安定したキャッシュフローにより、10年以上にわたり増配を続けています。', en: 'A strong recovery in the aerospace segment and growth in the high-margin software business support performance. Disciplined management and stable cash flow have enabled over a decade of continuous dividend increases.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'ハネウェルって、どんな会社？', en: 'What Kind of Company is Honeywell?' },
+        business_p: { ja: '航空宇宙、ビルディング、産業、パフォーマンスマテリアルという4つのセグメントで事業を展開。各分野で高い技術力と市場シェアを誇り、ソフトウェアプラットフォーム「Honeywell Forge」で各事業の連携を強化しています。', en: 'Operates across four segments: Aerospace, Building Automation, Industrial Automation, and Performance Materials & Technologies. Boasts high technical expertise and market share in each field, strengthening synergies with its "Honeywell Forge" software platform.' },
+        core_business_title: { ja: 'ビジネスを支える4つのセグメント', en: 'Four Segments Supporting the Business' },
+        core_aero_title: { ja: '航空宇宙', en: 'Aerospace' },
+        core_aero_p: { ja: '航空機のエンジン、電子機器、ソフトウェアを提供。旅行需要の回復で力強く成長する最大部門。', en: 'Provides aircraft engines, avionics, and software. The largest segment, growing strongly with the recovery in travel demand.' },
+        core_ia_title: { ja: '産業オートメーション', en: 'Industrial Automation' },
+        core_ia_p: { ja: '工場の生産性を向上させる制御システムやセンサー、安全装置などを提供。景気動向に敏感。', en: 'Provides control systems, sensors, and safety equipment to improve factory productivity. Sensitive to economic trends.' },
+        core_ba_title: { ja: 'ビルディング・オートメーション', en: 'Building Automation' },
+        core_ba_p: { ja: '商業ビルの空調、防火、セキュリティシステムを提供。建物のスマート化と省エネ化に貢献。', en: 'Provides HVAC, fire, and security systems for commercial buildings, contributing to smart and energy-efficient buildings.' },
+        core_pmt_title: { ja: 'マテリアル＆テクノロジー', en: 'Materials & Technologies' },
+        core_pmt_p: { ja: '持続可能な航空燃料（SAF）やリサイクル技術など、エネルギー転換を支える最先端技術を提供。', en: 'Provides cutting-edge technologies that support the energy transition, such as sustainable aviation fuel (SAF) and recycling technologies.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'ハネウェルの強みは、ハードウェアの深い専門知識と、それを補完するソフトウェアプラットフォーム「Honeywell Forge」の組み合わせです。これにより、単なる製品売り切りではなく、顧客の運用効率を継続的に改善するソリューションを提供できます。', en: 'Honeywell\'s strength is the combination of its deep hardware expertise and the complementary "Honeywell Forge" software platform. This allows it to provide solutions that continuously improve customer operational efficiency, rather than just selling one-off products.' },
+        chart_competitor_label_hon: { ja: 'ハネウェル', en: 'Honeywell' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['航空宇宙事業', 'オートメーション', 'ソフトウェア(Forge)', '収益性', '技術革新'], en: ['Aerospace', 'Automation', 'Software (Forge)', 'Profitability', 'Innovation'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: '航空宇宙部門の力強い成長が、他の景気敏感な事業の軟調さを補っています。規律あるコスト管理により、安定した利益率とキャッシュフローを維持しています。', en: 'Strong growth in the Aerospace segment is offsetting weakness in other cyclical businesses. Disciplined cost management helps maintain stable profit margins and cash flow.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +3%', en: '+3% YoY' },
+        stat_margin: { ja: '営業利益率', en: 'Operating Margin' },
+        stat_margin_tooltip: { ja: '本業の収益力を示す指標。多角的な事業ポートフォリオと効率的な経営で高い水準を維持。', en: 'A measure of core profitability. Maintained at a high level due to a diversified portfolio and efficient management.' },
+        stat_margin_desc: { ja: '高い収益性', en: 'High Profitability' },
+        stat_dividend_yield: { ja: '配当利回り', en: 'Dividend Yield' },
+        stat_dividend_yield_desc: { ja: '10年以上連続増配', en: '10+ Years of Dividend Growth' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: '産業界の優等生として知られるハネウェル株。長期的なメガトレンドに乗る成長性と、景気循環に左右されるリスクの両面を天秤にかける必要があります。', en: 'Known as a blue chip of the industrial sector, Honeywell stock requires balancing its growth potential from long-term megatrends against the risks of economic cycles.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「長期的」に強い理由', en: 'Why This Stock is Strong for the "Long-Term"' },
+        bull_content_li1: { ja: '<strong>メガトレンドの追い風:</strong> 自動化、航空、エネルギー転換という、長期的に拡大が見込まれる3つの巨大市場で事業を展開。', en: '<strong>Megatrend Tailwinds:</strong> Operates in three massive markets—automation, aerospace, and energy transition—that are expected to grow long-term.' },
+        bull_content_li2: { ja: '<strong>航空宇宙部門の強さ:</strong> 航空旅行の回復と防衛需要の増加により、安定した成長と高い利益率が見込める。', en: '<strong>Aerospace Strength:</strong> Positioned for stable growth and high margins due to the recovery in air travel and increased defense spending.' },
+        bull_content_li3: { ja: '<strong>ソフトウェアへの移行:</strong> 高収益なソフトウェアプラットフォーム「Forge」の成長が、全体の利益率を押し上げる。', en: '<strong>Shift to Software:</strong> Growth of the high-margin "Forge" software platform will boost overall profitability.' },
+        bull_content_li4: { ja: '<strong>優れた株主還元:</strong> 安定したフリーキャッシュフローを原資に、長年にわたり増配と自社株買いを継続している。', en: '<strong>Excellent Shareholder Returns:</strong> Consistently increases dividends and buys back shares, funded by stable free cash flow.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>景気循環リスク:</strong> 産業・ビルディング部門は、景気後退局面で企業の設備投資が減少すると、需要が落ち込む。', en: '<strong>Cyclical Risk:</strong> The Industrial and Building segments are vulnerable to downturns as corporate capital spending decreases during recessions.' },
+        bear_content_li2: { ja: '<strong>サプライチェーンの混乱:</strong> グローバルに事業を展開しているため、地政学リスクや部品不足が生産に影響を与える可能性。', en: '<strong>Supply Chain Disruptions:</strong> As a global operator, geopolitical risks or component shortages could impact production.' },
+        bear_content_li3: { ja: '<strong>M&Aの統合リスク:</strong> 最近買収したCarrier社のセキュリティ事業など、大型買収の統合が計画通りに進まないリスク。', en: '<strong>M&A Integration Risk:</strong> Risk that the integration of large acquisitions, like the recent Carrier security business, may not proceed as planned.' },
+        bear_content_li4: { ja: '<strong>競争の激化:</strong> GEやシーメンスなど、各事業分野で強力なライバルとの競争に常に晒されている。', en: '<strong>Intense Competition:</strong> Constantly faces strong competition from powerful rivals like GE and Siemens in all of its business segments.' },
+        outlook_title: { ja: 'ハネウェルの未来は？', en: 'What is Honeywell\'s Future?' },
+        outlook_p: { ja: 'ハネウェルの未来は、3つのメガトレンド（自動化、航空、エネルギー転換）を軸としたポートフォリオの強化と、ソフトウェア事業の成長加速にかかっています。', en: 'Honeywell\'s future hinges on strengthening its portfolio around the three megatrends (automation, aerospace, and energy transition) and accelerating the growth of its software business.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: '航空宇宙部門の力強い需要を取り込み、サプライチェーンを安定化。最近買収したセキュリティ事業（Carrier）の統合を進め、ビルディング・オートメーション事業を強化します。', en: 'Capture strong demand in the aerospace sector and stabilize the supply chain. Strengthen the Building Automation business by integrating the recently acquired Carrier security business.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: '持続可能な航空燃料（SAF）やグリーン水素、バッテリー技術など、エネルギー転換分野でのリーダーシップを確立。量子コンピューティング技術の実用化も目指します。', en: 'Establish leadership in the energy transition field, including sustainable aviation fuel (SAF), green hydrogen, and battery technology. Also aims for the practical application of quantum computing.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'ハネウェルは、景気循環の影響を受けつつも、長期的な成長トレンドに乗る質の高い産業株。ポートフォリオの中核として、じっくりと保有するのに適した銘柄です。', en: 'Honeywell is a high-quality industrial stock that rides long-term growth trends while being subject to economic cycles. It is a suitable stock to hold patiently as a core part of a portfolio.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: 'マクロ経済指標が鍵', en: 'Macroeconomic Indicators are Key' },
+        strategy_res_short_p: { ja: '株価は製造業PMIや設備投資の動向など、景気の先行指標に左右されやすい。短期的な売買は、これらの指標を読んで行うことになります。', en: 'The stock price is susceptible to leading economic indicators like the Manufacturing PMI and capital expenditure trends. Short-term trading will involve reading these indicators.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '航空宇宙部門の受注残に注目', en: 'Focus on the Aerospace Backlog' },
+        strategy_res_medium_p: { ja: '航空会社の力強い需要が続くかどうかが中期のポイント。決算発表で示される航空宇宙部門の受注残高（バックログ）の伸びが、将来の成長を示唆します。', en: 'The key for the medium term is whether strong demand from airlines will continue. Growth in the aerospace backlog, reported in earnings announcements, will indicate future growth.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: 'メガトレンドに投資する', en: 'Invest in the Megatrends' },
+        strategy_res_long_p: { ja: '短期的な景気の波は気にせず、自動化やエネルギー転換といった、不可逆的な世界の大きな変化を捉える戦略。安定した配当を受け取りながら、長期的な成長を待つことができます。', en: 'A strategy to capture irreversible major global shifts like automation and the energy transition, ignoring short-term economic waves. You can wait for long-term growth while receiving stable dividends.' },
+        footer_copyright: { ja: '&copy; 2025 Honeywell International Inc. Investor Dashboard. All rights reserved.', en: '&copy; 2025 Honeywell International Inc. Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                el.innerHTML = translations[key][lang];
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_hon[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-red-400 animate-pop-in"><h3 class="font-bold text-red-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [205, 195, 190, 200, 210, 208, 215, 220, 210, 205, 212, 215], borderColor: '#D92D2D', backgroundColor: 'rgba(217, 45, 45, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [367, 381, 405], backgroundColor: '#D92D2D', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [56, 60, 65], borderColor: '#FF4D4D', backgroundColor: '#FF4D4D', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['航空宇宙事業', 'オートメーション', 'ソフトウェア(Forge)', '収益性', '技術革新'], datasets: [ { label: 'ハネウェル', data: [95, 90, 85, 92, 88], backgroundColor: 'rgba(217, 45, 45, 0.2)', borderColor: 'rgba(217, 45, 45, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(217, 45, 45, 1)' }, { label: '競合他社 (平均)', data: [88, 85, 80, 86, 84], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-red-500', 'text-red-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-red-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

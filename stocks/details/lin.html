@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- START: LIN Content Changes - Title -->
+    <title data-lang="page_title">【リンデ版】産業ガスの世界的リーダー！投資家向けダッシュボード</title>
+    <!-- END: LIN Content Changes - Title -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to Linde's blue
+                        primary: '#005596', // Linde Blue
+                        secondary: '#00A1DE', // Lighter Blue
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: LIN Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #00A1DE, #005596); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #005596; }
+        /* END: LIN Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #005596; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: LIN Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">L</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Linde plc</span>
+                        <span class="text-sm font-semibold text-slate-500">NASDAQ: LIN</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: LIN Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: LIN Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    産業の「空気」を支配する寡占企業、<br>
+                    <span class="gradient-text">リンデ</span>の静かなる成長
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    世界最大の産業ガスメーカー「リンデ」。半導体から医療、そして脱炭素化まで、あらゆる産業に不可欠な存在の強みと未来を解き明かします。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「地味だけど、実はすごい？」社会インフラを支えるリンデへの投資妙味</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「リンデ」という社名に馴染みはなくても、私たちの生活は同社の製品なしには成り立ちません。リンデは、酸素、窒素、水素といった「産業ガス」を製造し、あらゆる産業に供給する世界的なリーディングカンパニーです。</p>
+                    <p data-lang="intro_card_p2">半導体の製造、病院での医療用酸素、食品の冷凍、そして未来のクリーンエネルギーである水素まで、その用途は無限大です。リンデのビジネスは、<strong class="text-blue-700">顧客の工場の隣に自社プラントを建設し、長期契約でガスを安定供給するという、極めて参入障壁の高いモデル</strong>で成り立っています。</p>
+                    <p data-lang="intro_card_p3">このページでは、「なぜリンデは儲かるのか？」「脱炭素化は追い風になるのか？」「景気後退への耐性は？」といった、投資家が知るべき本質的な問いに答えます。目立たないながらも、世界経済に不可欠な企業の強固なビジネスを、一緒に見ていきましょう。</p>
+                </div>
+            </div>
+            <!-- END: LIN Content Changes - Hero Section -->
+
+            <!-- START: LIN Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">安定したキャッシュフローと株主還元。ディフェンシブ銘柄の代表格</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">長期契約に支えられた安定的な収益と、規律ある資本配分により、景気変動の中でも着実な利益成長と増配を実現。株価は長期的に安定した上昇を描いています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="442.30">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="7.5">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="0.21">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="32">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: LIN Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: LIN Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">リンデって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">産業ガスの製造・供給と、ガス生産プラントの設計・建設（エンジニアリング）を手掛けるグローバル企業。世界経済の成長と、脱炭素化という長期的なトレンドの両方から恩恵を受けます。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える多様な最終市場</h3>
+                <div class="grid md:grid-cols-4 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_manufacturing_title">製造・化学</h4>
+                        <p class="text-slate-600" data-lang="core_manufacturing_p">金属加工、化学品製造、石油精製など、幅広い産業の基盤を支える最大の収益源。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13 19V22H11V19H13ZM10 3H14V17H10V3Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_healthcare_title">ヘルスケア</h4>
+                        <p class="text-slate-600" data-lang="core_healthcare_p">病院向けの医療用酸素や特殊ガスを供給。高齢化社会を背景に安定した成長が見込まれる。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2L9 4L5 4L5 6L3 6L3 8L2 8L2 16L3 16L3 18L5 18L5 20L9 20L9 22L15 22L15 20L19 20L19 18L21 18L21 16L22 16L22 8L21 8L21 6L19 6L19 4L15 4L15 2L9 2ZM11 6L13 6L13 8L15 8L15 10L17 10L17 14L15 14L15 16L13 16L13 18L11 18L11 16L9 16L9 14L7 14L7 10L9 10L9 8L11 8L11 6Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_electronics_title">エレクトロニクス</h4>
+                        <p class="text-slate-600" data-lang="core_electronics_p">半導体製造に不可欠な特殊ガスや材料を供給。AIやIoTの普及が追い風となる成長分野。</p>
+                    </div>
+                     <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_energy_title">クリーンエネルギー</h4>
+                        <p class="text-slate-600" data-lang="core_energy_p">世界有数の水素製造技術を活かし、脱炭素化に貢献。将来の大きな成長ドライバー。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">リンデの強みは、世界中に広がる供給網と、業界トップクラスのオペレーション効率です。競合のエールリキード社と市場を二分する寡占状態にあり、高い価格決定力と収益性を誇ります。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: LIN Content Changes - Business Section -->
+
+        <!-- START: LIN Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">景気変動の影響を受けにくい安定したビジネスモデルにより、売上、利益ともに着実な成長を実現。生み出したキャッシュフローを、増配や自社株買いで株主に還元しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$335億</p>
+                        <p class="text-base font-semibold text-blue-600" data-lang="stat_revenue_growth">前年比 +2.0%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">営業利益率
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">本業の収益力を示す指標。リンデは高い効率性で20%を超える高い利益率を誇る。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">24%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">業界トップクラスの収益性</p>
+                    </div>
+                    <div class="bg-cyan-50 border-l-4 border-cyan-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_dividend">年間配当額</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$5.40</p>
+                        <p class="text-base font-semibold text-cyan-600" data-lang="stat_dividend_desc">30年以上連続増配</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: LIN Content Changes - Financials Section -->
+        
+        <!-- START: LIN Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">ディフェンシブでありながら、脱炭素という長期的な成長テーマも持つリンデ株。安定性を求める投資家にとって魅力的な選択肢ですが、景気後退への懸念も考慮すべきです。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-blue-500 text-blue-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: LIN Content Changes - Thesis Section -->
+
+        <!-- START: LIN Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">リンデの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">リンデの未来は、世界的な脱炭素化の流れをいかにビジネスチャンスに変えるかにかかっています。クリーン水素と二酸化炭素回収・貯留（CCS）の分野で、主導的な役割を担うことを目指します。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-blue-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">半導体やヘルスケアなど、景気変動に強い分野での成長を加速。規律ある資本配分を継続し、自社株買いと増配を通じて株主還元を強化します。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">世界各地でクリーン水素プロジェクトを本格化させ、水素社会のインフラを構築。製鉄や化学プラントから排出されるCO2を回収するCCS事業を新たな収益の柱に育てます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: LIN Content Changes - Outlook Section -->
+
+        <!-- START: LIN Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">リンデは、ポートフォリオの安定性を高めるコア銘柄として魅力的です。長期的な視点で、脱炭素化という巨大なテーマに乗る投資戦略が考えられます。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-blue-100 text-blue-800 font-bold py-3 px-6 rounded-lg hover:bg-blue-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: LIN Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: LIN Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Linde plc Investor Dashboard. All rights reserved.</p>
+            <!-- END: LIN Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        page_title: { ja: '【リンデ版】産業ガスの世界的リーダー！投資家向けダッシュボード', en: '[Linde Edition] Global Leader in Industrial Gases! Investor Dashboard' },
+        nav_today: { ja: '本日の市況分析', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: '産業の「空気」を支配する寡占企業、<br><span class="gradient-text">リンデ</span>の静かなる成長', en: 'The Oligopolistic Company that Dominates Industrial "Air",<br>The Quiet Growth of <span class="gradient-text">Linde</span>' },
+        hero_subtitle: { ja: '世界最大の産業ガスメーカー「リンデ」。半導体から医療、そして脱炭素化まで、あらゆる産業に不可欠な存在の強みと未来を解き明かします。', en: 'The world\'s largest industrial gas company, "Linde." We unravel the strengths and future of this entity, essential to every industry from semiconductors to healthcare and decarbonization.' },
+        intro_card_title: { ja: '「地味だけど、実はすごい？」社会インフラを支えるリンデへの投資妙味', en: '"Unassuming, but actually amazing?" The investment appeal of Linde, a pillar of social infrastructure.' },
+        intro_card_p1: { ja: '「リンデ」という社名に馴染みはなくても、私たちの生活は同社の製品なしには成り立ちません。リンデは、酸素、窒素、水素といった「産業ガス」を製造し、あらゆる産業に供給する世界的なリーディングカンパニーです。', en: 'Even if the name "Linde" is unfamiliar, our daily lives would not be possible without its products. Linde is a global leading company that produces and supplies "industrial gases" such as oxygen, nitrogen, and hydrogen to all kinds of industries.' },
+        intro_card_p2: { ja: '半導体の製造、病院での医療用酸素、食品の冷凍、そして未来のクリーンエネルギーである水素まで、その用途は無限大です。リンデのビジネスは、<strong class="text-blue-700">顧客の工場の隣に自社プラントを建設し、長期契約でガスを安定供給するという、極めて参入障壁の高いモデル</strong>で成り立っています。', en: 'Its applications are endless, from semiconductor manufacturing, medical oxygen in hospitals, and food freezing, to hydrogen, the clean energy of the future. Linde\'s business is built on a <strong class="text-blue-700">model with extremely high barriers to entry: building its own plants next to customer facilities and ensuring a stable supply of gas through long-term contracts.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「なぜリンデは儲かるのか？」「脱炭素化は追い風になるのか？」「景気後退への耐性は？」といった、投資家が知るべき本質的な問いに答えます。目立たないながらも、世界経済に不可欠な企業の強固なビジネスを、一緒に見ていきましょう。', en: 'This page answers essential questions for investors, such as "Why is Linde so profitable?", "Is decarbonization a tailwind?", and "How resilient is it to recessions?". Let\'s explore the robust business of this inconspicuous yet indispensable company for the global economy.' },
+        growth_title: { ja: '安定したキャッシュフローと株主還元。ディフェンシブ銘柄の代表格', en: 'Stable Cash Flow and Shareholder Returns. A Quintessential Defensive Stock' },
+        growth_p: { ja: '長期契約に支えられた安定的な収益と、規律ある資本配分により、景気変動の中でも着実な利益成長と増配を実現。株価は長期的に安定した上昇を描いています。', en: 'Supported by stable revenues from long-term contracts and disciplined capital allocation, the company achieves steady profit growth and dividend increases even amidst economic fluctuations. The stock price has shown a stable, long-term upward trend.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'リンデって、どんな会社？', en: 'What Kind of Company is Linde?' },
+        business_p: { ja: '産業ガスの製造・供給と、ガス生産プラントの設計・建設（エンジニアリング）を手掛けるグローバル企業。世界経済の成長と、脱炭素化という長期的なトレンドの両方から恩恵を受けます。', en: 'A global company engaged in the production and supply of industrial gases and the design and construction of gas production plants (engineering). It benefits from both global economic growth and the long-term trend of decarbonization.' },
+        core_business_title: { ja: 'ビジネスを支える多様な最終市場', en: 'Diverse End Markets Supporting the Business' },
+        core_manufacturing_title: { ja: '製造・化学', en: 'Manufacturing & Chemicals' },
+        core_manufacturing_p: { ja: '金属加工、化学品製造、石油精製など、幅広い産業の基盤を支える最大の収益源。', en: 'The largest source of revenue, supporting the foundation of a wide range of industries such as metal fabrication, chemical production, and oil refining.' },
+        core_healthcare_title: { ja: 'ヘルスケア', en: 'Healthcare' },
+        core_healthcare_p: { ja: '病院向けの医療用酸素や特殊ガスを供給。高齢化社会を背景に安定した成長が見込まれる。', en: 'Supplies medical oxygen and specialty gases to hospitals. Stable growth is expected against the backdrop of an aging society.' },
+        core_electronics_title: { ja: 'エレクトロニクス', en: 'Electronics' },
+        core_electronics_p: { ja: '半導体製造に不可欠な特殊ガスや材料を供給。AIやIoTの普及が追い風となる成長分野。', en: 'Supplies specialty gases and materials essential for semiconductor manufacturing. A growth area benefiting from the spread of AI and IoT.' },
+        core_energy_title: { ja: 'クリーンエネルギー', en: 'Clean Energy' },
+        core_energy_p: { ja: '世界有数の水素製造技術を活かし、脱炭素化に貢献。将来の大きな成長ドライバー。', en: 'Contributes to decarbonization by leveraging its world-leading hydrogen production technology. A major future growth driver.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'リンデの強みは、世界中に広がる供給網と、業界トップクラスのオペレーション効率です。競合のエールリキード社と市場を二分する寡占状態にあり、高い価格決定力と収益性を誇ります。', en: 'Linde\'s strengths are its global supply network and industry-leading operational efficiency. It is in an oligopoly with competitor Air Liquide, boasting strong pricing power and profitability.' },
+        chart_competitor_label_lin: { ja: 'リンデ', en: 'Linde' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['グローバル展開', 'オペレーション効率', '収益性', '技術力(水素)', '安定性'], en: ['Global Reach', 'Operational Efficiency', 'Profitability', 'Technology (H2)', 'Stability'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: '景気変動の影響を受けにくい安定したビジネスモデルにより、売上、利益ともに着実な成長を実現。生み出したキャッシュフローを、増配や自社株買いで株主に還元しています。', en: 'With a stable business model less susceptible to economic fluctuations, the company achieves steady growth in both sales and profits. It returns the generated cash flow to shareholders through dividend increases and share buybacks.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +2.0%', en: '+2.0% YoY' },
+        stat_margin: { ja: '営業利益率', en: 'Operating Margin' },
+        stat_margin_tooltip: { ja: '本業の収益力を示す指標。リンデは高い効率性で20%を超える高い利益率を誇る。', en: 'A measure of core profitability. Linde boasts a high profit margin of over 20% due to its high efficiency.' },
+        stat_margin_desc: { ja: '業界トップクラスの収益性', en: 'Industry-Leading Profitability' },
+        stat_dividend: { ja: '年間配当額', en: 'Annual Dividend' },
+        stat_dividend_desc: { ja: '30年以上連続増配', en: '30+ Consecutive Years of Dividend Growth' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: 'ディフェンシブでありながら、脱炭素という長期的な成長テーマも持つリンデ株。安定性を求める投資家にとって魅力的な選択肢ですが、景気後退への懸念も考慮すべきです。', en: 'Linde stock is both defensive and has a long-term growth theme of decarbonization. It is an attractive option for stability-seeking investors, but concerns about a recession should also be considered.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「盤石」である理由', en: 'Why This Stock is "Rock-Solid"' },
+        bull_content_li1: { ja: '<strong>不可欠な製品:</strong> 産業ガスは現代のあらゆる産業に不可欠で、代替が困難。需要が底堅い。', en: '<strong>Indispensable Products:</strong> Industrial gases are essential to all modern industries and difficult to replace, ensuring robust demand.' },
+        bull_content_li2: { ja: '<strong>高い参入障壁:</strong> 顧客拠点でのオンサイト供給モデルは、巨額の初期投資と長期契約を必要とし、新規参入が極めて困難。', en: '<strong>High Barriers to Entry:</strong> The on-site supply model at customer locations requires huge initial investment and long-term contracts, making new entry extremely difficult.' },
+        bull_content_li3: { ja: '<strong>脱炭素化の追い風:</strong> クリーン水素やCO2回収技術のリーダーであり、世界のエネルギー転換から大きな恩恵を受ける。', en: '<strong>Decarbonization Tailwinds:</strong> As a leader in clean hydrogen and CO2 capture technologies, it stands to benefit greatly from the global energy transition.' },
+        bull_content_li4: { ja: '<strong>優れた資本配分:</strong> 30年以上続く連続増配の実績が、経営の質の高さを証明している。', en: '<strong>Excellent Capital Allocation:</strong> A track record of over 30 consecutive years of dividend increases demonstrates high-quality management.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>景気循環リスク:</strong> 顧客が製造業や化学工業に多いため、世界的な景気後退局面ではガスの需要が減少する。', en: '<strong>Cyclical Risk:</strong> With many customers in manufacturing and chemicals, gas demand decreases during a global recession.' },
+        bear_content_li2: { ja: '<strong>エネルギー価格の変動:</strong> ガス製造は大量の電力を消費するため、エネルギー価格の高騰が利益率を圧迫する可能性がある。', en: '<strong>Energy Price Volatility:</strong> Gas production is energy-intensive, so soaring energy prices can pressure profit margins.' },
+        bear_content_li3: { ja: '<strong>プロジェクトの遅延リスク:</strong> 大規模なプラント建設プロジェクトは、遅延やコスト超過のリスクを常に抱えている。', en: '<strong>Project Delay Risk:</strong> Large-scale plant construction projects always carry the risk of delays and cost overruns.' },
+        bear_content_li4: { ja: '<strong>地政学リスク:</strong> 世界中で事業を展開しているため、特定の地域での政治的な不安定さがサプライチェーンに影響する可能性。', en: '<strong>Geopolitical Risk:</strong> Operating globally, political instability in certain regions could impact the supply chain.' },
+        outlook_title: { ja: 'リンデの未来は？', en: 'What is Linde\'s Future?' },
+        outlook_p: { ja: 'リンデの未来は、世界的な脱炭素化の流れをいかにビジネスチャンスに変えるかにかかっています。クリーン水素と二酸化炭素回収・貯留（CCS）の分野で、主導的な役割を担うことを目指します。', en: 'Linde\'s future depends on how it can turn the global trend of decarbonization into a business opportunity. It aims to play a leading role in clean hydrogen and carbon capture and storage (CCS).' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: '半導体やヘルスケアなど、景気変動に強い分野での成長を加速。規律ある資本配分を継続し、自社株買いと増配を通じて株主還元を強化します。', en: 'Accelerate growth in resilient sectors like electronics and healthcare. Continue disciplined capital allocation and enhance shareholder returns through buybacks and dividend increases.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: '世界各地でクリーン水素プロジェクトを本格化させ、水素社会のインフラを構築。製鉄や化学プラントから排出されるCO2を回収するCCS事業を新たな収益の柱に育てます。', en: 'Launch full-scale clean hydrogen projects worldwide to build the infrastructure for a hydrogen society. Develop the CCS business of capturing CO2 from steel and chemical plants into a new pillar of profit.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'リンデは、ポートフォリオの安定性を高めるコア銘柄として魅力的です。長期的な視点で、脱炭素化という巨大なテーマに乗る投資戦略が考えられます。', en: 'Linde is attractive as a core holding to enhance portfolio stability. A long-term investment strategy capitalizing on the massive theme of decarbonization is conceivable.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: 'マクロ経済指標に注目', en: 'Focus on Macroeconomic Indicators' },
+        strategy_res_short_p: { ja: '株価は製造業PMIなど、世界経済の先行指標に影響されやすい。短期的な取引は、これらの指標の変動を予測するゲームになります。', en: 'The stock price is sensitive to leading economic indicators like the Manufacturing PMI. Short-term trading becomes a game of predicting these fluctuations.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: 'プロジェクトの進捗を追う', en: 'Track Project Progress' },
+        strategy_res_medium_p: { ja: '大規模な水素プロジェクトやCCSプロジェクトの受注・稼働が、中期的な成長期待を高めます。決算発表での受注残高（バックログ）の推移が重要です。', en: 'Orders and commissioning of large-scale hydrogen and CCS projects will boost mid-term growth expectations. The trend in the order backlog announced at earnings is crucial.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: '配当再投資で複利を狙う', en: 'Aim for Compounding with Dividend Reinvestment' },
+        strategy_res_long_p: { ja: '短期的な景気サイクルは気にせず、寡占市場での支配的な地位と、脱炭素化という長期トレンドを信じて保有。配当貴族銘柄として、配当再投資で着実に資産を増やすのに適しています。', en: 'Hold for the long term, ignoring short-term economic cycles and trusting in its dominant position in an oligopolistic market and the long-term trend of decarbonization. As a dividend aristocrat, it is suitable for steadily growing assets through dividend reinvestment.' },
+        footer_copyright: { ja: '&copy; 2025 Linde plc Investor Dashboard. All rights reserved.', en: '&copy; 2025 Linde plc Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                el.innerHTML = translations[key][lang];
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_lin[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-blue-400 animate-pop-in"><h3 class="font-bold text-blue-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [400, 410, 405, 420, 430, 425, 435, 440, 438, 445, 450, 442], borderColor: '#005596', backgroundColor: 'rgba(0, 85, 150, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [328, 335, 345], backgroundColor: '#005596', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [55, 65, 72], borderColor: '#00A1DE', backgroundColor: '#00A1DE', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['グローバル展開', 'オペレーション効率', '収益性', '技術力(水素)', '安定性'], datasets: [ { label: 'リンデ', data: [95, 92, 94, 90, 96], backgroundColor: 'rgba(0, 85, 150, 0.2)', borderColor: 'rgba(0, 85, 150, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(0, 85, 150, 1)' }, { label: '競合他社 (平均)', data: [90, 88, 85, 82, 90], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target > 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target > 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-blue-500', 'text-blue-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-blue-500', 'text-blue-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-blue-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-blue-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="page_title">【ウェルズ・ファーゴ版】復活を目指す金融の巨人！投資家向けダッシュボード</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to Wells Fargo's red and gold theme
+                        primary: '#D71E28', // Wells Fargo Red
+                        secondary: '#F5B300', // Wells Fargo Gold
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: WFC Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #F5B300, #D71E28); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #D71E28; }
+        /* END: WFC Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #D71E28; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html">
+                        <img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10">
+                    </a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">本日の市況分析</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50">
+                        <i class="ri-user-line"></i>
+                        <span data-lang="login">ログイン</span>
+                    </button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: WFC Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-yellow-50 to-red-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-red-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">W</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Wells Fargo & Company</span>
+                        <span class="text-sm font-semibold text-slate-500">NYSE: WFC</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: WFC Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: WFC Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    信頼回復への道を歩む金融の巨人、<br>
+                    <span class="gradient-text">ウェルズ・ファーゴ</span>の再起
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    米国4大銀行の一角「ウェルズ・ファーゴ」。過去の不祥事を乗り越え、変革を進める伝統的金融機関の現在地と、投資価値を徹底分析します。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-red-50 to-yellow-50 border-red-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「バリュー株投資の好機？」変革期の巨大銀行、ウェルズ・ファーゴを理解する</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「ウェルズ・ファーゴ」は、米国全土に広範な支店網を持つ、アメリカを代表する大手商業銀行です。個人向けのリテールバンキングと、中小企業向けのビジネスバンキングに強みを持ち、米国の実体経済と深く結びついています。</p>
+                    <p data-lang="intro_card_p2">2016年に発覚した不正営業問題以降、長らく厳しい規制下にありましたが、新CEOのもとで大規模なコスト削減とリスク管理体制の強化を断行。例えるなら、<strong class="text-red-700">過去の過ちを反省し、贅肉をそぎ落として、より筋肉質で健全な優良企業へと生まれ変わろうとしている巨人</strong>なのです。</p>
+                    <p data-lang="intro_card_p3">このページでは、「ウェルズ・ファーゴの収益構造は？」「規制解除のインパクトは？」「競合と比べて割安なのか？」といった、投資家が今知りたい疑問に答えます。復活を期す金融の巨人が秘めるポテンシャルを、一緒に探っていきましょう。</p>
+                </div>
+            </div>
+            <!-- END: WFC Content Changes - Hero Section -->
+
+            <!-- START: WFC Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">コスト削減と金利上昇が追い風。株価は回復基調へ</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">徹底した経費削減と、高金利環境による利ざやの改善が業績を押し上げています。規制当局による資産上限キャップの解除への期待も、株価の回復を後押ししています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="59.80">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="21.5">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="0.21">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="12">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: WFC Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: WFC Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">ウェルズ・ファーゴって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">米国の個人・中小企業に深く根差した商業銀行業務を中核としつつ、富裕層向けウェルス・マネジメントや投資銀行業務も手掛ける、総合金融サービス企業です。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える4つの事業部門</h3>
+                <div class="grid md:grid-cols-4 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 20H3V11.157C3.4168 11.0544 3.8464 11 4.28571 11H19.7143C20.1536 11 20.5832 11.0544 21 11.157V20ZM3 9.14286V4H21V9.14286C20.284 9.5543 19.716 10 19.2857 10H4.71429C4.284 10 3.716 9.5543 3 9.14286Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_consumer_title">個人・中小企業</h4>
+                        <p class="text-slate-600" data-lang="core_consumer_p">預金、住宅ローン、クレジットカードなど。全米に広がる支店網が強みの最大収益部門。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 17H22V19H21V17ZM21 13H22V15H21V13ZM21 9H22V11H21V9ZM21 5H22V7H21V5ZM2 19H20V21H2V19ZM2 3H20V5H2V3Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_commercial_title">商業銀行</h4>
+                        <p class="text-slate-600" data-lang="core_commercial_p">中堅・大企業向けの融資や資金管理サービス。米国の実体経済との強固な関係が特徴。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C15.3137 2 18 4.68629 18 8C18 11.3137 15.3137 14 12 14C8.68629 14 6 11.3137 6 8C6 4.68629 8.68629 2 12 2ZM12 16C17.5228 16 22 18.2386 22 21V22H2V21C2 18.2386 6.47715 16 12 16Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_wealth_title">ウェルス・投資管理</h4>
+                        <p class="text-slate-600" data-lang="core_wealth_p">富裕層向けの資産運用アドバイスやプライベートバンクサービス。安定した手数料収入が魅力。</p>
+                    </div>
+                     <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 11C10.8954 11 10 10.1046 10 9C10 7.89543 10.8954 7 12 7C13.1046 7 14 7.89543 14 9C14 10.1046 13.1046 11 12 11ZM12 13C14.2091 13 16 14.7909 16 17H8C8 14.7909 9.79086 13 12 13Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_corp_title">法人・投資銀行</h4>
+                        <p class="text-slate-600" data-lang="core_corp_p">大企業向けのM&Aアドバイザリーや資金調達支援。近年、強化を進めている成長分野。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">ウェルズ・ファーゴの強みは、全米に広がる強固な顧客基盤と、コスト削減による高い収益性です。競合のJPモルガンやバンク・オブ・アメリカと比べて、株価が割安に評価されている点も投資家にとって魅力的です。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: WFC Content Changes - Business Section -->
+
+        <!-- START: WFC Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">コスト削減努力が実を結び、利益率が改善。高金利環境も追い風となり、純金利収入が増加しています。株主への還元も積極的に行われています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$825億</p>
+                        <p class="text-base font-semibold text-red-600" data-lang="stat_revenue_growth">前年比 +4.1%</p>
+                    </div>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">効率性比率
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">銀行の収益性を示す指標。経費を収益で割って算出され、低いほど効率的な経営を意味する。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">65%</p>
+                        <p class="text-base font-semibold text-yellow-600" data-lang="stat_margin_desc">コスト削減で改善傾向</p>
+                    </div>
+                    <div class="bg-orange-50 border-l-4 border-orange-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_dividend_yield">配当利回り</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">2.34%</p>
+                        <p class="text-base font-semibold text-orange-600" data-lang="stat_dividend_yield_desc">安定した株主還元</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: WFC Content Changes - Financials Section -->
+        
+        <!-- START: WFC Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">「割安なバリュー株」として注目されるウェルズ・ファーゴ。規制解除による成長再開への期待と、景気後退への懸念が交錯する中、投資判断が分かれています。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-red-500 text-red-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: WFC Content Changes - Thesis Section -->
+
+        <!-- START: WFC Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">ウェルズ・ファーゴの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">ウェルズ・ファーゴの未来は、過去の不祥事から完全に脱却し、規制当局からの信頼を回復できるかにかかっています。コスト効率の高い、よりスリムで強力な銀行への変革を目指します。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-red-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-red-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">FRBによる資産上限キャップの解除が最大の焦点。実現すれば、貸出の拡大や自社株買いの増加が可能となり、株価の大きなカタリストになります。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-red-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">デジタルバンキングへの投資を強化し、若年層の顧客を獲得。ウェルス・マネジメントや投資銀行部門を強化し、商業銀行業務への依存度を下げ、収益源を多様化させます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: WFC Content Changes - Outlook Section -->
+
+        <!-- START: WFC Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">ウェルズ・ファーゴは、典型的なバリュー（割安）株であり、景気敏感株。会社の変革と規制解除のストーリーを信じ、景気回復局面を狙う投資家に適しています。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-red-100 text-red-800 font-bold py-3 px-6 rounded-lg hover:bg-red-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: WFC Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: WFC Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Wells Fargo & Company Investor Dashboard. All rights reserved.</p>
+            <!-- END: WFC Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        // Navigation
+        nav_today: { ja: '本日の市況分析', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        // Page title
+        page_title: { ja: '【ウェルズ・ファーゴ版】復活を目指す金融の巨人！投資家向けダッシュボード', en: '[Wells Fargo Edition] Financial Giant Seeking Revival! Investor Dashboard' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: '信頼回復への道を歩む金融の巨人、<br><span class="gradient-text">ウェルズ・ファーゴ</span>の再起', en: 'The Financial Giant on the Road to Recovery,<br>The Resurgence of <span class="gradient-text">Wells Fargo</span>' },
+        hero_subtitle: { ja: '米国4大銀行の一角「ウェルズ・ファーゴ」。過去の不祥事を乗り越え、変革を進める伝統的金融機関の現在地と、投資価値を徹底分析します。', en: 'One of America\'s "Big Four" banks, "Wells Fargo." We thoroughly analyze the current state and investment value of this traditional financial institution as it overcomes past scandals and pushes for transformation.' },
+        intro_card_title: { ja: '「バリュー株投資の好機？」変革期の巨大銀行、ウェルズ・ファーゴを理解する', en: '"An Opportunity for Value Investing?" Understanding the Giant Bank in a Time of Transformation' },
+        intro_card_p1: { ja: '「ウェルズ・ファーゴ」は、米国全土に広範な支店網を持つ、アメリカを代表する大手商業銀行です。個人向けのリテールバンキングと、中小企業向けのビジネスバンキングに強みを持ち、米国の実体経済と深く結びついています。', en: '"Wells Fargo" is a leading American commercial bank with an extensive branch network across the United States. It has strengths in retail banking for individuals and business banking for small and medium-sized enterprises, deeply connecting it to the real U.S. economy.' },
+        intro_card_p2: { ja: '2016年に発覚した不正営業問題以降、長らく厳しい規制下にありましたが、新CEOのもとで大規模なコスト削減とリスク管理体制の強化を断行。例えるなら、<strong class="text-red-700">過去の過ちを反省し、贅肉をそぎ落として、より筋肉質で健全な優良企業へと生まれ変わろうとしている巨人</strong>なのです。', en: 'After the sales practices scandal that came to light in 2016, the bank was under strict regulatory scrutiny for a long time. However, under a new CEO, it has undertaken massive cost reductions and strengthened its risk management framework. It\'s like a <strong class="text-red-700">giant reflecting on its past mistakes, trimming the fat, and striving to be reborn as a leaner, healthier, blue-chip company.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「ウェルズ・ファーゴの収益構造は？」「規制解除のインパクトは？」「競合と比べて割安なのか？」といった、投資家が今知りたい疑問に答えます。復活を期す金融の巨人が秘めるポテンシャルを、一緒に探っていきましょう。', en: 'This page answers the questions that investors want to know now, such as "What is Wells Fargo\'s revenue structure?", "What is the impact of lifting regulatory caps?", and "Is it undervalued compared to its competitors?". Let\'s explore the potential of this financial giant aiming for a comeback.' },
+        growth_title: { ja: 'コスト削減と金利上昇が追い風。株価は回復基調へ', en: 'Cost Cutting and Rising Interest Rates Provide Tailwinds. Stock on a Recovery Path' },
+        growth_p: { ja: '徹底した経費削減と、高金利環境による利ざやの改善が業績を押し上げています。規制当局による資産上限キャップの解除への期待も、株価の回復を後押ししています。', en: 'Thorough expense reduction and improved net interest margins from the high-interest-rate environment are boosting performance. Expectations for the lifting of the asset cap by regulators are also supporting the stock\'s recovery.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'ウェルズ・ファーゴって、どんな会社？', en: 'What Kind of Company is Wells Fargo?' },
+        business_p: { ja: '米国の個人・中小企業に深く根差した商業銀行業務を中核としつつ、富裕層向けウェルス・マネジメントや投資銀行業務も手掛ける、総合金融サービス企業です。', en: 'A diversified financial services company with a core in commercial banking deeply rooted in U.S. individuals and small businesses, while also offering wealth management for the affluent and investment banking services.' },
+        core_business_title: { ja: 'ビジネスを支える4つの事業部門', en: 'Four Business Segments Supporting the Business' },
+        core_consumer_title: { ja: '個人・中小企業', en: 'Consumer & Small Business' },
+        core_consumer_p: { ja: '預金、住宅ローン、クレジットカードなど。全米に広がる支店網が強みの最大収益部門。', en: 'Deposits, home loans, credit cards, etc. The largest revenue segment, strengthened by a nationwide branch network.' },
+        core_commercial_title: { ja: '商業銀行', en: 'Commercial Banking' },
+        core_commercial_p: { ja: '中堅・大企業向けの融資や資金管理サービス。米国の実体経済との強固な関係が特徴。', en: 'Lending and treasury management for middle-market and large corporations. Characterized by strong relationships with the real U.S. economy.' },
+        core_wealth_title: { ja: 'ウェルス・投資管理', en: 'Wealth & Investment' },
+        core_wealth_p: { ja: '富裕層向けの資産運用アドバイスやプライベートバンクサービス。安定した手数料収入が魅力。', en: 'Asset management advice and private banking for high-net-worth individuals. Attractive for its stable fee income.' },
+        core_corp_title: { ja: '法人・投資銀行', en: 'Corporate & Investment' },
+        core_corp_p: { ja: '大企業向けのM&Aアドバイザリーや資金調達支援。近年、強化を進めている成長分野。', en: 'M&A advisory and capital raising support for large corporations. A growth area the company has been strengthening in recent years.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'ウェルズ・ファーゴの強みは、全米に広がる強固な顧客基盤と、コスト削減による高い収益性です。競合のJPモルガンやバンク・オブ・アメリカと比べて、株価が割安に評価されている点も投資家にとって魅力的です。', en: 'Wells Fargo\'s strengths are its solid nationwide customer base and high profitability from cost-cutting. Its relatively low valuation compared to competitors like JPMorgan and Bank of America is also attractive to investors.' },
+        chart_competitor_label_wfc: { ja: 'ウェルズ・ファーゴ', en: 'Wells Fargo' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['顧客基盤(個人)', '収益性(効率性)', 'ブランド信頼度', '成長性', 'バリュエーション'], en: ['Consumer Base', 'Profitability (Efficiency)', 'Brand Trust', 'Growth', 'Valuation'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: 'コスト削減努力が実を結び、利益率が改善。高金利環境も追い風となり、純金利収入が増加しています。株主への還元も積極的に行われています。', en: 'Cost-cutting efforts are paying off, improving profit margins. The high-interest-rate environment is also a tailwind, increasing net interest income. The company is also actively returning capital to shareholders.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +4.1%', en: '+4.1% YoY' },
+        stat_margin: { ja: '効率性比率', en: 'Efficiency Ratio' },
+        stat_margin_tooltip: { ja: '銀行の収益性を示す指標。経費を収益で割って算出され、低いほど効率的な経営を意味する。', en: 'A measure of a bank\'s profitability. Calculated by dividing expenses by revenue, a lower ratio indicates more efficient management.' },
+        stat_margin_desc: { ja: 'コスト削減で改善傾向', en: 'Improving due to cost cuts' },
+        stat_dividend_yield: { ja: '配当利回り', en: 'Dividend Yield' },
+        stat_dividend_yield_desc: { ja: '安定した株主還元', en: 'Stable Shareholder Returns' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: '「割安なバリュー株」として注目されるウェルズ・ファーゴ。規制解除による成長再開への期待と、景気後退への懸念が交錯する中、投資判断が分かれています。', en: 'Viewed as an attractive "value stock," Wells Fargo is at a crossroads where expectations for renewed growth from regulatory relief and concerns about a recession intersect, leading to divided investment opinions.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「見直される」理由', en: 'Why This Stock Could Be "Re-evaluated"' },
+        bull_content_li1: { ja: '<strong>資産上限キャップの解除:</strong> FRBによる規制が解除されれば、貸出を増やし、年間数十億ドルの追加利益を生む可能性がある。', en: '<strong>Lifting of the Asset Cap:</strong> If the Fed\'s restriction is lifted, it could expand lending and generate billions in additional annual profit.' },
+        bull_content_li2: { ja: '<strong>コスト削減効果:</strong> 新経営陣による徹底したコスト削減が利益率を押し上げ、収益性を高めている。', en: '<strong>Cost-Cutting Benefits:</strong> Aggressive cost reductions by the new management are boosting profit margins and enhancing profitability.' },
+        bull_content_li3: { ja: '<strong>魅力的な株主還元:</strong> 競合と比べて高い配当利回りと、積極的な自社株買いが株価を下支えする。', en: '<strong>Attractive Shareholder Returns:</strong> A higher dividend yield compared to peers and aggressive share buybacks support the stock price.' },
+        bull_content_li4: { ja: '<strong>割安なバリュエーション:</strong> 過去の不祥事の影響で、株価は同業他社に比べて割安な水準に留まっている。', en: '<strong>Undervalued Valuation:</strong> Due to the impact of past scandals, the stock remains at a discounted valuation compared to its peers.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>規制解除の不確実性:</strong> 資産上限キャップの解除時期は依然として不透明であり、期待が先行しすぎている可能性。', en: '<strong>Uncertainty of Regulatory Relief:</strong> The timing of the asset cap lift remains uncertain, and expectations may be running too high.' },
+        bear_content_li2: { ja: '<strong>景気後退リスク:</strong> 景気が悪化すれば、貸倒損失が増加し、銀行の収益を直接圧迫する。', en: '<strong>Recession Risk:</strong> An economic downturn would increase loan losses, directly pressuring the bank\'s earnings.' },
+        bear_content_li3: { ja: '<strong>ブランドイメージ:</strong> 過去の不祥事によるブランドイメージの毀損から完全に回復するには、まだ時間が必要。', en: '<strong>Brand Image:</strong> It will still take time to fully recover from the brand damage caused by past scandals.' },
+        bear_content_li4: { ja: '<strong>金利低下リスク:</strong> FRBが利下げに転じれば、銀行の収益の柱である純金利マージンが縮小する。', en: '<strong>Falling Interest Rate Risk:</strong> If the Fed begins to cut rates, the bank\'s net interest margin, a key pillar of profit, will shrink.' },
+        outlook_title: { ja: 'ウェルズ・ファーゴの未来は？', en: 'What is Wells Fargo\'s Future?' },
+        outlook_p: { ja: 'ウェルズ・ファーゴの未来は、過去の不祥事から完全に脱却し、規制当局からの信頼を回復できるかにかかっています。コスト効率の高い、よりスリムで強力な銀行への変革を目指します。', en: 'Wells Fargo\'s future depends on its ability to fully move past its scandals and regain the trust of regulators. It aims to transform into a more streamlined, powerful, and cost-efficient bank.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: 'FRBによる資産上限キャップの解除が最大の焦点。実現すれば、貸出の拡大や自社株買いの増加が可能となり、株価の大きなカタリストになります。', en: 'The lifting of the Fed\'s asset cap is the main focus. If achieved, it would allow for loan growth and increased share buybacks, serving as a major catalyst for the stock.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'デジタルバンキングへの投資を強化し、若年層の顧客を獲得。ウェルス・マネジメントや投資銀行部門を強化し、商業銀行業務への依存度を下げ、収益源を多様化させます。', en: 'Strengthen investment in digital banking to attract younger customers. Enhance the wealth management and investment banking divisions to reduce reliance on commercial banking and diversify revenue streams.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'ウェルズ・ファーゴは、典型的なバリュー（割安）株であり、景気敏感株。会社の変革と規制解除のストーリーを信じ、景気回復局面を狙う投資家に適しています。', en: 'Wells Fargo is a classic value and cyclical stock. It is suitable for investors who believe in the company\'s turnaround story and regulatory relief, aiming to capitalize on an economic recovery.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: '規制当局のニュースが全て', en: 'It\'s All About Regulatory News' },
+        strategy_res_short_p: { ja: '短期的な株価は、資産上限キャップの解除に関するニュースや噂で大きく動きます。FRB関係者の発言や報道に注意を払う必要があります。', en: 'The short-term stock price will be heavily influenced by news and rumors regarding the lifting of the asset cap. Pay close attention to statements from Fed officials and news reports.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '金利の方向性を見極める', en: 'Determine the Direction of Interest Rates' },
+        strategy_res_medium_p: { ja: '金利が高止まり、または緩やかに低下する環境は、銀行にとって追い風です。景気がソフトランディングし、金利が急低下しないシナリオが理想的です。', en: 'An environment where interest rates remain high or decline slowly is favorable for banks. A soft landing for the economy, without a sharp drop in rates, is the ideal scenario.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: '変革の果実を待つ', en: 'Wait for the Fruits of Transformation' },
+        strategy_res_long_p: { ja: '短期的な金利や規制のニュースは気にせず、経営改革が完了し、ウェルズ・ファーゴが本来の収益力を取り戻す未来に投資。割安な今が仕込み時と考える戦略です。', en: 'A strategy to invest in the future when management reforms are complete and Wells Fargo regains its original earning power, ignoring short-term news on rates and regulations. Considers the current discount an opportunity to buy.' },
+        footer_copyright: { ja: '&copy; 2025 Wells Fargo & Company Investor Dashboard. All rights reserved.', en: '&copy; 2025 Wells Fargo & Company Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                if (el.tagName === 'TITLE') {
+                    el.textContent = translations[key][lang];
+                } else {
+                    el.innerHTML = translations[key][lang];
+                }
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_wfc[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-red-400 animate-pop-in"><h3 class="font-bold text-red-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [45, 42, 40, 48, 50, 52, 55, 58, 60, 59, 62, 60], borderColor: '#D71E28', backgroundColor: 'rgba(215, 30, 40, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [785, 820, 840], backgroundColor: '#D71E28', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [191, 205, 220], borderColor: '#F5B300', backgroundColor: '#F5B300', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['顧客基盤(個人)', '収益性(効率性)', 'ブランド信頼度', '成長性', 'バリュエーション'], datasets: [ { label: 'ウェルズ・ファーゴ', data: [92, 85, 70, 75, 90], backgroundColor: 'rgba(215, 30, 40, 0.2)', borderColor: 'rgba(215, 30, 40, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(215, 30, 40, 1)' }, { label: '競合他社 (平均)', data: [88, 82, 85, 80, 80], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target > 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target > 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-red-500', 'text-red-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-red-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>
