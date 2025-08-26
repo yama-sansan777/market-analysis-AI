@@ -48,6 +48,8 @@
         .tab-button:not(.active):hover { background-color: #f9fafb; border-color: #d1d5db; color: #374151; transform: translateY(-2px); }
         .tab-button.active { border-color: #4338ca; color: #4338ca; background-color: #eef2ff; font-weight: 700; }
         .font-pacifico { font-family: 'Pacifico', cursive; }
+        .translate-loading { opacity: 0; transition: opacity 0.3s ease-in-out; }
+        .translate-loaded { opacity: 1; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -57,8 +59,8 @@
 <div class="flex items-center justify-between">
 <div class="flex items-center space-x-8">
 <a href="/"><img src="/image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
-<nav class="hidden md:flex space-x-6">
-<a href="/" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_today">本日の市況分析</a>
+<nav class="hidden md:flex space-x-6 opacity-0 translate-loading" id="main-nav">
+<a href="/" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_today">AI市況予報</a>
 <a href="/archive/" class="text-gray-600 hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
 <a href="/indicators/" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
 <a href="/terms/" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
@@ -88,9 +90,9 @@
 </header>
 
 <!-- Mobile Menu -->
-<div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-200">
+<div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-200 opacity-0 translate-loading">
     <div class="px-4 py-2 space-y-1">
-        <a href="/" class="block py-2 text-primary font-medium" data-lang="nav_today">本日の市況分析</a>
+        <a href="/" class="block py-2 text-primary font-medium" data-lang="nav_today">AI市況予報</a>
         <a href="/archive/" class="block py-2 text-gray-600 hover:text-primary" data-lang="nav_archive">分析アーカイブ</a>
         <a href="/indicators/" class="block py-2 text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
         <a href="/terms/" class="block py-2 text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
@@ -309,6 +311,20 @@
         if (window.initLanguage) {
             initLanguage();
         }
+        
+        // Show navigation after translations are loaded
+        setTimeout(() => {
+            const mainNav = document.getElementById('main-nav');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mainNav) {
+                mainNav.classList.remove('translate-loading');
+                mainNav.classList.add('translate-loaded');
+            }
+            if (mobileMenu) {
+                mobileMenu.classList.remove('translate-loading');
+                mobileMenu.classList.add('translate-loaded');
+            }
+        }, 100);
         
         // Mobile menu toggle
         document.getElementById('mobile-menu-button').addEventListener('click', () => {
