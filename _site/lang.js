@@ -5,7 +5,7 @@ let currentLang = localStorage.getItem('language') || 'ja';
 const translations = {
     ja: {
         // Navigation
-        nav_today: '本日の市況分析',
+        nav_today: 'AI市況予報',
         nav_archive: '分析アーカイブ',
         nav_indicators: 'テクニカル指標解説',
         nav_terms: '市場用語集',
@@ -152,7 +152,7 @@ const translations = {
         
         // Site Navigation section
         site_navigation_title: 'サイトナビゲーション',
-        nav_today_analysis_title: '本日の市況分析',
+        nav_today_analysis_title: 'AI市況予報',
         nav_today_analysis_desc: '最新の市場分析レポート',
         nav_archive_title: '分析アーカイブ',
         nav_archive_desc: '過去の市場分析レポート',
@@ -743,7 +743,7 @@ const translations = {
         // Footer section
         footer_company_name: '株式会社BizRom東京',
         footer_company_desc: '日本の短期株式トレーダー向けに、信頼性の高い市場分析を毎日2回配信するプロフェッショナルサービス',
-        footer_todays_analysis: '本日の市況分析',
+        footer_todays_analysis: 'AI市況予報',
         footer_analysis_archive: '分析アーカイブ',
         footer_technical_indicators: 'テクニカル指標解説',
         footer_market_glossary: '市場用語集',
@@ -765,7 +765,7 @@ const translations = {
     },
     en: {
         // Navigation
-        nav_today: 'Today\'s Market Analysis',
+        nav_today: 'AI Market Forecast',
         nav_archive: 'Analysis Archive',
         nav_indicators: 'Technical Indicators',
         nav_terms: 'Market Terms',
@@ -912,7 +912,7 @@ const translations = {
         
         // Site Navigation section
         site_navigation_title: 'Site Navigation',
-        nav_today_analysis_title: 'Today\'s Market Analysis',
+        nav_today_analysis_title: 'AI Market Forecast',
         nav_today_analysis_desc: 'Latest market analysis report',
         nav_archive_title: 'Analysis Archive',
         nav_archive_desc: 'Past market analysis reports',
@@ -1503,7 +1503,7 @@ const translations = {
         // Footer section
         footer_company_name: 'BizRom Tokyo Co., Ltd.',
         footer_company_desc: 'Professional service providing reliable market analysis twice daily for short-term Japanese stock traders',
-        footer_todays_analysis: 'Today\'s Market Analysis',
+        footer_todays_analysis: 'AI Market Forecast',
         footer_analysis_archive: 'Analysis Archive',
         footer_technical_indicators: 'Technical Indicators Guide',
         footer_market_glossary: 'Market Glossary',
