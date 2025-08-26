@@ -67,6 +67,10 @@ function initializeMobileMenu() {
     const mobileMenu = document.getElementById('mobile-menu');
     
     if (mobileMenuButton && mobileMenu) {
+        // とにかく見える状態を初期化（visibility隠し対策）
+        mobileMenu.style.visibility = 'visible';
+        // display は Tailwind の hidden クラスで制御する
+        
         // 重複防止: 既存のイベントリスナーを削除
         const newButton = mobileMenuButton.cloneNode(true);
         mobileMenuButton.parentNode.replaceChild(newButton, mobileMenuButton);
@@ -75,7 +79,14 @@ function initializeMobileMenu() {
         newButton.addEventListener('click', () => {
             const menu = document.getElementById('mobile-menu');
             if (menu) {
+                const willShow = menu.classList.contains('hidden');
                 menu.classList.toggle('hidden');
+                // 念のため visibility も制御（他スタイルの影響を排除）
+                menu.style.visibility = willShow ? 'visible' : 'hidden';
+                // display の直接制御は避けるが、hidden が外れても display: none が残っていた場合の保険
+                if (willShow) {
+                    menu.style.display = '';
+                }
             }
         });
         
