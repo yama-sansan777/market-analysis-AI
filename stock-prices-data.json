@@ -1,0 +1,272 @@
+[
+  {
+    "file": "blk.html",
+    "ticker": "BLK",
+    "name": "blk",
+    "currentPrice": 1125.86,
+    "ytdReturn": 33,
+    "marketCap": 0.18,
+    "peRatio": 15,
+    "hasChart": true
+  },
+  {
+    "file": "cost.html",
+    "ticker": "COST",
+    "name": "cost",
+    "currentPrice": 870.5,
+    "ytdReturn": 31.2,
+    "marketCap": 0.38,
+    "peRatio": 53,
+    "hasChart": true
+  },
+  {
+    "file": "meta.html",
+    "ticker": "META",
+    "name": "meta",
+    "currentPrice": 755,
+    "ytdReturn": 40.2,
+    "marketCap": 1.9,
+    "peRatio": 27,
+    "hasChart": true
+  },
+  {
+    "file": "lilly.html",
+    "ticker": "LILLY",
+    "name": "lilly",
+    "currentPrice": 711.68,
+    "ytdReturn": 28.5,
+    "marketCap": 0.64,
+    "peRatio": 45,
+    "hasChart": true
+  },
+  {
+    "file": "microsoft.html",
+    "ticker": "MICROSOFT",
+    "name": "microsoft",
+    "currentPrice": 504.24,
+    "ytdReturn": 22,
+    "marketCap": 3.75,
+    "peRatio": 35,
+    "hasChart": true
+  },
+  {
+    "file": "gs.html",
+    "ticker": "GS",
+    "name": "gs",
+    "currentPrice": 460.25,
+    "ytdReturn": 20.5,
+    "marketCap": 0.14,
+    "peRatio": 17,
+    "hasChart": true
+  },
+  {
+    "file": "lin.html",
+    "ticker": "LIN",
+    "name": "lin",
+    "currentPrice": 442.3,
+    "ytdReturn": 7.5,
+    "marketCap": 0.21,
+    "peRatio": 32,
+    "hasChart": true
+  },
+  {
+    "file": "crwd.html",
+    "ticker": "CRWD",
+    "name": "crwd",
+    "currentPrice": 419.17,
+    "ytdReturn": 45,
+    "marketCap": 0.11,
+    "peRatio": 85,
+    "hasChart": true
+  },
+  {
+    "file": "hd.html",
+    "ticker": "HD",
+    "name": "hd",
+    "currentPrice": 400.57,
+    "ytdReturn": 5.5,
+    "marketCap": 0.4,
+    "peRatio": 24,
+    "hasChart": true
+  },
+  {
+    "file": "etn.html",
+    "ticker": "ETN",
+    "name": "etn",
+    "currentPrice": 330.15,
+    "ytdReturn": 40.2,
+    "marketCap": 0.13,
+    "peRatio": 38,
+    "hasChart": true
+  },
+  {
+    "file": "avgo.html",
+    "ticker": "AVGO",
+    "name": "avgo",
+    "currentPrice": 294,
+    "ytdReturn": 72,
+    "marketCap": 1.22,
+    "peRatio": 28,
+    "hasChart": true
+  },
+  {
+    "file": "dhr.html",
+    "ticker": "DHR",
+    "name": "dhr",
+    "currentPrice": 255.8,
+    "ytdReturn": 7.2,
+    "marketCap": 0.19,
+    "peRatio": 42,
+    "hasChart": true
+  },
+  {
+    "file": "crm.html",
+    "ticker": "CRM",
+    "name": "crm",
+    "currentPrice": 248.29,
+    "ytdReturn": 9.6,
+    "marketCap": 0.24,
+    "peRatio": 50,
+    "hasChart": true
+  },
+  {
+    "file": "amazon.html",
+    "ticker": "AMAZON",
+    "name": "amazon",
+    "currentPrice": 228.84,
+    "ytdReturn": 18.5,
+    "marketCap": 2.15,
+    "peRatio": 45,
+    "hasChart": true
+  },
+  {
+    "file": "apple.html",
+    "ticker": "APPLE",
+    "name": "Apple Inc. (AAPL) 企業分析",
+    "currentPrice": 227,
+    "ytdReturn": 12.5,
+    "marketCap": 3.35,
+    "peRatio": 33,
+    "hasChart": true
+  },
+  {
+    "file": "hon.html",
+    "ticker": "HON",
+    "name": "hon",
+    "currentPrice": 216.74,
+    "ytdReturn": 12,
+    "marketCap": 0.15,
+    "peRatio": 25,
+    "hasChart": true
+  },
+  {
+    "file": "panw.html",
+    "ticker": "PANW",
+    "name": "panw",
+    "currentPrice": 185.34,
+    "ytdReturn": 28.5,
+    "marketCap": 0.12,
+    "peRatio": 220,
+    "hasChart": true
+  },
+  {
+    "file": "gev.html",
+    "ticker": "GEV",
+    "name": "gev",
+    "currentPrice": 175.5,
+    "ytdReturn": 25,
+    "marketCap": 0.047,
+    "peRatio": 38,
+    "hasChart": true
+  },
+  {
+    "file": "nvidia.html",
+    "ticker": "NVIDIA",
+    "name": "【NVIDIA版】AI革命の王様！投資家向けダッシュボード</title>\r\n    <script src=\"https://cdn.tailwindcss.com\"></script>\r\n    <script>\r\n        tailwind.config = {\r\n            theme: {\r\n                extend: {\r\n                    colors: {\r\n                        primary: '#2563EB',\r\n                        secondary: '#DC2626',\r\n                        bullish: '#10b981',\r\n                        bearish: '#ef4444',\r\n                        neutral: '#6b7280',\r\n                    },\r\n                    borderRadius: {\r\n                        'none': '0px',\r\n                        'sm': '4px',\r\n                        DEFAULT: '8px',\r\n                        'md': '12px',\r\n                        'lg': '16px',\r\n                        'xl': '20px',\r\n                        '2xl': '24px',\r\n                        '3xl': '32px',\r\n                        'full': '9999px',\r\n                        'button': '8px'\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    <script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>\r\n    <script src=\"https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js\"></script>\r\n    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\r\n    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\r\n    <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap\" rel=\"stylesheet\">\r\n    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css\">\r\n    <style>\r\n        body {\r\n            font-family: 'Inter', 'Noto Sans JP', sans-serif;\r\n            background-color: #F8FAFC;\r\n            color: #1E293B;\r\n        }\r\n        .gradient-text {\r\n            background: linear-gradient(to right, #14B8A6, #0D9488);\r\n            background-clip: text;\r\n            -webkit-background-clip: text;\r\n            -webkit-text-fill-color: transparent;\r\n        }\r\n        .nav-link {\r\n            position: relative;\r\n            transition: all 0.3s ease;\r\n            padding-bottom: 8px;\r\n        }\r\n        .nav-link::after {\r\n            content: '';\r\n            position: absolute;\r\n            bottom: 0;\r\n            left: 0;\r\n            width: 0;\r\n            height: 3px;\r\n            background-color: #14B8A6;\r\n            transition: width 0.3s ease;\r\n        }\r\n        .nav-link.active::after, .nav-link:hover::after {\r\n            width: 100%;\r\n        }\r\n        .card {\r\n            background-color: #FFFFFF;\r\n            border-radius: 1.5rem;\r\n            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);\r\n            transition: all 0.3s ease-in-out;\r\n            border: 1px solid #E2E8F0;\r\n        }\r\n        .card:hover {\r\n            transform: translateY(-8px);\r\n            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);\r\n        }\r\n        .fade-in-up {\r\n            opacity: 0;\r\n            transform: translateY(30px);\r\n            transition: opacity 0.6s ease-out, transform 0.6s ease-out;\r\n        }\r\n        .fade-in-up.visible {\r\n            opacity: 1;\r\n            transform: translateY(0);\r\n        }\r\n        .tooltip {\r\n            position: relative;\r\n            display: inline-block;\r\n            cursor: pointer;\r\n            border-bottom: 1px dotted #0D9488;\r\n        }\r\n        .tooltip .tooltiptext {\r\n            visibility: hidden;\r\n            width: 220px;\r\n            background-color: #262626;\r\n            color: #fff;\r\n            text-align: center;\r\n            border-radius: 6px;\r\n            padding: 8px;\r\n            position: absolute;\r\n            z-index: 1;\r\n            bottom: 125%;\r\n            left: 50%;\r\n            margin-left: -110px;\r\n            opacity: 0;\r\n            transition: opacity 0.3s;\r\n        }\r\n        .tooltip .tooltiptext::after {\r\n            content: \"\";\r\n            position: absolute;\r\n            top: 100%;\r\n            left: 50%;\r\n            margin-left: -5px;\r\n            border-width: 5px;\r\n            border-style: solid;\r\n            border-color: #262626 transparent transparent transparent;\r\n        }\r\n        .tooltip:hover .tooltiptext {\r\n            visibility: visible;\r\n            opacity: 1;\r\n        }\r\n    </style>\r\n</head>\r\n<body class=\"antialiased\">\r\n\r\n    <!-- Unified Header Menu -->\r\n    <header class=\"bg-white border-b border-gray-200\">\r\n        <div class=\"container mx-auto px-4 py-4\">\r\n            <div class=\"flex items-center justify-between\">\r\n                <div class=\"flex items-center space-x-8\">\r\n                    <a href=\"../../index.html\"><img src=\"../../image/logo.png\" alt=\"YOHOU US Stocks AI\" class=\"h-10\"></a>\r\n                    <nav class=\"hidden md:flex space-x-6 text-gray-600\">\r\n                        <a href=\"../../index.html\" class=\"hover:text-primary\" data-lang=\"nav_today\">本日の市況分析</a>\r\n                        <a href=\"../../pickup.html\" class=\"hover:text-primary\" data-lang=\"nav_pickup\">クレイマー保有銘柄</a>\r\n                        <a href=\"../../ipo.html\" class=\"text-gray-600 hover:text-primary\" data-lang=\"nav_ipo\">IPOスケジュール</a>\r\n                        <a href=\"../../indicators.html\" class=\"text-gray-600 hover:text-primary\" data-lang=\"nav_indicators\">テクニカル指標解説</a>\r\n                        <a href=\"../../terms.html\" class=\"text-gray-600 hover:text-primary\" data-lang=\"nav_terms\">市場用語集</a>\r\n                        <a href=\"../../about.html\" class=\"text-gray-600 hover:text-primary\" data-lang=\"nav_about\">サイトについて</a>\r\n                    </nav>\r\n                </div>\r\n                <div class=\"flex items-center space-x-1 md:space-x-4\">\r\n                    <button id=\"login-btn\" class=\"hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50\"><i class=\"ri-user-line\"></i><span data-lang=\"login\">ログイン</span></button>\r\n                    <button id=\"register-btn\" class=\"bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm\" data-lang=\"register\">無料登録</button>\r\n                    <div id=\"header-lang-switcher\" class=\"flex items-center space-x-2 mr-2 md:mr-4\">\r\n                        <button class=\"lang-btn\" data-lang=\"ja\">日本語</button>\r\n                        <span class=\"text-gray-400 text-xs\">",
+    "currentPrice": 174.98,
+    "ytdReturn": 130,
+    "marketCap": 4.27,
+    "peRatio": 65,
+    "hasChart": true
+  },
+  {
+    "file": "cof.html",
+    "ticker": "COF",
+    "name": "cof",
+    "currentPrice": 145.2,
+    "ytdReturn": 8.5,
+    "marketCap": 0.05,
+    "peRatio": 12,
+    "hasChart": true
+  },
+  {
+    "file": "tjx.html",
+    "ticker": "TJX",
+    "name": "tjx",
+    "currentPrice": 134,
+    "ytdReturn": 16.8,
+    "marketCap": 0.15,
+    "peRatio": 24,
+    "hasChart": true
+  },
+  {
+    "file": "abt.html",
+    "ticker": "ABT",
+    "name": "abt",
+    "currentPrice": 132,
+    "ytdReturn": 8,
+    "marketCap": 0.23,
+    "peRatio": 28,
+    "hasChart": true
+  },
+  {
+    "file": "dis.html",
+    "ticker": "DIS",
+    "name": "dis",
+    "currentPrice": 116.21,
+    "ytdReturn": 3.2,
+    "marketCap": 0.21,
+    "peRatio": 35,
+    "hasChart": true
+  },
+  {
+    "file": "dd.html",
+    "ticker": "DD",
+    "name": "dd",
+    "currentPrice": 85.2,
+    "ytdReturn": 5.5,
+    "marketCap": 0.035,
+    "peRatio": 25,
+    "hasChart": true
+  },
+  {
+    "file": "csco.html",
+    "ticker": "CSCO",
+    "name": "csco",
+    "currentPrice": 67.32,
+    "ytdReturn": 8.5,
+    "marketCap": 0.28,
+    "peRatio": 14,
+    "hasChart": true
+  },
+  {
+    "file": "wfc.html",
+    "ticker": "WFC",
+    "name": "wfc",
+    "currentPrice": 59.8,
+    "ytdReturn": 21.5,
+    "marketCap": 0.21,
+    "peRatio": 12,
+    "hasChart": true
+  },
+  {
+    "file": "ctra.html",
+    "ticker": "CTRA",
+    "name": "【コテラ・エナジー版】天然ガスの優良生産企業！投資家向けダッシュボード</title>\r\n    <!-- END: CTRA Content Changes - Title -->\r\n    <script src=\"https://cdn.tailwindcss.com\"></script>\r\n    <script>\r\n        tailwind.config = {\r\n            theme: {\r\n                extend: {\r\n                    colors: {\r\n                        // Primary color changed to a blue/green for Coterra Energy\r\n                        primary: '#005A8C', // Coterra Blue\r\n                        secondary: '#00A398', // Coterra Teal/Green\r\n                        bullish: '#10b981',\r\n                        bearish: '#ef4444',\r\n                        neutral: '#6b7280',\r\n                    },\r\n                    borderRadius: {\r\n                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',\r\n                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',\r\n                        'full': '9999px', 'button': '8px'\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    <script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>\r\n    <script src=\"https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js\"></script>\r\n    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\r\n    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\r\n    <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap\" rel=\"stylesheet\">\r\n    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css\">\r\n    <style>\r\n        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }\r\n        /* START: CTRA Content Changes - Accent Color */\r\n        .gradient-text { background: linear-gradient(to right, #00A398, #005A8C); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\r\n        .nav-link::after { background-color: #005A8C; content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; transition: width 0.3s ease; }\r\n        /* END: CTRA Content Changes - Accent Color */\r\n        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }\r\n        /* START: FORMAT CORRECTION - Underline now appears ONLY on hover, not for active section */\r\n        .nav-link:hover::after { width: 100%; }\r\n        /* END: FORMAT CORRECTION */\r\n        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }\r\n        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }\r\n        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }\r\n        .fade-in-up.visible { opacity: 1; transform: translateY(0); }\r\n        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #005A8C; }\r\n        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }\r\n        .tooltip .tooltiptext::after { content: \"\"; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }\r\n        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }\r\n        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }\r\n        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }\r\n    </style>\r\n</head>\r\n<body class=\"antialiased\">\r\n\r\n    <header class=\"bg-white border-b border-gray-200\">\r\n        <div class=\"container mx-auto px-4 py-4\">\r\n            <div class=\"flex items-center justify-between\">\r\n                <div class=\"flex items-center space-x-8\">\r\n                    <a href=\"#\"><img src=\"https://placehold.co/160x40/FFFFFF/333333?text=YourLogo\" alt=\"YOHOU US Stocks AI\" class=\"h-10\"></a>\r\n                    <nav class=\"hidden md:flex space-x-6 text-gray-600\">\r\n                        <a href=\"#\" class=\"hover:text-primary\" data-lang=\"nav_today\">本日の市況分析</a>\r\n                        <a href=\"#\" class=\"hover:text-primary\" data-lang=\"nav_pickup\">クレイマー保有銘柄</a>\r\n                        <a href=\"#\" class=\"text-gray-600 hover:text-primary\" data-lang=\"nav_ipo\">IPOスケジュール</a>\r\n                        <a href=\"#\" class=\"text-gray-600 hover:text-primary\" data-lang=\"nav_indicators\">テクニカル指標解説</a>\r\n                        <a href=\"#\" class=\"text-gray-600 hover:text-primary\" data-lang=\"nav_terms\">市場用語集</a>\r\n                        <a href=\"#\" class=\"text-gray-600 hover:text-primary\" data-lang=\"nav_about\">サイトについて</a>\r\n                    </nav>\r\n                </div>\r\n                <div class=\"flex items-center space-x-1 md:space-x-4\">\r\n                    <button id=\"login-btn\" class=\"hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50\"><i class=\"ri-user-line\"></i><span data-lang=\"login\">ログイン</span></button>\r\n                    <button id=\"register-btn\" class=\"bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm\" data-lang=\"register\">無料登録</button>\r\n                    <div id=\"header-lang-switcher\" class=\"flex items-center space-x-2 mr-2 md:mr-4\">\r\n                        <button class=\"lang-btn\" data-lang=\"ja\">日本語</button>\r\n                        <span class=\"text-gray-400 text-xs\">",
+    "currentPrice": 27.8,
+    "ytdReturn": 7.5,
+    "marketCap": 0.021,
+    "peRatio": 13,
+    "hasChart": true
+  }
+]

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
     <script src="translations/load.js"></script>
     <script src="lang.js"></script>
+    <script src="js/header-loader.js"></script>
 <style>
 :where([class^="ri-"])::before { content: "\f3c2"; }
 body {
@@ -136,52 +137,7 @@ body {
 </script>
 </head>
 <body class="min-h-screen">
-<header class="bg-white border-b border-gray-200">
-    <div class="container mx-auto px-4 py-4">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-8">
-                <a href="index.html"><img src="image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
-                <nav class="hidden md:flex space-x-6">
-                    <a href="index.html" class="text-gray-600 hover:text-primary" data-lang="nav_today"></a>
-                    <a href="pickup.html" class="text-gray-600 hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
-                    <a href="ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
-                    <a href="indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators"></a>
-                    <a href="terms.html" class="text-primary font-medium border-b-2 border-primary pb-1" data-lang="nav_terms"></a>
-                    <a href="about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about"></a>
-                </nav>
-            </div>
-            <div class="flex items-center space-x-1 md:space-x-4">
-                <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
-                <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
-                <!-- 言語切り替えボタンをヘッダー内に配置 -->
-                <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
-                    <button class="lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="ja">日本語</button>
-                    <span class="text-gray-400 text-xs">|</span>
-                    <button class="lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors" data-lang="en">EN</button>
-                </div>
-                <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
-                    <i class="ri-menu-line ri-lg"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- モバイルメニュー -->
-<div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
-    <div class="px-4 py-2 space-y-1">
-        <a href="index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">本日の市況分析</a>
-        <a href="pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
-        <a href="ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
-        <a href="indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
-        <a href="terms.html" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50" data-lang="nav_terms">市場用語集</a>
-        <a href="about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
-        <div class="border-t border-gray-200 pt-2 mt-2">
-            <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
-            <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
-        </div>
-    </div>
-</div>
+<div id="header-container"></div>
 
 <main class="container mx-auto px-4 py-6 max-w-7xl">
   <div class="mb-8">

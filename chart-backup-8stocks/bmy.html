@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- START: BMY Content Changes - Title -->
+    <title data-lang="page_title">【ブリストルマイヤーズ】がん・免疫領域の革新者！投資家向けダッシュボード</title>
+    <!-- END: BMY Content Changes - Title -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to a professional blue for Bristol Myers
+                        primary: '#005587', // A deep, corporate blue
+                        secondary: '#5A9BD5', // A lighter accent blue
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: BMY Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #5A9BD5, #005587); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #005587; }
+        /* END: BMY Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #005587; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">AI市況予報</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">AI市況予報</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: BMY Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-700 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">B</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Bristol Myers Squibb</span>
+                        <span class="text-sm font-semibold text-slate-500">NYSE: BMY</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: BMY Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: BMY Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    特許の崖を乗り越える創薬の巨人、<br>
+                    <span class="gradient-text">ブリストルマイヤーズ</span>の挑戦
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    がん、免疫疾患、心血管疾患の領域で世界をリードする製薬大手「ブリストル・マイヤーズ スクイブ」。主力薬の特許切れという逆境を、新薬ポートフォリオで乗り越えようとしています。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「高配当バリュー株の代表格」特許切れの逆境は、絶好の投資機会か？</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「ブリストル・マイヤーズ スクイブ（BMS）」は、がん免疫療法薬「オプジーボ」や抗凝固薬「エリキュース」といったブロックバスター（超大型薬）で知られる、世界有数の製薬会社です。</p>
+                    <p data-lang="intro_card_p2">しかし現在、同社は「パテントクリフ（特許の崖）」という大きな課題に直面しています。これらの主力薬の特許が切れ始め、後発医薬品との競争で売上が減少するリスクに晒されています。この逆境に対し、BMSは<strong class="text-blue-700">M&Aと自社開発による新薬ポートフォリオの拡充で、次なる成長の柱を懸命に育てています。</strong></p>
+                    <p data-lang="intro_card_p3">このページでは、「BMSの新薬は特許切れを補えるのか？」「高い配当は維持できるのか？」「株価は割安なのか？」といった、投資家が最も注目するポイントを解説します。逆境に立ち向かう創薬の巨人の現在地と、復活への道筋を探ります。</p>
+                </div>
+            </div>
+            <!-- END: BMY Content Changes - Hero Section -->
+
+            <!-- START: BMY Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">特許切れ懸念で株価は低迷。高い配当利回りが魅力</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">主力薬の特許失効への懸念が株価の重しとなっていますが、新薬ポートフォリオの成長と堅実なキャッシュフロー創出力を背景に、同社は高い配当利回りを維持しています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="48.34">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="-17.5">-0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="0.0985">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="7.08">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: BMY Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: BMY Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">ブリストルマイヤーズって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">がん、免疫学、心血管疾患、血液疾患、神経科学の5つを重点領域とし、革新的な医薬品の研究開発・販売を行っています。M&Aを積極的に活用してパイプラインを強化するのが特徴です。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える主力製品群</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_cardio_title">心血管</h4>
+                        <p class="text-slate-600" data-lang="core_cardio_p">抗凝固薬「エリキュース」が世界的なブロックバスター。しかし、数年後に特許切れを迎える。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 3H14V17H10V3Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_onco_title">オンコロジー (がん)</h4>
+                        <p class="text-slate-600" data-lang="core_onco_p">がん免疫療法薬「オプジーボ」や多発性骨髄腫治療薬「レブラミド」が主力。こちらも特許切れが課題。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_new_title">新製品ポートフォリオ</h4>
+                        <p class="text-slate-600" data-lang="core_new_p">貧血治療薬「レブロジル」や乾癬治療薬「ソーティクツ」など、特許切れを補う新薬群の成長が鍵。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">ブリストルマイヤーズの強みは、がんや免疫といった専門性の高い領域での卓越した創薬力です。セルジーンなどの大型買収を通じて獲得した強力なパイプラインと、高い配当利回りが、競合のメルクやファイザーに対する魅力となっています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: BMY Content Changes - Business Section -->
+
+        <!-- START: BMY Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">主力薬の特許切れの影響で、売上は減少傾向にあります。しかし、新製品の売上は力強く成長しており、コスト削減と合わせて利益の底堅さを支えています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$445億</p>
+                        <p class="text-base font-semibold text-blue-600" data-lang="stat_revenue_growth">前年比 -1%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">営業利益率
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">本業の儲けを示す指標。特許切れの影響を受けるも、依然として高い水準を維持。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">18%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">高水準を維持</p>
+                    </div>
+                    <div class="bg-indigo-50 border-l-4 border-indigo-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_dividend_yield">配当利回り</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">5.30%</p>
+                        <p class="text-base font-semibold text-indigo-600" data-lang="stat_dividend_yield_desc">高配当が魅力</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: BMY Content Changes - Financials Section -->
+        
+        <!-- START: BMY Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">「パテントクリフ」という最大の逆境に直面するブリストルマイヤーズ株。新薬ポートフォリオの成功を信じる強気派と、特許切れの影響を懸念する弱気派で、評価が真っ二つに割れています。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-blue-500 text-blue-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: BMY Content Changes - Thesis Section -->
+
+        <!-- START: BMY Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">ブリストルマイヤーズの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">ブリストルマイヤーズの未来は、現在の主力薬の特許切れによる売上減少を、新薬ポートフォリオの成長で完全に補い、再び成長軌道に戻れるかにかかっています。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-blue-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">新薬ポートフォリオ（レブロジル、ソーティクツ、カムザイオスなど）の売上を加速させ、2025年までに100億ドル以上の売上を目指します。コスト削減も継続し、利益率を維持します。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">最近買収したKaruna社の統合を進め、統合失調症治療薬などの神経科学分野を新たな成長の柱に育成。細胞療法などの次世代技術への投資も継続します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: BMY Content Changes - Outlook Section -->
+
+        <!-- START: BMY Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">ブリストルマイヤーズは、高い配当利回りを享受しながら、新薬ポートフォリオの成功による株価の再評価を待つ、典型的なバリュー（割安）株・ターンアラウンド（事業再生）株です。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-blue-100 text-blue-800 font-bold py-3 px-6 rounded-lg hover:bg-blue-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: BMY Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: BMY Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Bristol Myers Squibb Company Investor Dashboard. All rights reserved.</p>
+            <!-- END: BMY Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        nav_today: { ja: 'AI市況予報', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        page_title: { ja: '【ブリストルマイヤーズ】がん・免疫領域の革新者！投資家向けダッシュボード', en: '【Bristol Myers Squibb】Cancer & Immunology Innovator! Investor Dashboard' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: '特許の崖を乗り越える創薬の巨人、<br><span class="gradient-text">ブリストルマイヤーズ</span>の挑戦', en: 'The Drug Discovery Giant Overcoming the Patent Cliff,<br>The Challenge of <span class="gradient-text">Bristol Myers</span>' },
+        hero_subtitle: { ja: 'がん、免疫疾患、心血管疾患の領域で世界をリードする製薬大手「ブリストル・マイヤーズ スクイブ」。主力薬の特許切れという逆境を、新薬ポートフォリオで乗り越えようとしています。', en: 'A leading global pharmaceutical company in oncology, immunology, and cardiovascular disease, "Bristol Myers Squibb." It is striving to overcome the adversity of key drug patent expirations with its new product portfolio.' },
+        intro_card_title: { ja: '「高配当バリュー株の代表格」特許切れの逆境は、絶好の投資機会か？', en: '"A prime example of a high-dividend value stock." Is the adversity of patent cliffs a golden investment opportunity?' },
+        intro_card_p1: { ja: '「ブリストル・マイヤーズ スクイブ（BMS）」は、がん免疫療法薬「オプジーボ」や抗凝固薬「エリキュース」といったブロックバスター（超大型薬）で知られる、世界有数の製薬会社です。', en: '"Bristol Myers Squibb (BMS)" is one of the world\'s leading pharmaceutical companies, known for blockbusters like the cancer immunotherapy drug "Opdivo" and the anticoagulant "Eliquis."' },
+        intro_card_p2: { ja: 'しかし現在、同社は「パテントクリフ（特許の崖）」という大きな課題に直面しています。これらの主力薬の特許が切れ始め、後発医薬品との競争で売上が減少するリスクに晒されています。この逆境に対し、BMSは<strong class="text-blue-700">M&Aと自社開発による新薬ポートフォリオの拡充で、次なる成長の柱を懸命に育てています。</strong>', en: 'However, the company is currently facing a major challenge known as the "patent cliff." As the patents for these key drugs begin to expire, it is exposed to the risk of sales decline due to competition from generics. To counter this, BMS is <strong class="text-blue-700">diligently cultivating its next pillars of growth by expanding its new drug portfolio through M&A and in-house development.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「BMSの新薬は特許切れを補えるのか？」「高い配当は維持できるのか？」「株価は割安なのか？」といった、投資家が最も注目するポイントを解説します。逆境に立ち向かう創薬の巨人の現在地と、復活への道筋を探ります。', en: 'This page explains the key points investors are most focused on, such as "Can BMS\'s new drugs offset the patent expirations?", "Can the high dividend be sustained?", and "Is the stock undervalued?". We will explore the current situation of this drug discovery giant facing adversity and its path to recovery.' },
+        growth_title: { ja: '特許切れ懸念で株価は低迷。高い配当利回りが魅力', en: 'Stock Languishes on Patent Cliff Concerns. High Dividend Yield is Attractive' },
+        growth_p: { ja: '主力薬の特許失効への懸念が株価の重しとなっていますが、新薬ポートフォリオの成長と堅実なキャッシュフロー創出力を背景に、同社は高い配当利回りを維持しています。', en: 'Concerns over the patent expiration of key drugs are weighing on the stock price, but the company maintains a high dividend yield, supported by the growth of its new product portfolio and solid cash flow generation.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'ブリストルマイヤーズって、どんな会社？', en: 'What Kind of Company is Bristol Myers Squibb?' },
+        business_p: { ja: 'がん、免疫学、心血管疾患、血液疾患、神経科学の5つを重点領域とし、革新的な医薬品の研究開発・販売を行っています。M&Aを積極的に活用してパイプラインを強化するのが特徴です。', en: 'It focuses on five therapeutic areas—oncology, immunology, cardiovascular, hematology, and neuroscience—to research, develop, and commercialize innovative medicines. It is characterized by its active use of M&A to strengthen its pipeline.' },
+        core_business_title: { ja: 'ビジネスを支える主力製品群', en: 'Key Product Franchises Supporting the Business' },
+        core_cardio_title: { ja: '心血管', en: 'Cardiovascular' },
+        core_cardio_p: { ja: '抗凝固薬「エリキュース」が世界的なブロックバスター。しかし、数年後に特許切れを迎える。', en: 'The anticoagulant "Eliquis" is a global blockbuster, but it faces patent expiration in a few years.' },
+        core_onco_title: { ja: 'オンコロジー (がん)', en: 'Oncology' },
+        core_onco_p: { ja: 'がん免疫療法薬「オプジーボ」や多発性骨髄腫治療薬「レブラミド」が主力。こちらも特許切れが課題。', en: 'Led by the cancer immunotherapy drug "Opdivo" and the multiple myeloma drug "Revlimid." Patent expirations are also a challenge here.' },
+        core_new_title: { ja: '新製品ポートフォリオ', en: 'New Product Portfolio' },
+        core_new_p: { ja: '貧血治療薬「レブロジル」や乾癬治療薬「ソーティクツ」など、特許切れを補う新薬群の成長が鍵。', en: 'The growth of new drugs to offset patent expirations, such as "Reblozyl" for anemia and "Sotyktu" for psoriasis, is key.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'ブリストルマイヤーズの強みは、がんや免疫といった専門性の高い領域での卓越した創薬力です。セルジーンなどの大型買収を通じて獲得した強力なパイプラインと、高い配当利回りが、競合のメルクやファイザーに対する魅力となっています。', en: 'Bristol Myers Squibb\'s strength is its outstanding drug discovery capability in highly specialized areas like oncology and immunology. Its strong pipeline, acquired through large-scale M&A like Celgene, and its high dividend yield make it attractive compared to competitors like Merck and Pfizer.' },
+        chart_competitor_label_bmy: { ja: 'ブリストルマイヤーズ', en: 'Bristol Myers' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['創薬パイプライン', '市場シェア(がん)', '収益性', '配当利回り', 'バリュエーション'], en: ['Drug Pipeline', 'Market Share (Oncology)', 'Profitability', 'Dividend Yield', 'Valuation'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: '主力薬の特許切れの影響で、売上は減少傾向にあります。しかし、新製品の売上は力強く成長しており、コスト削減と合わせて利益の底堅さを支えています。', en: 'Revenues are on a downward trend due to the impact of patent expirations on key drugs. However, sales of new products are growing strongly, which, combined with cost reductions, is supporting the bottom line.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 -1%', en: '-1% YoY' },
+        stat_margin: { ja: '営業利益率', en: 'Operating Margin' },
+        stat_margin_tooltip: { ja: '本業の儲けを示す指標。特許切れの影響を受けるも、依然として高い水準を維持。', en: 'A measure of core profitability. Despite the impact of patent cliffs, it remains at a high level.' },
+        stat_margin_desc: { ja: '高水準を維持', en: 'Maintaining High Levels' },
+        stat_dividend_yield: { ja: '配当利回り', en: 'Dividend Yield' },
+        stat_dividend_yield_desc: { ja: '高配当が魅力', en: 'Attractive High Dividend' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: '「パテントクリフ」という最大の逆境に直面するブリストルマイヤーズ株。新薬ポートフォリオの成功を信じる強気派と、特許切れの影響を懸念する弱気派で、評価が真っ二つに割れています。', en: 'Bristol Myers Squibb stock is facing its biggest adversity, the "patent cliff." Opinions are sharply divided between bulls who believe in the success of its new drug portfolio and bears who are concerned about the impact of patent expirations.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「復活」する理由', en: 'Why This Stock Could "Rebound"' },
+        bull_content_li1: { ja: '<strong>新薬ポートフォリオの成長:</strong> 複数の新薬が二桁成長を遂げており、特許切れの売上減少を補う以上の成長が期待される。', en: '<strong>Growth of New Product Portfolio:</strong> Several new drugs are achieving double-digit growth, expected to more than offset the sales decline from patent expirations.' },
+        bull_content_li2: { ja: '<strong>魅力的なバリュエーション:</strong> 株価は歴史的に見て割安な水準にあり、下値リスクが限定的。', en: '<strong>Attractive Valuation:</strong> The stock is trading at historically low valuation levels, limiting downside risk.' },
+        bull_content_li3: { ja: '<strong>高い配当利回り:</strong> 5%を超える高い配当利回りは、株価が低迷する中でもインカムゲインを提供する。', en: '<strong>High Dividend Yield:</strong> A high dividend yield of over 5% provides income even if the stock price stagnates.' },
+        bull_content_li4: { ja: '<strong>M&Aによるパイプライン強化:</strong> 潤沢なキャッシュフローを活かし、将来の成長源となる有望なバイオテック企業を買収し続ける。', en: '<strong>Pipeline Strengthening through M&A:</strong> Continues to use its abundant cash flow to acquire promising biotech companies that will be future sources of growth.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>パテントクリフの影響:</strong> 主力薬「エリキュース」「オプジーボ」の特許切れによる売上減少が、想定以上に大きくなるリスク。', en: '<strong>Impact of Patent Cliff:</strong> The risk that the sales decline from the patent expirations of key drugs "Eliquis" and "Opdivo" could be larger than expected.' },
+        bear_content_li2: { ja: '<strong>新薬開発の失敗:</strong> 医薬品開発は常に失敗のリスクを伴う。期待の新薬候補が、臨床試験で期待外れの結果に終わる可能性。', en: '<strong>Drug Development Failures:</strong> Drug development always carries the risk of failure. Promising new drug candidates may end with disappointing results in clinical trials.' },
+        bear_content_li3: { ja: '<strong>高い負債水準:</strong> セルジーンなどの大型買収により、財務レバレッジが高まっている。', en: '<strong>High Debt Levels:</strong> Financial leverage has increased due to large-scale acquisitions like Celgene.' },
+        bear_content_li4: { ja: '<strong>薬価引き下げ圧力:</strong> 米国政府による薬価交渉など、政治的な圧力が高まり、収益性が低下するリスク。', en: '<strong>Drug Price Pressure:</strong> The risk that profitability could decline due to rising political pressure, such as U.S. government drug price negotiations.' },
+        outlook_title: { ja: 'ブリストルマイヤーズの未来は？', en: 'What is Bristol Myers Squibb\'s Future?' },
+        outlook_p: { ja: 'ブリストルマイヤーズの未来は、現在の主力薬の特許切れによる売上減少を、新薬ポートフォリオの成長で完全に補い、再び成長軌道に戻れるかにかかっています。', en: 'Bristol Myers Squibb\'s future depends on whether the growth of its new product portfolio can fully offset the revenue decline from the patent expirations of its current key drugs and return the company to a growth trajectory.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: '新薬ポートフォリオ（レブロジル、ソーティクツ、カムザイオスなど）の売上を加速させ、2025年までに100億ドル以上の売上を目指します。コスト削減も継続し、利益率を維持します。', en: 'Accelerate sales of the new product portfolio (Reblozyl, Sotyktu, Camzyos, etc.) to achieve over $10 billion in sales by 2025. Continue cost reductions to maintain profit margins.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: '最近買収したKaruna社の統合を進め、統合失調症治療薬などの神経科学分野を新たな成長の柱に育成。細胞療法などの次世代技術への投資も継続します。', en: 'Advance the integration of the recently acquired Karuna Therapeutics to cultivate the neuroscience field, including schizophrenia treatments, as a new pillar of growth. Continue investing in next-generation technologies like cell therapy.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'ブリストルマイヤーズは、高い配当利回りを享受しながら、新薬ポートフォリオの成功による株価の再評価を待つ、典型的なバリュー（割安）株・ターンアラウンド（事業再生）株です。', en: 'Bristol Myers Squibb is a classic value and turnaround stock, where investors can enjoy a high dividend yield while waiting for a stock re-rating based on the success of its new drug portfolio.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: '臨床試験の結果がカタリスト', en: 'Clinical Trial Results are the Catalyst' },
+        strategy_res_short_p: { ja: '短期的な株価は、開発中の新薬の臨床試験の結果や、FDAの承認ニュースに大きく左右されます。これらのイベントに注目する必要があります。', en: 'The short-term stock price is heavily influenced by the results of clinical trials for drugs in development and FDA approval news. It is necessary to pay attention to these events.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '新薬の売上を追う', en: 'Track New Product Sales' },
+        strategy_res_medium_p: { ja: '新薬ポートフォリオが、四半期ごとに力強い成長を示し、特許切れの影響を相殺できるかどうかが焦点。決算での新薬の売上実績が最も重要です。', en: 'The focus is on whether the new drug portfolio can show strong quarterly growth and offset the impact of patent expirations. The sales performance of new drugs in earnings reports is most important.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: '配当再投資と復活劇に賭ける', en: 'Bet on Dividend Reinvestment and the Turnaround Story' },
+        strategy_res_long_p: { ja: '短期的な株価の低迷は気にせず、高い配当を受け取りながら、BMSが特許の崖を乗り越え、再び成長企業として評価される日を待つ戦略。忍耐が求められます。', en: 'A strategy to ignore short-term stock price weakness, collect high dividends, and wait for the day BMS overcomes the patent cliff and is re-evaluated as a growth company. Patience is required.' },
+        footer_copyright: { ja: '&copy; 2025 Bristol Myers Squibb Company Investor Dashboard. All rights reserved.', en: '&copy; 2025 Bristol Myers Squibb Company Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                el.innerHTML = translations[key][lang];
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_bmy[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-blue-400 animate-pop-in"><h3 class="font-bold text-blue-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [60, 58, 55, 52, 50, 48, 45, 43, 45, 42, 44, 42], borderColor: '#005587', backgroundColor: 'rgba(0, 85, 135, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [450, 445, 460], backgroundColor: '#005587', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [80, 60, 70], borderColor: '#5A9BD5', backgroundColor: '#5A9BD5', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['創薬パイプライン', '市場シェア(がん)', '収益性', '配当利回り', 'バリュエーション'], datasets: [ { label: 'ブリストルマイヤーズ', data: [90, 92, 88, 95, 94], backgroundColor: 'rgba(0, 85, 135, 0.2)', borderColor: 'rgba(0, 85, 135, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(0, 85, 135, 1)' }, { label: '競合他社 (平均)', data: [85, 88, 90, 80, 82], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-blue-500', 'text-blue-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-blue-500', 'text-blue-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-blue-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-blue-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

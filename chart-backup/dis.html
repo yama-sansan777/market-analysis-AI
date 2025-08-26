@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- START: DIS Content Changes - Title -->
+    <title data-lang="page_title">【ディズニー版】エンタメ帝国の再創造！投資家向けダッシュボード</title>
+    <!-- END: DIS Content Changes - Title -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to a magical Disney blue
+                        primary: '#1D4ED8', // A deep, magical blue
+                        secondary: '#3B82F6', // A lighter accent blue
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: DIS Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #3B82F6, #1D4ED8); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #1D4ED8; }
+        /* END: DIS Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #1D4ED8; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">AI市況予報</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">AI市況予報</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: DIS Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">D</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">The Walt Disney Company</span>
+                        <span class="text-sm font-semibold text-slate-500">NYSE: DIS</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: DIS Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: DIS Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    魔法の王国の再建、<br>
+                    <span class="gradient-text">ディズニー</span>の逆襲が始まる
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    世界中の人々を魅了するエンターテイメント帝国「ディズニー」。ストリーミング事業の黒字化とパーク事業の絶好調を武器に、復活の狼煙を上げています。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「王の帰還なるか？」変革期のディズニーに投資するということ</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「ディズニー」は、単なるアニメや映画の会社ではありません。テーマパーク、テレビ局、ストリーミングサービス、キャラクター商品まで、世界で最も強力な知的財産（IP）を武器に、多角的なエンターテイメント事業を展開する巨大帝国です。</p>
+                    <p data-lang="intro_card_p2">近年、動画配信サービスの台頭でテレビ事業が苦戦し、ストリーミング事業への巨額投資で利益が圧迫されていました。しかし、伝説的なCEOの復帰と大規模なコスト削減を経て、<strong class="text-blue-700">利益を出す体質へと大きく変貌。ストリーミング事業の黒字化という長年の悲願を達成し、反撃の準備は整いました。</strong></p>
+                    <p data-lang="intro_card_p3">このページでは、「ディズニーの復活は本物か？」「パーク事業の成長は続くのか？」「ストリーミング戦争の勝者は？」といった、投資家が最も注目するポイントを解説します。エンタメの王者が再び輝きを取り戻すまでの物語を、一緒に追いかけましょう。</p>
+                </div>
+            </div>
+            <!-- END: DIS Content Changes - Hero Section -->
+
+            <!-- START: DIS Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">ストリーミング黒字化とパークの好調が株価を後押し</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">長年の課題だったストリーミング事業（Disney+ & Hulu）が遂に黒字化を達成。テーマパーク事業も力強い成長を続けており、市場の信頼が回復しつつあります。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="116.21">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="3.2">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="0.21">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="35">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: DIS Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: DIS Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">ディズニーって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">「エンターテイメント」「エクスペリエンス」「スポーツ」の3つの事業セグメントを通じて、世界中の人々に忘れられない体験を提供。強力なIPを各事業で活用するシナジー戦略が強みです。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">帝国を支える3つのセグメント</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 3H14V17H10V3Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_experiences_title">エクスペリエンス</h4>
+                        <p class="text-slate-600" data-lang="core_experiences_p">テーマパーク、リゾート、クルーズ船、キャラクター商品など。高い利益率を誇る最大の収益源。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 3.75C4 3.33579 4.33579 3 4.75 3H19.25C19.6642 3 20 3.33579 20 3.75V20.25C20 20.6642 19.6642 21 19.25 21H4.75C4.33579 21 4 20.6642 4 20.25V3.75ZM10 17L15 12L10 7V17Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_entertainment_title">エンターテイメント</h4>
+                        <p class="text-slate-600" data-lang="core_entertainment_p">Disney+, Huluなどのストリーミングサービス、映画製作、ABCなどのテレビ放送事業を含む。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM11 7H13V13H11V7ZM11 15H13V17H11V15Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_sports_title">スポーツ</h4>
+                        <p class="text-slate-600" data-lang="core_sports_p">スポーツ専門チャンネル「ESPN」が中核。依然として高い収益力を誇るが、ケーブルテレビ離れが課題。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">ディズニーの強みは、100年の歴史で培われた比類なき知的財産（IP）ポートフォリオです。ミッキーマウスからマーベル、スター・ウォーズまで、世代を超えて愛されるキャラクター群が、テーマパークから映画、商品まで、あらゆる事業の競争優位性の源泉となっています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: DIS Content Changes - Business Section -->
+
+        <!-- START: DIS Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">コスト削減とパーク事業の好調により、利益が大幅に改善。ストリーミング事業の赤字縮小も進み、収益性は回復基調にあります。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$892億</p>
+                        <p class="text-base font-semibold text-blue-600" data-lang="stat_revenue_growth">前年比 +7.5%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">営業利益率
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">本業の儲けを示す指標。ストリーミングへの投資で一時的に低下したが、回復傾向にある。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">14.4%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">回復基調</p>
+                    </div>
+                    <div class="bg-indigo-50 border-l-4 border-indigo-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_dplus_subs">Disney+ 加入者数</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">1.5億人</p>
+                        <p class="text-base font-semibold text-indigo-600" data-lang="stat_dplus_subs_desc">黒字化を達成</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: DIS Content Changes - Financials Section -->
+        
+        <!-- START: DIS Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">エンタメの王者の復活ストーリーに投資するディズニー株。ストリーミング事業の収益性と、伝統的なメディア事業の衰退という、光と影の両面を評価する必要があります。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-blue-500 text-blue-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: DIS Content Changes - Thesis Section -->
+
+        <!-- START: DIS Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">ディズニーの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">ディズニーの未来は、ストリーミング事業を安定した収益源へと育て上げ、テーマパークへの大型投資で体験価値をさらに高められるかにかかっています。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-blue-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">ストリーミング事業の収益性をさらに高めるため、Huluとのバンドル戦略や広告付きプランを強化。テーマパークへの600億ドル規模の大型投資計画を具体化させます。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">ESPNの完全ストリーミング化を推進し、スポーツ配信の未来を切り拓く。映画事業を再建し、「アナと雪の女王」や「トイ・ストーリー」などの人気シリーズの続編でヒットを狙います。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: DIS Content Changes - Outlook Section -->
+
+        <!-- START: DIS Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">ディズニーは、典型的な「ターンアラウンド（事業再生）」銘柄。経営改革の成果が本格的に現れることを期待する、忍耐強い投資家に適しています。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-blue-100 text-blue-800 font-bold py-3 px-6 rounded-lg hover:bg-blue-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: DIS Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: DIS Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 The Walt Disney Company Investor Dashboard. All rights reserved.</p>
+            <!-- END: DIS Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        page_title: { ja: '【ディズニー版】エンタメ帝国の再創造！投資家向けダッシュボード', en: '[Disney Edition] Recreation of the Entertainment Empire! Investor Dashboard' },
+        nav_today: { ja: 'AI市況予報', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: '魔法の王国の再建、<br><span class="gradient-text">ディズニー</span>の逆襲が始まる', en: 'Rebuilding the Magic Kingdom,<br>The Counterattack of <span class="gradient-text">Disney</span> Begins' },
+        hero_subtitle: { ja: '世界中の人々を魅了するエンターテイメント帝国「ディズニー」。ストリーミング事業の黒字化とパーク事業の絶好調を武器に、復活の狼煙を上げています。', en: 'The entertainment empire "Disney" captivates people worldwide. With the profitability of its streaming business and the booming success of its parks, it is signaling a major comeback.' },
+        intro_card_title: { ja: '「王の帰還なるか？」変革期のディズニーに投資するということ', en: '"The Return of the King?" What it means to invest in Disney during its transformation.' },
+        intro_card_p1: { ja: '「ディズニー」は、単なるアニメや映画の会社ではありません。テーマパーク、テレビ局、ストリーミングサービス、キャラクター商品まで、世界で最も強力な知的財産（IP）を武器に、多角的なエンターテイメント事業を展開する巨大帝国です。', en: '"Disney" is not just an animation and movie company. It is a giant empire that operates a diversified entertainment business, leveraging the world\'s most powerful intellectual property (IP) across theme parks, TV networks, streaming services, and merchandise.' },
+        intro_card_p2: { ja: '近年、動画配信サービスの台頭でテレビ事業が苦戦し、ストリーミング事業への巨額投資で利益が圧迫されていました。しかし、伝説的なCEOの復帰と大規模なコスト削減を経て、<strong class="text-blue-700">利益を出す体質へと大きく変貌。ストリーミング事業の黒字化という長年の悲願を達成し、反撃の準備は整いました。</strong>', en: 'In recent years, its television business has struggled with the rise of streaming services, and huge investments in streaming have squeezed profits. However, after the return of its legendary CEO and massive cost-cutting, it has <strong class="text-blue-700">transformed into a profitable entity, achieving the long-awaited goal of streaming profitability and is now ready for a counteroffensive.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「ディズニーの復活は本物か？」「パーク事業の成長は続くのか？」「ストリーミング戦争の勝者は？」といった、投資家が最も注目するポイントを解説します。エンタメの王者が再び輝きを取り戻すまでの物語を、一緒に追いかけましょう。', en: 'This page explains the key points that investors are most focused on, such as "Is Disney\'s comeback real?", "Will the parks business continue to grow?", and "Who will win the streaming wars?". Let\'s follow the story of the king of entertainment as it regains its sparkle.' },
+        growth_title: { ja: 'ストリーミング黒字化とパークの好調が株価を後押し', en: 'Streaming Profitability and Strong Parks Performance Boost Stock Price' },
+        growth_p: { ja: '長年の課題だったストリーミング事業（Disney+ & Hulu）が遂に黒字化を達成。テーマパーク事業も力強い成長を続けており、市場の信頼が回復しつつあります。', en: 'The long-standing challenge of the streaming business (Disney+ & Hulu) has finally achieved profitability. The theme parks business also continues its strong growth, and market confidence is gradually being restored.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'ディズニーって、どんな会社？', en: 'What Kind of Company is Disney?' },
+        business_p: { ja: '「エンターテイメント」「エクスペリエンス」「スポーツ」の3つの事業セグメントを通じて、世界中の人々に忘れられない体験を提供。強力なIPを各事業で活用するシナジー戦略が強みです。', en: 'Delivering unforgettable experiences to people worldwide through three business segments: Entertainment, Experiences, and Sports. Its strength lies in a synergy strategy that leverages its powerful IP across all businesses.' },
+        core_business_title: { ja: '帝国を支える3つのセグメント', en: 'Three Segments Supporting the Empire' },
+        core_experiences_title: { ja: 'エクスペリエンス', en: 'Experiences' },
+        core_experiences_p: { ja: 'テーマパーク、リゾート、クルーズ船、キャラクター商品など。高い利益率を誇る最大の収益源。', en: 'Theme parks, resorts, cruise lines, and consumer products. The largest source of revenue, boasting high profit margins.' },
+        core_entertainment_title: { ja: 'エンターテイメント', en: 'Entertainment' },
+        core_entertainment_p: { ja: 'Disney+, Huluなどのストリーミングサービス、映画製作、ABCなどのテレビ放送事業を含む。', en: 'Includes streaming services like Disney+ and Hulu, film production, and television broadcasting businesses like ABC.' },
+        core_sports_title: { ja: 'スポーツ', en: 'Sports' },
+        core_sports_p: { ja: 'スポーツ専門チャンネル「ESPN」が中核。依然として高い収益力を誇るが、ケーブルテレビ離れが課題。', en: 'Centered on the sports channel "ESPN." Still highly profitable, but facing challenges from cord-cutting.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'ディズニーの強みは、100年の歴史で培われた比類なき知的財産（IP）ポートフォリオです。ミッキーマウスからマーベル、スター・ウォーズまで、世代を超えて愛されるキャラクター群が、テーマパークから映画、商品まで、あらゆる事業の競争優位性の源泉となっています。', en: 'Disney\'s strength is its unparalleled intellectual property (IP) portfolio, cultivated over 100 years. From Mickey Mouse to Marvel and Star Wars, its collection of characters loved across generations is the source of its competitive advantage in all businesses, from theme parks to movies and merchandise.' },
+        chart_competitor_label_dis: { ja: 'ディズニー', en: 'Disney' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['IP(知的財産)力', 'パーク事業', 'ストリーミング規模', '収益性', 'ブランド力'], en: ['IP Strength', 'Parks Business', 'Streaming Scale', 'Profitability', 'Brand Power'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: 'コスト削減とパーク事業の好調により、利益が大幅に改善。ストリーミング事業の赤字縮小も進み、収益性は回復基調にあります。', en: 'Profits have significantly improved due to cost reductions and strong performance in the parks business. The reduction of losses in the streaming segment is also progressing, and profitability is on a recovery trend.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +7.5%', en: '+7.5% YoY' },
+        stat_margin: { ja: '営業利益率', en: 'Operating Margin' },
+        stat_margin_tooltip: { ja: '本業の儲けを示す指標。ストリーミングへの投資で一時的に低下したが、回復傾向にある。', en: 'A measure of core profitability. It temporarily declined due to streaming investments but is now recovering.' },
+        stat_margin_desc: { ja: '回復基調', en: 'On a Recovery Trend' },
+        stat_dplus_subs: { ja: 'Disney+ 加入者数', en: 'Disney+ Subscribers' },
+        stat_dplus_subs_desc: { ja: '黒字化を達成', en: 'Achieved Profitability' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '営業利益 (億ドル)', en: 'Operating Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: 'エンタメの王者の復活ストーリーに投資するディズニー株。ストリーミング事業の収益性と、伝統的なメディア事業の衰退という、光と影の両面を評価する必要があります。', en: 'Investing in Disney stock is a bet on the comeback story of the king of entertainment. You need to evaluate both the light and shadow: the profitability of streaming and the decline of the traditional media business.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「復活」する理由', en: 'Why This Stock Could "Come Back"' },
+        bull_content_li1: { ja: '<strong>パーク事業の絶好調:</strong> 旅行需要の回復と値上げにより、テーマパークは過去最高の利益を記録。', en: '<strong>Booming Parks Business:</strong> Theme parks are recording record profits thanks to a recovery in travel demand and price increases.' },
+        bull_content_li2: { ja: '<strong>ストリーミングの黒字化:</strong> 長年の投資フェーズを終え、Disney+とHuluが利益を生む事業へと転換。', en: '<strong>Streaming Profitability:</strong> After years of investment, Disney+ and Hulu are transforming into profitable businesses.' },
+        bull_content_li3: { ja: '<strong>比類なきIPポートフォリオ:</strong> マーベル、スター・ウォーズ、ピクサーなど、新作を生み出し続ける強力なIPを持つ。', en: '<strong>Unmatched IP Portfolio:</strong> Possesses powerful IP like Marvel, Star Wars, and Pixar that continuously generate new content.' },
+        bull_content_li4: { ja: '<strong>コスト削減効果:</strong> 大規模なリストラとコスト管理により、利益率が大幅に改善している。', en: '<strong>Benefits of Cost Cutting:</strong> Profit margins are significantly improving due to large-scale restructuring and cost management.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>リニアTVの衰退:</strong> ESPNなどのケーブルテレビ事業は、コードカッティング（ケーブル離れ）により構造的な衰退が続く。', en: '<strong>Decline of Linear TV:</strong> The cable TV business, including ESPN, continues its structural decline due to cord-cutting.' },
+        bear_content_li2: { ja: '<strong>ストリーミングの競争激化:</strong> NetflixやAmazon Primeなど、巨大なライバルとの熾烈なコンテンツ獲得競争。', en: '<strong>Intense Streaming Competition:</strong> Fierce competition for content acquisition with giant rivals like Netflix and Amazon Prime.' },
+        bear_content_li3: { ja: '<strong>映画事業の不振:</strong> 近年、ヒット作に恵まれず、映画スタジオの収益性が低下している。', en: '<strong>Slump in Film Business:</strong> The movie studio\'s profitability has declined in recent years due to a lack of blockbuster hits.' },
+        bear_content_li4: { ja: '<strong>CEOの後継者問題:</strong> 復帰したボブ・アイガーCEOの後の経営体制が依然として不透明。', en: '<strong>CEO Succession Issue:</strong> The management structure after the return of CEO Bob Iger remains uncertain.' },
+        outlook_title: { ja: 'ディズニーの未来は？', en: 'What is Disney\'s Future?' },
+        outlook_p: { ja: 'ディズニーの未来は、ストリーミング事業を安定した収益源へと育て上げ、テーマパークへの大型投資で体験価値をさらに高められるかにかかっています。', en: 'Disney\'s future depends on its ability to grow the streaming business into a stable source of profit and to further enhance the value of the theme park experience through large-scale investments.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: 'ストリーミング事業の収益性をさらに高めるため、Huluとのバンドル戦略や広告付きプランを強化。テーマパークへの600億ドル規模の大型投資計画を具体化させます。', en: 'To further increase streaming profitability, strengthen the Hulu bundle strategy and ad-supported plans. Finalize plans for a massive $60 billion investment in theme parks.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'ESPNの完全ストリーミング化を推進し、スポーツ配信の未来を切り拓く。映画事業を再建し、「アナと雪の女王」や「トイ・ストーリー」などの人気シリーズの続編でヒットを狙います。', en: 'Push for a full-streaming version of ESPN to pioneer the future of sports broadcasting. Rebuild the film business and aim for hits with sequels to popular franchises like "Frozen" and "Toy Story."' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'ディズニーは、典型的な「ターンアラウンド（事業再生）」銘柄。経営改革の成果が本格的に現れることを期待する、忍耐強い投資家に適しています。', en: 'Disney is a classic "turnaround" stock. It is suitable for patient investors who expect the results of management reforms to fully materialize.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: 'ストリーミングの加入者数に注目', en: 'Focus on Streaming Subscriber Numbers' },
+        strategy_res_short_p: { ja: '短期的な株価は、四半期ごとのDisney+の加入者数や、映画の興行成績に左右されやすい。市場の期待を超えるかどうかが鍵です。', en: 'The short-term stock price is sensitive to quarterly Disney+ subscriber numbers and box office results. Exceeding market expectations is key.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '利益率の改善を追う', en: 'Track Profit Margin Improvement' },
+        strategy_res_medium_p: { ja: 'コスト削減が計画通りに進み、ストリーミング事業の利益率が着実に改善していくかどうかが重要。パーク事業の客足の動向も注視が必要です。', en: 'It is crucial to see if cost reductions proceed as planned and if the profitability of the streaming business steadily improves. Also, keep a close eye on theme park attendance trends.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: 'IPの価値を信じる', en: 'Believe in the Value of IP' },
+        strategy_res_long_p: { ja: '短期的な業績の浮き沈みは気にせず、ディズニーが持つ圧倒的なIPの価値と、それが生み出す長期的なキャッシュフローを信じて保有。王国の復活に賭ける戦略です。', en: 'A strategy to bet on the kingdom\'s revival by holding for the long term, ignoring short-term performance fluctuations and believing in the value of Disney\'s unparalleled IP and the long-term cash flow it generates.' },
+        footer_copyright: { ja: '&copy; 2025 The Walt Disney Company Investor Dashboard. All rights reserved.', en: '&copy; 2025 The Walt Disney Company Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                el.innerHTML = translations[key][lang];
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_dis[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-blue-400 animate-pop-in"><h3 class="font-bold text-blue-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [85, 82, 80, 90, 95, 110, 115, 120, 110, 100, 108, 105], borderColor: '#1D4ED8', backgroundColor: 'rgba(29, 78, 216, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [889, 912, 940], backgroundColor: '#1D4ED8', yAxisID: 'y' }, { type: 'line', label: '営業利益 (億ドル)', data: [128, 140, 165], borderColor: '#3B82F6', backgroundColor: '#3B82F6', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['IP(知的財産)力', 'パーク事業', 'ストリーミング規模', '収益性', 'ブランド力'], datasets: [ { label: 'ディズニー', data: [98, 95, 90, 85, 99], backgroundColor: 'rgba(29, 78, 216, 0.2)', borderColor: 'rgba(29, 78, 216, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(29, 78, 216, 1)' }, { label: '競合他社 (平均)', data: [75, 70, 92, 88, 85], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-blue-500', 'text-blue-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-blue-500', 'text-blue-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-blue-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-blue-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

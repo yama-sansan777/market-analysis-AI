@@ -25,7 +25,21 @@ async function loadHeader() {
             
             // 翻訳システムを再適用（ヘッダー内の要素に対して）
             if (window.applyTranslations) {
-                window.applyTranslations();
+                // 翻訳適用後にメニューを表示
+                setTimeout(() => {
+                    window.applyTranslations();
+                    // 翻訳が完了してからメニューを表示
+                    const headerNav = document.querySelector('header nav');
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (headerNav) headerNav.style.visibility = 'visible';
+                    if (mobileMenu) mobileMenu.style.visibility = 'visible';
+                }, 50);
+            } else {
+                // 翻訳システムがない場合は即座に表示
+                const headerNav = document.querySelector('header nav');
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (headerNav) headerNav.style.visibility = 'visible';
+                if (mobileMenu) mobileMenu.style.visibility = 'visible';
             }
         }
     } catch (error) {

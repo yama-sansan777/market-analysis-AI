@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- START: GEV Content Changes - Title -->
+    <title data-lang="page_title">【GEベルノバ版】エネルギー転換のリーダー！投資家向けダッシュボード</title>
+    <!-- END: GEV Content Changes - Title -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to GE Vernova's green
+                        primary: '#00884A', // GE Vernova Green
+                        secondary: '#00A75A', // Lighter accent green
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: GEV Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #00A75A, #00884A); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #00884A; content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; transition: width 0.3s ease; }
+        /* END: GEV Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #00884A; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">AI市況予報</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">AI市況予報</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: GEV Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-green-50 to-emerald-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-600 to-emerald-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">G</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">GE Vernova</span>
+                        <span class="text-sm font-semibold text-slate-500">NYSE: GEV</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: GEV Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: GEV Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    エネルギーの未来を電化する巨人、<br>
+                    <span class="gradient-text">GEベルノバ</span>の誕生
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    伝説的コングロマリットGEからスピンオフした「GEベルノバ」。ガスタービンから風力、電力網まで、世界のエネルギー転換をリードする新生企業の可能性を探ります。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-emerald-50 to-green-50 border-emerald-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「ターンアラウンド・ストーリー」GEベルノバは、次の産業界のスターになれるか？</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「GEベルノバ」は、2024年4月にゼネラル・エレクトリック（GE）から独立した、エネルギー事業に特化した新会社です。130年以上の歴史を持つGEの技術と経験を受け継ぎ、世界の電力インフラを支える重要な役割を担っています。</p>
+                    <p data-lang="intro_card_p2">同社の強みは、天然ガス発電を担う「パワー」、風力発電の「ウィンド」、送配電網を担う「エレクトリフィケーション」という、エネルギーの生成から供給までを網羅するポートフォリオです。例えるなら、<strong class="text-green-700">発電所を建設し、風車を立て、そして電気を家庭まで届ける送電網まで、電力システムの全てを手掛ける総合エンジニアリング企業</strong>なのです。</p>
+                    <p data-lang="intro_card_p3">このページでは、「GEベルノバの収益の柱は？」「赤字の風力事業は再生できるのか？」「AIデータセンターの電力需要は追い風か？」といった、投資家が最も注目するポイントを解説します。伝説の巨人から生まれ変わった、新生企業の挑戦を見ていきましょう。</p>
+                </div>
+            </div>
+            <!-- END: GEV Content Changes - Hero Section -->
+
+            <!-- START: GEV Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">エネルギー転換の追い風を受け、株価は力強く上昇</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">AIデータセンターや電化による電力需要の急増と、再生可能エネルギーへの移行という巨大な追い風が市場の期待を集め、スピンオフ以来、株価は好調に推移しています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-green-600" data-count="175.50">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">上場来リターン</p>
+                        <p class="text-4xl font-bold text-green-600" data-count="25.0">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-green-600" data-count="0.047">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-green-600" data-count="38">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: GEV Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: GEV Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">GEベルノバって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">世界の電力の約30%がGEの技術で生み出されています。ガスタービン、風力タービン、そして送配電技術という3つの事業を柱に、エネルギーの未来を創造しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える3つのセグメント</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-green-50"><svg class="w-10 h-10 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_power_title">パワー</h4>
+                        <p class="text-slate-600" data-lang="core_power_p">高効率なガスタービンが主力。安定した電力供給を担い、会社の利益の大半を稼ぐキャッシュカウ。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-green-50"><svg class="w-10 h-10 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 3H14V17H10V3Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_wind_title">ウィンド</h4>
+                        <p class="text-slate-600" data-lang="core_wind_p">陸上・洋上風力タービンを製造。再生可能エネルギーの中核だが、現在は収益性の改善が課題。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-green-50"><svg class="w-10 h-10 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13 10H21L11 22V12H3L13 2V10Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_electrification_title">エレクトリフィケーション</h4>
+                        <p class="text-slate-600" data-lang="core_electrification_p">送配電網を構築するグリッドソリューション。電力網の近代化という巨大な需要が追い風。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">GEベルノバの強みは、世界最大級のガスタービンの導入実績と、そこから生まれる安定したサービス収入です。競合のシーメンス・エナジーや三菱重工としのぎを削る一方、風力や電力網といったエネルギー転換の主要分野を全てカバーする、包括的なポートフォリオが特徴です。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: GEV Content Changes - Business Section -->
+
+        <!-- START: GEV Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">パワー部門の安定した利益が会社全体を支える中、長年の課題であった風力事業の黒字化と、エレクトリフィケーション部門の成長が今後の鍵を握ります。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-green-50 border-l-4 border-green-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$335億</p>
+                        <p class="text-base font-semibold text-green-600" data-lang="stat_revenue_growth">前年比 +1%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">調整後EBITDAマージン
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">本業の収益力を示す指標。現在は中庸な水準だが、2028年までに10%を目指している。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">6.5%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">利益率改善が目標</p>
+                    </div>
+                    <div class="bg-emerald-50 border-l-4 border-emerald-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_fcf">フリーキャッシュフロー</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$17億</p>
+                        <p class="text-base font-semibold text-emerald-600" data-lang="stat_fcf_desc">将来の成長投資の源泉</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: GEV Content Changes - Financials Section -->
+        
+        <!-- START: GEV Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">エネルギー転換という巨大なテーマを背負うGEベルノバ株。大きな成長ポテンシャルを秘める一方、赤字事業の再生という課題も抱えており、投資家の評価が分かれています。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-green-500 text-green-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: GEV Content Changes - Thesis Section -->
+
+        <!-- START: GEV Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">GEベルノバの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">GEベルノバの未来は、長年の課題であった風力事業の収益性を改善し、電力網の近代化という巨大な需要を捉え、エネルギー転換の総合リーダーへと進化できるかにかかっています。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-green-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-green-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">陸上風力事業の収益性改善に全力を注ぐ。AIデータセンターの建設ラッシュを追い風に、ガスタービンと電力網関連の受注を拡大します。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-green-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">次世代の大型洋上風力タービン「Haliade-X」の量産を軌道に乗せる。小規模な原子力発電（SMR）や水素技術といった、未来のエネルギー源への投資を本格化させます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: GEV Content Changes - Outlook Section -->
+
+        <!-- START: GEV Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">GEベルノバは、エネルギー転換という巨大なテーマに投資する、典型的な「ターンアラウンド（事業再生）」株。経営陣の改革実行力を信じ、長期的な視点で投資する忍耐が求められます。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-green-100 text-green-800 font-bold py-3 px-6 rounded-lg hover:bg-green-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: GEV Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: GEV Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 GE Vernova Investor Dashboard. All rights reserved.</p>
+            <!-- END: GEV Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        nav_today: { ja: 'AI市況予報', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        page_title: { ja: '【GEベルノバ版】エネルギー転換のリーダー！投資家向けダッシュボード', en: '【GE Vernova】Energy Transition Leader! Investor Dashboard' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: 'エネルギーの未来を電化する巨人、<br><span class="gradient-text">GEベルノバ</span>の誕生', en: 'The Giant Electrifying the Future of Energy,<br>The Birth of <span class="gradient-text">GE Vernova</span>' },
+        hero_subtitle: { ja: '伝説的コングロマリットGEからスピンオフした「GEベルノバ」。ガスタービンから風力、電力網まで、世界のエネルギー転換をリードする新生企業の可能性を探ります。', en: 'Spun off from the legendary conglomerate GE, "GE Vernova." We explore the potential of this new company leading the global energy transition, from gas turbines to wind and the power grid.' },
+        intro_card_title: { ja: '「ターンアラウンド・ストーリー」GEベルノバは、次の産業界のスターになれるか？', en: '"A Turnaround Story": Can GE Vernova become the next industrial star?' },
+        intro_card_p1: { ja: '「GEベルノバ」は、2024年4月にゼネラル・エレクトリック（GE）から独立した、エネルギー事業に特化した新会社です。130年以上の歴史を持つGEの技術と経験を受け継ぎ、世界の電力インフラを支える重要な役割を担っています。', en: '"GE Vernova" is a new company focused on the energy sector, spun off from General Electric (GE) in April 2024. Inheriting over 130 years of GE\'s technology and experience, it plays a crucial role in supporting the world\'s power infrastructure.' },
+        intro_card_p2: { ja: '同社の強みは、天然ガス発電を担う「パワー」、風力発電の「ウィンド」、送配電網を担う「エレクトリフィケーション」という、エネルギーの生成から供給までを網羅するポートフォリオです。例えるなら、<strong class="text-green-700">発電所を建設し、風車を立て、そして電気を家庭まで届ける送電網まで、電力システムの全てを手掛ける総合エンジニアリング企業</strong>なのです。', en: 'The company\'s strength lies in its comprehensive portfolio covering energy generation to delivery: "Power" for natural gas generation, "Wind" for wind power, and "Electrification" for the grid. It is like a <strong class="text-green-700">comprehensive engineering firm that handles every aspect of the power system, from building power plants and erecting wind turbines to delivering electricity to homes.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「GEベルノバの収益の柱は？」「赤字の風力事業は再生できるのか？」「AIデータセンターの電力需要は追い風か？」といった、投資家が最も注目するポイントを解説します。伝説の巨人から生まれ変わった、新生企業の挑戦を見ていきましょう。', en: 'This page explains the key points for investors, such as "What are GE Vernova\'s revenue pillars?", "Can the unprofitable Wind business be turned around?", and "Is the electricity demand from AI data centers a tailwind?". Let\'s look at the challenge of this new company, reborn from a legendary giant.' },
+        growth_title: { ja: 'エネルギー転換の追い風を受け、株価は力強く上昇', en: 'Stock Rises Strongly on Energy Transition Tailwinds' },
+        growth_p: { ja: 'AIデータセンターや電化による電力需要の急増と、再生可能エネルギーへの移行という巨大な追い風が市場の期待を集め、スピンオフ以来、株価は好調に推移しています。', en: 'Massive tailwinds from the surge in electricity demand due to AI data centers and electrification, and the shift to renewable energy, have gathered market expectations, and the stock has performed well since the spin-off.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '上場来リターン', en: 'Return Since IPO' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'GEベルノバって、どんな会社？', en: 'What Kind of Company is GE Vernova?' },
+        business_p: { ja: '世界の電力の約30%がGEの技術で生み出されています。ガスタービン、風力タービン、そして送配電技術という3つの事業を柱に、エネルギーの未来を創造しています。', en: 'About 30% of the world\'s electricity is generated with GE technology. The company is creating the future of energy with three pillars: gas turbines, wind turbines, and grid technologies.' },
+        core_business_title: { ja: 'ビジネスを支える3つのセグメント', en: 'Three Segments Supporting the Business' },
+        core_power_title: { ja: 'パワー', en: 'Power' },
+        core_power_p: { ja: '高効率なガスタービンが主力。安定した電力供給を担い、会社の利益の大半を稼ぐキャッシュカウ。', en: 'Centered on high-efficiency gas turbines. A cash cow that ensures stable power supply and generates the majority of the company\'s profits.' },
+        core_wind_title: { ja: 'ウィンド', en: 'Wind' },
+        core_wind_p: { ja: '陸上・洋上風力タービンを製造。再生可能エネルギーの中核だが、現在は収益性の改善が課題。', en: 'Manufactures onshore and offshore wind turbines. A core part of renewable energy, but improving profitability is a current challenge.' },
+        core_electrification_title: { ja: 'エレクトリフィケーション', en: 'Electrification' },
+        core_electrification_p: { ja: '送配電網を構築するグリッドソリューション。電力網の近代化という巨大な需要が追い風。', en: 'Grid solutions for building power transmission and distribution networks. Benefiting from the huge demand for grid modernization.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'GEベルノバの強みは、世界最大級のガスタービンの導入実績と、そこから生まれる安定したサービス収入です。競合のシーメンス・エナジーや三菱重工としのぎを削る一方、風力や電力網といったエネルギー転換の主要分野を全てカバーする、包括的なポートフォリオが特徴です。', en: 'GE Vernova\'s strength is its world-leading installed base of gas turbines and the stable service revenue it generates. While competing with rivals like Siemens Energy and Mitsubishi Heavy Industries, its comprehensive portfolio covering all key areas of the energy transition, such as wind and grid, is a key differentiator.' },
+        chart_competitor_label_gev: { ja: 'GEベルノバ', en: 'GE Vernova' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['ガスタービン事業', '風力事業', '電力網事業', '収益性', '成長性'], en: ['Gas Power', 'Wind', 'Grid Solutions', 'Profitability', 'Growth Potential'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: 'パワー部門の安定した利益が会社全体を支える中、長年の課題であった風力事業の黒字化と、エレクトリフィケーション部門の成長が今後の鍵を握ります。', en: 'While stable profits from the Power segment support the entire company, the key to the future lies in turning the long-challenged Wind business profitable and growing the Electrification segment.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +1%', en: '+1% YoY' },
+        stat_margin: { ja: '調整後EBITDAマージン', en: 'Adjusted EBITDA Margin' },
+        stat_margin_tooltip: { ja: '本業の収益力を示す指標。現在は中庸な水準だが、2028年までに10%を目指している。', en: 'A measure of core profitability. Currently at a modest level, but the company aims for 10% by 2028.' },
+        stat_margin_desc: { ja: '利益率改善が目標', en: 'Profit Margin Improvement is the Goal' },
+        stat_fcf: { ja: 'フリーキャッシュフロー', en: 'Free Cash Flow' },
+        stat_fcf_desc: { ja: '将来の成長投資の源泉', en: 'Source of Future Growth Investment' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: 'エネルギー転換という巨大なテーマを背負うGEベルノバ株。大きな成長ポテンシャルを秘める一方、赤字事業の再生という課題も抱えており、投資家の評価が分かれています。', en: 'GE Vernova stock carries the massive theme of energy transition. While it holds great growth potential, it also faces the challenge of turning around its unprofitable businesses, dividing investor opinion.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「大化け」する理由', en: 'Why This Stock Could "Soar"' },
+        bull_content_li1: { ja: '<strong>エネルギー転換の追い風:</strong> AIや電化による電力需要の増加と、脱炭素化への流れが、すべての事業の成長を後押しする。', en: '<strong>Energy Transition Tailwinds:</strong> Increased electricity demand from AI and electrification, along with the decarbonization trend, will boost growth in all segments.' },
+        bull_content_li2: { ja: '<strong>ガスタービンの強固な基盤:</strong> 世界最大の導入実績を誇るガスタービン事業は、安定したサービス収入を生み出すキャッシュカウ。', en: '<strong>Solid Gas Turbine Foundation:</strong> The gas turbine business, with the world\'s largest installed base, is a cash cow that generates stable service revenue.' },
+        bull_content_li3: { ja: '<strong>風力事業のターンアラウンド:</strong> 赤字の陸上風力事業が黒字化すれば、会社の利益は大幅に改善する。', en: '<strong>Wind Business Turnaround:</strong> If the unprofitable Onshore Wind business turns profitable, the company\'s earnings will improve significantly.' },
+        bull_content_li4: { ja: '<strong>電力網への投資拡大:</strong> 老朽化した電力網の近代化は世界的な課題であり、エレクトリフィケーション事業に巨大な機会をもたらす。', en: '<strong>Increased Grid Investment:</strong> Modernizing aging power grids is a global challenge, presenting a huge opportunity for the Electrification business.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>風力事業の不確実性:</strong> 洋上風力事業は依然として赤字であり、収益性の改善には時間がかかる。サプライチェーンの問題も根深い。', en: '<strong>Wind Business Uncertainty:</strong> The Offshore Wind business is still unprofitable, and improving its profitability will take time. Supply chain issues are also deep-rooted.' },
+        bear_content_li2: { ja: '<strong>実行リスク:</strong> GEから独立したばかりであり、新経営陣が計画通りに事業改革を実行できるかは未知数。', en: '<strong>Execution Risk:</strong> Having just spun off from GE, it is uncertain whether the new management team can execute the business transformation as planned.' },
+        bear_content_li3: { ja: '<strong>景気循環リスク:</strong> 大規模なエネルギープロジェクトは景気動向に大きく左右されるため、景気後退は受注の減少につながる。', en: '<strong>Cyclical Risk:</strong> Large-scale energy projects are heavily dependent on economic trends, so a recession could lead to a decrease in orders.' },
+        bear_content_li4: { ja: '<strong>競争の激化:</strong> ガスタービン、風力、電力網の各分野で、シーメンス・エナジーなど強力なグローバル企業との競争が激しい。', en: '<strong>Intensifying Competition:</strong> Faces fierce competition from strong global players like Siemens Energy in each of its gas turbine, wind, and grid segments.' },
+        outlook_title: { ja: 'GEベルノバの未来は？', en: 'What is GE Vernova\'s Future?' },
+        outlook_p: { ja: 'GEベルノバの未来は、長年の課題であった風力事業の収益性を改善し、電力網の近代化という巨大な需要を捉え、エネルギー転換の総合リーダーへと進化できるかにかかっています。', en: 'GE Vernova\'s future depends on its ability to improve the profitability of its long-challenged Wind business, capture the massive demand for grid modernization, and evolve into a comprehensive leader in the energy transition.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: '陸上風力事業の収益性改善に全力を注ぐ。AIデータセンターの建設ラッシュを追い風に、ガスタービンと電力網関連の受注を拡大します。', en: 'Focus all efforts on improving the profitability of the Onshore Wind business. Leverage the AI data center construction boom to expand orders for gas turbines and grid-related projects.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: '次世代の大型洋上風力タービン「Haliade-X」の量産を軌道に乗せる。小規模な原子力発電（SMR）や水素技術といった、未来のエネルギー源への投資を本格化させます。', en: 'Get the mass production of the next-generation "Haliade-X" offshore wind turbine on track. Ramp up investment in future energy sources like small modular reactors (SMRs) and hydrogen technology.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'GEベルノバは、エネルギー転換という巨大なテーマに投資する、典型的な「ターンアラウンド（事業再生）」株。経営陣の改革実行力を信じ、長期的な視点で投資する忍耐が求められます。', en: 'GE Vernova is a classic "turnaround" stock, an investment in the massive theme of energy transition. It requires patience to invest with a long-term perspective, trusting in management\'s ability to execute its reforms.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: '受注ニュースと金利動向に注目', en: 'Watch for Order News and Interest Rate Trends' },
+        strategy_res_short_p: { ja: '短期的な株価は、データセンターなどの大型案件の受注ニュースや、金利の変動に影響されやすい。市場の期待感を読むことが重要です。', en: 'The short-term stock price is sensitive to news of large project orders, such as for data centers, and to changes in interest rates. Reading market sentiment is crucial.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '風力事業の黒字化を見極める', en: 'Assess the Path to Profitability for Wind' },
+        strategy_res_medium_p: { ja: '風力事業が、計画通りにコストを削減し、黒字化への道筋をつけられるかどうかが中期的な最大の焦点。四半期ごとの利益率の改善が鍵となります。', en: 'The biggest mid-term focus is whether the Wind business can reduce costs as planned and pave a path to profitability. Quarter-over-quarter margin improvement is key.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: 'エネルギー転換の未来に賭ける', en: 'Bet on the Future of the Energy Transition' },
+        strategy_res_long_p: { ja: '短期的な収益性の改善は気にせず、世界の電化と脱炭素化という不可逆的なトレンドを信じて長期保有。GEの技術的遺産が、未来のエネルギー市場で花開くことに投資する戦略です。', en: 'A strategy to hold for the long term, ignoring short-term profitability improvements and believing in the irreversible trends of global electrification and decarbonization. This is an investment in GE\'s technological legacy blossoming in the future energy market.' },
+        footer_copyright: { ja: '&copy; 2025 GE Vernova Investor Dashboard. All rights reserved.', en: '&copy; 2025 GE Vernova Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                el.innerHTML = translations[key][lang];
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_gev[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-green-400 animate-pop-in"><h3 class="font-bold text-green-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [140, 145, 150, 155, 160, 165, 170, 175, 180, 178, 176, 175], borderColor: '#00884A', backgroundColor: 'rgba(0, 136, 74, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [332, 335, 350], backgroundColor: '#00884A', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [2, 10, 18], borderColor: '#00A75A', backgroundColor: '#00A75A', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['ガスタービン事業', '風力事業', '電力網事業', '収益性', '成長性'], datasets: [ { label: 'GEベルノバ', data: [95, 80, 88, 82, 90], backgroundColor: 'rgba(0, 136, 74, 0.2)', borderColor: 'rgba(0, 136, 74, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(0, 136, 74, 1)' }, { label: '競合他社 (平均)', data: [90, 85, 86, 88, 85], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(3) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(3) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-green-500', 'text-green-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-green-500', 'text-green-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-green-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-green-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-green-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-green-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-green-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-green-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

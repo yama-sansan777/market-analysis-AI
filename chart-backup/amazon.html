@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="page_title">【Amazon版】ECとAIの巨人！投資家向けダッシュボード</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#DC2626',
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        .gradient-text { background: linear-gradient(to right, #3B82F6, #2563EB); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; background-color: #3B82F6; transition: width 0.3s ease; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #2563EB; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html">
+                        <img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10">
+                    </a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">AI市況予報</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50">
+                        <i class="ri-user-line"></i>
+                        <span data-lang="login">ログイン</span>
+                    </button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">AI市況予報</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-gradient-to-r from-blue-50 to-sky-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-sky-400 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">A</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Amazon.com</span>
+                        <span class="text-sm font-semibold text-slate-500">NASDAQ: AMZN</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    ECとクラウドの絶対王者、<br>
+                    <span class="gradient-text">Amazon</span>が生活を変える
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    私たちの生活に欠かせない巨大企業「Amazon」。その強さの秘密と未来の可能性を、このページで徹底解剖します。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「GAFAM株、どれから買う？」まずは生活のインフラ、Amazonから理解しよう！</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「米国株投資を始めたいけど、どの有名企業がいいんだろう？」そんな疑問を持つ方に、まず知ってほしいのが「Amazon」です。ネット通販でお馴染みですが、そのビジネスは私たちの想像をはるかに超えるスケールで広がっています。</p>
+                    <p data-lang="intro_card_p2">実は、あなたが今見ているWebサイトや使っているアプリの多くも、Amazonのクラウドサービス「AWS」の上で動いています。ネット通販という巨大な「表の顔」だけでなく、<strong class="text-blue-700">世界のインターネットを支える「裏の顔」を持つ、まさに現代社会のインフラ企業</strong>なのです。</p>
+                    <p data-lang="intro_card_p3">このページでは、「Amazonの儲けの仕組みは？」「ライバルは？」「これからの成長分野は？」といった投資の核心に迫る疑問に、わかりやすく答えていきます。世界を動かす巨人の全体像を、一緒に掴んでいきましょう！</p>
+                </div>
+            </div>
+
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">安定成長と未来への投資。世界経済の羅針盤</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">Eコマースの安定した基盤に加え、高収益なAWSが成長を牽引。株価は世界経済の動向を反映しながらも、着実な成長を続けています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <!-- START: DATA UPDATE - Market data has been updated to real values -->
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="228.84">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="18.5">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="2.15">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-blue-600" data-count="45">0倍</p>
+                    </div>
+                    <!-- END: DATA UPDATE -->
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">Amazonって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">「地球上で最もお客様を大切にする企業」をビジョンに掲げ、Eコマースからクラウド、広告、AIまで、多角的に事業を展開するテクノロジーの巨人です。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">帝国を支える3つの柱</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.841a.75.75 0 00-.543-.922l-13.5-3A.75.75 0 003.75 6l-1.083 4.083a.75.75 0 00.625.917l12.75 3.001" /></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_ecommerce_title">Eコマース & 物流</h4>
+                        <p class="text-slate-600" data-lang="core_ecommerce_p">圧倒的な品揃えと、プライム会員向けの迅速な配送網が強み。売上の大半を占める基盤事業。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" /></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_aws_title">AWS (クラウド)</h4>
+                        <p class="text-slate-600" data-lang="core_aws_p">世界シェアNo.1のクラウドサービス。会社の利益の大部分を稼ぎ出す、高収益な「金のなる木」。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 100 15 7.5 7.5 0 000-15zM21 21l-5.197-5.197" /></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_ads_title">広告 & サブスク</h4>
+                        <p class="text-slate-600" data-lang="core_ads_p">ECサイト内の広告事業が急成長中。プライムビデオやMusicなど、サブスクリプションも安定収益源。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">Amazonの強みは、各事業が生み出す相乗効果。「買い物客が集まる→出品者が増える→AWSのデータが増える→AIが賢くなる」という無敵の好循環を築いています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">売上はEコマースが牽引し、利益はAWSが生み出すという理想的な構造。近年は広告事業の利益貢献も増え、収益構造はさらに盤石になっています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$5,906億</p>
+                        <p class="text-base font-semibold text-blue-600" data-lang="stat_revenue_growth">前年比 +12%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">営業利益率
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">売上から人件費や広告費なども引いた「本業の儲け」の割合。会社全体の実力を示す。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">8.0%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">改善傾向が続く</p>
+                    </div>
+                    <div class="bg-indigo-50 border-l-4 border-indigo-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_aws_growth">AWS部門 成長率</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">+17%</p>
+                        <p class="text-base font-semibold text-indigo-600" data-lang="stat_aws_growth_desc">利益成長の柱</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">社会のインフラとして成長を続けるAmazon。しかし、その巨大さゆえの規制リスクや、激化する競争環境など、投資家が注意すべき点も存在します。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-blue-500 text-blue-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">Amazonの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">Amazonは次の成長の柱として「AI」を位置づけています。AWSのAIサービスから、Eコマースのパーソナライズ、物流の自動化まで、AIが帝国をさらに進化させます。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-blue-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">生成AIサービス（Bedrock）のAWSへの統合を加速。広告事業のさらなる拡大と、Amazon Pharmacyなどヘルスケア分野への本格進出で収益源を多様化します。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">ドローン配送や倉庫ロボットの進化で物流網を完全自動化。衛星インターネット「Project Kuiper」で世界中のどこにでもサービスを届け、新たなインフラを構築します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">Amazonはポートフォリオの中核となりうる安定成長株。ただし、景気動向にも左右されるため、あなたの投資スタイルに合わせた戦略が重要です。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-blue-100 text-blue-800 font-bold py-3 px-6 rounded-lg hover:bg-blue-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <p data-lang="footer_copyright">&copy; 2025 Amazon.com Investor Dashboard. All rights reserved.</p>
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        // Navigation
+        nav_today: { ja: 'AI市況予報', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        // Account
+        page_title: { ja: '【Amazon版】ECとAIの巨人！投資家向けダッシュボード', en: '[Amazon Edition] E-commerce & AI Giant! Investor Dashboard' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: 'ECとクラウドの絶対王者、<br><span class="gradient-text">Amazon</span>が生活を変える', en: 'The Absolute King of E-commerce and Cloud,<br><span class="gradient-text">Amazon</span> Changes Our Lives' },
+        hero_subtitle: { ja: '私たちの生活に欠かせない巨大企業「Amazon」。その強さの秘密と未来の可能性を、このページで徹底解剖します。', en: 'The giant "Amazon" is essential to our lives. This page thoroughly dissects the secrets of its strength and future potential.' },
+        intro_card_title: { ja: '「GAFAM株、どれから買う？」まずは生活のインフラ、Amazonから理解しよう！', en: '"Which FAANG stock to buy first?" Let\'s start by understanding the infrastructure of our lives, Amazon!' },
+        intro_card_p1: { ja: '「米国株投資を始めたいけど、どの有名企業がいいんだろう？」そんな疑問を持つ方に、まず知ってほしいのが「Amazon」です。ネット通販でお馴染みですが、そのビジネスは私たちの想像をはるかに超えるスケールで広がっています。', en: '"I want to start investing in U.S. stocks, but which famous company is best?" For those with that question, the first company to know is "Amazon." While familiar for online shopping, its business extends on a scale far beyond our imagination.' },
+        intro_card_p2: { ja: '実は、あなたが今見ているWebサイトや使っているアプリの多くも、Amazonのクラウドサービス「AWS」の上で動いています。ネット通販という巨大な「表の顔」だけでなく、<strong class="text-blue-700">世界のインターネットを支える「裏の顔」を持つ、まさに現代社会のインフラ企業</strong>なのです。', en: 'In fact, many of the websites and apps you use are running on Amazon\'s cloud service, "AWS." It\'s not just the giant "public face" of online retail; it\'s <strong class="text-blue-700">truly an infrastructure company for modern society with a "hidden face" that supports the global internet.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「Amazonの儲けの仕組みは？」「ライバルは？」「これからの成長分野は？」といった投資の核心に迫る疑問に、わかりやすく答えていきます。世界を動かす巨人の全体像を、一緒に掴んでいきましょう！', en: 'On this page, we will clearly answer core investment questions like "How does Amazon make money?", "Who are its rivals?", and "What are its future growth areas?". Let\'s grasp the full picture of this world-moving giant together!' },
+        growth_title: { ja: '安定成長と未来への投資。世界経済の羅針盤', en: 'Stable Growth and Future Investment. A Compass for the Global Economy' },
+        growth_p: { ja: 'Eコマースの安定した基盤に加え、高収益なAWSが成長を牽引。株価は世界経済の動向を反映しながらも、着実な成長を続けています。', en: 'In addition to a stable e-commerce foundation, the highly profitable AWS drives growth. The stock price continues to grow steadily while reflecting global economic trends.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'Amazonって、どんな会社？', en: 'What Kind of Company is Amazon?' },
+        business_p: { ja: '「地球上で最もお客様を大切にする企業」をビジョンに掲げ、Eコマースからクラウド、広告、AIまで、多角的に事業を展開するテクノロジーの巨人です。', en: 'With a vision to be "Earth\'s most customer-centric company," it is a technology giant that operates a diverse range of businesses from e-commerce and cloud to advertising and AI.' },
+        core_business_title: { ja: '帝国を支える3つの柱', en: 'Three Pillars Supporting the Empire' },
+        core_ecommerce_title: { ja: 'Eコマース & 物流', en: 'E-commerce & Logistics' },
+        core_ecommerce_p: { ja: '圧倒的な品揃えと、プライム会員向けの迅速な配送網が強み。売上の大半を占める基盤事業。', en: 'Its strength lies in its overwhelming product selection and rapid delivery network for Prime members. This is the foundational business, accounting for the majority of sales.' },
+        core_aws_title: { ja: 'AWS (クラウド)', en: 'AWS (Cloud)' },
+        core_aws_p: { ja: '世界シェアNo.1のクラウドサービス。会社の利益の大部分を稼ぎ出す、高収益な「金のなる木」。', en: 'The world\'s No. 1 cloud service by market share. A highly profitable "cash cow" that generates the majority of the company\'s profits.' },
+        core_ads_title: { ja: '広告 & サブスク', en: 'Ads & Subscriptions' },
+        core_ads_p: { ja: 'ECサイト内の広告事業が急成長中。プライムビデオやMusicなど、サブスクリプションも安定収益源。', en: 'The advertising business on its e-commerce site is rapidly growing. Subscriptions like Prime Video and Music are also stable revenue sources.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'Amazonの強みは、各事業が生み出す相乗効果。「買い物客が集まる→出品者が増える→AWSのデータが増える→AIが賢くなる」という無敵の好循環を築いています。', en: 'Amazon\'s strength is the synergy created by its various businesses. It has built an unbeatable virtuous cycle: "More shoppers attract more sellers → more data for AWS → smarter AI."' },
+        chart_competitor_label_amazon: { ja: 'Amazon', en: 'Amazon' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['Eコマース網', 'クラウド(AWS)', '物流', 'エコシステム', 'AI/イノベーション'], en: ['E-commerce Network', 'Cloud (AWS)', 'Logistics', 'Ecosystem', 'AI/Innovation'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: '売上はEコマースが牽引し、利益はAWSが生み出すという理想的な構造。近年は広告事業の利益貢献も増え、収益構造はさらに盤石になっています。', en: 'It has an ideal structure where e-commerce drives revenue and AWS generates profits. In recent years, the profit contribution from the advertising business has also increased, further solidifying its earnings structure.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +12%', en: '+12% YoY' },
+        stat_margin: { ja: '営業利益率', en: 'Operating Margin' },
+        stat_margin_tooltip: { ja: '売上から人件費や広告費なども引いた「本業の儲け」の割合。会社全体の実力を示す。', en: 'The ratio of "core business profit" after deducting costs like labor and advertising from sales. It indicates the company\'s overall strength.' },
+        stat_margin_desc: { ja: '改善傾向が続く', en: 'Continuing to Improve' },
+        stat_aws_growth: { ja: 'AWS部門 成長率', en: 'AWS Growth' },
+        stat_aws_growth_desc: { ja: '利益成長の柱', en: 'Pillar of Profit Growth' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '営業利益 (億ドル)', en: 'Operating Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: '社会のインフラとして成長を続けるAmazon。しかし、その巨大さゆえの規制リスクや、激化する競争環境など、投資家が注意すべき点も存在します。', en: 'Amazon continues to grow as a societal infrastructure. However, there are points investors should be wary of, such as regulatory risks due to its sheer size and intensifying competition.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「成長」し続ける理由', en: 'Why This Stock Could Keep Growing' },
+        bull_content_li1: { ja: '<strong>AWSの圧倒的支配力:</strong> クラウド市場で首位を独走。AIブームで需要はさらに加速。', en: '<strong>Dominance of AWS:</strong> Clear leader in the cloud market. Demand is accelerating further with the AI boom.' },
+        bull_content_li2: { ja: '<strong>Eコマースの牙城:</strong> 強力な物流網とプライム会員制度が、他社の追随を許さない「堀」となっている。', en: '<strong>E-commerce Fortress:</strong> Its powerful logistics network and Prime membership create a "moat" that competitors cannot easily cross.' },
+        bull_content_li3: { ja: '<strong>高収益な広告事業:</strong> Eコマースと連動した広告は、Google、Metaに次ぐ第3の柱に成長。', en: '<strong>Profitable Ad Business:</strong> Advertising linked to e-commerce has grown into a third pillar after Google and Meta.' },
+        bull_content_li4: { ja: '<strong>AIへの積極投資:</strong> AI開発企業Anthropicへの巨額出資など、次世代の覇権を狙う。', en: '<strong>Aggressive AI Investment:</strong> Aiming for next-generation dominance with huge investments in AI companies like Anthropic.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>独禁法・規制リスク:</strong> 巨大すぎるため、世界各国の政府から独占禁止法違反で調査・提訴されるリスク。', en: '<strong>Antitrust/Regulatory Risk:</strong> Being too big, it faces risks of investigation and lawsuits for antitrust violations from governments worldwide.' },
+        bear_content_li2: { ja: '<strong>クラウド市場の競争激化:</strong> Microsoft (Azure)やGoogle (GCP)が猛追。シェア争いが激しくなっている。', en: '<strong>Intensifying Cloud Competition:</strong> Microsoft (Azure) and Google (GCP) are catching up fast, heating up the battle for market share.' },
+        bear_content_li3: { ja: '<strong>景気への敏感さ:</strong> Eコマース事業は個人の消費動向に大きく左右されるため、景気後退の影響を受けやすい。', en: '<strong>Economic Sensitivity:</strong> The e-commerce business is heavily dependent on consumer spending, making it vulnerable to economic downturns.' },
+        bear_content_li4: { ja: '<strong>労働問題:</strong> 倉庫従業員の労働組合結成の動きなど、人件費の上昇やブランドイメージ低下の懸念。', en: '<strong>Labor Issues:</strong> Concerns about rising labor costs and brand image damage from movements to unionize warehouse employees.' },
+        outlook_title: { ja: 'Amazonの未来は？', en: 'What is Amazon\'s Future?' },
+        outlook_p: { ja: 'Amazonは次の成長の柱として「AI」を位置づけています。AWSのAIサービスから、Eコマースのパーソナライズ、物流の自動化まで、AIが帝国をさらに進化させます。', en: 'Amazon positions "AI" as its next pillar of growth. From AWS AI services to e-commerce personalization and logistics automation, AI will further evolve the empire.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: '生成AIサービス（Bedrock）のAWSへの統合を加速。広告事業のさらなる拡大と、Amazon Pharmacyなどヘルスケア分野への本格進出で収益源を多様化します。', en: 'Accelerate the integration of generative AI services (Bedrock) into AWS. Diversify revenue streams through further expansion of the advertising business and a full-scale entry into healthcare with Amazon Pharmacy.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'ドローン配送や倉庫ロボットの進化で物流網を完全自動化。衛星インターネット「Project Kuiper」で世界中のどこにでもサービスを届け、新たなインフラを構築します。', en: 'Fully automate the logistics network with advanced drone delivery and warehouse robots. Build new infrastructure by delivering services anywhere in the world with the "Project Kuiper" satellite internet.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'Amazonはポートフォリオの中核となりうる安定成長株。ただし、景気動向にも左右されるため、あなたの投資スタイルに合わせた戦略が重要です。', en: 'Amazon is a stable growth stock that can be a core holding in a portfolio. However, since it is also influenced by economic trends, a strategy tailored to your investment style is important.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: 'マクロ経済に注目', en: 'Focus on Macroeconomics' },
+        strategy_res_short_p: { ja: '株価は金利や景気の動向に敏感です。短期的な取引は市場全体のニュースに左右されやすいため、決算や経済指標の発表タイミングが重要になります。', en: 'The stock price is sensitive to interest rates and economic trends. Short-term trading is easily swayed by market-wide news, so timing around earnings and economic data releases is crucial.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '「押し目買い」が有効', en: '"Buy the Dip" is Effective' },
+        strategy_res_medium_p: { ja: 'クラウドとEコマースのファンダメンタルズは強力。市場全体の下落で株価が下がった局面は、買い増しの好機となり得ます。コア事業の成長率に注目しましょう。', en: 'The fundamentals of cloud and e-commerce are strong. Dips caused by broader market downturns can be good opportunities to buy more. Keep an eye on the growth rates of core businesses.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: '帝国の成長を信じる', en: 'Believe in the Empire\'s Growth' },
+        strategy_res_long_p: { ja: '短期的な株価は気にせず、AI、ヘルスケア、衛星通信といった未来の事業が花開くのを待つ戦略。社会のインフラとしての価値は長期的に高まる可能性が高いです。', en: 'A strategy to ignore short-term price moves and wait for future businesses like AI, healthcare, and satellite communications to flourish. Its value as societal infrastructure is likely to increase in the long term.' },
+        footer_copyright: { ja: '&copy; 2025 Amazon.com Investor Dashboard. All rights reserved.', en: '&copy; 2025 Amazon.com Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                if (el.tagName === 'TITLE') {
+                    el.textContent = translations[key][lang];
+                } else {
+                    el.innerHTML = translations[key][lang];
+                }
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_amazon[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-blue-400 animate-pop-in"><h3 class="font-bold text-blue-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [138, 142, 135, 150, 155, 160, 175, 170, 180, 182, 188, 185], borderColor: '#3B82F6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [5748, 6380, 7100], backgroundColor: '#3B82F6', yAxisID: 'y' }, { type: 'line', label: '営業利益 (億ドル)', data: [368, 510, 650], borderColor: '#6366F1', backgroundColor: '#6366F1', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['Eコマース網', 'クラウド(AWS)', '物流', 'エコシステム', 'AI/イノベーション'], datasets: [ { label: 'Amazon', data: [95, 90, 98, 92, 88], backgroundColor: 'rgba(59, 130, 246, 0.2)', borderColor: 'rgba(37, 99, 235, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(37, 99, 235, 1)' }, { label: '競合他社 (平均)', data: [75, 85, 70, 80, 82], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = '+' + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = '+' + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-blue-500', 'text-blue-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-blue-500', 'text-blue-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-blue-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-blue-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

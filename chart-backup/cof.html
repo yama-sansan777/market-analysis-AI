@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- START: COF Content Changes - Title -->
+    <title data-lang="page_title">【キャピタルワン版】金融テクノロジーの革命児！投資家向けダッシュボード</title>
+    <!-- END: COF Content Changes - Title -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to Capital One's blue and red theme
+                        primary: '#00407A', // Capital One Blue
+                        secondary: '#DA291C', // Capital One Red
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: COF Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #DA291C, #00407A); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #00407A; content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; transition: width 0.3s ease; }
+        /* END: COF Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        /* START: FORMAT CORRECTION - Underline now appears only on hover */
+        .nav-link:hover::after { width: 100%; }
+        /* END: FORMAT CORRECTION */
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #00407A; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">AI市況予報</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">AI市況予報</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: COF Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-blue-50 to-red-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-800 to-red-700 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">C</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Capital One Financial</span>
+                        <span class="text-sm font-semibold text-slate-500">NYSE: COF</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: COF Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: COF Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    データで金融を再発明する革命児、<br>
+                    <span class="gradient-text">キャピタルワン</span>の挑戦
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    クレジットカード業界の巨人「キャピタルワン」。テクノロジーとデータ分析を武器に、伝統的な銀行業界に破壊的イノベーションをもたらす金融テクノロジー企業の真価に迫ります。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-red-50 to-blue-50 border-red-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「銀行らしくない銀行」Discover買収で、キャピタルワンは何を目指すのか？</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「キャピタルワン」は、米国最大級のクレジットカード発行会社であり、自動車ローンやオンライン銀行も手掛ける大手金融機関です。しかし、その本質は伝統的な銀行ではなく、「テクノロジー企業」に近いと言えます。</p>
+                    <p data-lang="intro_card_p2">創業以来、データ分析を駆使して顧客一人ひとりに最適な金融商品を提案する戦略で急成長してきました。そして今、決済ネットワークを持つDiscover Financialの買収により、<strong class="text-blue-800">VisaやMastercardといった巨大ネットワークに対抗する、独自の決済エコシステムの構築</strong>という壮大な挑戦を始めようとしています。</p>
+                    <p data-lang="intro_card_p3">このページでは、「キャピタルワンのビジネスモデルの強みは？」「Discover買収の真の狙いは？」「景気後退への耐性は？」といった、投資家が知るべき核心に迫ります。金融業界の未来を創るゲームチェンジャーの戦略を、一緒に分析しましょう。</p>
+                </div>
+            </div>
+            <!-- END: COF Content Changes - Hero Section -->
+
+            <!-- START: COF Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">Discover買収への期待と、金利動向が株価の鍵</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">Discover Financialの買収発表が、将来の成長への大きな期待を生み、株価を押し上げました。今後の株価は、この歴史的な買収の成否と、米国の金利・景気動向に大きく左右されます。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="145.20">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="8.5">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="0.05">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="12">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: COF Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: COF Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">キャピタルワンって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">クレジットカード事業を中核に、消費者向け銀行業務（自動車ローン、預金）、法人向け銀行業務の3つのセグメントで事業を展開する、米国トップ10に入る大手銀行です。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える3つのセグメント</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 7H2V17H22V7ZM20 9H4V15H20V9Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_credit_card_title">クレジットカード</h4>
+                        <p class="text-slate-600" data-lang="core_credit_card_p">売上・利益の大部分を占める最大の事業。データ分析に基づくマーケティングで高いシェアを誇る。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM11 7H13V13H11V7ZM11 15H13V17H11V15Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_consumer_banking_title">消費者向け銀行</h4>
+                        <p class="text-slate-600" data-lang="core_consumer_banking_p">自動車ローンが中心。オンライン中心の預金サービスも展開し、低コストでの資金調達に貢献。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 20H3V18H21V20ZM12 2C12.5523 2 13 2.44772 13 3V15C13 15.5523 12.5523 16 12 16C11.4477 16 11 15.5523 11 15V3C11 2.44772 11.4477 2 12 2ZM12 16C14.7614 16 17 13.7614 17 11V3H15V11C15 12.6569 13.6569 14 12 14C10.3431 14 9 12.6569 9 11V3H7V11C7 13.7614 9.23858 16 12 16Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_commercial_banking_title">法人向け銀行</h4>
+                        <p class="text-slate-600" data-lang="core_commercial_banking_p">中堅企業向けの融資や資金管理サービスを提供。景気動向に業績が左右されやすい。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">キャピタルワンの強みは、伝統的な銀行の枠を超えた、テクノロジーとデータ分析への積極的な投資です。これにより、競合のJPMorgan ChaseやBank of Americaといった巨大銀行とは異なるアプローチで、高い収益性を実現しています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: COF Content Changes - Business Section -->
+
+        <!-- START: COF Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">高金利環境が純金利マージン（利ざや）の追い風となる一方、景気減速懸念から貸倒損失は増加傾向。コスト管理と信用リスクのコントロールが課題です。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$375億</p>
+                        <p class="text-base font-semibold text-blue-600" data-lang="stat_revenue_growth">前年比 +2%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">純金利マージン (NIM)
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">貸出金利と預金金利の差から生まれる、銀行の基本的な収益力を示す指標。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">6.5%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">高金利が追い風</p>
+                    </div>
+                    <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_charge_off">貸倒率</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">2.5%</p>
+                        <p class="text-base font-semibold text-red-600" data-lang="stat_charge_off_desc">上昇傾向に注意</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: COF Content Changes - Financials Section -->
+        
+        <!-- START: COF Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">Discover買収による長期的な成長ストーリーへの期待と、短期的な景気後退リスクが交錯するキャピタルワン株。投資家のリスク許容度が問われます。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-blue-500 text-blue-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: COF Content Changes - Thesis Section -->
+
+        <!-- START: COF Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">キャピタルワンの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">キャピタルワンの未来は、Discover買収を成功させ、VisaとMastercardに次ぐ第3の決済ネットワークを構築できるかにかかっています。テクノロジーを駆使した、よりパーソナルな金融サービスの提供を目指します。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-blue-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">Discover Financialの買収を完了させ、規制当局の承認を得ることが最優先課題。統合計画を策定し、シナジー効果の実現に向けた準備を進めます。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">独自の決済ネットワークを活用し、加盟店手数料などの新たな収益源を確立。データ分析能力をさらに高め、より革新的な金融商品やサービスを開発します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: COF Content Changes - Outlook Section -->
+
+        <!-- START: COF Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">キャピタルワンは、景気敏感株でありながら、Discover買収という大きな変革の可能性を秘めた銘柄。景気サイクルと、大型M&Aの成功に賭ける投資家に適しています。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-blue-100 text-blue-800 font-bold py-3 px-6 rounded-lg hover:bg-blue-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: COF Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: COF Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Capital One Financial Corp. Investor Dashboard. All rights reserved.</p>
+            <!-- END: COF Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        nav_today: { ja: 'AI市況予報', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        page_title: { ja: '【キャピタルワン版】金融テクノロジーの革命児！投資家向けダッシュボード', en: '【Capital One】Financial Technology Revolutionary! Investor Dashboard' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: 'データで金融を再発明する革命児、<br><span class="gradient-text">キャピタルワン</span>の挑戦', en: 'The Revolutionary Reimagining Finance with Data,<br>The Challenge of <span class="gradient-text">Capital One</span>' },
+        hero_subtitle: { ja: 'クレジットカード業界の巨人「キャピタルワン」。テクノロジーとデータ分析を武器に、伝統的な銀行業界に破壊的イノベーションをもたらす金融テクノロジー企業の真価に迫ります。', en: 'The credit card industry giant, "Capital One." We explore the true value of this financial technology company that brings disruptive innovation to the traditional banking industry with its technology and data analytics.' },
+        intro_card_title: { ja: '「銀行らしくない銀行」Discover買収で、キャピタルワンは何を目指すのか？', en: '"The Unbanklike Bank": What is Capital One aiming for with the Discover acquisition?' },
+        intro_card_p1: { ja: '「キャピタルワン」は、米国最大級のクレジットカード発行会社であり、自動車ローンやオンライン銀行も手掛ける大手金融機関です。しかし、その本質は伝統的な銀行ではなく、「テクノロジー企業」に近いと言えます。', en: '"Capital One" is one of the largest credit card issuers in the U.S. and a major financial institution that also handles auto loans and online banking. However, its essence is closer to a "technology company" than a traditional bank.' },
+        intro_card_p2: { ja: '創業以来、データ分析を駆使して顧客一人ひとりに最適な金融商品を提案する戦略で急成長してきました。そして今、決済ネットワークを持つDiscover Financialの買収により、<strong class="text-blue-800">VisaやMastercardといった巨大ネットワークに対抗する、独自の決済エコシステムの構築</strong>という壮大な挑戦を始めようとしています。', en: 'Since its founding, it has grown rapidly with a strategy of using data analytics to offer optimal financial products to each customer. And now, with the acquisition of Discover Financial, which has its own payment network, it is embarking on a grand challenge: <strong class="text-blue-800">building its own payment ecosystem to compete with giant networks like Visa and Mastercard.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「キャピタルワンのビジネスモデルの強みは？」「Discover買収の真の狙いは？」「景気後退への耐性は？」といった、投資家が知るべき核心に迫ります。金融業界の未来を創るゲームチェンジャーの戦略を、一緒に分析しましょう。', en: 'This page delves into the core questions for investors, such as "What are the strengths of Capital One\'s business model?", "What is the true goal of the Discover acquisition?", and "How resilient is it to a recession?". Let\'s analyze the strategy of this game-changer shaping the future of the financial industry.' },
+        growth_title: { ja: 'Discover買収への期待と、金利動向が株価の鍵', en: 'Expectations for Discover Acquisition and Interest Rate Trends are Key to Stock Price' },
+        growth_p: { ja: 'Discover Financialの買収発表が、将来の成長への大きな期待を生み、株価を押し上げました。今後の株価は、この歴史的な買収の成否と、米国の金利・景気動向に大きく左右されます。', en: 'The announcement of the Discover Financial acquisition created high expectations for future growth and boosted the stock price. The future stock price will be heavily influenced by the success of this historic acquisition and U.S. interest rate and economic trends.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'キャピタルワンって、どんな会社？', en: 'What Kind of Company is Capital One?' },
+        business_p: { ja: 'クレジットカード事業を中核に、消費者向け銀行業務（自動車ローン、預金）、法人向け銀行業務の3つのセグメントで事業を展開する、米国トップ10に入る大手銀行です。', en: 'A top 10 U.S. bank that operates in three segments: Credit Card, Consumer Banking (auto loans, deposits), and Commercial Banking.' },
+        core_business_title: { ja: 'ビジネスを支える3つのセグメント', en: 'Three Segments Supporting the Business' },
+        core_credit_card_title: { ja: 'クレジットカード', en: 'Credit Card' },
+        core_credit_card_p: { ja: '売上・利益の大部分を占める最大の事業。データ分析に基づくマーケティングで高いシェアを誇る。', en: 'The largest business, accounting for the majority of revenue and profit. Boasts a high market share due to data-driven marketing.' },
+        core_consumer_banking_title: { ja: '消費者向け銀行', en: 'Consumer Banking' },
+        core_consumer_banking_p: { ja: '自動車ローンが中心。オンライン中心の預金サービスも展開し、低コストでの資金調達に貢献。', en: 'Centered on auto loans. Also offers online-focused deposit services, contributing to low-cost funding.' },
+        core_commercial_banking_title: { ja: '法人向け銀行', en: 'Commercial Banking' },
+        core_commercial_banking_p: { ja: '中堅企業向けの融資や資金管理サービスを提供。景気動向に業績が左右されやすい。', en: 'Provides lending and treasury management services to middle-market companies. Performance is susceptible to economic trends.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'キャピタルワンの強みは、伝統的な銀行の枠を超えた、テクノロジーとデータ分析への積極的な投資です。これにより、競合のJPMorgan ChaseやBank of Americaといった巨大銀行とは異なるアプローチで、高い収益性を実現しています。', en: 'Capital One\'s strength is its aggressive investment in technology and data analytics, which goes beyond the traditional banking framework. This allows it to achieve high profitability with a different approach from giant competitors like JPMorgan Chase and Bank of America.' },
+        chart_competitor_label_cof: { ja: 'キャピタルワン', en: 'Capital One' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['クレジットカード事業', 'テクノロジー＆データ', '収益性(NIM)', 'ブランド力', 'バリュエーション'], en: ['Credit Card Business', 'Tech & Data', 'Profitability (NIM)', 'Brand Power', 'Valuation'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: '高金利環境が純金利マージン（利ざや）の追い風となる一方、景気減速懸念から貸倒損失は増加傾向。コスト管理と信用リスクのコントロールが課題です。', en: 'While the high-interest-rate environment is a tailwind for net interest margin (NIM), loan losses are trending upward due to concerns about an economic slowdown. Cost management and credit risk control are key challenges.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +2%', en: '+2% YoY' },
+        stat_margin: { ja: '純金利マージン (NIM)', en: 'Net Interest Margin (NIM)' },
+        stat_margin_tooltip: { ja: '貸出金利と預金金利の差から生まれる、銀行の基本的な収益力を示す指標。', en: 'A basic measure of a bank\'s profitability, derived from the difference between lending and deposit rates.' },
+        stat_margin_desc: { ja: '高金利が追い風', en: 'High Rates are a Tailwind' },
+        stat_charge_off: { ja: '貸倒率', en: 'Charge-Off Rate' },
+        stat_charge_off_desc: { ja: '上昇傾向に注意', en: 'Watch the Upward Trend' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: 'Discover買収による長期的な成長ストーリーへの期待と、短期的な景気後退リスクが交錯するキャピタルワン株。投資家のリスク許容度が問われます。', en: 'Capital One stock is at a crossroads, with expectations for long-term growth from the Discover acquisition and short-term recession risks. It tests an investor\'s risk tolerance.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「化ける」理由', en: 'Why This Stock Could "Transform"' },
+        bull_content_li1: { ja: '<strong>Discover買収のシナジー:</strong> 独自の決済ネットワークを持つことで、VisaやMastercardに支払っていた手数料を削減し、大きな利益改善が見込める。', en: '<strong>Synergies from Discover Acquisition:</strong> Having its own payment network will reduce fees paid to Visa and Mastercard, leading to significant profit improvement.' },
+        bull_content_li2: { ja: '<strong>テクノロジーとデータの優位性:</strong> 銀行業界随一のデータ分析能力が、優れた信用リスク管理とマーケティングを可能にする。', en: '<strong>Tech and Data Advantage:</strong> Its best-in-class data analytics capabilities in the banking industry enable superior credit risk management and marketing.' },
+        bull_content_li3: { ja: '<strong>強力なブランド認知度:</strong> クレジットカード事業で築いた高いブランド力は、顧客獲得において大きな強みとなる。', en: '<strong>Strong Brand Recognition:</strong> The strong brand built in the credit card business is a major advantage in customer acquisition.' },
+        bull_content_li4: { ja: '<strong>割安なバリュエーション:</strong> 景気後退懸念から、株価は同業他社に比べて割安な水準で取引されている。', en: '<strong>Undervalued Valuation:</strong> Due to recession concerns, the stock is trading at a discount compared to its peers.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>景気後退リスク:</strong> 景気が悪化し、失業率が上昇すると、クレジットカードや自動車ローンの延滞・貸倒れが急増する。', en: '<strong>Recession Risk:</strong> An economic downturn and rising unemployment would lead to a surge in delinquencies and charge-offs for credit cards and auto loans.' },
+        bear_content_li2: { ja: '<strong>Discover買収の規制リスク:</strong> 巨大銀行の誕生に対して、規制当局が承認しない、あるいは厳しい条件を課す可能性がある。', en: '<strong>Regulatory Risk of Discover Acquisition:</strong> Regulators may not approve the creation of such a large bank, or may impose strict conditions.' },
+        bear_content_li3: { ja: '<strong>金利低下リスク:</strong> FRBが利下げに転じると、銀行の収益の柱である純金利マージンが縮小する。', en: '<strong>Falling Interest Rate Risk:</strong> If the Fed begins to cut rates, the bank\'s net interest margin, a key pillar of profit, will shrink.' },
+        bear_content_li4: { ja: '<strong>競争の激化:</strong> クレジットカード市場は競争が非常に激しく、FinTech企業の台頭も脅威となる。', en: '<strong>Intensifying Competition:</strong> The credit card market is extremely competitive, and the rise of FinTech companies also poses a threat.' },
+        outlook_title: { ja: 'キャピタルワンの未来は？', en: 'What is Capital One\'s Future?' },
+        outlook_p: { ja: 'キャピタルワンの未来は、Discover買収を成功させ、VisaとMastercardに次ぐ第3の決済ネットワークを構築できるかにかかっています。テクノロジーを駆使した、よりパーソナルな金融サービスの提供を目指します。', en: 'Capital One\'s future depends on the successful acquisition of Discover and its ability to build a third major payment network to rival Visa and Mastercard. It aims to provide more personalized financial services using technology.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: 'Discover Financialの買収を完了させ、規制当局の承認を得ることが最優先課題。統合計画を策定し、シナジー効果の実現に向けた準備を進めます。', en: 'Completing the acquisition of Discover Financial and obtaining regulatory approval is the top priority. It will formulate an integration plan and prepare for the realization of synergies.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: '独自の決済ネットワークを活用し、加盟店手数料などの新たな収益源を確立。データ分析能力をさらに高め、より革新的な金融商品やサービスを開発します。', en: 'Leverage its own payment network to establish new revenue streams, such as merchant fees. Further enhance its data analytics capabilities to develop more innovative financial products and services.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'キャピタルワンは、景気敏感株でありながら、Discover買収という大きな変革の可能性を秘めた銘柄。景気サイクルと、大型M&Aの成功に賭ける投資家に適しています。', en: 'Capital One is a cyclical stock that also holds the potential for a major transformation through the Discover acquisition. It is suitable for investors who are willing to bet on the economic cycle and the success of a large-scale M&A.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: 'Discover買収のニュースが全て', en: 'It\'s All About the Discover Acquisition News' },
+        strategy_res_short_p: { ja: '短期的な株価は、規制当局による買収承認のニュースに最も大きく反応します。このディールの進捗に関する報道が、短期的な変動要因となります。', en: 'The short-term stock price will react most significantly to news of regulatory approval for the acquisition. Reports on the progress of this deal will be a short-term driver.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '金利と貸倒れの動向を見る', en: 'Watch Interest Rate and Charge-Off Trends' },
+        strategy_res_medium_p: { ja: 'FRBの金利政策と、それに伴う貸倒率の動向が中期的な業績を左右します。景気がソフトランディングし、貸倒れが抑制されれば、株価は見直される可能性があります。', en: 'The Fed\'s interest rate policy and the resulting trend in charge-off rates will determine mid-term performance. If the economy achieves a soft landing and charge-offs are contained, the stock could be re-evaluated.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: '決済ネットワークの創造に賭ける', en: 'Bet on the Creation of a Payment Network' },
+        strategy_res_long_p: { ja: '短期的な景気サイクルは気にせず、Discover買収が成功し、Visa・Mastercardに次ぐ第3の決済ネットワークが生まれるという壮大なストーリーに投資する戦略です。', en: 'A strategy to invest in the grand narrative of the Discover acquisition succeeding and creating a third major payment network to rival Visa and Mastercard, ignoring short-term economic cycles.' },
+        footer_copyright: { ja: '&copy; 2025 Capital One Financial Corp. Investor Dashboard. All rights reserved.', en: '&copy; 2025 Capital One Financial Corp. Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                el.innerHTML = translations[key][lang];
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_cof[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-blue-400 animate-pop-in"><h3 class="font-bold text-blue-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [110, 105, 100, 115, 130, 135, 140, 145, 138, 142, 148, 145], borderColor: '#00407A', backgroundColor: 'rgba(0, 64, 122, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [368, 375, 390], backgroundColor: '#00407A', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [48, 55, 62], borderColor: '#DA291C', backgroundColor: '#DA291C', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['クレジットカード事業', 'テクノロジー＆データ', '収益性(NIM)', 'ブランド力', 'バリュエーション'], datasets: [ { label: 'キャピタルワン', data: [95, 92, 90, 93, 88], backgroundColor: 'rgba(0, 64, 122, 0.2)', borderColor: 'rgba(0, 64, 122, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(0, 64, 122, 1)' }, { label: '競合他社 (平均)', data: [88, 80, 85, 90, 82], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-blue-500', 'text-blue-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-blue-500', 'text-blue-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-blue-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-blue-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

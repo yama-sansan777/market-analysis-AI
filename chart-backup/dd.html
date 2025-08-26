@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- START: DD Content Changes - Title -->
+    <title data-lang="page_title">【デュポン版】特殊化学の世界的リーダー！投資家向けダッシュボード</title>
+    <!-- END: DD Content Changes - Title -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to DuPont's red
+                        primary: '#D92D2D', // DuPont Red
+                        secondary: '#FF4D4D', // Lighter accent red
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: DD Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #FF4D4D, #D92D2D); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #D92D2D; content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; transition: width 0.3s ease; }
+        /* END: DD Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #D92D2D; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">AI市況予報</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">AI市況予報</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: DD Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-red-50 to-orange-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-orange-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">D</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">DuPont de Nemours</span>
+                        <span class="text-sm font-semibold text-slate-500">NYSE: DD</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: DD Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: DD Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    科学の力で未来を創るイノベーター、<br>
+                    <span class="gradient-text">デュポン</span>の変革と成長
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    200年以上の歴史を持つ化学の巨人「デュポン」。エレクトロニクス、水、防護といった高成長分野に特化し、よりスリムで強力な企業へと変貌を遂げています。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-orange-50 to-red-50 border-orange-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「ポートフォリオ変革」新生デュポンは、景気循環を乗り越えられるか？</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「デュポン」は、かつての巨大化学コングロマリットから、事業の選択と集中を繰り返し、より専門性の高い特殊化学メーカーへと生まれ変わりました。ケブラー®やタイベック®といった、世界的に有名なブランドを数多く保有しています。</p>
+                    <p data-lang="intro_card_p2">現在のデュポンの強みは、半導体、5G、クリーンな水、防護服といった、長期的な成長が見込まれる「メガトレンド」に事業を集中させている点です。例えるなら、<strong class="text-red-700">未来の成長に不可欠な「金の卵」を産む事業だけを選び出し、そこに経営資源を集中投下する、熟練のポートフォリオマネージャー</strong>のような企業です。</p>
+                    <p data-lang="intro_card_p3">このページでは、「デュポンの主要事業の強みは？」「なぜ事業の入れ替えを続けるのか？」「今後の成長ドライバーは？」といった、投資家が知るべき本質に迫ります。絶え間ない変革を通じて、未来の需要を捉えようとする化学の巨人の戦略を見ていきましょう。</p>
+                </div>
+            </div>
+            <!-- END: DD Content Changes - Hero Section -->
+
+            <!-- START: DD Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">景気循環に左右されるも、高収益事業への集中が強み</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">エレクトロニクスや建設市場の需要減速が短期的な業績の重しとなっていますが、高マージンな事業への集中とコスト管理により、収益性は維持。株価は景気回復への期待を織り込みつつあります。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="85.20">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="5.5">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="0.035">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-red-600" data-count="25">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: DD Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: DD Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">デュポンって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">「エレクトロニクス＆インダストリアル」「ウォーター＆プロテクション」「インダストリアル・ソリューションズ」の3つのセグメントで、高機能な素材とソリューションを提供しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える3つのセグメント</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2L9 4L5 4L5 6L3 6L3 8L2 8L2 16L3 16L3 18L5 18L5 20L9 20L9 22L15 22L15 20L19 20L19 18L21 18L21 16L22 16L22 8L21 8L21 6L19 6L19 4L15 4L15 2L9 2ZM11 6L13 6L13 8L15 8L15 10L17 10L17 14L15 14L15 16L13 16L13 18L11 18L11 16L9 16L9 14L7 14L7 10L9 10L9 8L11 8L11 6Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_ei_title">エレクトロニクス＆インダストリアル</h4>
+                        <p class="text-slate-600" data-lang="core_ei_p">半導体製造プロセスやスマートフォンに使われる高機能材料を提供。AIや5Gの普及が追い風。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_wp_title">ウォーター＆プロテクション</h4>
+                        <p class="text-slate-600" data-lang="core_wp_p">逆浸透膜などの水処理ソリューションと、ケブラー®やタイベック®などの防護服・建材を提供。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-red-50"><svg class="w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 3H14V17H10V3Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_is_title">インダストリアル・ソリューションズ</h4>
+                        <p class="text-slate-600" data-lang="core_is_p">自動車、ヘルスケア、航空宇宙など、幅広い産業向けに特殊な接着剤や潤滑剤などを提供。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">デュポンの強みは、長年の研究開発で培われた、模倣困難な技術力と強力な特許ポートフォリオです。各分野で高い市場シェアと価格決定力を持ち、競合のダウや3Mに対して、高い利益率を実現しています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: DD Content Changes - Business Section -->
+
+        <!-- START: DD Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">エレクトロニクス市場の在庫調整や、中国経済の減速により、売上は一時的に低迷。しかし、コスト削減と高付加価値製品への集中により、利益率は底堅く推移しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$125億</p>
+                        <p class="text-base font-semibold text-red-600" data-lang="stat_revenue_growth">前年比 -2%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">営業EBITDAマージン
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">本業の収益力を示す指標。デュポンは高機能製品に特化することで、高い利益率を維持している。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">25%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">高い収益性</p>
+                    </div>
+                    <div class="bg-orange-50 border-l-4 border-orange-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_fcf">フリーキャッシュフロー</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$18億</p>
+                        <p class="text-base font-semibold text-orange-600" data-lang="stat_fcf_desc">株主還元とM&Aの源泉</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: DD Content Changes - Financials Section -->
+        
+        <!-- START: DD Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">長期的な成長トレンドに乗る優良企業でありながら、景気循環の影響を受けやすいデュポン株。景気回復局面を狙う投資家と、安定性を求める投資家で評価が分かれます。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-red-500 text-red-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: DD Content Changes - Thesis Section -->
+
+        <!-- START: DD Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">デュポンの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">デュポンの未来は、高成長・高マージンな事業へのポートフォリオ変革を継続し、景気循環の影響を受けにくい、より強靭な企業体質を構築できるかにかかっています。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-red-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-red-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">半導体市場の回復を捉え、エレクトロニクス事業の成長を再加速。水事業と防護事業の安定的な成長を維持しつつ、コスト削減を徹底します。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-red-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">ポートフォリオのさらなる見直しを進め、場合によっては事業の追加売却や大型買収も検討。EV、クリーンエネルギー、次世代通信といった分野での存在感を高めます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: DD Content Changes - Outlook Section -->
+
+        <!-- START: DD Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">デュポンは、景気回復局面で大きなリターンが期待できる、質の高い景気敏感（シクリカル）株。市場のサイクルを読み、割安なタイミングで仕込む戦略が有効です。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-red-100 text-red-800 font-bold py-3 px-6 rounded-lg hover:bg-red-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: DD Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: DD Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 DuPont de Nemours, Inc. Investor Dashboard. All rights reserved.</p>
+            <!-- END: DD Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        nav_today: { ja: 'AI市況予報', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        page_title: { ja: '【デュポン版】特殊化学の世界的リーダー！投資家向けダッシュボード', en: '【DuPont】Global Leader in Specialty Chemicals! Investor Dashboard' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: '科学の力で未来を創るイノベーター、<br><span class="gradient-text">デュポン</span>の変革と成長', en: 'The Innovator Creating the Future with Science,<br>The Transformation and Growth of <span class="gradient-text">DuPont</span>' },
+        hero_subtitle: { ja: '200年以上の歴史を持つ化学の巨人「デュポン」。エレクトロニクス、水、防護といった高成長分野に特化し、よりスリムで強力な企業へと変貌を遂げています。', en: 'The chemical giant "DuPont," with over 200 years of history. It is transforming into a leaner, more powerful company by specializing in high-growth areas like electronics, water, and protection.' },
+        intro_card_title: { ja: '「ポートフォリオ変革」新生デュポンは、景気循環を乗り越えられるか？', en: '"Portfolio Transformation": Can the new DuPont overcome economic cycles?' },
+        intro_card_p1: { ja: '「デュポン」は、かつての巨大化学コングロマリットから、事業の選択と集中を繰り返し、より専門性の高い特殊化学メーカーへと生まれ変わりました。ケブラー®やタイベック®といった、世界的に有名なブランドを数多く保有しています。', en: '"DuPont" has transformed from a giant chemical conglomerate into a more specialized specialty chemicals manufacturer through repeated portfolio selections and concentrations. It owns many world-famous brands like Kevlar® and Tyvek®.' },
+        intro_card_p2: { ja: '現在のデュポンの強みは、半導体、5G、クリーンな水、防護服といった、長期的な成長が見込まれる「メガトレンド」に事業を集中させている点です。例えるなら、<strong class="text-red-700">未来の成長に不可欠な「金の卵」を産む事業だけを選び出し、そこに経営資源を集中投下する、熟練のポートフォリオマネージャー</strong>のような企業です。', en: 'DuPont\'s current strength is its focus on "megatrends" with long-term growth potential, such as semiconductors, 5G, clean water, and protective apparel. It\'s like a <strong class="text-red-700">skilled portfolio manager that selects only the businesses that will lay "golden eggs" essential for future growth and concentrates its resources there.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「デュポンの主要事業の強みは？」「なぜ事業の入れ替えを続けるのか？」「今後の成長ドライバーは？」といった、投資家が知るべき本質に迫ります。絶え間ない変革を通じて、未来の需要を捉えようとする化学の巨人の戦略を見ていきましょう。', en: 'This page delves into the core aspects investors should know, such as "What are the strengths of DuPont\'s key businesses?", "Why does it continue to reshuffle its portfolio?", and "What are its future growth drivers?". Let\'s examine the strategy of this chemical giant as it seeks to capture future demand through constant transformation.' },
+        growth_title: { ja: '景気循環に左右されるも、高収益事業への集中が強み', en: 'Cyclical, but Strengthened by Focus on High-Margin Businesses' },
+        growth_p: { ja: 'エレクトロニクスや建設市場の需要減速が短期的な業績の重しとなっていますが、高マージンな事業への集中とコスト管理により、収益性は維持。株価は景気回復への期待を織り込みつつあります。', en: 'While a slowdown in demand from the electronics and construction markets is a short-term headwind, profitability is being maintained through a focus on high-margin businesses and cost management. The stock price is beginning to price in expectations of an economic recovery.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'デュポンって、どんな会社？', en: 'What Kind of Company is DuPont?' },
+        business_p: { ja: '「エレクトロニクス＆インダストリアル」「ウォーター＆プロテクション」「インダストリアル・ソリューションズ」の3つのセグメントで、高機能な素材とソリューションを提供しています。', en: 'It provides high-performance materials and solutions through three segments: "Electronics & Industrial," "Water & Protection," and "Industrial Solutions."' },
+        core_business_title: { ja: 'ビジネスを支える3つのセグメント', en: 'Three Segments Supporting the Business' },
+        core_ei_title: { ja: 'エレクトロニクス＆インダストリアル', en: 'Electronics & Industrial' },
+        core_ei_p: { ja: '半導体製造プロセスやスマートフォンに使われる高機能材料を提供。AIや5Gの普及が追い風。', en: 'Provides high-performance materials used in semiconductor manufacturing processes and smartphones. The spread of AI and 5G is a tailwind.' },
+        core_wp_title: { ja: 'ウォーター＆プロテクション', en: 'Water & Protection' },
+        core_wp_p: { ja: '逆浸透膜などの水処理ソリューションと、ケブラー®やタイベック®などの防護服・建材を提供。', en: 'Provides water treatment solutions like reverse osmosis membranes, and protective apparel and building materials like Kevlar® and Tyvek®.' },
+        core_is_title: { ja: 'インダストリアル・ソリューションズ', en: 'Industrial Solutions' },
+        core_is_p: { ja: '自動車、ヘルスケア、航空宇宙など、幅広い産業向けに特殊な接着剤や潤滑剤などを提供。', en: 'Provides specialty adhesives, lubricants, and more for a wide range of industries including automotive, healthcare, and aerospace.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'デュポンの強みは、長年の研究開発で培われた、模倣困難な技術力と強力な特許ポートフォリオです。各分野で高い市場シェアと価格決定力を持ち、競合のダウや3Mに対して、高い利益率を実現しています。', en: 'DuPont\'s strength is its difficult-to-imitate technology and strong patent portfolio, cultivated through years of R&D. It holds high market share and pricing power in its respective fields, achieving higher profit margins than competitors like Dow and 3M.' },
+        chart_competitor_label_dd: { ja: 'デュポン', en: 'DuPont' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['技術革新(R&D)', '市場シェア(電子材料)', 'ブランド力', '収益性', 'ポートフォリオ'], en: ['Innovation (R&D)', 'Market Share (Electronics)', 'Brand Power', 'Profitability', 'Portfolio'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: 'エレクトロニクス市場の在庫調整や、中国経済の減速により、売上は一時的に低迷。しかし、コスト削減と高付加価値製品への集中により、利益率は底堅く推移しています。', en: 'Sales are temporarily sluggish due to inventory adjustments in the electronics market and a slowdown in the Chinese economy. However, profit margins remain solid thanks to cost reductions and a focus on high-value-added products.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 -2%', en: '-2% YoY' },
+        stat_margin: { ja: '営業EBITDAマージン', en: 'Operating EBITDA Margin' },
+        stat_margin_tooltip: { ja: '本業の収益力を示す指標。デュポンは高機能製品に特化することで、高い利益率を維持している。', en: 'A measure of core profitability. DuPont maintains high profit margins by specializing in high-performance products.' },
+        stat_margin_desc: { ja: '高い収益性', en: 'High Profitability' },
+        stat_fcf: { ja: 'フリーキャッシュフロー', en: 'Free Cash Flow' },
+        stat_fcf_desc: { ja: '株主還元とM&Aの源泉', en: 'Source of Shareholder Returns & M&A' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: '長期的な成長トレンドに乗る優良企業でありながら、景気循環の影響を受けやすいデュポン株。景気回復局面を狙う投資家と、安定性を求める投資家で評価が分かれます。', en: 'DuPont stock is a high-quality company riding long-term growth trends, yet it is susceptible to economic cycles. Opinions are divided between investors aiming for a cyclical recovery and those seeking stability.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「景気回復で輝く」理由', en: 'Why This Stock "Shines in a Recovery"' },
+        bull_content_li1: { ja: '<strong>半導体市場の回復:</strong> AIやIoTの普及に伴い、半導体需要が回復すれば、エレクトロニクス事業の売上が大きく伸びる。', en: '<strong>Semiconductor Market Recovery:</strong> As demand for semiconductors recovers with the spread of AI and IoT, sales in the Electronics business will grow significantly.' },
+        bull_content_li2: { ja: '<strong>高付加価値ポートフォリオ:</strong> 利益率の高い特殊化学分野に事業を集中させており、収益性が高い。', en: '<strong>High-Value Portfolio:</strong> Its focus on the high-margin specialty chemicals sector results in high profitability.' },
+        bull_content_li3: { ja: '<strong>水ビジネスの安定成長:</strong> 世界的な水不足を背景に、水処理ソリューション事業は景気に関わらず安定した成長が見込める。', en: '<strong>Stable Growth in Water Business:</strong> Against the backdrop of global water scarcity, the water solutions business can expect stable growth regardless of the economy.' },
+        bull_content_li4: { ja: '<strong>株主還元へのコミットメント:</strong> 安定したキャッシュフローを背景に、増配や自社株買いに積極的。', en: '<strong>Commitment to Shareholder Returns:</strong> Actively pursues dividend increases and share buybacks, supported by stable cash flow.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>景気循環リスク:</strong> 売上の多くが、半導体、自動車、建設といった景気敏感な市場に依存している。', en: '<strong>Cyclical Risk:</strong> A large portion of its sales depends on cyclical markets such as semiconductors, automotive, and construction.' },
+        bear_content_li2: { ja: '<strong>中国経済の減速:</strong> 中国は主要な市場の一つであり、同国の景気減速は業績に直接的な影響を与える。', en: '<strong>Slowdown in China\'s Economy:</strong> China is one of its major markets, and an economic slowdown there directly impacts performance.' },
+        bear_content_li3: { ja: '<strong>原材料価格の変動:</strong> 原油価格などの変動が、製造コストや利益率に影響を与える。', en: '<strong>Raw Material Price Volatility:</strong> Fluctuations in prices of crude oil and other materials affect manufacturing costs and profit margins.' },
+        bear_content_li4: { ja: '<strong>訴訟リスク:</strong> PFAS（有機フッ素化合物）に関連する訴訟問題を抱えており、将来的な財務リスクとなる可能性。', en: '<strong>Litigation Risk:</strong> Faces litigation related to PFAS (per- and polyfluoroalkyl substances), which could pose a future financial risk.' },
+        outlook_title: { ja: 'デュポンの未来は？', en: 'What is DuPont\'s Future?' },
+        outlook_p: { ja: 'デュポンの未来は、高成長・高マージンな事業へのポートフォリオ変革を継続し、景気循環の影響を受けにくい、より強靭な企業体質を構築できるかにかかっています。', en: 'DuPont\'s future depends on its ability to continue transforming its portfolio towards high-growth, high-margin businesses and building a more resilient corporate structure that is less susceptible to economic cycles.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: '半導体市場の回復を捉え、エレクトロニクス事業の成長を再加速。水事業と防護事業の安定的な成長を維持しつつ、コスト削減を徹底します。', en: 'Capture the recovery of the semiconductor market to re-accelerate growth in the Electronics business. Maintain stable growth in the Water and Protection businesses while thoroughly implementing cost reductions.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'ポートフォリオのさらなる見直しを進め、場合によっては事業の追加売却や大型買収も検討。EV、クリーンエネルギー、次世代通信といった分野での存在感を高めます。', en: 'Further review the portfolio, potentially considering additional divestitures or large-scale acquisitions. Increase its presence in fields like EVs, clean energy, and next-generation communications.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'デュポンは、景気回復局面で大きなリターンが期待できる、質の高い景気敏感（シクリカル）株。市場のサイクルを読み、割安なタイミングで仕込む戦略が有効です。', en: 'DuPont is a high-quality cyclical stock with the potential for significant returns during an economic recovery. A strategy of reading the market cycle and buying at an attractive valuation is effective.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: '半導体サイクルの転換点に注目', en: 'Watch for the Turn in the Semiconductor Cycle' },
+        strategy_res_short_p: { ja: '株価は、半導体市場の在庫調整が終わり、需要が回復する兆候に敏感に反応します。関連する経済指標や企業の決算速報が重要です。', en: 'The stock price is highly sensitive to signs that the inventory correction in the semiconductor market is over and demand is recovering. Related economic indicators and corporate earnings reports are crucial.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '景気回復の波に乗る', en: 'Ride the Wave of Economic Recovery' },
+        strategy_res_medium_p: { ja: '金利が低下し、住宅や自動車市場が本格的に回復する局面が投資の好機。利益率の改善が伴えば、株価は大きく上昇する可能性があります。', en: 'An opportune time to invest is when interest rates fall and the housing and auto markets begin a full recovery. If accompanied by margin improvement, the stock could rise significantly.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: 'メガトレンドに投資する', en: 'Invest in the Megatrends' },
+        strategy_res_long_p: { ja: '短期的な景気サイクルは気にせず、エレクトロニクスやクリーンウォーターといった、長期的な成長が確実視される分野のリーダーに投資する戦略。安定した配当も魅力です。', en: 'A strategy to invest in a leader in fields with certain long-term growth, like electronics and clean water, ignoring short-term economic cycles. Its stable dividend is also attractive.' },
+        footer_copyright: { ja: '&copy; 2025 DuPont de Nemours, Inc. Investor Dashboard. All rights reserved.', en: '&copy; 2025 DuPont de Nemours, Inc. Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                el.innerHTML = translations[key][lang];
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_dd[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-red-400 animate-pop-in"><h3 class="font-bold text-red-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [75, 78, 72, 70, 75, 80, 82, 85, 83, 80, 84, 85], borderColor: '#D92D2D', backgroundColor: 'rgba(217, 45, 45, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [130, 125, 130], backgroundColor: '#D92D2D', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [25, 22, 26], borderColor: '#FF4D4D', backgroundColor: '#FF4D4D', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['技術革新(R&D)', '市場シェア(電子材料)', 'ブランド力', '収益性', 'ポートフォリオ'], datasets: [ { label: 'デュポン', data: [92, 90, 95, 93, 88], backgroundColor: 'rgba(217, 45, 45, 0.2)', borderColor: 'rgba(217, 45, 45, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(217, 45, 45, 1)' }, { label: '競合他社 (平均)', data: [85, 82, 88, 86, 84], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(3) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(3) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-red-500', 'text-red-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-red-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

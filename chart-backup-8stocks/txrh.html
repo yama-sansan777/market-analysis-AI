@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- START: TXRH Content Changes - Title -->
+    <title data-lang="page_title">【テキサスロードハウス版】ステーキハウスの王者！投資家向けダッシュボード</title>
+    <!-- END: TXRH Content Changes - Title -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to a rustic brown for Texas Roadhouse
+                        primary: '#A16207', // A rustic, deep brown
+                        secondary: '#CA8A04', // A warm, golden accent
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: TXRH Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #CA8A04, #A16207); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #A16207; content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; transition: width 0.3s ease; }
+        /* END: TXRH Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #A16207; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html"><img src="https://placehold.co/160x40/FFFFFF/333333?text=YourLogo" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">AI市況予報</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../glossary.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">AI市況予報</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../glossary.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: TXRH Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-yellow-600 to-orange-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">T</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Texas Roadhouse, Inc.</span>
+                        <span class="text-sm font-semibold text-slate-500">NASDAQ: TXRH</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: TXRH Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: TXRH Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    伝説的な価値と楽しさを提供する、<br>
+                    <span class="gradient-text">テキサス・ロードハウス</span>の強さ
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    カジュアルダイニング業界で圧倒的な人気を誇るステーキハウスチェーン「テキサス・ロードハウス」。その驚異的な既存店売上成長と、熱狂的なファンを生み出す秘密に迫ります。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「最高のステーキ体験」なぜテキサス・ロードハウスは常に行列ができるのか？</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「テキサス・ロードハウス」は、手切りステーキ、焼きたてパン、そして無料で提供されるピーナッツで有名な、アメリカンスタイルのカジュアルダイニングレストランです。</p>
+                    <p data-lang="intro_card_p2">同社の強みは、高品質な食事と活気あふれる雰囲気を、手頃な価格で提供するという卓越した「価値提案」にあります。厳しい品質管理と、従業員を大切にする企業文化が、高い顧客満足度とリピート率を生み出しています。例えるなら、<strong class="text-yellow-700">最高の食材と最高のサービスを、誰もが楽しめる価格で提供することに全力を注ぐ、情熱的なレストラン経営者</strong>のような存在です。</p>
+                    <p data-lang="intro_card_p3">このページでは、「なぜ競合を圧倒できるのか？」「コスト上昇にどう対応しているのか？」「今後の成長戦略は？」といった、投資家が知るべき本質に迫ります。外食産業の常識を覆す、優良企業の強さの秘密を解き明かしましょう。</p>
+                </div>
+            </div>
+            <!-- END: TXRH Content Changes - Hero Section -->
+
+            <!-- START: TXRH Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">業界トップクラスの成長率と、揺るぎないブランド力</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">インフレ環境下でも客足を伸ばし、既存店売上高は二桁近い成長を継続。その力強いファンダメンタルズが評価され、株価は史上最高値圏で推移しています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-yellow-700" data-count="174.86">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-yellow-700" data-count="11.11">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-yellow-700" data-count="0.0124">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-yellow-700" data-count="29.10">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: TXRH Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: TXRH Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">テキサス・ロードハウスって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">主力ブランドの「テキサス・ロードハウス」に加え、小規模ながら成長中の「Bubba's 33」（ピザとバーガー）と「Jaggers」（ファストカジュアル）の2つのブランドを展開しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える3つのブランド</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-yellow-50"><svg class="w-10 h-10 text-yellow-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_txrh_title">Texas Roadhouse</h4>
+                        <p class="text-slate-600" data-lang="core_txrh_p">手頃な価格のステーキと活気ある雰囲気で、ファミリー層から絶大な支持を得る主力ブランド。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-yellow-50"><svg class="w-10 h-10 text-yellow-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 3H14V17H10V3Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_bubbas_title">Bubba's 33</h4>
+                        <p class="text-slate-600" data-lang="core_bubbas_p">ピザ、バーガー、ビールを中心としたスポーツバー業態。若者層をターゲットにした成長ブランド。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-yellow-50"><svg class="w-10 h-10 text-yellow-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_jaggers_title">Jaggers</h4>
+                        <p class="text-slate-600" data-lang="core_jaggers_p">高品質なハンバーガーやサンドイッチを提供するファストカジュアル業態。新たな成長の柱として期待。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">テキサス・ロードハウスの強みは、徹底したオペレーションの効率化と、従業員のモチベーションを高く保つ独自の企業文化です。これにより、競合のステーキハウスチェーンと比べて、常に高い既存店売上高の成長率と利益率を達成しています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: TXRH Content Changes - Business Section -->
+
+        <!-- START: TXRH Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">インフレによるコスト増を、巧みな価格戦略と客足の増加で吸収し、売上・利益ともに力強い成長を継続。業界のリーダーとしての実力を示しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$48億</p>
+                        <p class="text-base font-semibold text-yellow-700" data-lang="stat_revenue_growth">前年比 +15%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">レストラン利益率
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">店舗レベルでの収益性を示す指標。コスト管理能力の高さを示す。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">16.5%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">コスト増でも高水準</p>
+                    </div>
+                    <div class="bg-orange-50 border-l-4 border-orange-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_comps">既存店売上高成長率</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">+9.9%</p>
+                        <p class="text-base font-semibold text-orange-600" data-lang="stat_comps_desc">業界トップクラス</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: TXRH Content Changes - Financials Section -->
+        
+        <!-- START: TXRH Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">カジュアルダイニング業界の「ベスト・イン・クラス」と評価されるテキサス・ロードハウス。その成長性への期待は高いものの、景気後退による個人消費の落ち込みが最大のリスクです。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-yellow-500 text-yellow-700" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: TXRH Content Changes - Thesis Section -->
+
+        <!-- START: TXRH Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">テキサス・ロードハウスの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">テキサス・ロードハウスの未来は、主力ブランドの安定成長を維持しつつ、Bubba's 33とJaggersという新たな成長エンジンをいかに育てられるかにかかっています。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-yellow-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-yellow-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">年間約30店舗のペースでテキサス・ロードハウスの新規出店を継続。デジタル技術を活用して、店舗の生産性向上とテイクアウト事業の強化を図ります。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-yellow-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">Bubba's 33とJaggersの出店を加速させ、全米規模のブランドへと育成。将来的には、海外市場への本格的な展開も視野に入れます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: TXRH Content Changes - Outlook Section -->
+
+        <!-- START: TXRH Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">テキサス・ロードハウスは、安定した成長と株主還元を両立する、質の高い消費者関連株。景気動向に注意しつつ、長期的な視点でブランドの成長に投資する戦略が有効です。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-orange-100 text-orange-800 font-bold py-3 px-6 rounded-lg hover:bg-orange-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: TXRH Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: TXRH Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Texas Roadhouse, Inc. Investor Dashboard. All rights reserved.</p>
+            <!-- END: TXRH Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        nav_today: { ja: 'AI市況予報', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: '伝説的な価値と楽しさを提供する、<br><span class="gradient-text">テキサス・ロードハウス</span>の強さ', en: 'Delivering Legendary Value and Fun,<br>The Strength of <span class="gradient-text">Texas Roadhouse</span>' },
+        hero_subtitle: { ja: 'カジュアルダイニング業界で圧倒的な人気を誇るステーキハウスチェーン「テキサス・ロードハウス」。その驚異的な既存店売上成長と、熱狂的なファンを生み出す秘密に迫ります。', en: 'The steakhouse chain "Texas Roadhouse" boasts overwhelming popularity in the casual dining industry. We delve into the secrets behind its phenomenal comparable store sales growth and its ability to create enthusiastic fans.' },
+        intro_card_title: { ja: '「最高のステーキ体験」なぜテキサス・ロードハウスは常に行列ができるのか？', en: '"The Ultimate Steak Experience": Why is there always a line at Texas Roadhouse?' },
+        intro_card_p1: { ja: '「テキサス・ロードハウス」は、手切りステーキ、焼きたてパン、そして無料で提供されるピーナッツで有名な、アメリカンスタイルのカジュアルダイニングレストランです。', en: '"Texas Roadhouse" is an American-style casual dining restaurant famous for its hand-cut steaks, fresh-baked bread, and complimentary peanuts.' },
+        intro_card_p2: { ja: '同社の強みは、高品質な食事と活気あふれる雰囲気を、手頃な価格で提供するという卓越した「価値提案」にあります。厳しい品質管理と、従業員を大切にする企業文化が、高い顧客満足度とリピート率を生み出しています。例えるなら、<strong class="text-yellow-700">最高の食材と最高のサービスを、誰もが楽しめる価格で提供することに全力を注ぐ、情熱的なレストラン経営者</strong>のような存在です。', en: 'The company\'s strength lies in its outstanding "value proposition" of providing high-quality food and a lively atmosphere at an affordable price. Strict quality control and a corporate culture that values its employees result in high customer satisfaction and repeat rates. It\'s like a <strong class="text-yellow-700">passionate restaurateur dedicated to offering the best food and service at a price everyone can enjoy.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「なぜ競合を圧倒できるのか？」「コスト上昇にどう対応しているのか？」「今後の成長戦略は？」といった、投資家が知るべき本質に迫ります。外食産業の常識を覆す、優良企業の強さの秘密を解き明かしましょう。', en: 'This page delves into the core questions for investors, such as "Why can it outperform competitors?", "How is it dealing with rising costs?", and "What is its future growth strategy?". Let\'s uncover the secrets to the strength of this blue-chip company that is upending the restaurant industry.' },
+        growth_title: { ja: '業界トップクラスの成長率と、揺るぎないブランド力', en: 'Industry-Leading Growth Rate and Unshakeable Brand Power' },
+        growth_p: { ja: 'インフレ環境下でも客足を伸ばし、既存店売上高は二桁近い成長を継続。その力強いファンダメンタルズが評価され、株価は史上最高値圏で推移しています。', en: 'Even in an inflationary environment, it continues to attract more customers and achieve near double-digit comparable store sales growth. Its strong fundamentals are recognized, and the stock is trading near its all-time high.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'テキサス・ロードハウスって、どんな会社？', en: 'What Kind of Company is Texas Roadhouse?' },
+        business_p: { ja: '主力ブランドの「テキサス・ロードハウス」に加え、小規模ながら成長中の「Bubba\'s 33」（ピザとバーガー）と「Jaggers」（ファストカジュアル）の2つのブランドを展開しています。', en: 'In addition to its flagship "Texas Roadhouse" brand, it operates two smaller but growing brands: "Bubba\'s 33" (pizza and burgers) and "Jaggers" (fast-casual).' },
+        core_business_title: { ja: 'ビジネスを支える3つのブランド', en: 'Three Brands Supporting the Business' },
+        core_txrh_title: { ja: 'Texas Roadhouse', en: 'Texas Roadhouse' },
+        core_txrh_p: { ja: '手頃な価格のステーキと活気ある雰囲気で、ファミリー層から絶大な支持を得る主力ブランド。', en: 'The flagship brand, enjoying immense support from families for its affordable steaks and lively atmosphere.' },
+        core_bubbas_title: { ja: 'Bubba\'s 33', en: 'Bubba\'s 33' },
+        core_bubbas_p: { ja: 'ピザ、バーガー、ビールを中心としたスポーツバー業態。若者層をターゲットにした成長ブランド。', en: 'A sports bar concept centered on pizza, burgers, and beer. A growing brand targeting a younger demographic.' },
+        core_jaggers_title: { ja: 'Jaggers', en: 'Jaggers' },
+        core_jaggers_p: { ja: '高品質なハンバーガーやサンドイッチを提供するファストカジュアル業態。新たな成長の柱として期待。', en: 'A fast-casual concept offering high-quality burgers and sandwiches. Expected to be a new pillar of growth.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'テキサス・ロードハウスの強みは、徹底したオペレーションの効率化と、従業員のモチベーションを高く保つ独自の企業文化です。これにより、競合のステーキハウスチェーンと比べて、常に高い既存店売上高の成長率と利益率を達成しています。', en: 'Texas Roadhouse\'s strength is its highly efficient operations and a unique corporate culture that keeps employee morale high. This allows it to consistently achieve higher comparable store sales growth and profit margins than competing steakhouse chains.' },
+        chart_competitor_label_txrh: { ja: 'テキサス・ロードハウス', en: 'Texas Roadhouse' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['価値提案', '顧客満足度', 'オペレーション効率', '成長率', '収益性'], en: ['Value Proposition', 'Customer Satisfaction', 'Operational Efficiency', 'Growth Rate', 'Profitability'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: 'インフレによるコスト増を、巧みな価格戦略と客足の増加で吸収し、売上・利益ともに力強い成長を継続。業界のリーダーとしての実力を示しています。', en: 'It has absorbed rising costs from inflation through savvy pricing strategies and increased customer traffic, continuing strong growth in both revenue and profit, demonstrating its strength as an industry leader.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +15%', en: '+15% YoY' },
+        stat_margin: { ja: 'レストラン利益率', en: 'Restaurant-Level Margin' },
+        stat_margin_tooltip: { ja: '店舗レベルでの収益性を示す指標。コスト管理能力の高さを示す。', en: 'A measure of profitability at the store level, indicating strong cost management capabilities.' },
+        stat_margin_desc: { ja: 'コスト増でも高水準', en: 'High Level Despite Cost Increases' },
+        stat_comps: { ja: '既存店売上高成長率', en: 'Comp Store Sales Growth' },
+        stat_comps_desc: { ja: '業界トップクラス', en: 'Top-Tier in the Industry' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: 'カジュアルダイニング業界の「ベスト・イン・クラス」と評価されるテキサス・ロードハウス。その成長性への期待は高いものの、景気後退による個人消費の落ち込みが最大のリスクです。', en: 'Regarded as "best-in-class" in the casual dining industry, Texas Roadhouse has high growth expectations, but its biggest risk is a decline in consumer spending due to a recession.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「成長し続ける」理由', en: 'Why This Stock Could "Keep Growing"' },
+        bull_content_li1: { ja: '<strong>卓越した価値提案:</strong> 高品質な食事を手頃な価格で提供することで、景気変動時でも顧客を引きつける。', en: '<strong>Outstanding Value Proposition:</strong> Attracts customers even during economic fluctuations by offering high-quality food at affordable prices.' },
+        bull_content_li2: { ja: '<strong>高い顧客ロイヤリティ:</strong> 活気ある雰囲気と優れたサービスが、熱狂的なリピーターを生み出している。', en: '<strong>High Customer Loyalty:</strong> A lively atmosphere and excellent service create enthusiastic repeat customers.' },
+        bull_content_li3: { ja: '<strong>新規ブランドの成長:</strong> Bubba\'s 33とJaggersが新たな成長ドライバーとなり、長期的な成長を支える。', en: '<strong>Growth of New Brands:</strong> Bubba\'s 33 and Jaggers will become new growth drivers, supporting long-term growth.' },
+        bull_content_li4: { ja: '<strong>優れた経営陣:</strong> 創業者精神を受け継ぐ経営陣が、現場主義と効率的なオペレーションを維持している。', en: '<strong>Excellent Management:</strong> Management that inherits the founder\'s spirit maintains a hands-on approach and efficient operations.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>景気後退リスク:</strong> 外食は典型的な裁量的支出であり、景気が悪化すれば、真っ先に節約の対象となる。', en: '<strong>Recession Risk:</strong> Dining out is a typical discretionary expense and is one of the first things consumers cut back on during a recession.' },
+        bear_content_li2: { ja: '<strong>コスト上昇圧力:</strong> 牛肉などの食材価格や、人件費の上昇が、利益率を圧迫し続ける。', en: '<strong>Rising Cost Pressures:</strong> Rising prices for ingredients like beef, as well as labor costs, continue to squeeze profit margins.' },
+        bear_content_li3: { ja: '<strong>高いバリュエーション:</strong> 株価は将来の成長を織り込んでおり、同業他社に比べて割高な水準にある。', en: '<strong>High Valuation:</strong> The stock price has priced in future growth and is at a premium compared to its peers.' },
+        bear_content_li4: { ja: '<strong>競争の激化:</strong> カジュアルダイニング市場は競争が非常に激しく、常に新たな競合が出現する。', en: '<strong>Intense Competition:</strong> The casual dining market is extremely competitive, with new rivals constantly emerging.' },
+        outlook_title: { ja: 'テキサス・ロードハウスの未来は？', en: 'What is Texas Roadhouse\'s Future?' },
+        outlook_p: { ja: 'テキサス・ロードハウスの未来は、主力ブランドの安定成長を維持しつつ、Bubba\'s 33とJaggersという新たな成長エンジンをいかに育てられるかにかかっています。', en: 'The future of Texas Roadhouse depends on its ability to nurture its new growth engines, Bubba\'s 33 and Jaggers, while maintaining stable growth for its flagship brand.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: '年間約30店舗のペースでテキサス・ロードハウスの新規出店を継続。デジタル技術を活用して、店舗の生産性向上とテイクアウト事業の強化を図ります。', en: 'Continue to open new Texas Roadhouse locations at a pace of about 30 per year. Utilize digital technology to improve store productivity and strengthen the to-go business.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'Bubba\'s 33とJaggersの出店を加速させ、全米規模のブランドへと育成。将来的には、海外市場への本格的な展開も視野に入れます。', en: 'Accelerate the rollout of Bubba\'s 33 and Jaggers to grow them into national brands. Also considering full-scale international expansion in the future.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'テキサス・ロードハウスは、安定した成長と株主還元を両立する、質の高い消費者関連株。景気動向に注意しつつ、長期的な視点でブランドの成長に投資する戦略が有効です。', en: 'Texas Roadhouse is a high-quality consumer stock that balances stable growth with shareholder returns. A strategy of investing in the brand\'s growth with a long-term perspective, while keeping an eye on economic trends, is effective.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: '既存店売上高が全て', en: 'It\'s All About Comp Sales' },
+        strategy_res_short_p: { ja: '短期的な株価は、四半期ごとの既存店売上高の伸び率に最も敏感に反応します。特に客足（トラフィック）の動向が、市場の期待を左右します。', en: 'The short-term stock price is most sensitive to the quarterly comparable store sales growth rate. Customer traffic trends, in particular, will sway market expectations.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '利益率の動向を注視', en: 'Watch Profit Margin Trends' },
+        strategy_res_medium_p: { ja: '食材費や人件費のインフレを、価格戦略と効率化で吸収し、レストラン利益率を維持・向上できるかが重要。この数字が、持続的な成長力を示します。', en: 'The key is whether it can maintain and improve restaurant-level profit margins by absorbing food and labor inflation through pricing strategies and efficiencies. This number indicates sustainable earning power.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: '新規ブランドの成長に賭ける', en: 'Bet on the Growth of New Brands' },
+        strategy_res_long_p: { ja: '主力ブランドの安定性に加え、Bubba\'s 33とJaggersが次のテキサス・ロードハウスへと成長する未来に投資。長期的な店舗数の拡大が、株価成長の最大のドライバーです。', en: 'In addition to the stability of the flagship brand, invest in a future where Bubba\'s 33 and Jaggers grow into the next Texas Roadhouse. Long-term store count growth is the biggest driver of stock appreciation.' },
+        footer_copyright: { ja: '&copy; 2025 Texas Roadhouse, Inc. Investor Dashboard. All rights reserved.', en: '&copy; 2025 Texas Roadhouse, Inc. Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' },
+        page_title: { ja: '【テキサスロードハウス版】ステーキハウスの王者！投資家向けダッシュボード', en: '【Texas Roadhouse】The Steakhouse King! Investor Dashboard' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                el.innerHTML = translations[key][lang];
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_txrh[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-orange-400 animate-pop-in"><h3 class="font-bold text-orange-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [110, 115, 112, 120, 130, 140, 150, 160, 155, 165, 175, 170], borderColor: '#A16207', backgroundColor: 'rgba(161, 98, 7, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [40, 48, 55], backgroundColor: '#A16207', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [3.5, 4.2, 5.0], borderColor: '#CA8A04', backgroundColor: '#CA8A04', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['価値提案', '顧客満足度', 'オペレーション効率', '成長率', '収益性'], datasets: [ { label: 'テキサス・ロードハウス', data: [98, 96, 92, 95, 90], backgroundColor: 'rgba(161, 98, 7, 0.2)', borderColor: 'rgba(161, 98, 7, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(161, 98, 7, 1)' }, { label: '競合他社 (平均)', data: [85, 88, 86, 82, 85], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(3) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(3) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-yellow-500', 'text-yellow-700');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-yellow-500', 'text-yellow-700');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-yellow-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-yellow-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-yellow-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-yellow-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-yellow-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-yellow-700') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

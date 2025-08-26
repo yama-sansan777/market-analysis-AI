@@ -37,6 +37,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <script src="translations/load.js"></script>
+    <script src="lang.js"></script>
+    <script src="js/header-loader.js"></script>
     <!-- Chosen Palette: Modern Slate -->
     <!-- Application Structure Plan: A multi-page application simulated with top-level tabs within a single HTML file. The primary view ("Weekly Outlook") is the detailed dashboard. A second view ("Monthly Outlook") is added as a separate, distinct page, managed by JS. This structure directly addresses the user's request to treat the entire weekly report as one "tab" and create a new, large page for the monthly report as another "tab". -->
     <!-- Visualization & Content Choices: The core of the application is the visualization of the sentiment divergence between AAII (retail) and Investors Intelligence (pro), for which a grouped bar chart (Chart.js) is the most effective choice to highlight the stark contrast. Custom HTML/CSS gauges are used for the Fear & Greed Index and the overall market score to provide a more engaging, dashboard-like feel. Simple bar and line charts (Chart.js) are used to compare inflation (CPI vs. PPI) and show trends in employment and yield curves. This approach translates complex data into easily digestible visuals. All textual content is condensed into cards and bullet points for scannability. This supports the designed dashboard structure by making data glanceable and interactive. -->
@@ -136,37 +139,7 @@
 </head>
 <body class="text-slate-700 min-h-screen">
 
-<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-4">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-8">
-                <div class="flex items-center font-bold text-xl text-primary">
-                    <span>📈 YOHOU US Stocks AI</span>
-                </div>
-                <nav class="hidden md:flex space-x-6 text-gray-600">
-                    <a href="#" class="text-primary font-medium border-b-2 border-primary pb-1">本日の市況分析</a>
-                    <a href="#" class="hover:text-primary">クレイマー保有銘柄</a>
-                    <a href="#" class="hover:text-primary">IPOスケジュール</a>
-                    <a href="#" class="hover:text-primary">テクニカル指標解説</a>
-                </nav>
-            </div>
-            <div class="flex items-center space-x-1 md:space-x-4">
-                <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
-                    <i class="ri-menu-line ri-lg"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</header>
-
-<div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
-    <div class="px-4 py-2 space-y-1">
-        <a href="#" class="block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50">本日の市況分析</a>
-        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">クレイマー保有銘柄</a>
-        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">IPOスケジュール</a>
-        <a href="#" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">テクニカル指標解説</a>
-    </div>
-</div>
+<div id="header-container"></div>
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 

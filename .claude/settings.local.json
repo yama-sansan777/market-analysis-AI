@@ -13,7 +13,14 @@
       "Bash(git commit:*)",
       "Bash(git tag:*)",
       "Bash(mv:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(for file in stocks/details/apple.html stocks/details/microsoft.html stocks/details/ctra.html stocks/details/gev.html)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(done)",
+      "Bash(grep:*)",
+      "Bash(for file in microsoft.html nvidia.html panw.html sbux.html tjx.html txrh.html wfc.html)",
+      "Bash(for file in *.html)",
+      "Bash(powershell:*)"
     ],
     "deny": []
   }

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="page_title">【イーライリリー版】医薬品の革新者！投資家向けダッシュボード</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to a professional purple for pharma
+                        primary: '#6D28D9',
+                        secondary: '#DC2626',
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: LLY Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #8B5CF6, #6D28D9); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #6D28D9; }
+        /* END: LLY Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #6D28D9; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html">
+                        <img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10">
+                    </a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">AI市況予報</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50">
+                        <i class="ri-user-line"></i>
+                        <span data-lang="login">ログイン</span>
+                    </button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">AI市況予報</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: LLY Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-purple-50 to-violet-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-violet-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">L</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">Eli Lilly and Company</span>
+                        <span class="text-sm font-semibold text-slate-500">NYSE: LLY</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: LLY Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: LLY Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    医薬品の未来を拓く巨人、<br>
+                    <span class="gradient-text">イーライリリー</span>の革新
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    糖尿病・肥満症治療薬で世界を席巻する製薬大手「イーライリリー」。その驚異的な成長の源泉と、未来のパイプラインを徹底分析します。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-violet-50 to-fuchsia-50 border-violet-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「今、最も熱い製薬株？」世界を変える新薬を生み出す、イーライリリーの実力</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「イーライリリー」という名前を、最近ニュースでよく耳にしませんか？この会社は、140年以上の歴史を持つ米国の老舗製薬会社ですが、今、歴史上最も注目される時期を迎えています。</p>
+                    <p data-lang="intro_card_p2">その理由は、糖尿病治療薬「マンジャロ」と肥満症治療薬「ゼップバウンド」という画期的な新薬の大ヒットです。これらの薬は、従来の治療薬をはるかに超える効果で世界中の患者の生活を変え、同社を世界一の時価総額を誇る製薬会社へと押し上げました。例えるなら、<strong class="text-purple-700">医薬品業界に革命を起こす「ゲームチェンジャー」を次々と生み出す、研究開発の巨人</strong>なのです。</p>
+                    <p data-lang="intro_card_p3">このページでは、「イーライリリーの強みは？」「次のヒット薬は？」「株価はまだ上がる？」といった投資家の疑問に、一つひとつ丁寧にお答えします。世界中の人々の健康と未来を担う企業のポテンシャルを、一緒に探っていきましょう。</p>
+                </div>
+            </div>
+            <!-- END: LLY Content Changes - Hero Section -->
+
+            <!-- START: LLY Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">驚異的な株価上昇！新薬がもたらす爆発的成長</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">GLP-1受容体作動薬「マンジャロ」「ゼップバウンド」の需要が世界的に爆発。その期待が株価を押し上げ、S&P500の中でもトップクラスのパフォーマンスを記録しています。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-purple-600" data-count="711.68">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-purple-600" data-count="28.5">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-purple-600" data-count="0.64">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-purple-600" data-count="45">0倍</p>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: LLY Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: LLY Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">イーライリリーって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">研究開発を経営の核に据え、糖尿病、肥満症、がん、アルツハイマー病など、アンメット・メディカル・ニーズ（未だ満たされていない医療ニーズ）の高い領域に注力しています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">成長を牽引する3つの柱</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-purple-50"><svg class="w-10 h-10 text-purple-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C13.6569 2 15 3.34315 15 5V6H17C18.1046 6 19 6.89543 19 8V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V8C5 6.89543 5.89543 6 7 6H9V5C9 3.34315 10.3431 2 12 2ZM12 4C11.4477 4 11 4.44772 11 5V6H13V5C13 4.44772 12.5523 4 12 4ZM14 12H16V14H14V12ZM8 12H10V14H8V12Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_do_title">糖尿病・肥満症</h4>
+                        <p class="text-slate-600" data-lang="core_do_p">「マンジャロ」「ゼップバウンド」が驚異的な成長を記録。会社の売上を牽引する最大の事業部門。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-purple-50"><svg class="w-10 h-10 text-purple-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 2C15.0899 2 18 4.91015 18 8.5C18 12.0899 15.0899 15 11.5 15C7.91015 15 5 12.0899 5 8.5C5 4.91015 7.91015 2 11.5 2ZM11.5 4C9.01472 4 7 6.01472 7 8.5C7 10.9853 9.01472 13 11.5 13C13.9853 13 16 10.9853 16 8.5C16 6.01472 13.9853 4 11.5 4ZM10.5 16H12.5L14.5 22H8.5L10.5 16Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_onco_title">がん</h4>
+                        <p class="text-slate-600" data-lang="core_onco_p">乳がん治療薬「ベージニオ」などが安定した売上を記録。次世代のがん治療薬の研究開発も積極的に推進。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-purple-50"><svg class="w-10 h-10 text-purple-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM13 7V11H17V13H13V17H11V13H7V11H11V7H13Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_neuro_title">神経科学・免疫</h4>
+                        <p class="text-slate-600" data-lang="core_neuro_p">アルツハイマー病治療薬「ドナネマブ」が承認され、新たな成長ドライバーとして期待されている。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">イーライリリーの真の強みは、基礎研究から臨床開発、製造まで一貫して行う圧倒的な創薬力。特にGLP-1作動薬の分野では、競合のノボノルディスク社としのぎを削っています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: LLY Content Changes - Business Section -->
+
+        <!-- START: LLY Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">新薬の売上急拡大を受け、業績は爆発的な成長フェーズに突入。売上・利益ともに市場予想を上回るペースで拡大を続けています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-purple-50 border-l-4 border-purple-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$458億</p>
+                        <p class="text-base font-semibold text-purple-600" data-lang="stat_revenue_growth">前年比 +28%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">研究開発費率
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">売上高に対してどれくらいの費用を研究開発に投資しているかを示す割合。高いほど将来への投資に積極的。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">25%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">未来への積極投資</p>
+                    </div>
+                    <div class="bg-violet-50 border-l-4 border-violet-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_mounjaro_sales">マンジャロ売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$97億</p>
+                        <p class="text-base font-semibold text-violet-600" data-lang="stat_mounjaro_sales_desc">驚異的な立ち上がり</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: LLY Content Changes - Financials Section -->
+        
+        <!-- START: LLY Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">歴史的な成長を遂げているイーライリリー株。しかし、その高い株価には将来への大きな期待が織り込まれており、投資家はリスクも慎重に評価する必要があります。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-purple-500 text-purple-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: LLY Content Changes - Thesis Section -->
+
+        <!-- START: LLY Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">イーライリリーの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">イーライリリーは、現在の成功に安住しません。GLP-1作動薬の適応拡大や次世代経口薬の開発、そしてアルツハイマー病という巨大市場への挑戦が未来を創ります。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-purple-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-purple-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">「マンジャロ」「ゼップバウンド」の生産体制を大幅に増強し、供給不足を解消。さらに、心血管疾患や睡眠時無呼吸症候群などへの適応拡大を目指します。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-purple-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">アルツハイマー病治療薬「ドナネマブ」の市場浸透を本格化。さらに、注射ではなく錠剤で済む次世代の経口GLP-1作動薬「Orforglipron」の上市を目指します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: LLY Content Changes - Outlook Section -->
+
+        <!-- START: LLY Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">イーライリリーは、典型的な高成長（グロース）株。高いリターンが期待できる一方、株価の変動も大きいため、あなたの投資スタイルに合わせた判断が求められます。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-purple-100 text-purple-800 font-bold py-3 px-6 rounded-lg hover:bg-purple-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: LLY Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: LLY Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 Eli Lilly and Company Investor Dashboard. All rights reserved.</p>
+            <!-- END: LLY Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        // Navigation
+        nav_today: { ja: 'AI市況予報', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        // Page title
+        page_title: { ja: '【イーライリリー版】医薬品の革新者！投資家向けダッシュボード', en: '[Eli Lilly Edition] Pharmaceutical Innovator! Investor Dashboard' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: '医薬品の未来を拓く巨人、<br><span class="gradient-text">イーライリリー</span>の革新', en: 'The Giant Forging the Future of Medicine,<br>The Innovation of <span class="gradient-text">Eli Lilly</span>' },
+        hero_subtitle: { ja: '糖尿病・肥満症治療薬で世界を席巻する製薬大手「イーライリリー」。その驚異的な成長の源泉と、未来のパイプラインを徹底分析します。', en: 'Pharmaceutical giant "Eli Lilly" is taking the world by storm with its diabetes and obesity drugs. We thoroughly analyze the source of its phenomenal growth and its future pipeline.' },
+        intro_card_title: { ja: '「今、最も熱い製薬株？」世界を変える新薬を生み出す、イーライリリーの実力', en: '"The hottest pharma stock right now?" The power of Eli Lilly to create world-changing new drugs.' },
+        intro_card_p1: { ja: '「イーライリリー」という名前を、最近ニュースでよく耳にしませんか？この会社は、140年以上の歴史を持つ米国の老舗製薬会社ですが、今、歴史上最も注目される時期を迎えています。', en: 'Have you been hearing the name "Eli Lilly" in the news lately? This company is a long-established American pharmaceutical firm with over 140 years of history, but it is now experiencing its most significant period of attention ever.' },
+        intro_card_p2: { ja: 'その理由は、糖尿病治療薬「マンジャロ」と肥満症治療薬「ゼップバウンド」という画期的な新薬の大ヒットです。これらの薬は、従来の治療薬をはるかに超える効果で世界中の患者の生活を変え、同社を世界一の時価総額を誇る製薬会社へと押し上げました。例えるなら、<strong class="text-purple-700">医薬品業界に革命を起こす「ゲームチェンジャー」を次々と生み出す、研究開発の巨人</strong>なのです。', en: 'The reason is the massive success of groundbreaking new drugs: "Mounjaro" for diabetes and "Zepbound" for obesity. These medicines are changing the lives of patients worldwide with effectiveness far exceeding previous treatments, propelling the company to become the world\'s most valuable pharmaceutical firm. In essence, it is a <strong class="text-purple-700">giant of research and development, continuously creating "game-changers" that revolutionize the pharmaceutical industry.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「イーライリリーの強みは？」「次のヒット薬は？」「株価はまだ上がる？」といった投資家の疑問に、一つひとつ丁寧にお答えします。世界中の人々の健康と未来を担う企業のポテンシャルを、一緒に探っていきましょう。', en: 'On this page, we will carefully answer investor questions such as, "What are Eli Lilly\'s strengths?", "What is the next blockbuster drug?", and "Will the stock price continue to rise?". Let\'s explore the potential of a company that holds the health and future of people worldwide.' },
+        growth_title: { ja: '驚異的な株価上昇！新薬がもたらす爆発的成長', en: 'Phenomenal Stock Surge! Explosive Growth Driven by New Drugs' },
+        growth_p: { ja: 'GLP-1受容体作動薬「マンジャロ」「ゼップバウンド」の需要が世界的に爆発。その期待が株価を押し上げ、S&P500の中でもトップクラスのパフォーマンスを記録しています。', en: 'Global demand for the GLP-1 receptor agonists "Mounjaro" and "Zepbound" has exploded. This expectation is driving the stock price, recording top-tier performance within the S&P 500.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'イーライリリーって、どんな会社？', en: 'What Kind of Company is Eli Lilly?' },
+        business_p: { ja: '研究開発を経営の核に据え、糖尿病、肥満症、がん、アルツハイマー病など、アンメット・メディカル・ニーズ（未だ満たされていない医療ニーズ）の高い領域に注力しています。', en: 'With R&D at the core of its management, the company focuses on areas with high unmet medical needs, such as diabetes, obesity, oncology, and Alzheimer\'s disease.' },
+        core_business_title: { ja: '成長を牽引する3つの柱', en: 'Three Pillars Driving Growth' },
+        core_do_title: { ja: '糖尿病・肥満症', en: 'Diabetes & Obesity' },
+        core_do_p: { ja: '「マンジャロ」「ゼップバウンド」が驚異的な成長を記録。会社の売上を牽引する最大の事業部門。', en: '"Mounjaro" and "Zepbound" are recording phenomenal growth, making this the largest business segment driving company sales.' },
+        core_onco_title: { ja: 'がん', en: 'Oncology' },
+        core_onco_p: { ja: '乳がん治療薬「ベージニオ」などが安定した売上を記録。次世代のがん治療薬の研究開発も積極的に推進。', en: 'Breast cancer drug "Verzenio" and others maintain stable sales. Actively promoting R&D for next-generation cancer treatments.' },
+        core_neuro_title: { ja: '神経科学・免疫', en: 'Neuroscience & Immunology' },
+        core_neuro_p: { ja: 'アルツハイマー病治療薬「ドナネマブ」が承認され、新たな成長ドライバーとして期待されている。', en: 'The Alzheimer\'s drug "donanemab" has been approved and is expected to be a new growth driver.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'イーライリリーの真の強みは、基礎研究から臨床開発、製造まで一貫して行う圧倒的な創薬力。特にGLP-1作動薬の分野では、競合のノボノルディスク社としのぎを削っています。', en: 'Eli Lilly\'s true strength is its overwhelming drug discovery capability, covering everything from basic research to clinical development and manufacturing. Especially in the GLP-1 agonist field, it fiercely competes with rival Novo Nordisk.' },
+        chart_competitor_label_lly: { ja: 'イーライリリー', en: 'Eli Lilly' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['創薬パイプライン', '市場シェア(肥満症)', '研究開発力', '収益性', '将来性'], en: ['Drug Pipeline', 'Market Share (Obesity)', 'R&D Capability', 'Profitability', 'Future Potential'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: '新薬の売上急拡大を受け、業績は爆発的な成長フェーズに突入。売上・利益ともに市場予想を上回るペースで拡大を続けています。', en: 'With rapidly expanding sales of new drugs, the company has entered an explosive growth phase. Both revenue and profit continue to grow at a pace exceeding market expectations.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +28%', en: '+28% YoY' },
+        stat_margin: { ja: '研究開発費率', en: 'R&D Expense Ratio' },
+        stat_margin_tooltip: { ja: '売上高に対してどれくらいの費用を研究開発に投資しているかを示す割合。高いほど将来への投資に積極的。', en: 'The percentage of revenue invested in research and development. A higher ratio indicates a more aggressive investment in the future.' },
+        stat_margin_desc: { ja: '未来への積極投資', en: 'Aggressive Future Investment' },
+        stat_mounjaro_sales: { ja: 'マンジャロ売上高', en: 'Mounjaro Sales' },
+        stat_mounjaro_sales_desc: { ja: '驚異的な立ち上がり', en: 'Phenomenal Launch' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: '歴史的な成長を遂げているイーライリリー株。しかし、その高い株価には将来への大きな期待が織り込まれており、投資家はリスクも慎重に評価する必要があります。', en: 'Eli Lilly stock is experiencing historic growth. However, its high price already reflects significant future expectations, and investors must carefully evaluate the risks.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「成長」し続ける理由', en: 'Why This Stock Could Keep Growing' },
+        bull_content_li1: { ja: '<strong>GLP-1市場の拡大:</strong> 肥満症治療薬市場は今後10年で10倍以上に拡大するとの予測もあり、巨大な成長機会。', en: '<strong>Expanding GLP-1 Market:</strong> The obesity drug market is projected to grow more than tenfold in the next decade, offering a huge growth opportunity.' },
+        bull_content_li2: { ja: '<strong>豊富なパイプライン:</strong> アルツハイマー病治療薬「ドナネマブ」など、次のブロックバスター候補が控えている。', en: '<strong>Rich Pipeline:</strong> Upcoming blockbuster candidates like the Alzheimer\'s drug "donanemab" are in the pipeline.' },
+        bull_content_li3: { ja: '<strong>優れた開発力:</strong> 競合よりも効果や利便性の高い次世代の薬剤（経口薬など）を開発中。', en: '<strong>Superior Development:</strong> Developing next-generation drugs (like oral medications) with better efficacy and convenience than competitors.' },
+        bull_content_li4: { ja: '<strong>生産能力への投資:</strong> 需要に応えるため製造施設へ大規模投資を行っており、将来の売上増に直結する。', en: '<strong>Investment in Production:</strong> Large-scale investments in manufacturing facilities to meet demand will directly lead to future sales growth.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>高すぎる株価:</strong> PERは100倍を超え、将来の成功をかなり織り込んだ水準。少しの躓きで大きく下落する可能性。', en: '<strong>High Valuation:</strong> With a P/E ratio over 100, the stock is priced for perfection. Any stumble could lead to a significant drop.' },
+        bear_content_li2: { ja: '<strong>熾烈な競争:</strong> 競合のノボノルディスクに加え、多くの製薬会社が肥満症治療薬市場に参入し、競争が激化。', en: '<strong>Fierce Competition:</strong> In addition to rival Novo Nordisk, many pharmaceutical companies are entering the obesity drug market, intensifying competition.' },
+        bear_content_li3: { ja: '<strong>薬価引き下げ圧力:</strong> 薬の価格が高すぎることへの批判が強く、政府による薬価引き下げの圧力がリスクとなる。', en: '<strong>Drug Price Pressure:</strong> Strong criticism over high drug prices poses a risk of government-mandated price reductions.' },
+        bear_content_li4: { ja: '<strong>臨床試験の失敗:</strong> 新薬開発は常に失敗のリスクと隣り合わせ。パイプラインの薬が期待通りに進まない可能性。', en: '<strong>Clinical Trial Failures:</strong> New drug development always carries the risk of failure. Pipeline drugs may not progress as expected.' },
+        outlook_title: { ja: 'イーライリリーの未来は？', en: 'What is Eli Lilly\'s Future?' },
+        outlook_p: { ja: 'イーライリリーは、現在の成功に安住しません。GLP-1作動薬の適応拡大や次世代経口薬の開発、そしてアルツハイマー病という巨大市場への挑戦が未来を創ります。', en: 'Eli Lilly is not resting on its current success. Its future will be shaped by expanding the applications of GLP-1 agonists, developing next-gen oral drugs, and tackling the massive Alzheimer\'s market.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: '「マンジャロ」「ゼップバウンド」の生産体制を大幅に増強し、供給不足を解消。さらに、心血管疾患や睡眠時無呼吸症候群などへの適応拡大を目指します。', en: 'Significantly ramp up production of "Mounjaro" and "Zepbound" to resolve shortages. Also, aim to expand their approved uses for conditions like cardiovascular disease and sleep apnea.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'アルツハイマー病治療薬「ドナネマブ」の市場浸透を本格化。さらに、注射ではなく錠剤で済む次世代の経口GLP-1作動薬「Orforglipron」の上市を目指します。', en: 'Achieve full market penetration for the Alzheimer\'s drug "donanemab." Additionally, aim to launch "Orforglipron," a next-generation oral GLP-1 agonist that can be taken as a pill instead of an injection.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'イーライリリーは、典型的な高成長（グロース）株。高いリターンが期待できる一方、株価の変動も大きいため、あなたの投資スタイルに合わせた判断が求められます。', en: 'Eli Lilly is a classic high-growth stock. While it offers the potential for high returns, its price can be volatile, requiring a decision that aligns with your investment style.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: '臨床試験の結果に注目', en: 'Focus on Clinical Trial Results' },
+        strategy_res_short_p: { ja: '株価は新薬の臨床試験データやFDAの承認ニュースに非常に敏感です。短期的な値動きは、これらのイベントによって大きく左右されます。', en: 'The stock price is highly sensitive to clinical trial data and FDA approval news. Short-term movements are heavily influenced by these events.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '新薬の売上成長を追う', en: 'Track New Drug Sales Growth' },
+        strategy_res_medium_p: { ja: '「マンジャロ」や「ドナネマブ」が四半期ごとにどれだけ売上を伸ばせるかが重要。生産体制の増強が計画通りに進むかも株価の鍵です。', en: 'The key is how much sales of "Mounjaro" and "donanemab" can grow each quarter. Whether production expansion proceeds as planned is also crucial for the stock price.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: 'パイプラインの価値を信じる', en: 'Believe in the Pipeline\'s Value' },
+        strategy_res_long_p: { ja: '現在の株価は割高に見えても、将来のヒット薬候補がすべて成功すれば正当化される可能性も。研究開発力と未来の医療を変える可能性に投資する戦略です。', en: 'While the current stock price may seem expensive, it could be justified if all future blockbuster candidates succeed. This is a strategy of investing in R&D capabilities and the potential to change the future of medicine.' },
+        footer_copyright: { ja: '&copy; 2025 Eli Lilly and Company Investor Dashboard. All rights reserved.', en: '&copy; 2025 Eli Lilly and Company Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                if (el.tagName === 'TITLE') {
+                    el.textContent = translations[key][lang];
+                } else {
+                    el.innerHTML = translations[key][lang];
+                }
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_lly[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-purple-400 animate-pop-in"><h3 class="font-bold text-purple-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [550, 580, 600, 620, 650, 700, 750, 780, 820, 850, 880, 905], borderColor: '#6D28D9', backgroundColor: 'rgba(109, 40, 217, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [341, 420, 550], backgroundColor: '#6D28D9', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [63, 85, 120], borderColor: '#A78BFA', backgroundColor: '#A78BFA', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['創薬パイプライン', '市場シェア(肥満症)', '研究開発力', '収益性', '将来性'], datasets: [ { label: 'イーライリリー', data: [95, 90, 98, 85, 92], backgroundColor: 'rgba(109, 40, 217, 0.2)', borderColor: 'rgba(109, 40, 217, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(109, 40, 217, 1)' }, { label: '競合他社 (平均)', data: [80, 88, 85, 82, 80], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = '+' + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = '+' + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-purple-500', 'text-purple-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-purple-500', 'text-purple-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-purple-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-purple-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-purple-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-purple-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-purple-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-purple-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>

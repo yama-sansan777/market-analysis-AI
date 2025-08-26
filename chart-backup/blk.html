@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- START: BLK Content Changes - Title -->
+    <title data-lang="page_title">【ブラックロック版】世界最大の資産運用会社！投資家向けダッシュボード</title>
+    <!-- END: BLK Content Changes - Title -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary color changed to a professional black/blue for BlackRock
+                        primary: '#0D1117', // A deep, professional black
+                        secondary: '#3B82F6', // A contrasting blue
+                        bullish: '#10b981',
+                        bearish: '#ef4444',
+                        neutral: '#6b7280',
+                    },
+                    borderRadius: {
+                        'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+                        'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+                        'full': '9999px', 'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        /* START: BLK Content Changes - Accent Color */
+        .gradient-text { background: linear-gradient(to right, #4A5568, #0D1117); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link::after { background-color: #0D1117; }
+        /* END: BLK Content Changes - Accent Color */
+        .nav-link { position: relative; transition: all 0.3s ease; padding-bottom: 8px; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        .card { background-color: #FFFFFF; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.3s ease-in-out; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; border-bottom: 1px dotted #0D1117; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #262626; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #262626 transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Unified Header Menu -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="../../index.html"><img src="../../image/logo.png" alt="YOHOU US Stocks AI" class="h-10"></a>
+                    <nav class="hidden md:flex space-x-6 text-gray-600">
+                        <a href="../../index.html" class="hover:text-primary" data-lang="nav_today">AI市況予報</a>
+                        <a href="../../pickup.html" class="hover:text-primary" data-lang="nav_pickup">クレイマー保有銘柄</a>
+                        <a href="../../ipo.html" class="text-gray-600 hover:text-primary" data-lang="nav_ipo">IPOスケジュール</a>
+                        <a href="../../indicators.html" class="text-gray-600 hover:text-primary" data-lang="nav_indicators">テクニカル指標解説</a>
+                        <a href="../../terms.html" class="text-gray-600 hover:text-primary" data-lang="nav_terms">市場用語集</a>
+                        <a href="../../about.html" class="text-gray-600 hover:text-primary" data-lang="nav_about">サイトについて</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button id="login-btn" class="hidden md:flex items-center space-x-2 text-gray-600 hover:text-primary cursor-not-allowed opacity-50"><i class="ri-user-line"></i><span data-lang="login">ログイン</span></button>
+                    <button id="register-btn" class="bg-primary text-white px-2 md:px-4 py-2 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap cursor-not-allowed opacity-50 text-xs md:text-sm" data-lang="register">無料登録</button>
+                    <div id="header-lang-switcher" class="flex items-center space-x-2 mr-2 md:mr-4">
+                        <button class="lang-btn" data-lang="ja">日本語</button>
+                        <span class="text-gray-400 text-xs">|</span>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 ml-2 hover:text-primary transition-colors">
+                        <i class="ri-menu-line ri-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 shadow-lg">
+        <div class="px-4 py-2 space-y-1">
+            <a href="../../index.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_today">AI市況予報</a>
+            <a href="../../pickup.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_pickup">クレイマー保有銘柄</a>
+            <a href="../../ipo.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_ipo">IPOスケジュール</a>
+            <a href="../../indicators.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_indicators">テクニカル指標解説</a>
+            <a href="../../terms.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_terms">市場用語集</a>
+            <a href="../../about.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors" data-lang="nav_about">サイトについて</a>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+                <button class="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50" data-lang="login">ログイン</button>
+                <button class="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary/90 rounded-md mx-3 mt-2 transition-colors cursor-not-allowed opacity-50" data-lang="register">無料登録</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START: BLK Content Changes - Subheader -->
+    <div class="bg-gradient-to-r from-gray-50 to-blue-50 py-4 border-b border-gray-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-gray-800 to-blue-900 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">B</div>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-extrabold text-slate-800">BlackRock, Inc.</span>
+                        <span class="text-sm font-semibold text-slate-500">NYSE: BLK</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8 text-base font-medium">
+                    <a href="#dashboard" class="nav-link text-slate-700" data-lang="subnav_intro">はじめに</a>
+                    <a href="#business" class="nav-link text-slate-700" data-lang="subnav_company">どんな会社？</a>
+                    <a href="#financials" class="nav-link text-slate-700" data-lang="subnav_financials">業績は？</a>
+                    <a href="#thesis" class="nav-link text-slate-700" data-lang="subnav_thesis">買い？or 待ち？</a>
+                    <a href="#outlook" class="nav-link text-slate-700" data-lang="subnav_outlook">未来は？</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END: BLK Content Changes - Subheader -->
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+        
+        <!-- START: BLK Content Changes - Hero Section -->
+        <section id="dashboard" class="py-16 text-center">
+            <div class="fade-in-up">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight" data-lang="hero_title">
+                    10兆ドルを動かす資産運用の巨人、<br>
+                    <span class="gradient-text">ブラックロック</span>の支配力
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto" data-lang="hero_subtitle">
+                    世界最大の資産運用会社「ブラックロック」。ETFブランド「iシェアーズ」と金融テクノロジー「Aladdin」を武器に、世界の金融市場に絶大な影響力を持つ巨人の実態に迫ります。
+                </p>
+            </div>
+
+            <div class="card mt-12 p-8 text-left bg-gradient-to-br from-blue-50 to-gray-50 border-blue-200 fade-in-up" style="transition-delay: 50ms;">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4" data-lang="intro_card_title">「市場そのものに投資する」ブラックロックが持つ、他にはない強みとは？</h2>
+                <div class="text-lg text-slate-700 space-y-4">
+                    <p data-lang="intro_card_p1">「ブラックロック」は、世界中の年金基金や政府、個人投資家から10兆ドル（約1500兆円）以上もの資産を預かる、世界最大の資産運用会社です。その運用資産額は、日本のGDPの2倍以上に相当します。</p>
+                    <p data-lang="intro_card_p2">同社の強みは、S&P500などの株価指数に連動するETF（上場投資信託）ブランド「iシェアーズ」で圧倒的なシェアを誇る点にあります。さらに、金融機関向けのリスク管理プラットフォーム「Aladdin」は、業界標準のテクノロジーとなっています。例えるなら、<strong class="text-gray-700">世界中の投資家が利用する巨大な金融マーケットそのものを運営し、その取引システムまで提供している存在</strong>なのです。</p>
+                    <p data-lang="intro_card_p3">このページでは、「ブラックロックのビジネスモデルは？」「なぜETFは成長し続けるのか？」「今後の成長ドライバーは？」といった、投資家が知るべき核心に迫ります。世界の富の流れを左右する金融の巨人の全貌を、一緒に見ていきましょう。</p>
+                </div>
+            </div>
+            <!-- END: BLK Content Changes - Hero Section -->
+
+            <!-- START: BLK Content Changes - Stats & Chart -->
+            <div class="card mt-16 p-6 md:p-8 text-left fade-in-up" style="transition-delay: 150ms;">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-lang="growth_title">市場の成長と共に拡大する安定したビジネス</h2>
+                <p class="text-slate-600 mb-8" data-lang="growth_p">世界の株式市場が成長するにつれて、運用資産残高（AUM）と手数料収入が安定的に増加。ビットコインETFの成功など、新たな市場の開拓にも積極的です。</p>
+                <!-- START: DATA CORRECTION - Market data has been updated to more accurate values -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_price">現在の株価</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="1125.86">$0.00</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_ytd">年初来リターン</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="33.0">+0.0%</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_market_cap">時価総額</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="0.18">0.0兆ドル</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl">
+                        <p class="text-base text-slate-500" data-lang="stat_pe">PER (株価収益率)</p>
+                        <p class="text-4xl font-bold text-blue-800" data-count="15">0倍</p>
+                    </div>
+                </div>
+                <!-- END: DATA CORRECTION -->
+                <div class="h-[300px] w-full">
+                    <canvas id="stockPriceChart"></canvas>
+                </div>
+            </div>
+            <!-- END: BLK Content Changes - Stats & Chart -->
+        </section>
+
+        <!-- START: BLK Content Changes - Business Section -->
+        <section id="business" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="business_title">ブラックロックって、どんな会社？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="business_p">ETFを中心としたパッシブ運用、専門家が銘柄を選ぶアクティブ運用、そして金融テクノロジープラットフォーム「Aladdin」の3つを事業の柱としています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="core_business_title">ビジネスを支える3つの柱</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 20H4V18H20V20ZM20 12H22V16H20V12ZM20 4H4V10H20V4ZM2 12H4V16H2V12ZM2 10V4C2 3.44772 2.44772 3 3 3H21C21.5523 3 22 3.44772 22 4V10H20V6H4V10H2Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_etf_title">ETF (iシェアーズ)</h4>
+                        <p class="text-slate-600" data-lang="core_etf_p">S&P500などの指数に連動するパッシブ運用のETFで世界最大手。低コストで分散投資ができるため、個人投資家から機関投資家まで幅広く利用される。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C15.3137 2 18 4.68629 18 8C18 11.3137 15.3137 14 12 14C8.68629 14 6 11.3137 6 8C6 4.68629 8.68629 2 12 2ZM12 16C17.5228 16 22 18.2386 22 21V22H2V21C2 18.2386 6.47715 16 12 16Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_active_title">アクティブ運用</h4>
+                        <p class="text-slate-600" data-lang="core_active_p">ファンドマネージャーが独自の調査に基づき、市場平均を上回るリターンを目指して運用。プライベート・クレジットなど、代替資産にも注力。</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-2xl hover:bg-slate-50 transition">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-blue-50"><svg class="w-10 h-10 text-blue-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2L9 4L5 4L5 6L3 6L3 8L2 8L2 16L3 16L3 18L5 18L5 20L9 20L9 22L15 22L15 20L19 20L19 18L21 18L21 16L22 16L22 8L21 8L21 6L19 6L19 4L15 4L15 2L9 2ZM11 6L13 6L13 8L15 8L15 10L17 10L17 14L15 14L15 16L13 16L13 18L11 18L11 16L9 16L9 14L7 14L7 10L9 10L9 8L11 8L11 6Z"></path></svg></div>
+                        <h4 class="font-bold text-xl mb-2" data-lang="core_aladdin_title">テクノロジー (Aladdin)</h4>
+                        <p class="text-slate-600" data-lang="core_aladdin_p">自社開発したリスク管理・ポートフォリオ分析プラットフォーム。他の金融機関にも提供し、高収益なSaaSビジネスとなっている。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-4 text-center" data-lang="competitor_title">ライバルと比べて、何がすごいの？</h3>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-center" data-lang="competitor_p">ブラックロックの強みは、その圧倒的な「規模」です。巨大な運用資産は、ETFの低コスト化や、テクノロジーへの巨額投資を可能にし、競合のバンガードやステート・ストリートに対する優位性を築いています。</p>
+                <div class="h-[450px] w-full">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: BLK Content Changes - Business Section -->
+
+        <!-- START: BLK Content Changes - Financials Section -->
+        <section id="financials" class="py-24">
+             <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="financials_title">会社の業績は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="financials_p">世界の金融市場の成長と共に、運用資産残高（AUM）と手数料収入が安定的に増加。市場の変動を受けながらも、着実な利益成長を続けています。</p>
+            </div>
+            
+            <div class="card p-8 md:p-10 mb-12 fade-in-up">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-10">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_revenue">年間売上高</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$185億</p>
+                        <p class="text-base font-semibold text-blue-600" data-lang="stat_revenue_growth">前年比 +4%</p>
+                    </div>
+                    <div class="bg-sky-50 border-l-4 border-sky-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600"><span class="tooltip" data-lang="stat_margin">営業利益率
+                            <span class="tooltiptext" data-lang="stat_margin_tooltip">本業の収益力を示す指標。規模の経済を活かし、40%近い高い利益率を誇る。</span>
+                        </span></p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">38%</p>
+                        <p class="text-base font-semibold text-sky-600" data-lang="stat_margin_desc">高い収益性</p>
+                    </div>
+                    <div class="bg-gray-50 border-l-4 border-gray-400 p-6 rounded-lg">
+                        <p class="text-base text-slate-600" data-lang="stat_aum">運用資産残高 (AUM)</p>
+                        <p class="text-4xl font-extrabold text-slate-800 my-1">$10.5兆</p>
+                        <p class="text-base font-semibold text-gray-600" data-lang="stat_aum_desc">世界最大の資産運用会社</p>
+                    </div>
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="financialsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        <!-- END: BLK Content Changes - Financials Section -->
+        
+        <!-- START: BLK Content Changes - Thesis Section -->
+        <section id="thesis" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="thesis_title">で、この株「買い」なの？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="thesis_p">世界の金融市場の成長そのものに投資するようなブラックロック株。市場全体が成長し続けると信じる強気派と、その巨大さゆえのリスクを懸念する弱気派で見方が分かれます。</p>
+            </div>
+
+            <div class="card p-8 md:p-10 fade-in-up">
+                <div class="flex justify-center mb-8 border-b border-slate-200">
+                    <button id="bullBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-blue-500 text-blue-600" data-lang="bull_btn">強気シナリオ (Bull)</button>
+                    <button id="bearBtn" class="px-6 py-3 text-xl font-bold border-b-4 border-transparent text-slate-400" data-lang="bear_btn">弱気シナリオ (Bear)</button>
+                </div>
+                <div id="thesisContent">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </div>
+        </section>
+        <!-- END: BLK Content Changes - Thesis Section -->
+
+        <!-- START: BLK Content Changes - Outlook Section -->
+        <section id="outlook" class="py-24">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="outlook_title">ブラックロックの未来は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto" data-lang="outlook_p">ブラックロックの未来は、パッシブ運用の成長を取り込みつつ、プライベート・クレジットなどの代替資産や、テクノロジー分野でいかに新たな収益源を育てられるかにかかっています。</p>
+            </div>
+            <div class="card p-8 md:p-10 fade-in-up">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="roadmap_title">未来へのロードマップ</h3>
+                <div class="relative border-l-4 border-blue-300 ml-6 pl-8">
+                    <div class="mb-16 timeline-item">
+                        <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_near_title">近い未来 (1-2年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_near_p">ビットコインETFなどの暗号資産関連商品で市場をリード。Aladdinプラットフォームの機能を拡張し、より多くの金融機関への導入を目指します。</p>
+                    </div>
+                    <div class="timeline-item">
+                         <div class="absolute w-6 h-6 bg-blue-500 rounded-full -left-3.5 border-4 border-white"></div>
+                        <h4 class="text-2xl font-bold text-slate-800 mb-2" data-lang="roadmap_far_title">遠い未来 (3-5年後)</h4>
+                        <p class="text-slate-600 text-lg" data-lang="roadmap_far_p">インフラ投資ファンドの買収などを通じて、プライベート・マーケット分野での存在感を高める。退職金市場向けのソリューションを拡大し、安定した資金流入を確保します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: BLK Content Changes - Outlook Section -->
+
+        <!-- START: BLK Content Changes - Conclusion Section -->
+        <section id="conclusion" class="py-24 text-center bg-slate-50 rounded-3xl">
+             <div class="fade-in-up">
+                <h2 class="text-4xl font-bold text-center mb-4" data-lang="conclusion_title">【最終結論】あなたの投資戦略は？</h2>
+                <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-10" data-lang="conclusion_p">ブラックロックは、世界の経済成長と資本市場の拡大から恩恵を受ける、質の高い金融株。長期的な視点で、安定した配当と資産の成長を享受したい投資家に適しています。</p>
+                
+                <div id="strategy-finder" class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+                    <p class="text-xl font-bold mb-4" data-lang="strategy_q">Q. あなたはどれくらいの期間、投資の成果を待ちますか？</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="strategy-btn w-full text-lg bg-amber-100 text-amber-800 font-bold py-3 px-6 rounded-lg hover:bg-amber-200 transition" data-strategy="short" data-lang="strategy_btn_short">半年以内</button>
+                        <button class="strategy-btn w-full text-lg bg-sky-100 text-sky-800 font-bold py-3 px-6 rounded-lg hover:bg-sky-200 transition" data-strategy="medium" data-lang="strategy_btn_medium">1〜2年</button>
+                        <button class="strategy-btn w-full text-lg bg-blue-100 text-blue-800 font-bold py-3 px-6 rounded-lg hover:bg-blue-200 transition" data-strategy="long" data-lang="strategy_btn_long">3年以上</button>
+                    </div>
+                </div>
+
+                <div id="strategy-result" class="mt-8 max-w-xl mx-auto" style="display: none;"></div>
+             </div>
+        </section>
+        <!-- END: BLK Content Changes - Conclusion Section -->
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto p-10 text-center text-slate-400">
+            <!-- START: BLK Content Changes - Footer -->
+            <p data-lang="footer_copyright">&copy; 2025 BlackRock, Inc. Investor Dashboard. All rights reserved.</p>
+            <!-- END: BLK Content Changes - Footer -->
+            <p class="text-sm mt-3" data-lang="footer_disclaimer">この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。</p>
+        </div>
+    </footer>
+
+    <script>
+    // --- START: REBUILT JAVASCRIPT ---
+
+    const translations = {
+        page_title: { ja: '【ブラックロック版】世界最大の資産運用会社！投資家向けダッシュボード', en: '[BlackRock Edition] World\'s Largest Asset Manager! Investor Dashboard' },
+        nav_today: { ja: 'AI市況予報', en: 'Today\'s Analysis' },
+        nav_pickup: { ja: 'クレイマー保有銘柄', en: 'Cramer\'s Portfolio' },
+        nav_ipo: { ja: 'IPOスケジュール', en: 'IPO Schedule' },
+        nav_indicators: { ja: 'テクニカル指標解説', en: 'Technical Indicators' },
+        nav_terms: { ja: '市場用語集', en: 'Market Glossary' },
+        nav_about: { ja: 'サイトについて', en: 'About Us' },
+        login: { ja: 'ログイン', en: 'Login' },
+        register: { ja: '無料登録', en: 'Sign Up Free' },
+        subnav_intro: { ja: 'はじめに', en: 'Introduction' },
+        subnav_company: { ja: 'どんな会社？', en: 'The Company' },
+        subnav_financials: { ja: '業績は？', en: 'Financials' },
+        subnav_thesis: { ja: '買い？or 待ち？', en: 'Buy or Wait?' },
+        subnav_outlook: { ja: '未来は？', en: 'Outlook' },
+        hero_title: { ja: '10兆ドルを動かす資産運用の巨人、<br><span class="gradient-text">ブラックロック</span>の支配力', en: 'The $10 Trillion Asset Management Giant,<br>The Dominance of <span class="gradient-text">BlackRock</span>' },
+        hero_subtitle: { ja: '世界最大の資産運用会社「ブラックロック」。ETFブランド「iシェアーズ」と金融テクノロジー「Aladdin」を武器に、世界の金融市場に絶大な影響力を持つ巨人の実態に迫ります。', en: 'The world\'s largest asset manager, "BlackRock." We delve into the reality of this giant that wields immense influence over global financial markets with its "iShares" ETF brand and "Aladdin" financial technology.' },
+        intro_card_title: { ja: '「市場そのものに投資する」ブラックロックが持つ、他にはない強みとは？', en: '"Investing in the market itself": What is BlackRock\'s unique strength?' },
+        intro_card_p1: { ja: '「ブラックロック」は、世界中の年金基金や政府、個人投資家から10兆ドル（約1500兆円）以上もの資産を預かる、世界最大の資産運用会社です。その運用資産額は、日本のGDPの2倍以上に相当します。', en: '"BlackRock" is the world\'s largest asset manager, entrusted with over $10 trillion (about 1,500 trillion yen) from pension funds, governments, and individual investors worldwide. Its assets under management are more than double Japan\'s GDP.' },
+        intro_card_p2: { ja: '同社の強みは、S&P500などの株価指数に連動するETF（上場投資信託）ブランド「iシェアーズ」で圧倒的なシェアを誇る点にあります。さらに、金融機関向けのリスク管理プラットフォーム「Aladdin」は、業界標準のテクノロジーとなっています。例えるなら、<strong class="text-gray-700">世界中の投資家が利用する巨大な金融マーケットそのものを運営し、その取引システムまで提供している存在</strong>なのです。', en: 'The company\'s strength lies in its dominant share of the ETF (Exchange-Traded Fund) market with its "iShares" brand, which tracks stock indexes like the S&P 500. Furthermore, its risk management platform for financial institutions, "Aladdin," has become the industry standard. It\'s like an <strong class="text-gray-700">entity that operates the massive financial market used by investors worldwide and even provides its trading system.</strong>' },
+        intro_card_p3: { ja: 'このページでは、「ブラックロックのビジネスモデルは？」「なぜETFは成長し続けるのか？」「今後の成長ドライバーは？」といった、投資家が知るべき核心に迫ります。世界の富の流れを左右する金融の巨人の全貌を、一緒に見ていきましょう。', en: 'This page delves into the core questions for investors, such as "What is BlackRock\'s business model?", "Why do ETFs continue to grow?", and "What are its future growth drivers?". Let\'s explore the full picture of this financial giant that influences the flow of global wealth.' },
+        growth_title: { ja: '市場の成長と共に拡大する安定したビジネス', en: 'A Stable Business that Expands with Market Growth' },
+        growth_p: { ja: '世界の株式市場が成長するにつれて、運用資産残高（AUM）と手数料収入が安定的に増加。ビットコインETFの成功など、新たな市場の開拓にも積極的です。', en: 'As global stock markets grow, assets under management (AUM) and fee revenues increase steadily. The company is also actively pioneering new markets, such as with the success of its Bitcoin ETF.' },
+        stat_price: { ja: '現在の株価', en: 'Current Price' },
+        stat_ytd: { ja: '年初来リターン', en: 'YTD Return' },
+        stat_market_cap: { ja: '時価総額', en: 'Market Cap' },
+        stat_pe: { ja: 'PER (株価収益率)', en: 'P/E Ratio' },
+        chart_stock_label: { ja: '株価 ($)', en: 'Stock Price ($)' },
+        business_title: { ja: 'ブラックロックって、どんな会社？', en: 'What Kind of Company is BlackRock?' },
+        business_p: { ja: 'ETFを中心としたパッシブ運用、専門家が銘柄を選ぶアクティブ運用、そして金融テクノロジープラットフォーム「Aladdin」の3つを事業の柱としています。', en: 'Its business is built on three pillars: passive management centered on ETFs, active management where experts select stocks, and the "Aladdin" financial technology platform.' },
+        core_business_title: { ja: 'ビジネスを支える3つの柱', en: 'Three Pillars Supporting the Business' },
+        core_etf_title: { ja: 'ETF (iシェアーズ)', en: 'ETFs (iShares)' },
+        core_etf_p: { ja: 'S&P500などの指数に連動するパッシブ運用のETFで世界最大手。低コストで分散投資ができるため、個人投資家から機関投資家まで幅広く利用される。', en: 'The world\'s largest provider of passive investment ETFs that track indexes like the S&P 500. Widely used by both retail and institutional investors for low-cost, diversified investing.' },
+        core_active_title: { ja: 'アクティブ運用', en: 'Active Management' },
+        core_active_p: { ja: 'ファンドマネージャーが独自の調査に基づき、市場平均を上回るリターンを目指して運用。プライベート・クレジットなど、代替資産にも注力。', en: 'Fund managers aim to outperform the market average based on proprietary research. Also focuses on alternative assets like private credit.' },
+        core_aladdin_title: { ja: 'テクノロジー (Aladdin)', en: 'Technology (Aladdin)' },
+        core_aladdin_p: { ja: '自社開発したリスク管理・ポートフォリオ分析プラットフォーム。他の金融機関にも提供し、高収益なSaaSビジネスとなっている。', en: 'A proprietary risk management and portfolio analysis platform. Also offered to other financial institutions, forming a high-margin SaaS business.' },
+        competitor_title: { ja: 'ライバルと比べて、何がすごいの？', en: 'What Makes Them Stand Out from Rivals?' },
+        competitor_p: { ja: 'ブラックロックの強みは、その圧倒的な「規模」です。巨大な運用資産は、ETFの低コスト化や、テクノロジーへの巨額投資を可能にし、競合のバンガードやステート・ストリートに対する優位性を築いています。', en: 'BlackRock\'s strength is its overwhelming "scale." Its massive assets under management enable low-cost ETFs and huge investments in technology, creating an advantage over competitors like Vanguard and State Street.' },
+        chart_competitor_label_blk: { ja: 'ブラックロック', en: 'BlackRock' },
+        chart_competitor_label_rivals: { ja: '競合他社 (平均)', en: 'Competitors (Avg)' },
+        chart_competitor_axes: { ja: ['運用資産(AUM)', 'ETFシェア', 'テクノロジー(Aladdin)', 'ブランド力', '収益性'], en: ['AUM', 'ETF Share', 'Technology (Aladdin)', 'Brand Power', 'Profitability'] },
+        financials_title: { ja: '会社の業績は？', en: 'How Are the Company\'s Financials?' },
+        financials_p: { ja: '世界の金融市場の成長と共に、運用資産残高（AUM）と手数料収入が安定的に増加。市場の変動を受けながらも、着実な利益成長を続けています。', en: 'Along with the growth of global financial markets, assets under management (AUM) and fee revenues are steadily increasing. Despite market fluctuations, the company continues to achieve steady profit growth.' },
+        stat_revenue: { ja: '年間売上高', en: 'Annual Revenue' },
+        stat_revenue_growth: { ja: '前年比 +4%', en: '+4% YoY' },
+        stat_margin: { ja: '営業利益率', en: 'Operating Margin' },
+        stat_margin_tooltip: { ja: '本業の収益力を示す指標。規模の経済を活かし、40%近い高い利益率を誇る。', en: 'A measure of core profitability. Leverages economies of scale to boast a high profit margin of nearly 40%.' },
+        stat_margin_desc: { ja: '高い収益性', en: 'High Profitability' },
+        stat_aum: { ja: '運用資産残高 (AUM)', en: 'Assets Under Management (AUM)' },
+        stat_aum_desc: { ja: '世界最大の資産運用会社', en: 'World\'s Largest Asset Manager' },
+        chart_financials_revenue: { ja: '売上高 (億ドル)', en: 'Revenue ($B)' },
+        chart_financials_income: { ja: '純利益 (億ドル)', en: 'Net Income ($B)' },
+        chart_financials_unit: { ja: '億ドル', en: 'Billion USD' },
+        thesis_title: { ja: 'で、この株「買い」なの？', en: 'So, Is This Stock a "Buy"?' },
+        thesis_p: { ja: '世界の金融市場の成長そのものに投資するようなブラックロック株。市場全体が成長し続けると信じる強気派と、その巨大さゆえのリスクを懸念する弱気派で見方が分かれます。', en: 'BlackRock stock is like an investment in the growth of the global financial markets themselves. Views are divided between bulls who believe the overall market will continue to grow and bears who are concerned about the risks of its immense size.' },
+        bull_btn: { ja: '強気シナリオ (Bull)', en: 'Bull Case' },
+        bear_btn: { ja: '弱気シナリオ (Bear)', en: 'Bear Case' },
+        bull_content_title: { ja: 'この株が「市場と共に成長」する理由', en: 'Why This Stock "Grows with the Market"' },
+        bull_content_li1: { ja: '<strong>パッシブ運用の拡大:</strong> 低コストなETFへの資金流入は、長期的なトレンドであり、iシェアーズの成長を後押しする。', en: '<strong>Growth of Passive Investing:</strong> The flow of funds into low-cost ETFs is a long-term trend that will continue to boost the growth of iShares.' },
+        bull_content_li2: { ja: '<strong>規模の経済:</strong> 圧倒的な運用資産規模が、コスト競争力と高い利益率を生み出す。', en: '<strong>Economies of Scale:</strong> Its massive scale of assets under management creates cost competitiveness and high profit margins.' },
+        bull_content_li3: { ja: '<strong>Aladdinの強み:</strong> テクノロジー・プラットフォームが、他社にはない競争優位性と高収益な事業をもたらす。', en: '<strong>Strength of Aladdin:</strong> Its technology platform provides a unique competitive advantage and a high-margin business.' },
+        bull_content_li4: { ja: '<strong>新たな市場の開拓:</strong> ビットコインETFやプライベート・マーケットなど、新たな資産クラスへの展開で成長機会を捉える。', en: '<strong>Pioneering New Markets:</strong> Captures growth opportunities by expanding into new asset classes like the Bitcoin ETF and private markets.' },
+        bear_content_title: { ja: '知っておくべき「リスク」', en: 'The Risks You Should Know' },
+        bear_content_li1: { ja: '<strong>市場リスク:</strong> 業績は金融市場の動向に直接連動するため、世界的な株価下落は運用資産の減少と収益悪化に直結する。', en: '<strong>Market Risk:</strong> Performance is directly linked to financial market trends, so a global stock market decline would directly lead to a decrease in AUM and lower revenues.' },
+        bear_content_li2: { ja: '<strong>手数料の低下圧力:</strong> ETF市場の競争激化により、手数料（経費率）の引き下げ圧力が常に存在する。', en: '<strong>Fee Compression Pressure:</strong> Intense competition in the ETF market creates constant downward pressure on management fees (expense ratios).' },
+        bear_content_li3: { ja: '<strong>規制リスク:</strong> その巨大さゆえに、「大きすぎて潰せない」存在として、金融システムの安定を脅かすと見なされ、規制が強化されるリスク。', en: '<strong>Regulatory Risk:</strong> Due to its immense size, it faces the risk of being deemed "too big to fail" and a threat to financial stability, leading to tighter regulation.' },
+        bear_content_li4: { ja: '<strong>ESGへの逆風:</strong> ESG投資を推進する姿勢が、一部の政治家や投資家から批判を受け、資金流出につながる可能性。', en: '<strong>ESG Headwinds:</strong> Its promotion of ESG investing has drawn criticism from some politicians and investors, potentially leading to fund outflows.' },
+        outlook_title: { ja: 'ブラックロックの未来は？', en: 'What is BlackRock\'s Future?' },
+        outlook_p: { ja: 'ブラックロックの未来は、パッシブ運用の成長を取り込みつつ、プライベート・クレジットなどの代替資産や、テクノロジー分野でいかに新たな収益源を育てられるかにかかっています。', en: 'BlackRock\'s future depends on its ability to cultivate new revenue streams in alternative assets like private credit and in technology, while continuing to capture the growth of passive investing.' },
+        roadmap_title: { ja: '未来へのロードマップ', en: 'Roadmap to the Future' },
+        roadmap_near_title: { ja: '近い未来 (1-2年後)', en: 'Near Future (1-2 Years)' },
+        roadmap_near_p: { ja: 'ビットコインETFなどの暗号資産関連商品で市場をリード。Aladdinプラットフォームの機能を拡張し、より多くの金融機関への導入を目指します。', en: 'Lead the market with crypto-related products like the Bitcoin ETF. Aim to expand the features of the Aladdin platform and increase its adoption by more financial institutions.' },
+        roadmap_far_title: { ja: '遠い未来 (3-5年後)', en: 'Distant Future (3-5 Years)' },
+        roadmap_far_p: { ja: 'インフラ投資ファンドの買収などを通じて、プライベート・マーケット分野での存在感を高める。退職金市場向けのソリューションを拡大し、安定した資金流入を確保します。', en: 'Increase its presence in the private markets through acquisitions of infrastructure investment funds and other means. Expand solutions for the retirement market to secure stable fund inflows.' },
+        conclusion_title: { ja: '【最終結論】あなたの投資戦略は？', en: 'Final Conclusion: What\'s Your Strategy?' },
+        conclusion_p: { ja: 'ブラックロックは、世界の経済成長と資本市場の拡大から恩恵を受ける、質の高い金融株。長期的な視点で、安定した配当と資産の成長を享受したい投資家に適しています。', en: 'BlackRock is a high-quality financial stock that benefits from global economic growth and the expansion of capital markets. It is suitable for investors who want to enjoy stable dividends and asset growth from a long-term perspective.' },
+        strategy_q: { ja: 'Q. あなたはどれくらいの期間、投資の成果を待ちますか？', en: 'Q. How long are you willing to wait for returns?' },
+        strategy_btn_short: { ja: '半年以内', en: 'Within 6 months' },
+        strategy_btn_medium: { ja: '1〜2年', en: '1-2 years' },
+        strategy_btn_long: { ja: '3年以上', en: '3+ years' },
+        strategy_res_short_title: { ja: '短期派（〜6ヶ月）のあなたへ', en: 'For Short-Term Traders (~6 months)' },
+        strategy_res_short_subtitle: { ja: '市場のセンチメントがすべて', en: 'Market Sentiment is Everything' },
+        strategy_res_short_p: { ja: '株価は、株式市場全体のムードに大きく左右されます。FRBの金利政策や、VIX指数（恐怖指数）の動きなどが短期的な売買のヒントになります。', en: 'The stock price is heavily influenced by the overall mood of the stock market. The Fed\'s interest rate policy and movements in the VIX (fear index) can provide short-term trading clues.' },
+        strategy_res_medium_title: { ja: '中期派（1〜2年）のあなたへ', en: 'For Medium-Term Investors (1-2 years)' },
+        strategy_res_medium_subtitle: { ja: '資金流入のトレンドを見る', en: 'Watch the Fund Flow Trends' },
+        strategy_res_medium_p: { ja: 'ETFへの資金流入が継続しているかどうかが、中期的な業績の鍵。特に、高成長が見込まれる債券ETFや、テーマ型ETFへの資金流入に注目です。', en: 'Whether fund flows into ETFs continue is key to mid-term performance. Pay particular attention to flows into high-growth bond ETFs and thematic ETFs.' },
+        strategy_res_long_title: { ja: '長期派（3年以上）のあなたへ', en: 'For Long-Term Investors (3+ years)' },
+        strategy_res_long_subtitle: { ja: '世界の成長に賭ける', en: 'Bet on Global Growth' },
+        strategy_res_long_p: { ja: '短期的な市場の調整は気にせず、世界経済が長期的には成長し続けるという大きなストーリーに投資。配当再投資で、市場の成長を複利で享受する戦略です。', en: 'A strategy to invest in the grand narrative of continued long-term global economic growth, ignoring short-term market corrections. Enjoy the compounded growth of the market by reinvesting dividends.' },
+        footer_copyright: { ja: '&copy; 2025 BlackRock, Inc. Investor Dashboard. All rights reserved.', en: '&copy; 2025 BlackRock, Inc. Investor Dashboard. All rights reserved.' },
+        footer_disclaimer: { ja: 'この資料は情報提供のみを目的としており、投資勧誘を目的としたものではありません。投資に関する最終決定は、ご自身の判断と責任において行ってください。', en: 'This material is for informational purposes only and is not intended as investment advice. Please make your final investment decisions at your own discretion and risk.' }
+    };
+
+    // --- Global variables for charts ---
+    let stockChart, financialsChart, competitorChart;
+
+    // --- Core Functions ---
+    const applyTranslations = (lang) => {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[key] && translations[key][lang]) {
+                el.innerHTML = translations[key][lang];
+            }
+        });
+        document.documentElement.lang = lang;
+        updateAllCharts(lang);
+    };
+
+    const setLanguage = (lang) => {
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('#header-lang-switcher .lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('bg-primary', 'text-white', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+            } else {
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'px-2', 'py-1', 'rounded', 'text-xs', 'font-medium', 'transition-colors');
+                btn.classList.remove('bg-primary', 'text-white');
+            }
+        });
+        applyTranslations(lang);
+    };
+    
+    const updateAllCharts = (lang) => {
+        if (stockChart) {
+            stockChart.data.datasets[0].label = translations.chart_stock_label[lang];
+            stockChart.update();
+        }
+        if (financialsChart) {
+            financialsChart.data.datasets[0].label = translations.chart_financials_revenue[lang];
+            financialsChart.data.datasets[1].label = translations.chart_financials_income[lang];
+            financialsChart.options.scales.y.title.text = translations.chart_financials_unit[lang];
+            financialsChart.update();
+        }
+        if (competitorChart) {
+            competitorChart.data.labels = translations.chart_competitor_axes[lang];
+            competitorChart.data.datasets[0].label = translations.chart_competitor_label_blk[lang];
+            competitorChart.data.datasets[1].label = translations.chart_competitor_label_rivals[lang];
+            competitorChart.update();
+        }
+    };
+
+    const showStrategy = (type) => {
+        const resultDiv = document.getElementById('strategy-result');
+        if (!resultDiv) return;
+        const lang = localStorage.getItem('language') || 'ja';
+        let content = '';
+        if (type === 'short') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-400 animate-pop-in"><h3 class="font-bold text-amber-700 text-xl">${translations.strategy_res_short_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_short_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_short_p[lang]}</p></div>`;
+        } else if (type === 'medium') {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-sky-400 animate-pop-in"><h3 class="font-bold text-sky-700 text-xl">${translations.strategy_res_medium_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_medium_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_medium_p[lang]}</p></div>`;
+        } else {
+            content = `<div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-blue-400 animate-pop-in"><h3 class="font-bold text-blue-700 text-xl">${translations.strategy_res_long_title[lang]}</h3><p class="text-3xl font-extrabold my-2">${translations.strategy_res_long_subtitle[lang]}</p><p class="text-lg text-slate-600">${translations.strategy_res_long_p[lang]}</p></div>`;
+        }
+        resultDiv.innerHTML = content;
+        resultDiv.style.display = 'block';
+    };
+
+    // --- Initialization Functions ---
+    const initCharts = () => {
+        Chart.defaults.font.family = "'Inter', 'Noto Sans JP', sans-serif";
+        Chart.defaults.font.size = 14;
+
+        try {
+            const stockLabels = Array.from({length: 12}, (_, i) => {
+                const date = new Date(2023, 7, 1);
+                date.setMonth(date.getMonth() + i);
+                return date;
+            });
+            const stockCtx = document.getElementById('stockPriceChart');
+            if(stockCtx) {
+                stockChart = new Chart(stockCtx, {
+                    type: 'line',
+                    // START: DATA CORRECTION - Chart data updated to reflect new price
+                    data: { labels: stockLabels, datasets: [{ label: '株価 ($)', data: [720, 700, 680, 750, 780, 800, 810, 790, 770, 760, 790, 810], borderColor: '#005B94', backgroundColor: 'rgba(0, 91, 148, 0.1)', fill: true, tension: 0.4 }] },
+                    // END: DATA CORRECTION
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#E2E8F0' } }, x: { type: 'time', time: { unit: 'month' }, grid: { display: false } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize stock chart:", e); }
+
+        try {
+            const financialsCtx = document.getElementById('financialsChart');
+            if(financialsCtx) {
+                financialsChart = new Chart(financialsCtx, {
+                    data: { labels: ['2023年', '2024年', '2025年 (予想)'], datasets: [ { type: 'bar', label: '売上高 (億ドル)', data: [178, 185, 205], backgroundColor: '#005B94', yAxisID: 'y' }, { type: 'line', label: '純利益 (億ドル)', data: [56, 60, 68], borderColor: '#A8996E', backgroundColor: '#A8996E', tension: 0.4, yAxisID: 'y' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } }, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '億ドル' }, grid: { color: '#E2E8F0' } } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize financials chart:", e); }
+
+        try {
+            const competitorCtx = document.getElementById('competitorChart');
+            if(competitorCtx) {
+                competitorChart = new Chart(competitorCtx, {
+                    type: 'radar',
+                    data: { labels: ['運用資産(AUM)', 'ETFシェア', 'テクノロジー(Aladdin)', 'ブランド力', '収益性'], datasets: [ { label: 'ブラックロック', data: [98, 95, 96, 94, 92], backgroundColor: 'rgba(0, 91, 148, 0.2)', borderColor: 'rgba(0, 91, 148, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(0, 91, 148, 1)' }, { label: '競合他社 (平均)', data: [85, 88, 70, 90, 86], backgroundColor: 'rgba(203, 213, 225, 0.2)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(100, 116, 139, 1)' } ] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { r: { angleLines: { color: '#E2E8F0' }, grid: { color: '#E2E8F0' }, pointLabels: { font: { size: 16 } }, suggestedMin: 0, suggestedMax: 100 } } }
+                });
+            }
+        } catch (e) { console.error("Failed to initialize competitor chart:", e); }
+    };
+
+    const initAnimations = () => {
+        const animateCount = (element) => {
+            const target = +element.getAttribute('data-count');
+            if (isNaN(target)) return;
+            
+            const isPercentage = element.innerText.includes('%');
+            const isTrillion = element.innerText.includes('兆ドル');
+            const isTimes = element.innerText.includes('倍');
+            const isDollar = element.innerText.includes('$');
+            
+            const duration = 1500;
+            let start = 0;
+            
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                let current = progress * target;
+                
+                if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + current.toFixed(1) + '%';
+                else if (isDollar) element.innerText = '$' + current.toFixed(2);
+                else if (isTrillion) element.innerText = current.toFixed(2) + '兆ドル';
+                else if (isTimes) element.innerText = current.toFixed(0) + '倍';
+                else element.innerText = current.toFixed(0);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    if (isPercentage) element.innerText = (target >= 0 ? '+' : '') + target.toFixed(1) + '%';
+                    else if (isDollar) element.innerText = '$' + target.toFixed(2);
+                    else if (isTrillion) element.innerText = target.toFixed(2) + '兆ドル';
+                    else if (isTimes) element.innerText = target.toFixed(0) + '倍';
+                    else element.innerText = target.toFixed(0);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(animateCount);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    };
+
+    const setupEventListeners = () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+
+        document.getElementById('header-lang-switcher')?.addEventListener('click', (e) => {
+            if (e.target.matches('.lang-btn')) {
+                const lang = e.target.dataset.lang;
+                if (lang) {
+                    setLanguage(lang);
+                    updateThesisContent();
+                    const strategyResult = document.getElementById('strategy-result');
+                    if(strategyResult) strategyResult.style.display = 'none';
+                }
+            }
+        });
+
+        const bullBtn = document.getElementById('bullBtn');
+        const bearBtn = document.getElementById('bearBtn');
+        if (bullBtn && bearBtn) {
+            bullBtn.addEventListener('click', () => {
+                bullBtn.classList.add('border-blue-500', 'text-blue-600');
+                bullBtn.classList.remove('border-transparent', 'text-slate-400');
+                bearBtn.classList.add('border-transparent', 'text-slate-400');
+                bearBtn.classList.remove('border-red-500', 'text-red-600');
+                updateThesisContent();
+            });
+            bearBtn.addEventListener('click', () => {
+                bearBtn.classList.add('border-red-500', 'text-red-600');
+                bearBtn.classList.remove('border-transparent', 'text-slate-400');
+                bullBtn.classList.add('border-transparent', 'text-slate-400');
+                bullBtn.classList.remove('border-blue-500', 'text-blue-600');
+                updateThesisContent();
+            });
+        }
+        
+        document.querySelectorAll('.strategy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const strategyType = button.dataset.strategy;
+                if (strategyType) showStrategy(strategyType);
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    };
+
+    const updateThesisContent = () => {
+        const thesisContent = document.getElementById('thesisContent');
+        const bullBtn = document.getElementById('bullBtn');
+        if (!thesisContent || !bullBtn) return;
+
+        const lang = localStorage.getItem('language') || 'ja';
+        const bullContent = `<h3 class="text-3xl font-bold text-blue-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>${translations.bull_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-blue-500 font-bold mr-3 mt-1">✓</span><span>${translations.bull_content_li4[lang]}</span></li></ul>`;
+        const bearContent = `<h3 class="text-3xl font-bold text-red-700 mb-6 flex items-center"><svg class="w-10 h-10 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>${translations.bear_content_title[lang]}</h3><ul class="space-y-4 text-slate-700 text-lg"><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li1[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li2[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li3[lang]}</span></li><li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">✗</span><span>${translations.bear_content_li4[lang]}</span></li></ul>`;
+        
+        thesisContent.innerHTML = bullBtn.classList.contains('text-blue-600') ? bullContent : bearContent;
+    };
+
+    // --- Main Execution ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initAnimations();
+        setupEventListeners();
+
+        const initialLang = localStorage.getItem('language') || 'ja';
+        setLanguage(initialLang);
+        updateThesisContent();
+    });
+
+    </script>
+</body>
+</html>
