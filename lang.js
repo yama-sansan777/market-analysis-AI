@@ -1651,7 +1651,42 @@ function switchLanguage(lang) {
     // Trigger custom event for any additional dynamic content that might need updating
     document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
     
+    // ヘッダー読み込み後の言語ボタンセットアップ
+    setupHeaderLanguageButtons();
+    
     console.log(`✅ Language switched to: ${lang}`);
+}
+
+// Setup header language buttons if available
+function setupHeaderLanguageButtons() {
+    const headerSwitcher = document.getElementById('header-lang-switcher');
+    if (headerSwitcher) {
+        // ヘッダー内のボタンにイベントリスナーを追加
+        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
+            // 既存のリスナーを削除して重複を防止
+            btn.replaceWith(btn.cloneNode(true));
+        });
+        
+        // 新しいボタンにイベントリスナーを追加
+        document.getElementById('header-lang-switcher').querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const lang = this.getAttribute('data-lang');
+                switchLanguage(lang);
+            });
+        });
+        
+        // 初期状態を設定
+        updateHeaderLanguageButtons();
+        
+        // 固定位置スイッチャーがあれば削除
+        const existingSwitcher = document.getElementById('lang-switcher');
+        if (existingSwitcher) {
+            existingSwitcher.remove();
+        }
+        
+        return true;
+    }
+    return false;
 }
 
 // Initialize language system
@@ -1674,30 +1709,17 @@ async function initLanguage() {
         }
     }
     
-    // ヘッダー内の言語切り替えボタンが存在する場合は、それを使用
-    const headerSwitcher = document.getElementById('header-lang-switcher');
-    if (headerSwitcher) {
-        // ヘッダー内のボタンにイベントリスナーを追加
-        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const lang = this.getAttribute('data-lang');
-                switchLanguage(lang);
-            });
-        });
-        
-        // 初期状態を設定
-        updateHeaderLanguageButtons();
-        
-        // 既存の固定位置スイッチャーがあれば削除
-        const existingSwitcher = document.getElementById('lang-switcher');
-        if (existingSwitcher) {
-            existingSwitcher.remove();
-        }
-    } else {
-        // ヘッダー内のボタンが存在しない場合は、固定位置のスイッチャーを追加
-        const switcher = createLanguageSwitcher();
-        document.body.appendChild(switcher);
+    // ヘッダー内の言語切り替えボタンをチェック（ヘッダー読み込み後に再実行される）
+    setupHeaderLanguageButtons();
+    
+    // 既存の固定位置スイッチャーがあれば削除（重複防止）
+    const existingSwitcher = document.getElementById('lang-switcher');
+    if (existingSwitcher) {
+        existingSwitcher.remove();
     }
+    
+    // ヘッダーが読み込まれるまで固定位置スイッチャーは作成しない
+    // （header-loader.jsからapplyTranslations呼び出し時に処理される）
     
     // Apply current language
     switchLanguage(currentLang);
@@ -1720,6 +1742,8 @@ function getTranslation(key, lang = currentLang) {
 // Export functions for use in other scripts
 window.initLanguage = initLanguage;
 window.switchLanguage = switchLanguage;
+window.setupHeaderLanguageButtons = setupHeaderLanguageButtons;
+window.applyTranslations = () => switchLanguage(currentLang);  // Alias for compatibility
 window.currentLang = currentLang;
 window.translations = translations;
 window.getTranslation = getTranslation; 
