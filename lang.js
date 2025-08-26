@@ -1594,50 +1594,89 @@ function switchLanguage(lang) {
     // Trigger custom event for any additional dynamic content that might need updating
     document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
     
-    // ヘッダー読み込み後の言語ボタンセットアップ
-    setupHeaderLanguageButtons();
+    // ヘッダー読み込み後の言語ボタンセットアップ（制御された呼び出し）
+    if (!window.headerLanguageButtonsInitialized) {
+        console.log('🔧 First time language switch - setting up header buttons');
+        setupHeaderLanguageButtons();
+    } else {
+        console.log('🔄 Header buttons already initialized - updating state only');
+        updateHeaderLanguageButtons();
+        // 定期的なクリーンアップ
+        cleanupDuplicateSwitchers();
+    }
     
     console.log(`✅ Language switched to: ${lang}`);
 }
 
-// Setup header language buttons if available
+// Global flag to prevent duplicate initialization
+window.headerLanguageButtonsInitialized = false;
+
+// Setup header language buttons if available (enhanced duplicate prevention)
 function setupHeaderLanguageButtons() {
+    console.log('🔧 setupHeaderLanguageButtons called');
+    
     const headerSwitcher = document.getElementById('header-lang-switcher');
-    if (headerSwitcher) {
-        // 重複防止フラグをチェック
-        if (headerSwitcher.dataset.initialized === 'true') {
-            updateHeaderLanguageButtons();
-            return true;
-        }
-        
-        // ヘッダー内のボタンにイベントリスナーを追加（安全な方法）
-        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
-            // 既存のクリックイベントをクリア（DOMを破壊しない）
-            const newBtn = btn.cloneNode(true);
-            btn.parentNode.replaceChild(newBtn, btn);
-            
-            // 新しいイベントリスナーを追加
-            newBtn.addEventListener('click', function() {
-                const lang = this.getAttribute('data-lang');
-                switchLanguage(lang);
-            });
-        });
-        
-        // 初期化完了フラグを設定
-        headerSwitcher.dataset.initialized = 'true';
-        
-        // 初期状態を設定
+    if (!headerSwitcher) {
+        console.log('⚠️ Header switcher not found');
+        return false;
+    }
+    
+    // 強化された重複防止チェック
+    if (window.headerLanguageButtonsInitialized) {
+        console.log('✅ Header language buttons already initialized, updating state only');
         updateHeaderLanguageButtons();
-        
-        // 固定位置スイッチャーがあれば削除
-        const existingSwitcher = document.getElementById('lang-switcher');
-        if (existingSwitcher) {
-            existingSwitcher.remove();
-        }
-        
         return true;
     }
-    return false;
+    
+    console.log('🔧 Initializing header language buttons...');
+    
+    // 既存のイベントリスナーを安全に削除
+    headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
+        // 既存のリスナーをクリア
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        
+        // 新しいイベントリスナーを追加
+        newBtn.addEventListener('click', function() {
+            const lang = this.getAttribute('data-lang');
+            console.log(`🌐 Language button clicked: ${lang}`);
+            switchLanguage(lang);
+        });
+    });
+    
+    // グローバルフラグとローカルフラグの両方を設定
+    window.headerLanguageButtonsInitialized = true;
+    headerSwitcher.dataset.initialized = 'true';
+    
+    // 初期状態を設定
+    updateHeaderLanguageButtons();
+    
+    // 強制的に不要なスイッチャーを削除
+    cleanupDuplicateSwitchers();
+    
+    console.log('✅ Header language buttons initialized successfully');
+    return true;
+}
+
+// 重複スイッチャーの強制削除
+function cleanupDuplicateSwitchers() {
+    console.log('🧹 Cleaning up duplicate language switchers...');
+    
+    // 固定位置スイッチャーを削除
+    const existingSwitchers = document.querySelectorAll('#lang-switcher');
+    existingSwitchers.forEach(switcher => {
+        console.log('🗑️ Removing duplicate lang-switcher');
+        switcher.remove();
+    });
+    
+    // 他の不要なスイッチャーも削除
+    const allSwitchers = document.querySelectorAll('.lang-switcher, [class*="lang-switch"]');
+    allSwitchers.forEach(switcher => {
+        if (switcher.id !== 'header-lang-switcher' && !switcher.closest('#header-lang-switcher')) {
+            console.log('🗑️ Removing unknown language switcher:', switcher);
+            switcher.remove();
+        }
+    });
 }
 
 // Initialize language system
@@ -1690,10 +1729,57 @@ function getTranslation(key, lang = currentLang) {
     return translations[lang][key] || key;
 }
 
+// MutationObserver to monitor and remove duplicate switchers
+function startDuplicateSwitcherWatcher() {
+    console.log('👀 Starting duplicate switcher watcher...');
+    
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList') {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        // Check if the added node is a language switcher
+                        if (node.id === 'lang-switcher' || 
+                            node.classList.contains('lang-switcher') ||
+                            node.querySelector && node.querySelector('#lang-switcher, .lang-switcher')) {
+                            console.log('🚨 Duplicate switcher detected and removing:', node);
+                            node.remove();
+                        }
+                        
+                        // Also check for any elements with fixed positioning that might be language switchers
+                        if (node.style && node.style.position === 'fixed' && 
+                            node.querySelector && node.querySelector('.lang-btn')) {
+                            console.log('🚨 Fixed position language switcher detected and removing:', node);
+                            node.remove();
+                        }
+                    }
+                });
+            }
+        });
+    });
+    
+    // Start observing
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    
+    console.log('✅ Duplicate switcher watcher started');
+    return observer;
+}
+
+// Initialize the watcher when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        startDuplicateSwitcherWatcher();
+    }, 1000); // Wait 1 second after DOM is ready
+});
+
 // Export functions for use in other scripts
 window.initLanguage = initLanguage;
 window.switchLanguage = switchLanguage;
 window.setupHeaderLanguageButtons = setupHeaderLanguageButtons;
+window.cleanupDuplicateSwitchers = cleanupDuplicateSwitchers;
 window.applyTranslations = () => switchLanguage(currentLang);  // Alias for compatibility
 window.currentLang = currentLang;
 window.translations = translations;
