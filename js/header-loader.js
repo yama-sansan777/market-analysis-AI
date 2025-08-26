@@ -19,6 +19,12 @@ async function loadHeader() {
             
             // 現在のページをハイライト
             setActiveNavigation();
+
+            // 言語スイッチャーの重複を除去（万一複数挿入された場合）
+            const switchers = document.querySelectorAll('#header-lang-switcher');
+            if (switchers.length > 1) {
+                switchers.forEach((el, idx) => { if (idx > 0) el.remove(); });
+            }
             
             // モバイルメニューの機能を最初に初期化（他の処理と独立）
             initializeMobileMenu();
@@ -28,6 +34,10 @@ async function loadHeader() {
                 // 翻訳適用後にメニューを表示
                 setTimeout(() => {
                     window.applyTranslations();
+                    // ヘッダー言語ボタンの外観とイベントを再設定
+                    if (window.setupHeaderLanguageButtons) {
+                        window.setupHeaderLanguageButtons();
+                    }
                     // 翻訳が完了してからメニューを表示
                     const headerNav = document.querySelector('header nav');
                     const mobileMenu = document.getElementById('mobile-menu');
@@ -40,6 +50,10 @@ async function loadHeader() {
                 const mobileMenu = document.getElementById('mobile-menu');
                 if (headerNav) headerNav.style.visibility = 'visible';
                 if (mobileMenu) mobileMenu.style.visibility = 'visible';
+                // 言語ボタン初期化（存在すれば）
+                if (window.setupHeaderLanguageButtons) {
+                    window.setupHeaderLanguageButtons();
+                }
             }
         }
     } catch (error) {
