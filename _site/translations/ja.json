@@ -1,6 +1,8 @@
 {
-  "nav_today": "本日の市況分析",
+  "nav_today": "AI市況予報",
+  "nav_pickup": "クレイマー保有銘柄",
   "nav_archive": "分析アーカイブ",
+  "nav_ipo": "IPOスケジュール",
   "nav_indicators": "テクニカル指標解説",
   "nav_terms": "市場用語集",
   "nav_about": "サイトについて",
@@ -26,5 +28,6 @@
   "main_subtitle": "短期トレーダーのためのデータ駆動型インサイト",
   "summary_title": "総合評価",
   "footer_copyright": "© 2025 Market Insight Japan. All rights reserved.",
-  "footer_disclaimer_short": "当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。投資の最終判断はご自身でお願いします。"
+  "footer_disclaimer_short": "当サイトの情報は投資判断の参考として提供されるものであり、投資勧誘を目的としたものではありません。投資の最終判断はご自身でお願いします。",
+  "pickup_subtitle": "ジム・クレイマーの現在保有している銘柄群です。銘柄分析は「詳細を見る」から。"
 }

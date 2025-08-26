@@ -1,6 +1,8 @@
 {
-  "nav_today": "Today's Market Analysis",
+  "nav_today": "AI Market Forecast",
+  "nav_pickup": "Cramer's Holdings",
   "nav_archive": "Analysis Archive",
+  "nav_ipo": "IPO Schedule",
   "nav_indicators": "Technical Indicators",
   "nav_terms": "Market Terms",
   "nav_about": "About",
@@ -26,5 +28,6 @@
   "main_subtitle": "Data-Driven Insights for Short-Term Traders",
   "summary_title": "Overall Assessment",
   "footer_copyright": "© 2025 Market Insight Japan. All rights reserved.",
-  "footer_disclaimer_short": "The information on this site is provided for investment reference purposes and is not intended to solicit investment. Please make your final investment decisions at your own discretion."
+  "footer_disclaimer_short": "The information on this site is provided for investment reference purposes and is not intended to solicit investment. Please make your final investment decisions at your own discretion.",
+  "pickup_subtitle": "Jim Cramer's current portfolio holdings. Stock analysis available from 'View Details'."
 }
