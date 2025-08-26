@@ -26,7 +26,9 @@ async function loadHeader() {
             setActiveNavigation();
 
             // 言語スイッチャーの重複を除去（万一複数挿入された場合）
-            const switchers = document.querySelectorAll('#header-lang-switcher');
+            // 直近のヘッダー内だけで重複チェック（他ページ要素に影響しないよう限定）
+            const headerRoot = headerContainer.querySelector('header')?.parentNode || document;
+            const switchers = headerRoot.querySelectorAll('#header-lang-switcher');
             if (switchers.length > 1) {
                 switchers.forEach((el, idx) => { if (idx > 0) el.remove(); });
             }
@@ -44,15 +46,17 @@ async function loadHeader() {
                         window.setupHeaderLanguageButtons();
                     }
                     // 翻訳が完了してからメニューを表示
-                    const headerNav = document.querySelector('header nav');
-                    const mobileMenu = document.getElementById('mobile-menu');
+                    const headerScope = headerContainer;
+                    const headerNav = headerScope.querySelector('header nav');
+                    const mobileMenu = headerScope.querySelector('#mobile-menu');
                     if (headerNav) headerNav.style.visibility = 'visible';
                     if (mobileMenu) mobileMenu.style.visibility = 'visible';
                 }, 50);
             } else {
                 // 翻訳システムがない場合は即座に表示
-                const headerNav = document.querySelector('header nav');
-                const mobileMenu = document.getElementById('mobile-menu');
+                const headerScope = headerContainer;
+                const headerNav = headerScope.querySelector('header nav');
+                const mobileMenu = headerScope.querySelector('#mobile-menu');
                 if (headerNav) headerNav.style.visibility = 'visible';
                 if (mobileMenu) mobileMenu.style.visibility = 'visible';
                 // 言語ボタン初期化（存在すれば）
@@ -73,7 +77,8 @@ function initializeMobileMenu() {
     
     if (mobileMenuButton && mobileMenu) {
         // とにかく見える状態を初期化（visibility隠し対策）
-        mobileMenu.style.visibility = 'visible';
+        // 初期は非表示。ただし hidden クラスで管理するため visibility は空に戻す
+        mobileMenu.style.visibility = '';
         // display は Tailwind の hidden クラスで制御する
         
         // 重複防止: 既存のイベントリスナーを削除
@@ -94,10 +99,8 @@ function initializeMobileMenu() {
             if (menu) {
                 const willShow = menu.classList.contains('hidden');
                 menu.classList.toggle('hidden');
-                // 念のため visibility も制御（他スタイルの影響を排除）
-                menu.style.visibility = willShow ? 'visible' : 'hidden';
-                // display の直接制御は避けるが、hidden が外れても display: none が残っていた場合の保険
-                if (willShow) {
+                // 保険: hidden 解除時に display が none になっていたらクリア
+                if (willShow && getComputedStyle(menu).display === 'none') {
                     menu.style.display = '';
                 }
             }
