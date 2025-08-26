@@ -20,6 +20,9 @@ async function loadHeader() {
             // ヘッダー読み込み後にモバイルメニューの機能を初期化
             initializeMobileMenu();
             
+            // 現在のページをハイライト
+            setActiveNavigation();
+            
             // 翻訳システムを再適用（ヘッダー内の要素に対して）
             if (window.applyTranslations) {
                 window.applyTranslations();
@@ -39,6 +42,50 @@ function initializeMobileMenu() {
         mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
+    }
+}
+
+// 現在のページをパスから判定する関数
+function getCurrentPageFromPath(pathname) {
+    // パスの最後の部分からファイル名を取得
+    const fileName = pathname.split('/').pop() || 'index.html';
+    
+    // ファイル名から拡張子を除いてページ名を取得
+    const pageName = fileName.replace('.html', '');
+    
+    // 空文字またはindex.htmlの場合はindexとして扱う
+    if (!pageName || pageName === 'index') {
+        return 'index';
+    }
+    
+    return pageName;
+}
+
+// 現在のページをハイライトする関数
+function setActiveNavigation() {
+    const currentPath = window.location.pathname;
+    const currentPage = getCurrentPageFromPath(currentPath);
+    
+    // デスクトップナビゲーション: 全てのリンクをリセット
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.className = 'nav-link text-gray-600 hover:text-primary';
+    });
+    
+    // モバイルナビゲーション: 全てのリンクをリセット
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.className = 'mobile-nav-link block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors';
+    });
+    
+    // 現在のページに対応するデスクトップリンクをアクティブ化
+    const activeDesktopLink = document.querySelector(`.nav-link[data-page="${currentPage}"]`);
+    if (activeDesktopLink) {
+        activeDesktopLink.className = 'nav-link text-primary font-medium border-b-2 border-primary pb-1';
+    }
+    
+    // 現在のページに対応するモバイルリンクをアクティブ化
+    const activeMobileLink = document.querySelector(`.mobile-nav-link[data-page="${currentPage}"]`);
+    if (activeMobileLink) {
+        activeMobileLink.className = 'mobile-nav-link block px-3 py-2 text-primary font-medium border-l-4 border-primary bg-blue-50';
     }
 }
 

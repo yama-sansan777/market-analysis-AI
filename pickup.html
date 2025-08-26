@@ -93,7 +93,7 @@
     </section>
 
     <!-- フィルター＆ソート機能セクション -->
-    <section class="mb-8 p-4 bg-white rounded-xl shadow-sm border border-gray-200 sticky top-0 z-40">
+    <section class="mb-8 p-4 bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <!-- セクターフィルター -->
             <div class="flex-grow">
@@ -145,10 +145,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
-    // --- 言語システム初期化 ---
-    if (typeof window.initLanguage === 'function') {
-        await window.initLanguage();
-    }
 
     // --- モバイルメニュー機能 (index.htmlから継承) ---
     const mobileMenuButton = document.getElementById('mobile-menu-button');
