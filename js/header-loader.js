@@ -1,6 +1,10 @@
 // ヘッダーコンポーネントを動的に読み込む関数
 async function loadHeader() {
     try {
+        // 二重ロード防止
+        if (window.__headerLoaded) {
+            return;
+        }
         // パスを自動検出（ルートまたはサブディレクトリ）
         const currentPath = window.location.pathname;
         const isInSubDir = currentPath.includes('/stocks/details/');
@@ -16,6 +20,7 @@ async function loadHeader() {
         const headerContainer = document.getElementById('header-container');
         if (headerContainer) {
             headerContainer.innerHTML = headerHTML;
+            window.__headerLoaded = true;
             
             // 現在のページをハイライト
             setActiveNavigation();
@@ -77,7 +82,15 @@ function initializeMobileMenu() {
         
         // 新しいイベントリスナーを追加
         newButton.addEventListener('click', () => {
-            const menu = document.getElementById('mobile-menu');
+            // ボタンに最も近いメニューを優先して取得（重複ID対策）
+            let menu = null;
+            const headerEl = newButton.closest('header');
+            if (headerEl && headerEl.parentNode) {
+                menu = headerEl.parentNode.querySelector('#mobile-menu');
+            }
+            if (!menu) {
+                menu = document.getElementById('mobile-menu');
+            }
             if (menu) {
                 const willShow = menu.classList.contains('hidden');
                 menu.classList.toggle('hidden');
