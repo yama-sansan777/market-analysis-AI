@@ -5,7 +5,7 @@ let currentLang = localStorage.getItem('language') || 'ja';
 const translations = {
     ja: {
         // Navigation
-        nav_today: '本日の市況分析',
+        nav_today: 'AI市況予報',
         nav_pickup: 'クレイマー保有銘柄',
         nav_archive: '分析アーカイブ',
         nav_ipo: 'IPOスケジュール',
@@ -158,7 +158,7 @@ const translations = {
         
         // Site Navigation section
         site_navigation_title: 'サイトナビゲーション',
-        nav_today_analysis_title: '本日の市況分析',
+        nav_today_analysis_title: 'AI市況予報',
         nav_today_analysis_desc: '最新の市場分析レポート',
         nav_archive_title: '分析アーカイブ',
         nav_archive_desc: '過去の市場分析レポート',
@@ -749,7 +749,7 @@ const translations = {
         // Footer section
         footer_company_name: '株式会社BizRom東京',
         footer_company_desc: '米国株の短期トレーダー向けに、信頼性の高い市場分析を毎日2回配信するプロフェッショナルサービス',
-        footer_todays_analysis: '本日の市況分析',
+        footer_todays_analysis: 'AI市況予報',
         footer_analysis_archive: '分析アーカイブ',
         footer_technical_indicators: 'テクニカル指標解説',
         footer_market_glossary: '市場用語集',
@@ -771,7 +771,7 @@ const translations = {
     },
     en: {
         // Navigation
-        nav_today: 'Today\'s Market Analysis',
+        nav_today: 'AI Market Forecast',
         nav_pickup: 'Cramer\'s Holdings',
         nav_archive: 'Analysis Archive',
         nav_ipo: 'IPO Schedule',
@@ -924,7 +924,7 @@ const translations = {
         
         // Site Navigation section
         site_navigation_title: 'Site Navigation',
-        nav_today_analysis_title: 'Today\'s Market Analysis',
+        nav_today_analysis_title: 'AI Market Forecast',
         nav_today_analysis_desc: 'Latest market analysis report',
         nav_archive_title: 'Analysis Archive',
         nav_archive_desc: 'Past market analysis reports',
