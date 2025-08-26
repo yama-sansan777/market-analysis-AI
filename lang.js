@@ -1537,46 +1537,6 @@ const translations = {
     }
 };
 
-// Language switcher HTML
-function createLanguageSwitcher() {
-    // ヘッダー内の言語切り替えボタンが既に存在する場合は、それを使用
-    const headerSwitcher = document.getElementById('header-lang-switcher');
-    if (headerSwitcher) {
-        // ヘッダー内のボタンにイベントリスナーを追加
-        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const lang = this.getAttribute('data-lang');
-                switchLanguage(lang);
-            });
-        });
-        
-        // 初期状態を設定
-        updateHeaderLanguageButtons();
-        return headerSwitcher;
-    }
-    
-    // フォールバック: 固定位置のスイッチャーを作成（他のページ用）
-    const switcher = document.createElement('div');
-    switcher.id = 'lang-switcher';
-    switcher.className = 'fixed top-4 right-4 z-50 bg-white rounded-lg shadow-lg border border-gray-200 p-2';
-    switcher.innerHTML = `
-        <div class="flex items-center space-x-2">
-            <button class="lang-btn ${currentLang === 'ja' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700'} px-3 py-1 rounded text-sm font-medium transition-colors" data-lang="ja">日本語</button>
-            <span class="text-gray-400">|</span>
-            <button class="lang-btn ${currentLang === 'en' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700'} px-3 py-1 rounded text-sm font-medium transition-colors" data-lang="en">English</button>
-        </div>
-    `;
-    
-    // Add event listeners
-    switcher.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const lang = this.getAttribute('data-lang');
-            switchLanguage(lang);
-        });
-    });
-    
-    return switcher;
-}
 
 // ヘッダー内の言語切り替えボタンの状態を更新する関数
 function updateHeaderLanguageButtons() {
@@ -1601,25 +1561,8 @@ function switchLanguage(lang) {
     // Update global currentLang for compatibility
     window.currentLang = lang;
     
-    // Update language switcher buttons (both fixed and header)
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        const btnLang = btn.getAttribute('data-lang');
-        if (btnLang === lang) {
-            // ヘッダー内のボタンの場合は小さいサイズ、固定位置のボタンの場合は通常サイズ
-            if (btn.closest('#header-lang-switcher')) {
-                btn.className = 'lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors';
-            } else {
-                btn.className = 'lang-btn bg-primary text-white px-3 py-1 rounded text-sm font-medium transition-colors';
-            }
-        } else {
-            // ヘッダー内のボタンの場合は小さいサイズ、固定位置のボタンの場合は通常サイズ
-            if (btn.closest('#header-lang-switcher')) {
-                btn.className = 'lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors';
-            } else {
-                btn.className = 'lang-btn bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm font-medium transition-colors';
-            }
-        }
-    });
+    // Update header language switcher buttons only
+    updateHeaderLanguageButtons();
     
     // Update all translatable elements
     document.querySelectorAll('[data-lang]').forEach(element => {
@@ -1661,19 +1604,27 @@ function switchLanguage(lang) {
 function setupHeaderLanguageButtons() {
     const headerSwitcher = document.getElementById('header-lang-switcher');
     if (headerSwitcher) {
-        // ヘッダー内のボタンにイベントリスナーを追加
-        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
-            // 既存のリスナーを削除して重複を防止
-            btn.replaceWith(btn.cloneNode(true));
-        });
+        // 重複防止フラグをチェック
+        if (headerSwitcher.dataset.initialized === 'true') {
+            updateHeaderLanguageButtons();
+            return true;
+        }
         
-        // 新しいボタンにイベントリスナーを追加
-        document.getElementById('header-lang-switcher').querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+        // ヘッダー内のボタンにイベントリスナーを追加（安全な方法）
+        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
+            // 既存のクリックイベントをクリア（DOMを破壊しない）
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            // 新しいイベントリスナーを追加
+            newBtn.addEventListener('click', function() {
                 const lang = this.getAttribute('data-lang');
                 switchLanguage(lang);
             });
         });
+        
+        // 初期化完了フラグを設定
+        headerSwitcher.dataset.initialized = 'true';
         
         // 初期状態を設定
         updateHeaderLanguageButtons();

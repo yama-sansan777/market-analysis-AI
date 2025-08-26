@@ -20,6 +20,9 @@ async function loadHeader() {
             // 現在のページをハイライト
             setActiveNavigation();
             
+            // モバイルメニューの機能を最初に初期化（他の処理と独立）
+            initializeMobileMenu();
+            
             // 翻訳システムを再適用（ヘッダー内の要素に対して）
             if (window.applyTranslations) {
                 // 翻訳適用後にメニューを表示
@@ -30,9 +33,6 @@ async function loadHeader() {
                     const mobileMenu = document.getElementById('mobile-menu');
                     if (headerNav) headerNav.style.visibility = 'visible';
                     if (mobileMenu) mobileMenu.style.visibility = 'visible';
-                    
-                    // 表示後にモバイルメニューの機能を初期化
-                    initializeMobileMenu();
                 }, 50);
             } else {
                 // 翻訳システムがない場合は即座に表示
@@ -40,9 +40,6 @@ async function loadHeader() {
                 const mobileMenu = document.getElementById('mobile-menu');
                 if (headerNav) headerNav.style.visibility = 'visible';
                 if (mobileMenu) mobileMenu.style.visibility = 'visible';
-                
-                // 表示後にモバイルメニューの機能を初期化
-                initializeMobileMenu();
             }
         }
     } catch (error) {
@@ -56,9 +53,23 @@ function initializeMobileMenu() {
     const mobileMenu = document.getElementById('mobile-menu');
     
     if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+        // 重複防止: 既存のイベントリスナーを削除
+        const newButton = mobileMenuButton.cloneNode(true);
+        mobileMenuButton.parentNode.replaceChild(newButton, mobileMenuButton);
+        
+        // 新しいイベントリスナーを追加
+        newButton.addEventListener('click', () => {
+            const menu = document.getElementById('mobile-menu');
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
         });
+        
+        // 初期化完了フラグを設定
+        newButton.dataset.initialized = 'true';
+        console.log('✅ Mobile menu initialized');
+    } else {
+        console.warn('⚠️ Mobile menu button or menu not found');
     }
 }
 

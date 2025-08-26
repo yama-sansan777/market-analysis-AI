@@ -6,10 +6,16 @@ const translations = {
     ja: {
         // Navigation
         nav_today: 'AI市況予報',
+        nav_pickup: 'クレイマー保有銘柄',
         nav_archive: '分析アーカイブ',
+        nav_ipo: 'IPOスケジュール',
         nav_indicators: 'テクニカル指標解説',
         nav_terms: '市場用語集',
         nav_about: 'サイトについて',
+        
+        // Pickup page
+        pickup_title: 'クレイマー保有銘柄',
+        pickup_subtitle: 'AIによる分析と市場トレンドに基づき、今注目すべき米国株をピックアップ',
         
         // Buttons
         login: 'ログイン',
@@ -70,15 +76,15 @@ const translations = {
         
         // Service Overview section
         service_overview_title: 'サービス概要',
-        service_overview_description: 'YOHOU US Stock AIは、最新の人工知能技術を活用して、日経平均株価の動向を分析・予測する革新的なAIプラットフォームです。市場データをリアルタイムで処理し、高度な機械学習アルゴリズムによって、精度の高い市場分析と予測を提供します。',
+        service_overview_description: 'YOHOU US Stock AIは、最新の人工知能技術を活用して、S&P 500をはじめとする米国株式市場の動向を分析・予測する革新的なAIプラットフォームです。市場データをリアルタイムで処理し、高度な機械学習アルゴリズムによって、精度の高い市場分析と予測を提供します。',
         service_features_title: '主な特徴',
-        service_feature_1: '日経平均、TOPIXなど主要指数の詳細分析',
+        service_feature_1: 'S&P 500、NASDAQ、ダウ平均など米国主要指数の詳細分析',
         service_feature_2: '市場の健全性、心理指標のリアルタイム評価',
         service_feature_3: 'セクター別の詳細な動向と相関分析',
         service_feature_4: '注目銘柄のピックアップと背景解説',
         target_users_title: '対象ユーザー',
         target_users_description: '当サービスは以下のような方々に最適です：',
-        target_user_1: '日本株の短期トレーダー',
+        target_user_1: '米国株の短期トレーダー',
         target_user_2: '機関投資家のトレーディングデスク',
         target_user_3: '市場動向を詳細に把握したい個人投資家',
         
@@ -87,7 +93,7 @@ const translations = {
         analysis_method_description: 'YOHOU US Stock AIでは、複数の分析手法を組み合わせることで、市場の多角的な理解を提供しています。定量的なデータ分析と定性的な市場解釈を融合させ、バランスの取れた市場見通しを提供します。',
         data_collection_title: 'データ収集方法',
         data_collection_description: '当サービスでは、以下のデータソースを活用しています：',
-        data_source_1: '東京証券取引所のリアルタイム取引データ',
+        data_source_1: 'NYSE・NASDAQのリアルタイム取引データ',
         data_source_2: '各種経済指標と企業業績データ',
         data_source_3: 'グローバル市場の相関データ',
         key_indicators_title: '主要分析指標',
@@ -327,7 +333,7 @@ const translations = {
         term_low_price_point2: '連続して安値を更新する場合は下降トレンドの強さを示す',
         term_low_price_point3: '前回の安値を割り込まずに反発する場合は、底打ちのサインとなることがある',
         term_low_price_point4: '年初来安値や史上最安値の更新は、投資家心理に大きな影響を与える',
-        term_low_price_example: '「日経平均は一時27,000円の年初来安値を記録したが、その後は反発して上昇トレンドに転じた」',
+        term_low_price_example: '「S&P 500は一時4,200ポイントの年初来安値を記録したが、その後は反発して上昇トレンドに転じた」',
         term_low_price_related1: '高値',
         term_low_price_related2: 'サポートライン',
         term_low_price_related3: '底値',
@@ -343,13 +349,13 @@ const translations = {
         term_uptrend_related3: 'トレンドライン',
         term_stock_index_title: '株価指数（かぶかしすう）',
         term_stock_index_desc: '株価指数とは、特定の市場や業種の株価全体の動向を表す指標です。複数の銘柄の株価を一定のルールで集計し、単一の数値として表します。市場全体の動きを把握するために使用されます。',
-        term_stock_index_point1: '日経平均株価（日経225）：東証一部上場企業から選ばれた225銘柄の平均株価',
-        term_stock_index_point2: 'TOPIX（東証株価指数）：東証一部上場全銘柄の時価総額加重平均',
-        term_stock_index_point3: 'JPX日経インデックス400：ROEなどの指標を基に選定された400銘柄の時価総額加重平均',
-        term_stock_index_point4: '日経ジャスダック平均：ジャスダック市場上場銘柄の平均株価',
-        term_stock_index_example: '「本日の日経平均株価は前日比300円高の29,500円で取引を終えた」',
-        term_stock_index_related1: '日経平均',
-        term_stock_index_related2: 'TOPIX',
+        term_stock_index_point1: 'S&P 500：米国の代表的な500銘柄の時価総額加重平均指数',
+        term_stock_index_point2: 'NASDAQ Composite：NASDAQ取引所上場の全銘柄の時価総額加重平均指数',
+        term_stock_index_point3: 'Russell 2000：米国の小型株2,000銘柄で構成される時価総額加重平均指数',
+        term_stock_index_point4: 'Dow Jones Industrial Average：米国の代表的な30銘柄の株価平均',
+        term_stock_index_example: '「本日のS&P 500は前日比0.8%高の4,850ポイントで取引を終えた」',
+        term_stock_index_related1: 'S&P 500',
+        term_stock_index_related2: 'NASDAQ',
         term_stock_index_related3: '指数化',
         term_shareholder_benefit_title: '株主優待（かぶぬしゆうたい）',
         term_shareholder_benefit_desc: '株主優待とは、企業が自社株主に対して提供する特典のことです。自社製品、商品券、割引券などが一般的で、配当とは別に株主に還元する仕組みです。',
@@ -377,7 +383,7 @@ const translations = {
         term_support_line_point2: '株価がサポートラインに接近すると買い注文が入りやすい',
         term_support_line_point3: 'サポートラインを下抜けると、さらなる下落の可能性が高まる',
         term_support_line_point4: '下抜けた後に再び上抜けると、レジスタンスラインに転換することがある',
-        term_support_line_example: '「日経平均は28,000円付近に強いサポートラインがあり、3度この水準で反発している」',
+        term_support_line_example: '「S&P 500は4,600ポイント付近に強いサポートラインがあり、3度この水準で反発している」',
         term_support_line_related1: 'レジスタンスライン',
         term_support_line_related2: 'トレンドライン',
         term_support_line_related3: 'ブレイクアウト',
@@ -397,7 +403,7 @@ const translations = {
         term_high_price_point2: '連続して高値を更新する場合は上昇トレンドの強さを示す',
         term_high_price_point3: '前回の高値を超えられずに反落する場合は、天井のサインとなることがある',
         term_high_price_point4: '年初来高値や史上最高値の更新は、投資家心理に大きな影響を与える',
-        term_high_price_example: '「日経平均は一時30,000円の年初来高値を記録したが、その後は利益確定売りで反落した」',
+        term_high_price_example: '「S&P 500は一時5,100ポイントの年初来高値を記録したが、その後は利益確定売りで反落した」',
         term_high_price_related1: '安値',
         term_high_price_related2: 'レジスタンスライン',
         term_high_price_related3: '天井',
@@ -411,16 +417,16 @@ const translations = {
         term_downtrend_related1: 'アップトレンド',
         term_downtrend_related2: 'レンジ相場',
         term_downtrend_related3: 'トレンドライン',
-        term_nikkei_title: '日経平均株価（にっけいへいきんかぶか）',
-        term_nikkei_desc: '日経平均株価（日経225）は、東京証券取引所に上場する代表的な225銘柄の株価を平均した指数です。日本の株式市場全体の動向を示す代表的な指標として広く利用されています。',
+        term_nikkei_title: 'S&P 500（エス・アンド・ピー・ファイブハンドレッド）',
+        term_nikkei_desc: 'S&P 500は、米国の代表的な500銘柄で構成される時価総額加重平均株価指数です。米国株式市場全体の動向を示す代表的な指標として世界中で広く利用されています。',
         term_nikkei_point1: '株価平均型の指数で、株価の高い銘柄ほど影響力が大きい',
         term_nikkei_point2: '日本経済新聞社が算出・公表している',
         term_nikkei_point3: '構成銘柄は定期的に見直される',
         term_nikkei_point4: '先物やオプション取引の対象となっている',
-        term_nikkei_example: '「米国株式市場の上昇を受けて、日経平均株価は29,000円台を回復した」',
-        term_nikkei_related1: 'TOPIX',
+        term_nikkei_example: '「好調な企業決算を受けて、S&P 500は4,900ポイント台を回復した」',
+        term_nikkei_related1: 'NASDAQ',
         term_nikkei_related2: 'ダウ平均',
-        term_nikkei_related3: '日経平均先物',
+        term_nikkei_related3: 'S&P 500先物',
         term_dividend_title: '配当（はいとう）',
         term_dividend_desc: '配当とは、企業が利益の一部を株主に現金で還元する仕組みです。株主に対する重要な利益還元方法の一つで、通常は年1回（期末配当）または年2回（中間配当と期末配当）実施されます。',
         term_dividend_point1: '配当金額は1株あたりの金額で表示される',
@@ -468,7 +474,7 @@ const translations = {
         term_resistance_line_point2: '株価がレジスタンスラインに接近すると売り注文が入りやすい',
         term_resistance_line_point3: 'レジスタンスラインを上抜けると、さらなる上昇の可能性が高まる',
         term_resistance_line_point4: '上抜けた後に再び下抜けると、サポートラインに転換することがある',
-        term_resistance_line_example: '「日経平均は30,000円付近に強いレジスタンスラインがあり、2度この水準で反落している」',
+        term_resistance_line_example: '「S&P 500は5,000ポイント付近に強いレジスタンスラインがあり、2度この水準で反落している」',
         term_resistance_line_related1: 'サポートライン',
         term_resistance_line_related2: 'トレンドライン',
         term_resistance_line_related3: 'ブレイクアウト',
@@ -518,7 +524,7 @@ const translations = {
         ma_sma_desc: '単純移動平均（SMA）：指定した期間の終値の合計を期間数で割った値',
         ma_ema_desc: '指数平滑移動平均（EMA）：直近の価格に重みを付けた移動平均',
         ma_ema_formula: 'EMA = 価格 × K + 前日のEMA × (1 - K)<br>K = 2 ÷ (期間数 + 1)',
-        ma_chart_desc: '日経平均株価と20日/50日/200日移動平均線',
+        ma_chart_desc: 'S&P 500株価と20日/50日/200日移動平均線',
         ma_usage_1: '短期移動平均線が長期移動平均線を上抜けると買いシグナル（ゴールデンクロス）',
         ma_usage_2: '短期移動平均線が長期移動平均線を下抜けると売りシグナル（デッドクロス）',
         ma_usage_3: '価格が移動平均線を上回っていれば上昇トレンド、下回っていれば下降トレンド',
@@ -535,7 +541,7 @@ const translations = {
         macd_line_desc: 'MACD線 = 短期EMA - 長期EMA（通常12日と26日）',
         macd_signal_desc: 'シグナル線 = MACDの9日EMA',
         macd_histogram_desc: 'ヒストグラム = MACD線 - シグナル線',
-        macd_chart_desc: '上：日経平均株価、下：MACD（青線：MACD線、赤線：シグナル線、ヒストグラム）',
+        macd_chart_desc: '上：S&P 500株価、下：MACD（青線：MACD線、赤線：シグナル線、ヒストグラム）',
         macd_usage_1: 'MACD線がシグナル線を上抜けると買いシグナル',
         macd_usage_2: 'MACD線がシグナル線を下抜けると売りシグナル',
         macd_usage_3: 'MACD線とシグナル線がゼロラインを上回っていれば上昇トレンド',
@@ -559,7 +565,7 @@ const translations = {
         rsi_description: 'RSIは、一定期間における値上がり幅と値下がり幅の比率から算出される指標で、相場の過熱感や買われ過ぎ・売られ過ぎの状態を判断するのに役立ちます。0〜100の範囲で表示され、通常は14日間の期間で計算されます。',
         rsi_formula_1: 'RSI = 100 - (100 / (1 + RS))',
         rsi_formula_2: 'RS（相対力）= 一定期間の平均上昇幅 ÷ 一定期間の平均下落幅',
-        rsi_chart_desc: '上：日経平均株価、下：RSI（14日間）',
+        rsi_chart_desc: '上：S&P 500株価、下：RSI（14日間）',
         rsi_usage_1: 'RSIが70以上で買われ過ぎ（売りシグナル）',
         rsi_usage_2: 'RSIが30以下で売られ過ぎ（買いシグナル）',
         rsi_usage_3: 'RSIが50を上回ると上昇トレンド、下回ると下降トレンド',
@@ -577,7 +583,7 @@ const translations = {
         stochastics_description: 'ストキャスティクスは、一定期間の価格レンジにおける現在の終値の位置を百分率で表した指標です。相場の勢いや方向性、買われ過ぎ・売られ過ぎの状態を判断するのに役立ちます。',
         stochastics_formula_1: '%K = 100 × ((現在の終値 - 期間内の最安値) ÷ (期間内の最高値 - 期間内の最安値))',
         stochastics_formula_2: '%D = %Kの3日間の単純移動平均',
-        stochastics_chart_desc: '上：日経平均株価、下：ストキャスティクス（青線：%K、赤線：%D）',
+        stochastics_chart_desc: '上：S&P 500株価、下：ストキャスティクス（青線：%K、赤線：%D）',
         stochastics_usage_1: '%Kが%Dを上抜けると買いシグナル',
         stochastics_usage_2: '%Kが%Dを下抜けると売りシグナル',
         stochastics_usage_3: '80以上で買われ過ぎ、20以下で売られ過ぎと判断',
@@ -595,7 +601,7 @@ const translations = {
         bollinger_formula_1: '中央線 = n期間の単純移動平均（通常20日）',
         bollinger_formula_2: '上限バンド = 中央線 + (n期間の標準偏差 × k)（通常k=2）',
         bollinger_formula_3: '下限バンド = 中央線 - (n期間の標準偏差 × k)（通常k=2）',
-        bollinger_chart_desc: '日経平均株価とボリンジャーバンド（20日、±2σ）',
+        bollinger_chart_desc: 'S&P 500株価とボリンジャーバンド（20日、±2σ）',
         bollinger_usage_1: '価格が上限バンドに接触/突破すると買われ過ぎ、下限バンドに接触/突破すると売られ過ぎの可能性',
         bollinger_usage_2: 'バンド幅の拡大はボラティリティの増加、縮小はボラティリティの減少を示す',
         bollinger_usage_3: 'バンド幅が極端に縮小した後は、大きな値動きが発生する可能性が高い（スクイーズ）',
@@ -617,7 +623,7 @@ const translations = {
         atr_tr_2: '|当日の高値 - 前日の終値|',
         atr_tr_3: '|当日の安値 - 前日の終値|',
         atr_formula: 'ATR = n日間のTRの指数移動平均（通常14日）',
-        atr_chart_desc: '上：日経平均株価、下：ATR（14日間）',
+        atr_chart_desc: '上：S&P 500株価、下：ATR（14日間）',
         atr_usage_title: '使い方',
         atr_usage_1: 'ATRの上昇はボラティリティの増加、下降はボラティリティの減少を示す',
         atr_usage_2: 'ATRの急上昇は、相場の転換点や重要なイベントの発生を示唆することがある',
@@ -639,7 +645,7 @@ const translations = {
         obv_calc_up: '価格が上昇した場合：OBV = 前日のOBV + 当日の出来高',
         obv_calc_down: '価格が下落した場合：OBV = 前日のOBV - 当日の出来高',
         obv_calc_unchanged: '価格が変わらない場合：OBV = 前日のOBV',
-        obv_chart_desc: '上：日経平均株価、下：OBV',
+        obv_chart_desc: '上：S&P 500株価、下：OBV',
         obv_usage_title: '使い方',
         obv_usage_1: 'OBVが上昇トレンドにあれば、価格の上昇トレンドが確認される',
         obv_usage_2: 'OBVが下降トレンドにあれば、価格の下降トレンドが確認される',
@@ -657,7 +663,7 @@ const translations = {
         vwap_calculation_title: '計算方法',
         vwap_formula: 'VWAP = Σ(価格 × 出来高) ÷ Σ(出来高)',
         vwap_note: '通常、1日の取引時間内で計算され、翌日にリセットされる',
-        vwap_chart_desc: '日経平均株価とVWAP',
+        vwap_chart_desc: 'S&P 500株価とVWAP',
         vwap_usage_title: '使い方',
         vwap_usage_1: '価格がVWAPを上回っていれば買い圧力が強く、下回っていれば売り圧力が強いと判断',
         vwap_usage_2: 'VWAPはサポート/レジスタンスとして機能することが多い',
@@ -680,7 +686,7 @@ const translations = {
         cci_formula_tp: 'TP（典型的価格）= (高値 + 安値 + 終値) / 3',
         cci_formula_sma: 'SMA of TP = TPのn期間単純移動平均（通常20日）',
         cci_formula_md: 'MD = TPとSMA of TPの絶対偏差の平均',
-        cci_chart_desc: '上：日経平均株価、下：CCI（20日間）',
+        cci_chart_desc: '上：S&P 500株価、下：CCI（20日間）',
         cci_usage_title: '使い方',
         cci_usage_1: 'CCIが+100を上回ると買われ過ぎ、-100を下回ると売られ過ぎと判断',
         cci_usage_2: 'CCIがゼロラインを上抜けると上昇トレンド、下抜けると下降トレンドの可能性',
@@ -742,7 +748,7 @@ const translations = {
 
         // Footer section
         footer_company_name: '株式会社BizRom東京',
-        footer_company_desc: '日本の短期株式トレーダー向けに、信頼性の高い市場分析を毎日2回配信するプロフェッショナルサービス',
+        footer_company_desc: '米国株の短期トレーダー向けに、信頼性の高い市場分析を毎日2回配信するプロフェッショナルサービス',
         footer_todays_analysis: 'AI市況予報',
         footer_analysis_archive: '分析アーカイブ',
         footer_technical_indicators: 'テクニカル指標解説',
@@ -766,10 +772,16 @@ const translations = {
     en: {
         // Navigation
         nav_today: 'AI Market Forecast',
+        nav_pickup: 'Cramer\'s Holdings',
         nav_archive: 'Analysis Archive',
+        nav_ipo: 'IPO Schedule',
         nav_indicators: 'Technical Indicators',
         nav_terms: 'Market Terms',
         nav_about: 'About',
+        
+        // Pickup page
+        pickup_title: 'Cramer\'s Holdings',
+        pickup_subtitle: 'AI-driven analysis and market trends to highlight US stocks worth watching',
         
         // Buttons
         login: 'Login',
@@ -832,7 +844,7 @@ const translations = {
         service_overview_title: 'Service Overview',
         service_overview_description: 'YOHOU US Stock AI is an innovative AI platform that uses the latest artificial intelligence technology to analyze and predict Nikkei stock index trends. It processes market data in real-time and provides highly accurate market analysis and forecasts through advanced machine learning algorithms.',
         service_features_title: 'Key Features',
-        service_feature_1: 'Detailed analysis of major indices such as Nikkei and TOPIX',
+        service_feature_1: 'Detailed analysis of major indices such as Nikkei and NASDAQ',
         service_feature_2: 'Real-time evaluation of market health and psychological indicators',
         service_feature_3: 'Detailed sector-by-sector trends and correlation analysis',
         service_feature_4: 'Stock picks and background explanations',
@@ -1104,12 +1116,12 @@ const translations = {
         term_stock_index_title: 'Stock Index',
         term_stock_index_desc: 'A stock index represents the overall performance of a specific market or sector. It is calculated by aggregating the prices of multiple stocks according to a set formula, providing a single value to track market movements.',
         term_stock_index_point1: 'Nikkei Stock Average (Nikkei 225): An average of 225 stocks selected from the TSE First Section.',
-        term_stock_index_point2: 'TOPIX (Tokyo Stock Price Index): A market capitalization-weighted average of all stocks on the TSE First Section.',
+        term_stock_index_point2: 'NASDAQ (Tokyo Stock Price Index): A market capitalization-weighted average of all stocks on the TSE First Section.',
         term_stock_index_point3: 'JPX-Nikkei Index 400: A market capitalization-weighted average of 400 stocks selected based on metrics like ROE.',
         term_stock_index_point4: 'Nikkei Jasdaq Average: An average of stocks listed on the Jasdaq market.',
         term_stock_index_example: '"Today, the Nikkei Stock Average closed at ¥29,500, up ¥300 from the previous day."',
         term_stock_index_related1: 'Nikkei Average',
-        term_stock_index_related2: 'TOPIX',
+        term_stock_index_related2: 'NASDAQ',
         term_stock_index_related3: 'Indexing',
         term_shareholder_benefit_title: 'Shareholder Benefits',
         term_shareholder_benefit_desc: 'Shareholder benefits are perks offered by a company to its shareholders. These typically include company products, gift certificates, or discounts, and are a way of returning value to shareholders in addition to dividends.',
@@ -1178,7 +1190,7 @@ const translations = {
         term_nikkei_point3: 'The constituent stocks are reviewed periodically.',
         term_nikkei_point4: 'It is a target for futures and options trading.',
         term_nikkei_example: '"Following a rise in the U.S. stock market, the Nikkei Stock Average recovered to the ¥29,000 level."',
-        term_nikkei_related1: 'TOPIX',
+        term_nikkei_related1: 'NASDAQ',
         term_nikkei_related2: 'Dow Average',
         term_nikkei_related3: 'Nikkei Futures',
         term_dividend_title: 'Dividend',
@@ -1503,7 +1515,7 @@ const translations = {
         // Footer section
         footer_company_name: 'BizRom Tokyo Co., Ltd.',
         footer_company_desc: 'Professional service providing reliable market analysis twice daily for short-term Japanese stock traders',
-        footer_todays_analysis: 'AI Market Forecast',
+        footer_todays_analysis: 'Today\'s Market Analysis',
         footer_analysis_archive: 'Analysis Archive',
         footer_technical_indicators: 'Technical Indicators Guide',
         footer_market_glossary: 'Market Glossary',
@@ -1525,46 +1537,6 @@ const translations = {
     }
 };
 
-// Language switcher HTML
-function createLanguageSwitcher() {
-    // ヘッダー内の言語切り替えボタンが既に存在する場合は、それを使用
-    const headerSwitcher = document.getElementById('header-lang-switcher');
-    if (headerSwitcher) {
-        // ヘッダー内のボタンにイベントリスナーを追加
-        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const lang = this.getAttribute('data-lang');
-                switchLanguage(lang);
-            });
-        });
-        
-        // 初期状態を設定
-        updateHeaderLanguageButtons();
-        return headerSwitcher;
-    }
-    
-    // フォールバック: 固定位置のスイッチャーを作成（他のページ用）
-    const switcher = document.createElement('div');
-    switcher.id = 'lang-switcher';
-    switcher.className = 'fixed top-4 right-4 z-50 bg-white rounded-lg shadow-lg border border-gray-200 p-2';
-    switcher.innerHTML = `
-        <div class="flex items-center space-x-2">
-            <button class="lang-btn ${currentLang === 'ja' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700'} px-3 py-1 rounded text-sm font-medium transition-colors" data-lang="ja">日本語</button>
-            <span class="text-gray-400">|</span>
-            <button class="lang-btn ${currentLang === 'en' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700'} px-3 py-1 rounded text-sm font-medium transition-colors" data-lang="en">English</button>
-        </div>
-    `;
-    
-    // Add event listeners
-    switcher.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const lang = this.getAttribute('data-lang');
-            switchLanguage(lang);
-        });
-    });
-    
-    return switcher;
-}
 
 // ヘッダー内の言語切り替えボタンの状態を更新する関数
 function updateHeaderLanguageButtons() {
@@ -1589,25 +1561,8 @@ function switchLanguage(lang) {
     // Update global currentLang for compatibility
     window.currentLang = lang;
     
-    // Update language switcher buttons (both fixed and header)
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        const btnLang = btn.getAttribute('data-lang');
-        if (btnLang === lang) {
-            // ヘッダー内のボタンの場合は小さいサイズ、固定位置のボタンの場合は通常サイズ
-            if (btn.closest('#header-lang-switcher')) {
-                btn.className = 'lang-btn bg-primary text-white px-2 py-1 rounded text-xs font-medium transition-colors';
-            } else {
-                btn.className = 'lang-btn bg-primary text-white px-3 py-1 rounded text-sm font-medium transition-colors';
-            }
-        } else {
-            // ヘッダー内のボタンの場合は小さいサイズ、固定位置のボタンの場合は通常サイズ
-            if (btn.closest('#header-lang-switcher')) {
-                btn.className = 'lang-btn bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium transition-colors';
-            } else {
-                btn.className = 'lang-btn bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm font-medium transition-colors';
-            }
-        }
-    });
+    // Update header language switcher buttons only
+    updateHeaderLanguageButtons();
     
     // Update all translatable elements
     document.querySelectorAll('[data-lang]').forEach(element => {
@@ -1625,23 +1580,64 @@ function switchLanguage(lang) {
         }
     });
     
-    // Reload data for index.html if loadReportData function exists
+    // Page-specific reloading and rendering
     if (typeof window.loadReportData === 'function') {
+        // For index.html - reload data and redraw all charts with new language
+        console.log('🔄 Reloading data for language change...');
         window.loadReportData();
-    }
-    
-    // Re-render content for archive.html if renderAll function exists
-    if (typeof window.renderAll === 'function') {
+    } else if (typeof window.renderAll === 'function') {
+        // For archive.html - re-render content
+        console.log('🔄 Re-rendering archive content for language change...');
         window.renderAll();
     }
     
-    // Reload data to apply auto-translation for charts and dynamic content
-    if (window.loadReportData) {
-        window.loadReportData();
-    }
-    
-    // Trigger custom event for dynamic content
+    // Trigger custom event for any additional dynamic content that might need updating
     document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
+    
+    // ヘッダー読み込み後の言語ボタンセットアップ
+    setupHeaderLanguageButtons();
+    
+    console.log(`✅ Language switched to: ${lang}`);
+}
+
+// Setup header language buttons if available
+function setupHeaderLanguageButtons() {
+    const headerSwitcher = document.getElementById('header-lang-switcher');
+    if (headerSwitcher) {
+        // 重複防止フラグをチェック
+        if (headerSwitcher.dataset.initialized === 'true') {
+            updateHeaderLanguageButtons();
+            return true;
+        }
+        
+        // ヘッダー内のボタンにイベントリスナーを追加（安全な方法）
+        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
+            // 既存のクリックイベントをクリア（DOMを破壊しない）
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            // 新しいイベントリスナーを追加
+            newBtn.addEventListener('click', function() {
+                const lang = this.getAttribute('data-lang');
+                switchLanguage(lang);
+            });
+        });
+        
+        // 初期化完了フラグを設定
+        headerSwitcher.dataset.initialized = 'true';
+        
+        // 初期状態を設定
+        updateHeaderLanguageButtons();
+        
+        // 固定位置スイッチャーがあれば削除
+        const existingSwitcher = document.getElementById('lang-switcher');
+        if (existingSwitcher) {
+            existingSwitcher.remove();
+        }
+        
+        return true;
+    }
+    return false;
 }
 
 // Initialize language system
@@ -1664,30 +1660,17 @@ async function initLanguage() {
         }
     }
     
-    // ヘッダー内の言語切り替えボタンが存在する場合は、それを使用
-    const headerSwitcher = document.getElementById('header-lang-switcher');
-    if (headerSwitcher) {
-        // ヘッダー内のボタンにイベントリスナーを追加
-        headerSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const lang = this.getAttribute('data-lang');
-                switchLanguage(lang);
-            });
-        });
-        
-        // 初期状態を設定
-        updateHeaderLanguageButtons();
-        
-        // 既存の固定位置スイッチャーがあれば削除
-        const existingSwitcher = document.getElementById('lang-switcher');
-        if (existingSwitcher) {
-            existingSwitcher.remove();
-        }
-    } else {
-        // ヘッダー内のボタンが存在しない場合は、固定位置のスイッチャーを追加
-        const switcher = createLanguageSwitcher();
-        document.body.appendChild(switcher);
+    // ヘッダー内の言語切り替えボタンをチェック（ヘッダー読み込み後に再実行される）
+    setupHeaderLanguageButtons();
+    
+    // 既存の固定位置スイッチャーがあれば削除（重複防止）
+    const existingSwitcher = document.getElementById('lang-switcher');
+    if (existingSwitcher) {
+        existingSwitcher.remove();
     }
+    
+    // ヘッダーが読み込まれるまで固定位置スイッチャーは作成しない
+    // （header-loader.jsからapplyTranslations呼び出し時に処理される）
     
     // Apply current language
     switchLanguage(currentLang);
@@ -1710,6 +1693,8 @@ function getTranslation(key, lang = currentLang) {
 // Export functions for use in other scripts
 window.initLanguage = initLanguage;
 window.switchLanguage = switchLanguage;
+window.setupHeaderLanguageButtons = setupHeaderLanguageButtons;
+window.applyTranslations = () => switchLanguage(currentLang);  // Alias for compatibility
 window.currentLang = currentLang;
 window.translations = translations;
 window.getTranslation = getTranslation; 
