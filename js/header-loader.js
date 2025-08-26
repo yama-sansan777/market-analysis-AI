@@ -17,9 +17,6 @@ async function loadHeader() {
         if (headerContainer) {
             headerContainer.innerHTML = headerHTML;
             
-            // ヘッダー読み込み後にモバイルメニューの機能を初期化
-            initializeMobileMenu();
-            
             // 現在のページをハイライト
             setActiveNavigation();
             
@@ -33,6 +30,9 @@ async function loadHeader() {
                     const mobileMenu = document.getElementById('mobile-menu');
                     if (headerNav) headerNav.style.visibility = 'visible';
                     if (mobileMenu) mobileMenu.style.visibility = 'visible';
+                    
+                    // 表示後にモバイルメニューの機能を初期化
+                    initializeMobileMenu();
                 }, 50);
             } else {
                 // 翻訳システムがない場合は即座に表示
@@ -40,6 +40,9 @@ async function loadHeader() {
                 const mobileMenu = document.getElementById('mobile-menu');
                 if (headerNav) headerNav.style.visibility = 'visible';
                 if (mobileMenu) mobileMenu.style.visibility = 'visible';
+                
+                // 表示後にモバイルメニューの機能を初期化
+                initializeMobileMenu();
             }
         }
     } catch (error) {
