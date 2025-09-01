@@ -258,11 +258,11 @@
                 </div>
                 
                 <section id="outlook" class="mb-16 text-center">
-                    <p class="text-slate-500 mb-8 max-w-2xl mx-auto">ジャクソンホールでのFRB議長発言を受け市場心理は好転。しかし週末のPCEインフレ指標が、この楽観論を試す重要な試金石となります。</p>
+                    <p class="text-slate-500 mb-8 max-w-2xl mx-auto" id="market-outlook-text">ジャクソンホールでのFRB議長発言を受け市場心理は好転。しかし週末のPCEインフレ指標が、この楽観論を試す重要な試金石となります。</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場の方向性</h3><p class="text-2xl font-bold text-bullish mt-2">やや強気</p></div>
-                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">総合スコア</h3><p class="text-5xl font-bold text-slate-800 mt-1">6<span class="text-2xl text-slate-400">/10</span></p></div>
-                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場心理</h3><p class="text-lg font-semibold text-slate-700 mt-2 leading-tight">期待と警戒の綱引き:<br>FRBの政策転換を見据える</p></div>
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場の方向性</h3><p class="text-2xl font-bold text-neutral mt-2">中立～やや弱気</p></div>
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">総合スコア</h3><p class="text-5xl font-bold text-slate-800 mt-1">4<span class="text-2xl text-slate-400">/10</span></p></div>
+                        <div class="card p-6"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">市場心理</h3><p class="text-lg font-semibold text-slate-700 mt-2 leading-tight">雇用統計が最終判断を下す:<br>市場はNFPの審判を待つ</p></div>
                     </div>
                 </section>
 
@@ -270,14 +270,14 @@
                     <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">マーケットダッシュボード</h2>
                     <p class="text-slate-500 mb-8">センチメントとマクロ経済の重要指標を可視化。特にプロと個人のセンチメントの極端な乖離は、市場の不安定さを示す警告シグナルです。</p>
                     <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
-                        <div class="lg:col-span-3 card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">センチメントの巨大な乖離</h3><p class="text-sm text-slate-500 mb-4">プロ投資家は極端に楽観的（逆張りでは売りシグナル）、個人投資家は極端に悲観的（逆張りでは買いシグナル）という稀な状況が発生しています。</p><div class="chart-container h-64 md:h-80"><canvas id="sentimentDivergenceChart"></canvas></div></div>
+                        <div class="lg:col-span-3 card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">センチメントの乖離</h3><p class="text-sm text-slate-500 mb-4">個人投資家は警戒感を強める一方、オプション市場では楽観が優勢。この矛盾は、ネガティブサプライズに対する脆弱性を示唆します。</p><div class="chart-container h-64 md:h-80"><canvas id="sentimentDivergenceChart"></canvas></div></div>
                         <div class="lg:col-span-2 space-y-6">
-                            <div class="card p-6"><div class="flex items-center justify-between space-x-4"><div><h3 class="font-bold text-lg text-slate-800">Fear & Greed Index</h3><p class="text-4xl font-bold text-bullish" id="fearGreedValue">56</p><p class="text-sm text-slate-500">市場は「強欲」状態にあります。</p></div><div class="flex-shrink-0 flex flex-col items-center"><div class="gauge-container"><div class="gauge-background"></div><div class="gauge-mask"></div><div id="fearGreedNeedle" class="gauge-needle"></div><div class="gauge-center"></div></div><div class="w-full flex justify-between text-xs px-2 mt-1 text-slate-500"><span>恐怖</span><span>強欲</span></div></div></div></div>
-                            <div class="grid grid-cols-2 gap-6"><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">VIX (恐怖指数)</h3><p class="text-3xl font-bold text-indigo-600 mt-1">14.22</p></div><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">Put/Call Ratio</h3><p class="text-3xl font-bold text-rose-600 mt-1">0.52</p></div></div>
+                            <div class="card p-6"><div class="flex items-center justify-between space-x-4"><div><h3 class="font-bold text-lg text-slate-800">Fear & Greed Index</h3><p class="text-4xl font-bold text-neutral" id="fearGreedValue">50</p><p class="text-sm text-slate-500">市場は「中立」状態にあります。</p></div><div class="flex-shrink-0 flex flex-col items-center"><div class="gauge-container"><div class="gauge-background"></div><div class="gauge-mask"></div><div id="fearGreedNeedle" class="gauge-needle"></div><div class="gauge-center"></div></div><div class="w-full flex justify-between text-xs px-2 mt-1 text-slate-500"><span>恐怖</span><span>強欲</span></div></div></div></div>
+                            <div class="grid grid-cols-2 gap-6"><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">VIX (恐怖指数)</h3><p class="text-3xl font-bold text-indigo-600 mt-1">15.36</p></div><div class="card p-4 text-center"><h3 class="font-semibold text-slate-800 text-sm">Put/Call Ratio</h3><p class="text-3xl font-bold text-rose-600 mt-1">0.56</p></div></div>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">インフレ圧力</h3><p class="text-sm text-slate-500 mb-4">生産者物価(PPI)が急騰し、インフレ再燃リスクが浮上しています。</p><div class="chart-container h-56"><canvas id="inflationChart"></canvas></div></div>
+                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">インフレ圧力</h3><p class="text-sm text-slate-500 mb-4">FRBが重視するPCEインフレは依然高く、金融政策の舵取りを難しくしています。</p><div class="chart-container h-56"><canvas id="inflationChart"></canvas></div></div>
                         <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">雇用市場の減速</h3><p class="text-sm text-slate-500 mb-4">7月の雇用者数は予想を大幅に下回り、景気減速を示唆しています。</p><div class="chart-container h-56"><canvas id="employmentChart"></canvas></div></div>
                         <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">イールドカーブ</h3><p class="text-sm text-slate-500 mb-4">逆イールドが解消。歴史的には景気後退の兆候です。</p><div class="chart-container h-56"><canvas id="yieldCurveChart"></canvas></div></div>
                     </div>
@@ -301,8 +301,8 @@
                     <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">投資戦略の提案</h2>
                     <p class="text-slate-500 mb-8">現在の市場分析に基づき、短期トレーダーと中長期投資家それぞれに向けた戦略を提案します。</p>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">短期トレーダー向け戦略</h3><p class="text-sm text-slate-500 mb-4">週前半は押し目買いが有効。ただし金曜のPCE発表前にポジション調整を推奨します。</p><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th class="px-4 py-2">指数</th><th class="px-4 py-2 text-green-600">支持線</th><th class="px-4 py-2 text-red-600">抵抗線</th></tr></thead><tbody id="tech-levels-table-body" class="divide-y divide-slate-200"></tbody></table></div><div class="mt-6"><h4 class="font-semibold text-slate-700 mb-2">リスク管理</h4><ul class="space-y-2 text-sm text-slate-600 list-disc list-inside"><li><span class="font-semibold">損切り水準:</span> 厳格なストップロス注文が不可欠。</li><li><span class="font-semibold">ボラティリティ対策:</span> PCE発表前にポジションを縮小。</li></ul></div></div>
-                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">中長期投資家が注意すべきポイント</h3><ul class="space-y-4 text-sm text-slate-600"><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🔍</span><div><h4 class="font-semibold text-slate-800">ノイズとシグナルの峻別</h4><p>短期的な乱高下ではなく、FRBの政策転換という構造的変化に注目。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🛡️</span><div><h4 class="font-semibold text-slate-800">分散投資の再評価</h4><p>特定銘柄への集中リスクを避け、ポートフォリオのバランスを見直す好機。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">💡</span><div><h4 class="font-semibold text-slate-800">ボラティリティを好機に</h4><p>市場の急落は、優良な資産を割安で取得する機会となり得る。</p></div></li></ul></div>
+                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">短期トレーダー向け戦略</h3><p class="text-sm text-slate-500 mb-4">金曜の雇用統計発表まではポジションを小さくするのが賢明。データ発表後に方向性を見極めて取引する。強い数字ならショート、弱い数字ならロングを検討。</p><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-xs text-slate-700 uppercase bg-slate-50"><tr><th class="px-4 py-2">指数</th><th class="px-4 py-2 text-green-600">支持線</th><th class="px-4 py-2 text-red-600">抵抗線</th></tr></thead><tbody id="tech-levels-table-body" class="divide-y divide-slate-200"></tbody></table></div><div class="mt-6"><h4 class="font-semibold text-slate-700 mb-2">リスク管理</h4><ul class="space-y-2 text-sm text-slate-600 list-disc list-inside"><li><span class="font-semibold">ポジションサイズ:</span> 雇用統計発表前はサイズを50%以上削減。</li><li><span class="font-semibold">損切り徹底:</span> ボラティリティ急騰に備え、物理的な損切り注文が必須。</li></ul></div></div>
+                        <div class="card p-6"><h3 class="font-bold text-lg mb-4 text-slate-800">中長期投資家が注意すべきポイント</h3><ul class="space-y-4 text-sm text-slate-600"><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🔍</span><div><h4 class="font-semibold text-slate-800">ノイズとシグナルの峻別</h4><p>一つの雇用統計の結果でポートフォリオを大きく変更すべきではない。短期的なノイズと捉える。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">🛡️</span><div><h4 class="font-semibold text-slate-800">トレンドの監視</h4><p>重要なのはヘッドラインの数字ではなく、雇用創出の下降トレンドが続くか。持続的な冷却化は長期的に株式市場にプラス。</p></div></li><li class="flex items-start"><span class="text-xl mr-3 mt-0.5">💡</span><div><h4 class="font-semibold text-slate-800">ボラティリティを好機に</h4><p>データによる市場の急落は、AIなど長期成長テーマを持つ優良銘柄を割安で買い増す好機となり得る。</p></div></li></ul></div>
                     </div>
                 </section>
             </div>
@@ -522,22 +522,24 @@
             }
             // --- WEEKLY DATA AND FUNCTIONS ---
             const weeklyMarketData = {
-                sentiment: { fearGreed: 56.20, vix: 14.22, putCallRatio: 0.52, aaii: { bull: 30.8, bear: 44.8 }, investorsIntelligence: { bull: 60.8, bear: 18.1 } },
+                reportPeriod: '2025年9月2日〜9月5日',
+                marketOutlook: '今週の市場は金曜の米雇用統計待ちで方向感に欠ける展開が予想されます。強い結果はFRBの利下げ期待を後退させ、下落リスクを高める可能性があります。',
+                sentiment: { fearGreed: 50, vix: 15.36, putCallRatio: 0.56, aaii: { bull: 34.6, bear: 39.4 }, investorsIntelligence: { bull: 60.8, bear: 18.1 } },
                 macro: { inflation: { cpi: 2.7, ppi: 3.3 }, employment: { consensus: 105, actual: 73 }, yieldCurve: [-0.15, -0.10, -0.05, 0.01, 0.03], weeklyForecast: [6456, 6435, 6470, 6485, 6500] },
                 sectors: {
-                    tech: { title: '🤖 AI関連', summary: '市場牽引の主役。NVIDIA、MSFT、GOOGL等のクラウドAI事業の成長率が焦点。マグニフィセント・セブンが指数全体の方向性を左右します。', stocks: [{ name: 'NVIDIA (NVDA)', detail: '時価総額4.4兆ドルに迫る市場リーダー。' }, { name: 'Apple (AAPL)', detail: 'AI機能搭載の新型iPhoneへの期待と需要鈍化懸念が交錯。' }] },
+                    tech: { title: '🤖 AI関連', summary: '米国10年債利回りの動向に極めて敏感。強い雇用統計は利回りを押し上げ、高PERのハイテク株のバリュエーションに圧力をかける可能性が高い。NVIDIAの決算後の株価反応は、AI取引の「簡単な利益」が出尽くした可能性を示唆しており、利益確定売りに脆弱です。', stocks: [{ name: 'NVIDIA (NVDA)', detail: '決算は素晴らしかったが、期待値が高すぎたため株価は下落。今やAI全体の動向を占う先行指標。' }, { name: 'Microsoft (MSFT)', detail: 'クラウドサービスAzureが好調でAI戦略を着実に実行。NVIDIAより「安全な」AI関連銘柄と見なされている。' }] },
                     security: { title: '🛡️ サイバーセキュリティ', summary: '景気減速下でも安定需要が見込める長期的成長分野。クラウド化やDXの進展が追い風。', stocks: [{ name: 'Zscaler (ZS)', detail: 'ゼロトラスト分野のリーダー。'}, { name: 'Palo Alto Networks (PANW)', detail: 'プラットフォーム化戦略が奏功。'}] },
                     energy: { title: '☀️ クリーンエネルギー', summary: '長期的なアンダーパフォームから復調の兆し。政策的な後押しや割安感が投資家の関心を集めています。', stocks: [{ name: 'First Solar (FSLR)', detail: '米国内での製造能力が強み。'}, { name: 'Enphase Energy (ENPH)', detail: '住宅用ソーラー市場の回復期待。'}] }
                 },
                 events: [
-                    { date: '8/26 (火)', event: '耐久財受注 / CB消費者信頼感指数', impact: '中', impactColor: 'bg-amber-100 text-amber-800' },
-                    { date: '8/28 (木)', event: '第2四半期GDP改定値 / 新規失業保険申請件数', impact: '中', impactColor: 'bg-amber-100 text-amber-800' },
-                    { date: '8/29 (金)', event: 'コアPCE価格指数 / 個人所得・支出', impact: '強', impactColor: 'bg-rose-100 text-rose-800' },
+                    { date: '9/2 (火)', event: 'ISM製造業景況指数 (8月)', impact: '中', impactColor: 'bg-amber-100 text-amber-800' },
+                    { date: '9/4 (木)', event: 'ISM非製造業景況指数 (8月)', impact: '強', impactColor: 'bg-rose-100 text-rose-800' },
+                    { date: '9/5 (金)', event: '米雇用統計 (NFP, 失業率, 平均時給)', impact: '強', impactColor: 'bg-rose-100 text-rose-800' },
                 ],
                 techLevels: [
-                    { index: 'S&P 500', support: '6,441 / 6,408', resistance: '6,480 / 6,502' },
-                    { index: 'Nasdaq 100', support: '23,347 / 23,235', resistance: '23,668 / 23,838' },
-                    { index: 'Dow Jones', support: '45,447 / 45,137', resistance: '45,757 / 45,942' },
+                    { index: 'S&P 500', support: '6,400 / 6,350', resistance: '6,500 / 6,550' },
+                    { index: 'Nasdaq 100', support: '23,300 / 22,800', resistance: '23,700 / 24,000' },
+                    { index: 'Dow Jones', support: '45,270 / 45,000', resistance: '45,750 / 45,890' },
                 ]
             };
             
@@ -616,6 +618,20 @@
                     tabs[0].click();
                 };
 
+                const updateContentFromData = () => {
+                    // Update report period
+                    const reportPeriodEl = document.getElementById('report-period');
+                    if (reportPeriodEl && weeklyMarketData.reportPeriod) {
+                        reportPeriodEl.textContent = weeklyMarketData.reportPeriod;
+                    }
+                    
+                    // Update market outlook text
+                    const marketOutlookEl = document.getElementById('market-outlook-text');
+                    if (marketOutlookEl && weeklyMarketData.marketOutlook) {
+                        marketOutlookEl.textContent = weeklyMarketData.marketOutlook;
+                    }
+                };
+
                 const populateWeeklyTables = () => {
                     const eventsBody = document.getElementById('events-table-body');
                     if(eventsBody) {
@@ -629,6 +645,7 @@
                     }
                 };
                 
+                updateContentFromData();
                 updateFearGreedGauge();
                 createSentimentDivergenceChart();
                 createInflationChart();
